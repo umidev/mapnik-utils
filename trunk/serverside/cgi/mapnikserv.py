@@ -318,7 +318,10 @@ def generate_file(format):
     surface = cairo.SVGSurface(file.name, mapnik_map.width, mapnik_map.height)
   elif format == "pdf":
     surface = cairo.PDFSurface(file.name, mapnik_map.width, mapnik_map.height)
-  mapnik.render(mapnik_map, surface)
+  try:
+    mapnik.render(mapnik_map, surface)
+  except Exception, E:
+      output_error('Cairo python bindings are installed but mapnik was not properly linked at build time',E,note='try upgrading to the most recent mapnik svn')
   surface.finish()
   if format == "svg" and mode != "fetch":
     output_headers("image/%s+xml" % (format), "map.%s" % (format), file_size(file))
