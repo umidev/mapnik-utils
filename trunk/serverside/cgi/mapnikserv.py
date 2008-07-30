@@ -202,6 +202,22 @@ def output_envir():
     print '<pre>set DEBUG = True to enable debugging output</pre>'
   print '</body></html>'
 
+def output_traceback(E, message=None):
+  """
+  Output traceback
+  """
+  if message:
+    print "<h1>%s:</h1>" % message
+  print "<h3>Traceback: </h3>"
+  error = ["%s\n%s" % (str(E),"".join(traceback.format_tb(sys.exc_traceback)))]
+  if HAS_PYGMENTS:
+    code = highlight(error[0], PythonLexer(),HtmlFormatter())
+    print code
+  else:
+    print '<pre>'
+    print error[0]
+    print '</pre>'
+
 def output_error(message, E=None, note=None):
   """
   Report and <pre> formatted error message including
@@ -211,20 +227,11 @@ def output_error(message, E=None, note=None):
   output_headers("text/html")
   print error_top
   if E:
-    print "<h1>%s:</h1>" % message
-    print "<h3>Traceback: </h3>"
-    error = ["%s\n%s" % (str(E),"".join(traceback.format_tb(sys.exc_traceback)))]
-    if HAS_PYGMENTS:
-      code = highlight(error[0], PythonLexer(),HtmlFormatter())
-      print code
-    else:
-      print '<pre>'
-      print error[0]
-      print '</pre>'
+    output_traceback(E, message=message)
   else:
     print '<h1>%s</h1>' % message
   if note:
-    print note
+    print '<p style="color:red">' + note + '</p>'
   print '</div>' 
   if E:
     print error_tail
@@ -273,17 +280,31 @@ def generate_map_stats():
       print '\t\tTitle: <em>%s</em>' % l.title
       print '\t\tAbtract: <em>%s</em>' % l.abstract
       print '\t\tSrs: <em>%s</em>' % l.srs
-      print "\t\tEnvelope: <em>%s</em>" % l.envelope()
+      if l.datasource:
+        print "\t\tEnvelope: <em>%s</em>" % l.envelope()
+      else:
+        print '\t\tEnvelope: <span style="color:red"><em>Unable to be read</em></span>'      
       print "\t\tMin Zoom: <em>%s</em>" % l.minzoom
       print "\t\tMax Zoom: <em>%s</em>" % l.maxzoom     
       print "\t\tQueryable: <em>%s</em>" % l.queryable
       print "\t\tActive: <em>%s</em>" % l.active
-      print "\t\tDatasource: <em>"
-      for group in l.datasource.describe().split('\n\n'):
-        for item in group.split('\n'):
-          if item:
-            print '\t\t\t%s' % item
-      for s in l.styles:
+      if not l.datasource:
+        print '\t\tDatasource: <span style="color:red"><em>Not Found</em></span>'
+        print '\t\t\t<span style="color:darkred">Confirm your relative or absolute path to the datasource in your mapfile</span>'
+        print '\t\t\t<span style="color:darkred">Make sure your server has read permissions for the file or directory</span>'
+        print '\t\t\t<span style="color:darkred">Note, for shapefiles do not include the .shp extension</span>'
+      else:
+        print "\t\tDatasource: <em>"
+        try:
+          for group in l.datasource.describe().split('\n\n'):
+            for item in group.split('\n'):
+              if item:
+                print '\t\t\t%s' % item
+        except Exception, E:
+          print '<span style="color:red">Datasource listed in mapfile was not able to be read (Script could not parse datasource description)</span>'
+
+          output_traceback(E)
+        for s in l.styles:
           print "\n</em>\t\t<b>Style: </b>%s" % s
           styles.append(s)
           style = mapnik_map.find_style(s)
