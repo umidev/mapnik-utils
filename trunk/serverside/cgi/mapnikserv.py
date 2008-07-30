@@ -466,7 +466,7 @@ try:
       # Parse the mode of output
       mode = str(form.getvalue("mode"))
       if mode != "fetch" and mode != "view" and mode != "script" and mode != "debug":
-        output_error("Specify a mode <h2>mode=fetch to download image, mode=view to view image in the browser, mode=debug to view verbose debugging info, or mode=script to generate a python script to regenerate your map.</h2>")
+        output_error("Specify a mode <h2>mode=fetch to download image, mode=view to view image in the browser, mode=debug to view verbose debugging info, or mode=script to generate a python script to regenerate your map.</h2>",note=link(fetch_query()+ '&mode=%s' % MODE))
 
       # Make sure width and height are integers
       try:
