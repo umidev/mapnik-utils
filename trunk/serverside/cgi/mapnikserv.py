@@ -503,9 +503,9 @@ try:
       format = form.getvalue("format").lower()    
       
       # Set a limit on map size
-      if width * height > 40000000:
+      if width * height > 4000000:
         # Map is too large (limit is approximately A2 size)
-        output_error("Map too large: reduce your height and width or hack line 474 of this script.")
+        output_error("Map too large: reduce your height and width")
 
       elif mode == "script":
         generate_script(format, mapfile)
