@@ -14,7 +14,11 @@ Usage:
   Place mapnikserv in your web server directory capable of running cgi scripts.
   Make executable (chmod +x mapnikserv.py)
   Then visit http://yourserver/cgi-bin/mapnikserv.py
-
+  A sample mapfile (`mapfile.xml') is located at:
+    http://mapnik-utils.googlecode.com/svn/trunk/serverside/cgi/mapfile.xml
+  A sample shapefile is located inside:
+    http://mapnik-utils.googlecode.com/svn/trunk/sample_data/
+  
 Limitations: 
   This script offers no support (yet) for reprojections or the development or modification of the mapfile.
   It is not intended for use in a production environment in order to dynamically generate images. if that
@@ -210,7 +214,6 @@ def output_error(message, E=None, note=None):
     print "<h1>%s:</h1>" % message
     print "<h3>Traceback: </h3>"
     error = ["%s\n%s" % (str(E),"".join(traceback.format_tb(sys.exc_traceback)))]
-    #HAS_PYGMENTS = False
     if HAS_PYGMENTS:
       code = highlight(error[0], PythonLexer(),HtmlFormatter())
       print code
