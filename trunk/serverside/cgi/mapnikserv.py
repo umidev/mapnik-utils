@@ -21,8 +21,9 @@ Usage:
   
 Limitations: 
   This script offers no support (yet) for reprojections or the development or modification of the mapfile.
-  It is not intended for use in a production environment in order to dynamically generate images. if that
-  is your goal check out the Mapnik WMS server included in the mapnik source code.
+  The script is also not intended for use in a production environment to dynamically generate images.
+  The error handling is targeted at humanizing the learning and debugging of mapnik. 
+  Check out the Mapnik WMS server included in the mapnik source code for true serverside, OGC code.
   
 """
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com"
