@@ -1,0 +1,1 @@
+shp2img -m world.map -o map/hello_world_with_mapserver_mapfile.png
