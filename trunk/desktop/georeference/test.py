@@ -3,7 +3,7 @@
 from mapnik import *
 from georeference import render_to_wld
 
-m = Map(1000,500,'+proj=latlong +datum=WGS84')
+m = Map(10000,5000,'+proj=latlong +datum=WGS84')
 m.background = Color('steelblue')
 s = Style()
 r=Rule()
@@ -19,5 +19,5 @@ m.zoom_to_box(lyr.envelope())
 filepath = 'georeferenced'
 raster = '%s.png' % filepath
 world_file = '%s.wld' % filepath
-render_to_file(m, raster)
+render_to_file(m, raster, 'png256')
 render_to_wld(m, world_file)
