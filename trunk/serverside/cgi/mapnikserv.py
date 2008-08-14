@@ -7,11 +7,13 @@ Summary:
   A python cgi script for testing and debugging mapnik given a mapnik XML file and basic map variables.
 
 Dependencies:
-  Requires Python and Mapnik installed with the python bindings (requires boost +python).
-  Pycairo and Pygments are optional and extend the utility of the script.
+  Requires Python and Mapnik installed with the python bindings (requires boost +python +icu).
+  Pycairo (and cairographics) and Pygments are optional and extend the utility of the script.
 
 Usage:
   Place mapnikserv in your web server directory capable of running cgi scripts.
+  Either rename to mapnikserv.cgi or add an Apache directive for your cgi directory like:
+    AddHandler cgi-script .cgi .py # add .py
   Make executable (chmod +x mapnikserv.py)
   Then visit http://yourserver/cgi-bin/mapnikserv.py
   A sample mapfile (`mapfile.xml') is located at:
@@ -21,9 +23,15 @@ Usage:
   
 Limitations: 
   This script offers no support (yet) for reprojections or the development or modification of the mapfile.
-  The script is also not intended for use in a production environment to dynamically generate images.
-  The error handling is targeted at humanizing the learning and debugging of mapnik. 
-  Check out the Mapnik WMS server included in the mapnik source code for true serverside, OGC code.
+  It is not intended for use in a production environment in order to dynamically generate images. 
+  The error handling is targeted at humanizing the learning and debugging of mapnik. It can be used
+  as a non OGC WMS server, but if that is your goal check out the Mapnik WMS server included in the 
+  mapnik source code.
+
+TODO:
+  Collect a warnings list that is output whenever an error occurs, such as unhandled wms keys, but that
+  will not throw errors
+  Fix tile edge-matching problem when used as a WMS server with OpenLayers (until then use singletile mode)
   
 """
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com"
@@ -175,7 +183,27 @@ error_tail = """
 <p>For more info see your apache error log file ($ tail -f -n 50 /var/log/apache2/error_log).</p>
 </div>
 """
+def key(key):
+   """
+   In a case-insensitive way, check for keys
+   """
+   if form.has_key(key):
+     return True
+   elif form.has_key(key.upper()):
+     return True
+   else:
+     return False
 
+def get_key(key):
+   """
+   In a case-insensitive way, return values
+   """
+   if form.has_key(key):
+     return form.getvalue(key)
+   elif form.has_key(key.upper()):
+     return form.getvalue(key.upper())
+   else:
+     return ''
 
 def output_envir():
   """
@@ -444,24 +472,24 @@ if not form.list:
 # Check each query parameter, returning examples if absent and an EOF Exception
 try:
     # Check for the cgi keys
-    if not form.has_key("map"):
+    if not key("map"):
       # No mapfile specified
       output_error("No mapfile path specified",note=link(fetch_query()+ '&map=%s' % MAPFILE))
-    elif not form.has_key("bbox"):
+    elif not key("bbox"):
       # No bounding box specified
       output_error("No bounding box specified",note=link(fetch_query()+ '&bbox=%s' % BBOX))
-    elif not form.has_key("width"):
+    elif not key("width"):
       # No width specified
       output_error("No width specified <h2>Specify width=integer</h2>",note=link(fetch_query()+ '&width=%s' % WIDTH))
-    elif not form.has_key("height"):
+    elif not key("height"):
       # No height specified
       output_error("No height specified <h2>Specify height=integer.</h2>",note=link(fetch_query()+ '&height=%s' % HEIGHT))
-    elif not form.has_key("format"):
+    elif not key("format"):
       # No format specified
       output_error("No format specified<br /> Specify either format=png, png256, jpeg, svg, or pdf.",note=link(fetch_query()+ '&format=%s' % FORMAT))
 
     else:    
-      mapfile = str(form.getvalue("map"))
+      mapfile = str(get_key("map"))
       
       # Check if mapfile is located remotely and attempt to download to temp file
       if mapfile.find('http') > -1:
@@ -480,28 +508,28 @@ try:
       
       # Parse Bounding Box items
       try:
-       bbox = [float(x) for x in form.getvalue("bbox").split(",")]
+       bbox = [float(x) for x in get_key("bbox").split(",")]
        bbox = mapnik.Envelope(*bbox)
       except Exception, E:
        output_error("Problem setting Bounding Box", E)
        
       # Parse the mode of output
-      mode = str(form.getvalue("mode"))
+      mode = str(get_key("mode"))
       if mode != "fetch" and mode != "view" and mode != "script" and mode != "debug":
         output_error("Specify a mode <h2>mode=fetch to download image, mode=view to view image in the browser, mode=debug to view verbose debugging info, or mode=script to generate a python script to regenerate your map.</h2>",note=link(fetch_query()+ '&mode=%s' % MODE))
 
       # Make sure width and height are integers
       try:
-       width = int(form.getvalue("width"))
+       width = int(get_key("width"))
       except Exception, E:
        output_error("Problem setting map width dimensions",E)
 
       try:
-       height = int(form.getvalue("height"))
+       height = int(get_key("height"))
       except Exception, E:
        output_error("Problem setting map height dimensions",E)
 
-      format = form.getvalue("format").lower()    
+      format = get_key("format").lower().replace('image/','')   
       
       # Set a limit on map size
       if width * height > 4000000:
@@ -542,6 +570,6 @@ try:
         elif format == "svg" or format == "pdf":
           generate_file(format)
         else:
-          output_error("Unknown format '%s': Only accepts format=png, png256, jpeg, svg, and pdf" % form.getvalue("format"),E)
+          output_error("Unknown format '%s': Only accepts format=png, png256, jpeg, svg, and pdf" % get_key("format"))
 except Exception, E:
     output_error('unknown error at beginning of script!' ,E)
