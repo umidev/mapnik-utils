@@ -3,6 +3,8 @@
 
 This is a sample mapnik WMS server configuration, along with a testing [http://mapnik-utils.googlecode.com/svn/trunk/serverside/wms/openlayers.html Openlayers map].
 
+All files can be found in http://mapnik-utils.googlecode.com/svn/trunk/serverside/wms/
+
 == Installation ==
 
 === Step 1 ===
