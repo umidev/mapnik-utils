@@ -17,11 +17,13 @@
         var map, world, wms;
         function init(){
             map = new OpenLayers.Map('map');
-            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikserv.py?", {map:'mapfile.xml', mode: 'view', format:'image/png'}, {singleTile: true} );
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikserv.py?", {map:'mapfile.xml', mode: 'view', format:'image/png256'} );
             map.addLayers([wms]);
             map.fractionalZoom = true;
-            map.zoomToMaxExtent();     
-            OpenLayers.Util.getElement('info').value = wms.getFullRequestString();
+            map.zoomToMaxExtent();
+            var bounds = map.layers[0].getGridBounds();
+            var bbox = bounds.left + ',' + bounds.top + ',' + bounds.right + ',' + bounds.bottom;
+            $('debug').innerHTML = '<a href="' + wms.getFullRequestString({bbox:bbox, width:'500', height:'300'}).replace('view','debug') + '">Debug WMS Layer</a>';
             //wms.getURL(new OpenLayers.Bounds(wms.grid[0][0].bounds))
         }                
     </script>
@@ -30,10 +32,9 @@
       <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik WMS Test</h2>
     <div id="map">
     </div>
-    
-    <div id="info" style="font-size: small; left:10px; position:absolute; bottom: 30px; z-index:10000;overflow: auto;">
-    WMS Request:<br />
-    <input type="textarea" size= "100%" id='info'/>
-        </div>
+    <!--<div style="font-size: small; left:10px; position:absolute; bottom: 30px; z-index:10000;overflow: auto;">
+    Sample WMS Request:<br /> <input type="textarea" size= "100%" id='info'/>
+    --></div>
+    <div id="debug" style="font-size: large; right:10px; position:absolute; bottom: 30px; z-index:10000;"></div>
   </body>
 </html>

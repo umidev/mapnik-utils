@@ -383,7 +383,7 @@ def generate_image(format):
   """
   Render png or jpeg image output
   """
-  image = mapnik.Image(mapnik_map.width+10, mapnik_map.height+10)
+  image = mapnik.Image(mapnik_map.width, mapnik_map.height)
   image.background = mapnik.Color("green")
   mapnik.render(mapnik_map, image)
   image_string = image.tostring("%s" % format)
