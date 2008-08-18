@@ -25,12 +25,10 @@ MAP
     DATA         world_borders.shp
     STATUS      ON
     TYPE          POLYGON
-    TRANSPARENCY alpha
 
     CLASS
       NAME       "World"
       STYLE
-        ANTIALIAS true
         COLOR                 242 239 249
         OUTLINECOLOR   127 127 127
         WIDTH 1
