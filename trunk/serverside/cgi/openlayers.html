@@ -10,7 +10,6 @@
       width: 100%;
       height: 100%;
     }
-
    </style>
     <script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
     <script type="text/javascript">
@@ -24,12 +23,11 @@
             var bounds = map.layers[0].getGridBounds();
             var bbox = bounds.left + ',' + bounds.top + ',' + bounds.right + ',' + bounds.bottom;
             $('debug').innerHTML = '<a href="' + wms.getFullRequestString({bbox:bbox, width:'500', height:'300'}).replace('view','debug') + '">Debug WMS Layer</a>';
-            //wms.getURL(new OpenLayers.Bounds(wms.grid[0][0].bounds))
         }                
     </script>
   </head>
   <body onload="init()">
-      <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik WMS Test</h2>
+      <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik SimpleCGI as WMS Test</h2>
     <div id="map">
     </div>
     <!--<div style="font-size: small; left:10px; position:absolute; bottom: 30px; z-index:10000;overflow: auto;">
