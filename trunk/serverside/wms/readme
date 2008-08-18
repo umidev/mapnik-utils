@@ -1,14 +1,15 @@
-Mapnik OGC Server
-============
+= Mapnik OGC Server =
 
-This is a sample mapnik WMS server configuration, along with a testing Openlayers map.
+This is a ery rough sample mapnik WMS server configuration, along with an Openlayers map configured to test the setup.
+
+*Note: this is incomplete, additions are welcome.
 
 == Installation ==
 
 === Step 1 ===
 
  Install the wms prequisites listed at: http://trac.mapnik.org/wiki/OgcServer
- Install mod_fcgi within apache
+ Install mode_fastcgi or mod_fcgi within apache
   * http://blog.brandonking.net//2008/01/django-app-modfcgid-apache-2-setup-on.html/
   * http://blog.cleverelephant.ca/2008/05/fastcgi-on-osx-leopard.html
  
@@ -30,7 +31,7 @@ This is a sample mapnik WMS server configuration, along with a testing Openlayer
  
 http://localhost/cgi-bin/mapnikwms.py?LAYERS=world&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX=-180.0000000000001,-90,119.46385052802589,209.463850528026&WIDTH=256&HEIGHT=256
 
-You should see a small tile of the world.
+You should see a small tile of the world. If not check you apache logs.
 
 === Step 4 ===
 
