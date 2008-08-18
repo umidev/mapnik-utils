@@ -1,5 +1,5 @@
 # This mapfile mirrors the mapnik hello world example
-# A map can be generated from it by either running shp2img or using mapserv cgi
+# A map can be generated from it by running shp2img.
 # For example:
 # $ shp2img -m world.map -o map/hello_world_with_mapserver_mapfile.png
 # or
@@ -17,6 +17,7 @@ MAP
    NAME 'AGG' 
    DRIVER AGG/PNG 
    IMAGEMODE RGB
+   MIMETYPE "image/png"
   END
 
   LAYER 
@@ -24,11 +25,12 @@ MAP
     DATA         world_borders.shp
     STATUS      ON
     TYPE          POLYGON
+    TRANSPARENCY alpha
 
     CLASS
       NAME       "World"
-
       STYLE
+        ANTIALIAS true
         COLOR                 242 239 249
         OUTLINECOLOR   127 127 127
         WIDTH 1
