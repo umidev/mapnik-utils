@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+    <Stylesheet src="example.mss"/>
+    <Stylesheet>
+    </Stylesheet>
+    <Layer id="foo" class="foo bar">
+    </Layer>
+    <Layer id="bar" class="foo bar">
+    </Layer>
+</Map>
