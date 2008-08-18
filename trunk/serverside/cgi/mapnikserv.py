@@ -29,9 +29,11 @@ Limitations:
   mapnik source code.
 
 TODO:
-  Collect a warnings list that is output whenever an error occurs, such as unhandled wms keys, but that
-  will not throw errors
-  Fix tile edge-matching problem when used as a WMS server with OpenLayers (until then use singletile mode)
+  Add a mode=map like mapserver that uses a default bbox and dimensions/
+  Collect a warnings list that will store notices, such as unhandled wms keys, but that
+   will not throw errors until the HTML is displayed.
+  Add support for reprojection based on EPSG key.
+  
   
 """
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com"
@@ -57,18 +59,22 @@ try:
 except:
     HAS_PYGMENTS = False
 
-# If true mapfile, python environment and PYTHONPATH will be displayed (do not use in production environment)
+# If True the mapfile debug, python environment and PYTHONPATH will be displayed (do not use in production environment)
 DEBUG = False
 
-# Triggered as True when mapfile is loaded within script, after which mapfile stats will be output
+# Triggered as True when mapfile is successfully loaded within the script, after which mapfile stats will be able to be output
 MAPFILE_LOADED = False
 
+# Default mode to visually view output and require all keys
+MODE = 'view'
+
 # Defaults for query examples/suggestions
+# If MODE=map the bbox will be generated from the 
+# first layer loaded and these default dimensions will be used
 MAPFILE = 'mapfile.xml'
 BBOX = '-180,-90,180,90'
 WIDTH = '1000'
 HEIGHT = '500'
-MODE = 'view'
 FORMAT= 'png' 
 
 def output_headers(content_type, filename = "", length = 0):
