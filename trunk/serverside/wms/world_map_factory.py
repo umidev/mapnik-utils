@@ -1,6 +1,8 @@
 from mapnik.ogcserver.WMS import BaseWMSFactory
 from mapnik import Shapefile, Layer, Style, Rule, Color, PolygonSymbolizer, LineSymbolizer
 
+SHAPEFILE = 'world_borders'
+
 class WMSFactory(BaseWMSFactory):
   def __init__(self):
     BaseWMSFactory.__init__(self)
@@ -14,7 +16,7 @@ class WMSFactory(BaseWMSFactory):
     lyr.title = 'World Borders'
     lyr.abstract = 'World Test'
     lyr.queryable = True
-    lyr.datasource = Shapefile(file='world_borders')
+    lyr.datasource = Shapefile(file=SHAPEFILE)
     lyr.styles.append('s')
-    self.register_layer(lyr,'s')
+    self.register_layer(lyr,'s',('s',))
     self.finalize()
