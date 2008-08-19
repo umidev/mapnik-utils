@@ -7,8 +7,9 @@ class ParseException(Exception):
     pass
 
 class Selector:
+    """ Represents a complete selector with elements and attribute checks.
+    """
     def __init__(self, *elements):
-    
         if len(elements) > 2:
             raise ParseException('Only two-element selectors are supported for Mapnik styles')
 
