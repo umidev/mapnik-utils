@@ -86,3 +86,26 @@ open /Library/WebServer/Documents/tilecache/index.html
 # proceed with modifying the javascript to extend example…
 
 # Send a big thanks to Diego and Chris!
+
+
+
+
+Mapnik specific setup
+=====================
+
+sample url:
+http://localhost/tilecache/tilecache.cgi/1.0.0/world/0/0/0.png
+
+openlayers link:
+http://localhost/tilecache/openlayers.html
+
+## tilecache.cfg ##
+
+# Rendering World Borders data with Mapnik
+[world]
+type=Mapnik
+mapfile=/Library/WebServer/Documents/mapfile.xml
+
+[cache]
+type=Disk
+base=/Library/WebServer/Documents/cache
