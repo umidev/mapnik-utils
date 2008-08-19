@@ -9,48 +9,60 @@ class Selector:
         if len(atoms) > 2:
             raise Exception('Only two-atom selectors are supported for Mapnik styles')
 
+        if len(atoms) == 0:
+            raise Exception('At least one atom must be present in selectors for Mapnik styles')
+
+        if atoms[0].names[0] != 'Layer' and atoms[0].names[0][0] not in ('.', '#', '*'):
+            raise Exception('All non-ID, non-class first elements must be "Layer" Mapnik styles')
+        
         if len(atoms) == 2 and atoms[1].hasTests():
             raise Exception('Only the first atom in a selector may have attributes in Mapnik styles')
 
-        if len(atoms) == 2 and atoms[1].isID():
-            raise Exception('Only the first atom in a selector may be an ID in Mapnik styles')
+        if len(atoms) == 2 and atoms[1].countIDs():
+            raise Exception('Only the first atom in a selector may have an ID in Mapnik styles')
     
-        if len(atoms) == 2 and atoms[1].isClass():
-            raise Exception('Only the first atom in a selector may be a class in Mapnik styles')
+        if len(atoms) == 2 and atoms[1].countClasses():
+            raise Exception('Only the first atom in a selector may have a class in Mapnik styles')
     
         self.atoms = atoms[:]
 
     def specificity(self):
         """ Loosely based on http://www.w3.org/TR/REC-CSS2/cascade.html#specificity
         """
-        ids = len([a for a in self.atoms if a.isID()])
-        elements = len([a for a in self.atoms if not a.isID()])
+        ids = sum(a.countIDs() for a in self.atoms)
+        non_ids = sum((a.countNames() - a.countIDs()) for a in self.atoms)
         tests = sum(len(a.tests) for a in self.atoms)
         
-        return '%(ids)04d %(elements)04d %(tests)04d' % locals()
+        return '%(ids)04d %(non_ids)04d %(tests)04d' % locals()
 
     def __repr__(self):
         return ' '.join(repr(a) for a in self.atoms)
 
 class SelectorAtom:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        self.names = []
         self.tests = []
 
+    def addName(self, name):
+        self.names.append(name)
+    
     def addTest(self, test):
         self.tests.append(test)
 
     def hasTests(self):
         return bool(len(self.tests))
     
-    def isID(self):
-        return self.name.startswith('#')
+    def countIDs(self):
+        return len([n for n in self.names if n.startswith('#')])
     
-    def isClass(self):
-        return self.name.startswith('.')
+    def countNames(self):
+        return len(self.names)
+    
+    def countClasses(self):
+        return len([n for n in self.names if n.startswith('.')])
     
     def __repr__(self):
-        return self.name + ''.join(repr(t) for t in self.tests)
+        return ''.join(self.names) + ''.join(repr(t) for t in self.tests)
 
 class SelectorAttributeTest:
     def __init__(self, arg1, op, arg2):
@@ -167,43 +179,53 @@ def postprocess_selector(tokens):
     print tokens
     tokens = (token for token in trim_extra(tokens))
     
+    atoms = []
     parts = []
     
+    in_atom = False
     in_attribute = False
     
     for token in tokens:
         nname, value = token
         
-        if not in_attribute:
-            if nname == 'CHAR' and value in ('.', '#'):
+        if not in_atom:
+            if (nname == 'CHAR' and value in ('.', '*')) or nname in ('IDENT', 'HASH'):
+                atoms.append(SelectorAtom())
+                in_atom = True
+                # continue on to if in_atom below...
+
+        if in_atom and not in_attribute:
+            if nname == 'CHAR' and value == '.':
                 next_nname, next_value = tokens.next()
                 
                 if next_nname == 'IDENT':
-                    parts.append(SelectorAtom(value + next_value))
+                    atoms[-1].addName(value + next_value)
                 
-            elif nname in ('IDENT', 'HASH'):
-                parts.append(SelectorAtom(value))
-
-            elif (nname == 'CHAR' and value == '*'):
-                parts.append(SelectorAtom(value))
+            elif nname in ('IDENT', 'HASH') or (nname == 'CHAR' and value == '*'):
+                atoms[-1].addName(value)
 
             elif nname == 'CHAR' and value == '[':
-                parts.append([])
                 in_attribute = True
+
+            elif nname == 'S':
+                in_atom = False
                 
         elif in_attribute:
             if nname == 'IDENT':
-                parts[-1].append(value)
+                parts.append(value)
                 
             elif nname == 'CHAR' and value in ('<', '=', '>'):
-                parts[-1].append(value)
+                parts.append(value)
 
-            if nname == 'CHAR' and value == ']':
-                parts[-2].addTest(SelectorAttributeTest(*parts[-1][:3]))
-                parts = parts[:-1]
+            elif nname == 'CHAR' and value == ']':
+                atoms[-1].addTest(SelectorAttributeTest(*parts[-3:]))
                 in_attribute = False
+
+            elif nname == 'S':
+                in_atom = False
     
-    selector = Selector(*parts)
+    print atoms
+    selector = Selector(*atoms)
     
     return selector
 
@@ -230,7 +252,7 @@ def postprocess_value(tokens):
 if __name__ == '__main__':
 
     s = """
-    #foo.foo[baz>quuz] bar,
+    Layer#foo.foo[baz>quuz] bar,
     *
     {
         color: red;
