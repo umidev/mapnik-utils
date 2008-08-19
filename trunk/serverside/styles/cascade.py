@@ -248,7 +248,7 @@ if __name__ == '__main__':
     for ruleset in rulesets:
         for declaration in ruleset['declarations']:
             for selector in ruleset['selectors']:
-                rules.append({'selector': selector, 'property': declaration['property'], 'value': declaration['value'], 'position': declaration['position']})
+                rules.append({'selector': selector, 'specificity': selector.specificity(), 'property': declaration['property'], 'value': declaration['value'], 'position': declaration['position']})
 
     # sort by a css-like method
     rules.sort(key=lambda r: (r['selector'].specificity(), r['position'][0], r['position'][1]))
