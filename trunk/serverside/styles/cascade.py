@@ -3,42 +3,47 @@ import pprint
 import simplejson
 import cssutils.tokenize2
 
+class ParseException(Exception):
+    pass
+
 class Selector:
-    def __init__(self, *atoms):
+    def __init__(self, *elements):
     
-        if len(atoms) > 2:
-            raise Exception('Only two-atom selectors are supported for Mapnik styles')
+        if len(elements) > 2:
+            raise ParseException('Only two-element selectors are supported for Mapnik styles')
 
-        if len(atoms) == 0:
-            raise Exception('At least one atom must be present in selectors for Mapnik styles')
+        if len(elements) == 0:
+            raise ParseException('At least one element must be present in selectors for Mapnik styles')
 
-        if atoms[0].names[0] != 'Layer' and atoms[0].names[0][0] not in ('.', '#', '*'):
-            raise Exception('All non-ID, non-class first elements must be "Layer" Mapnik styles')
+        if elements[0].names[0] != 'Layer' and elements[0].names[0][0] not in ('.', '#', '*'):
+            raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles')
         
-        if len(atoms) == 2 and atoms[1].hasTests():
-            raise Exception('Only the first atom in a selector may have attributes in Mapnik styles')
+        if len(elements) == 2 and elements[1].countTests():
+            raise ParseException('Only the first element in a selector may have attributes in Mapnik styles')
 
-        if len(atoms) == 2 and atoms[1].countIDs():
-            raise Exception('Only the first atom in a selector may have an ID in Mapnik styles')
+        if len(elements) == 2 and elements[1].countIDs():
+            raise ParseException('Only the first element in a selector may have an ID in Mapnik styles')
     
-        if len(atoms) == 2 and atoms[1].countClasses():
-            raise Exception('Only the first atom in a selector may have a class in Mapnik styles')
+        if len(elements) == 2 and elements[1].countClasses():
+            raise ParseException('Only the first element in a selector may have a class in Mapnik styles')
     
-        self.atoms = atoms[:]
+        self.elements = elements[:]
 
     def specificity(self):
         """ Loosely based on http://www.w3.org/TR/REC-CSS2/cascade.html#specificity
         """
-        ids = sum(a.countIDs() for a in self.atoms)
-        non_ids = sum((a.countNames() - a.countIDs()) for a in self.atoms)
-        tests = sum(len(a.tests) for a in self.atoms)
+        ids = sum(a.countIDs() for a in self.elements)
+        non_ids = sum((a.countNames() - a.countIDs()) for a in self.elements)
+        tests = sum(len(a.tests) for a in self.elements)
         
         return '%(ids)04d %(non_ids)04d %(tests)04d' % locals()
 
     def __repr__(self):
-        return ' '.join(repr(a) for a in self.atoms)
+        return ' '.join(repr(a) for a in self.elements)
 
-class SelectorAtom:
+class SelectorElement:
+    """ One element in selector, with names and tests.
+    """
     def __init__(self):
         self.names = []
         self.tests = []
@@ -49,8 +54,8 @@ class SelectorAtom:
     def addTest(self, test):
         self.tests.append(test)
 
-    def hasTests(self):
-        return bool(len(self.tests))
+    def countTests(self):
+        return len(self.tests)
     
     def countIDs(self):
         return len([n for n in self.names if n.startswith('#')])
@@ -65,6 +70,8 @@ class SelectorAtom:
         return ''.join(self.names) + ''.join(repr(t) for t in self.tests)
 
 class SelectorAttributeTest:
+    """ Attribute test for a Selector, i.e. the part that looks like "[foo=bar]"
+    """
     def __init__(self, arg1, op, arg2):
         self.op = op
         self.arg1 = arg1
@@ -74,14 +81,16 @@ class SelectorAttributeTest:
         return '[%(arg1)s%(op)s%(arg2)s]' % self.__dict__
 
 class Property:
+    """ A style property.
+    """
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
         return self.name
 
-def parse_rulesets(s):
-    """
+def parse_stylesheet(s):
+    """ Parse a string representing a stylesheet into a list of rulesets.
     """
     in_selectors = False
     in_block = False
@@ -162,8 +171,22 @@ def parse_rulesets(s):
 
     return rulesets
 
-def trim_extra(tokens):
+def unroll_rulesets(rulesets):
+    """ Convert a list of rulesets (as returned by parse_stylesheet)
+        into an ordered list of individual selectors and declarations.
     """
+    rules = []
+    
+    for ruleset in rulesets:
+        for declaration in ruleset['declarations']:
+            for selector in ruleset['selectors']:
+                rules.append({'selector': selector, 'specificity': selector.specificity(), 'property': declaration['property'], 'value': declaration['value'], 'position': declaration['position']})
+
+    # sort by a css-like method
+    return sorted(rules, key=lambda r: (r['selector'].specificity(), r['position'][0], r['position'][1]))
+
+def trim_extra(tokens):
+    """ Trim comments and whitespace from each end of a list of tokens.
     """
     while tokens[0][0] in ('S', 'COMMENT'):
         tokens = tokens[1:]
@@ -174,41 +197,41 @@ def trim_extra(tokens):
     return tokens
 
 def postprocess_selector(tokens):
-    """
+    """ Convert a list of tokens into a Selector.
     """
     print tokens
     tokens = (token for token in trim_extra(tokens))
     
-    atoms = []
+    elements = []
     parts = []
     
-    in_atom = False
+    in_element = False
     in_attribute = False
     
     for token in tokens:
         nname, value = token
         
-        if not in_atom:
+        if not in_element:
             if (nname == 'CHAR' and value in ('.', '*')) or nname in ('IDENT', 'HASH'):
-                atoms.append(SelectorAtom())
-                in_atom = True
-                # continue on to if in_atom below...
+                elements.append(SelectorElement())
+                in_element = True
+                # continue on to if in_element below...
 
-        if in_atom and not in_attribute:
+        if in_element and not in_attribute:
             if nname == 'CHAR' and value == '.':
                 next_nname, next_value = tokens.next()
                 
                 if next_nname == 'IDENT':
-                    atoms[-1].addName(value + next_value)
+                    elements[-1].addName(value + next_value)
                 
             elif nname in ('IDENT', 'HASH') or (nname == 'CHAR' and value == '*'):
-                atoms[-1].addName(value)
+                elements[-1].addName(value)
 
             elif nname == 'CHAR' and value == '[':
                 in_attribute = True
 
             elif nname == 'S':
-                in_atom = False
+                in_element = False
                 
         elif in_attribute:
             if nname == 'IDENT':
@@ -218,27 +241,27 @@ def postprocess_selector(tokens):
                 parts.append(value)
 
             elif nname == 'CHAR' and value == ']':
-                atoms[-1].addTest(SelectorAttributeTest(*parts[-3:]))
+                elements[-1].addTest(SelectorAttributeTest(*parts[-3:]))
                 in_attribute = False
 
             elif nname == 'S':
-                in_atom = False
+                in_element = False
     
-    print atoms
-    selector = Selector(*atoms)
+    print elements
+    selector = Selector(*elements)
     
     return selector
 
 def postprocess_property(tokens):
-    """
+    """ Convert a one-element list of tokens into a Property.
     """
     tokens = trim_extra(tokens)
     
     if len(tokens) != 1:
-        raise Exception('Too many tokens in property: ' + repr(tokens))
+        raise ParseException('Too many tokens in property: ' + repr(tokens))
     
     if tokens[0][0] != 'IDENT':
-        raise Exception('Incorrect type of token in property: ' + repr(tokens))
+        raise ParseException('Incorrect type of token in property: ' + repr(tokens))
     
     return Property(tokens[0][1])
 
@@ -264,17 +287,10 @@ if __name__ == '__main__':
     * { this: that !important; }
     """
     
-    rulesets = parse_rulesets(s)
+    rulesets = parse_stylesheet(s)
     
-    rules = []
+    rules = unroll_rulesets(rulesets)
     
-    for ruleset in rulesets:
-        for declaration in ruleset['declarations']:
-            for selector in ruleset['selectors']:
-                rules.append({'selector': selector, 'specificity': selector.specificity(), 'property': declaration['property'], 'value': declaration['value'], 'position': declaration['position']})
-
-    # sort by a css-like method
-    rules.sort(key=lambda r: (r['selector'].specificity(), r['position'][0], r['position'][1]))
 
     #pprint.PrettyPrinter(indent=2).pprint(rulesets)
     pprint.PrettyPrinter(indent=2).pprint(rules)
