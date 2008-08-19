@@ -23,8 +23,8 @@ class Selector:
     def specificity(self):
         """ Loosely based on http://www.w3.org/TR/REC-CSS2/cascade.html#specificity
         """
-        ids = 0
-        elements = len(self.atoms)
+        ids = len([a for a in self.atoms if a.isID()])
+        elements = len([a for a in self.atoms if not a.isID()])
         tests = sum(len(a.tests) for a in self.atoms)
         
         return '%(ids)04d %(elements)04d %(tests)04d' % locals()
@@ -84,7 +84,7 @@ def parse_rulesets(s):
         
         try:
             if not in_selectors and not in_block:
-                if nname == 'IDENT' or (nname == 'CHAR' and value != '{'):
+                if (nname in ('IDENT', 'HASH')) or (nname == 'CHAR' and value != '{'):
                     # beginning of a 
                     rulesets.append({'selectors': [[(nname, value)]], 'declarations': []})
                     in_selectors = True
@@ -164,6 +164,7 @@ def trim_extra(tokens):
 def postprocess_selector(tokens):
     """
     """
+    print tokens
     tokens = (token for token in trim_extra(tokens))
     
     parts = []
@@ -180,7 +181,7 @@ def postprocess_selector(tokens):
                 if next_nname == 'IDENT':
                     parts.append(SelectorAtom(value + next_value))
                 
-            elif nname == 'IDENT':
+            elif nname in ('IDENT', 'HASH'):
                 parts.append(SelectorAtom(value))
 
             elif (nname == 'CHAR' and value == '*'):
@@ -229,7 +230,7 @@ def postprocess_value(tokens):
 if __name__ == '__main__':
 
     s = """
-    .foo[baz>quuz] bar,
+    #foo.foo[baz>quuz] bar,
     *
     {
         color: red;
