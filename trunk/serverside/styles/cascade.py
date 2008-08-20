@@ -1,3 +1,4 @@
+import re
 import sys
 import pprint
 import simplejson
@@ -5,34 +6,44 @@ import cssutils.tokenize2
 
 # recognized properties
 
+class color:
+    def __init__(self, hex):
+        self.hex = hex
+
+    def __repr__(self):
+        return self.hex
+
+class uri:
+    pass
+
 properties = {
     #--------------- polygon symbolizer
 
     # 
-    'polygon-fill': None, # hex color
+    'polygon-fill': color,
 
     # 
-    'polygon-opacity': None, # number
+    'polygon-opacity': int,
 
     #--------------- line symbolizer
 
     # CSS colour (default "black")
-    'line-color': None, # hex color
+    'line-color': color,
 
     # 0.0 - n (default 1.0)
-    'line-width': None, # number
+    'line-width': int,
 
     # 0.0 - 1.0 (default 1.0)
-    'line-opacity': None, # number
+    'line-opacity': int,
 
     # miter, round, bevel (default miter)
-    'line-join': None, # miter, round, bevel
+    'line-join': ('miter', 'round', 'bevel'),
 
     # round, butt, square (default butt)
-    'line-cap': None, # round, butt, square
+    'line-cap': ('butt', 'round', 'square'),
 
     # d0,d1, ... (default none)
-    'line-dasharray': None, # number(s)
+    'line-dasharray': None, # Number(s)
 
     #--------------- text symbolizer
 
@@ -40,50 +51,50 @@ properties = {
     'text-name': None, # (use selector for this)
 
     # Font name
-    'text-face-name': None, # string
+    'text-face-name': str,
 
     # Font size
-    'text-size': None, # number
+    'text-size': int,
 
     # ?
     'text-ratio': None, # ?
 
     # length before wrapping long names
-    'text-wrap-width': None, # number
+    'text-wrap-width': int,
 
     # space between repeated labels
-    'text-spacing': None, # number
+    'text-spacing': int,
 
     # allow labels to be moved from their point
     'text-label-position-tolerance': None, # ?
 
     # Maximum angle (in degrees) between two consecutive characters in a label allowed (to stop placing labels around sharp corners)
-    'text-max-char-angle-delta': None, # number
+    'text-max-char-angle-delta': int,
 
     # Color of the fill ie #FFFFFF
-    'text-fill': None, # hex color
+    'text-fill': color,
 
     # Color of the halo
-    'text-halo-fill': None, # hex color
+    'text-halo-fill': color,
 
     # Radius of the halo in whole pixels, fractional pixels are not accepted
-    'text-halo-radius': None, # number
+    'text-halo-radius': int,
 
     # displace label by fixed amount on either axis.
-    'text-dx': None, # number
-    'text-dy': None, # number
+    'text-dx': int,
+    'text-dy': int,
 
     # Boolean to avoid labeling near intersection edges.
     'text-avoid-edges': None, # ?
 
     # Minimum distance between repeated labels such as street names or shield symbols
-    'text-min-distance': None, # number
+    'text-min-distance': int,
 
     # Allow labels to overlap other labels
     'text-allow-overlap': None, # ...
 
     # "line" to label along lines instead of by point
-    'text-placement': None, # point, line, ?
+    'text-placement': ('point', 'line'),
 
     #--------------- polygon pattern symbolizer
 
@@ -91,10 +102,10 @@ properties = {
     'pattern-file': None, # url
 
     # px (default 4)
-    'pattern-width': None, # number
+    'pattern-width': int,
 
     # px (default 4)
-    'pattern-height': None, # number
+    'pattern-height': int,
 
     # png tiff (default none)
     'pattern-type': None, # png, tiff (derived from file)
@@ -105,13 +116,13 @@ properties = {
     'shield-name': None, # (use selector for this)
 
     # 
-    'shield-face-name': None, # string
+    'shield-face-name': str,
 
     # 
     'shield-size': None, # ?
 
     # 
-    'shield-fill': None, # hex color?
+    'shield-fill': color,
 
     # 
     'shield-file': None, # url
@@ -120,10 +131,10 @@ properties = {
     'shield-type': None, # png, tiff (derived from file)
 
     # 
-    'shield-width': None, # number
+    'shield-width': int,
 
     # 
-    'shield-height': None # number
+    'shield-height': int
 }
 
 class ParseException(Exception):
@@ -410,6 +421,40 @@ def postprocess_value(tokens, property):
     """
     tokens = trim_extra(tokens)
     
+    if properties[property.name] in (int, str, color) or type(properties[property.name]) is tuple:
+        if len(tokens) != 1:
+            raise ParseException('Single value only for property "%(property)s"' % locals())
+
+    if properties[property.name] is int:
+        if tokens[0][0] != 'NUMBER':
+            raise ParseException('Number value only for property "%(property)s"' % locals())
+
+        return int(tokens[0][1])
+
+    if properties[property.name] is str:
+        if tokens[0][0] != 'STRING':
+            raise ParseException('String value only for property "%(property)s"' % locals())
+
+        return tokens[0][1]
+
+    if properties[property.name] is color:
+        if tokens[0][0] != 'HASH':
+            raise ParseException('Hash value only for property "%(property)s"' % locals())
+
+        if not re.match(r'^#([0-9a-f]{3}){1,2}$', tokens[0][1], re.I):
+            raise ParseException('Unrecognized color value for property "%(property)s"' % locals())
+
+        return color(tokens[0][1])
+
+    if type(properties[property.name]) is tuple:
+        if tokens[0][0] != 'IDENT':
+            raise ParseException('Identifier value only for property "%(property)s"' % locals())
+
+        if tokens[0][1] not in properties[property.name]:
+            raise ParseException('Unrecognized value for property "%(property)s"' % locals())
+
+        return tokens[0][1]
+
     return tokens
 
 if __name__ == '__main__':
@@ -418,13 +463,14 @@ if __name__ == '__main__':
     Layer#foo.foo[baz>quuz] bar,
     *
     {
-        polygon-fill: #ff9900;
+        polygon-fill: #f90;
         text-face-name: /* boo yah */ "Helvetica Bold";
-        text-size: 10px 10% 10em 10;
-        polygon-opacity: url(http://example.com);
+        text-size: 10;
+        pattern-file: url('http://example.com');
+        line-cap: square;
     }
     
-    * { text-fill: that !important; }
+    * { text-fill: #ff9900; }
     """
     
     rulesets = parse_stylesheet(s)
