@@ -3,6 +3,129 @@ import pprint
 import simplejson
 import cssutils.tokenize2
 
+# recognized properties
+
+properties = {
+    #--------------- polygon symbolizer
+
+    # 
+    'polygon-fill': None, # hex color
+
+    # 
+    'polygon-opacity': None, # number
+
+    #--------------- line symbolizer
+
+    # CSS colour (default "black")
+    'line-color': None, # hex color
+
+    # 0.0 - n (default 1.0)
+    'line-width': None, # number
+
+    # 0.0 - 1.0 (default 1.0)
+    'line-opacity': None, # number
+
+    # miter, round, bevel (default miter)
+    'line-join': None, # miter, round, bevel
+
+    # round, butt, square (default butt)
+    'line-cap': None, # round, butt, square
+
+    # d0,d1, ... (default none)
+    'line-dasharray': None, # number(s)
+
+    #--------------- text symbolizer
+
+    # This is the query field you want to use for the label text, ie "street_name"
+    'text-name': None, # (use selector for this)
+
+    # Font name
+    'text-face-name': None, # string
+
+    # Font size
+    'text-size': None, # number
+
+    # ?
+    'text-ratio': None, # ?
+
+    # length before wrapping long names
+    'text-wrap-width': None, # number
+
+    # space between repeated labels
+    'text-spacing': None, # number
+
+    # allow labels to be moved from their point
+    'text-label-position-tolerance': None, # ?
+
+    # Maximum angle (in degrees) between two consecutive characters in a label allowed (to stop placing labels around sharp corners)
+    'text-max-char-angle-delta': None, # number
+
+    # Color of the fill ie #FFFFFF
+    'text-fill': None, # hex color
+
+    # Color of the halo
+    'text-halo-fill': None, # hex color
+
+    # Radius of the halo in whole pixels, fractional pixels are not accepted
+    'text-halo-radius': None, # number
+
+    # displace label by fixed amount on either axis.
+    'text-dx': None, # number
+    'text-dy': None, # number
+
+    # Boolean to avoid labeling near intersection edges.
+    'text-avoid-edges': None, # ?
+
+    # Minimum distance between repeated labels such as street names or shield symbols
+    'text-min-distance': None, # number
+
+    # Allow labels to overlap other labels
+    'text-allow-overlap': None, # ...
+
+    # "line" to label along lines instead of by point
+    'text-placement': None, # point, line, ?
+
+    #--------------- polygon pattern symbolizer
+
+    # path to image file (default none)
+    'pattern-file': None, # url
+
+    # px (default 4)
+    'pattern-width': None, # number
+
+    # px (default 4)
+    'pattern-height': None, # number
+
+    # png tiff (default none)
+    'pattern-type': None, # png, tiff (derived from file)
+
+    #--------------- shield symbolizer
+
+    # 
+    'shield-name': None, # (use selector for this)
+
+    # 
+    'shield-face-name': None, # string
+
+    # 
+    'shield-size': None, # ?
+
+    # 
+    'shield-fill': None, # hex color?
+
+    # 
+    'shield-file': None, # url
+
+    # 
+    'shield-type': None, # png, tiff (derived from file)
+
+    # 
+    'shield-width': None, # number
+
+    # 
+    'shield-height': None # number
+}
+
 class ParseException(Exception):
     pass
 
@@ -45,9 +168,16 @@ class Selector:
 class SelectorElement:
     """ One element in selector, with names and tests.
     """
-    def __init__(self):
-        self.names = []
-        self.tests = []
+    def __init__(self, names=None, tests=None):
+        if names:
+            self.names = names
+        else:
+            self.names = []
+
+        if tests:
+            self.tests = tests
+        else:
+            self.tests = []
 
     def addName(self, name):
         self.names.append(name)
@@ -85,6 +215,9 @@ class Property:
     """ A style property.
     """
     def __init__(self, name):
+        if name not in properties:
+            raise ParseException('"%s" is not a recognized property name' % name)
+    
         self.name = name
 
     def __repr__(self):
@@ -106,7 +239,11 @@ def parse_stylesheet(s):
         
         try:
             if not in_selectors and not in_block:
-                if (nname in ('IDENT', 'HASH')) or (nname == 'CHAR' and value != '{'):
+                if nname == 'CHAR' and value == '{':
+                    # 
+                    raise ParseException('Encountered unexpected opening "{"')
+
+                elif (nname in ('IDENT', 'HASH')) or (nname == 'CHAR' and value != '{'):
                     # beginning of a 
                     rulesets.append({'selectors': [[(nname, value)]], 'declarations': []})
                     in_selectors = True
@@ -141,6 +278,10 @@ def parse_stylesheet(s):
                 elif (nname == 'CHAR' and value == '}'):
                     # end of block
                     in_block = False
+
+                elif nname not in ('S', 'COMMENT'):
+                    # something else
+                    raise ParseException('Unexpected %(nname)s while looking for a property' % locals())
     
             elif in_declaration and in_property:
                 declaration = rulesets[-1]['declarations'][-1]
@@ -159,7 +300,7 @@ def parse_stylesheet(s):
             
                 if nname == 'CHAR' and value == ';':
                     # end of declaration
-                    declaration['value'] = postprocess_value(declaration['value'])
+                    declaration['value'] = postprocess_value(declaration['value'], declaration['property'])
                     in_declaration = False
     
                 elif nname not in ('COMMENT'):
@@ -167,7 +308,7 @@ def parse_stylesheet(s):
                     declaration['value'].append((nname, value))
 
         except:
-            print >> sys.stderr, 'Exception at line %(line)d, column %(col)d' % locals()
+            #print >> sys.stderr, 'Exception at line %(line)d, column %(col)d' % locals()
             raise
 
     return rulesets
@@ -200,7 +341,6 @@ def trim_extra(tokens):
 def postprocess_selector(tokens):
     """ Convert a list of tokens into a Selector.
     """
-    print tokens
     tokens = (token for token in trim_extra(tokens))
     
     elements = []
@@ -248,7 +388,6 @@ def postprocess_selector(tokens):
             elif nname == 'S':
                 in_element = False
     
-    print elements
     selector = Selector(*elements)
     
     return selector
@@ -266,7 +405,7 @@ def postprocess_property(tokens):
     
     return Property(tokens[0][1])
 
-def postprocess_value(tokens):
+def postprocess_value(tokens, property):
     """
     """
     tokens = trim_extra(tokens)
@@ -279,13 +418,13 @@ if __name__ == '__main__':
     Layer#foo.foo[baz>quuz] bar,
     *
     {
-        color: red;
-        font-family: /* boo yah */ "Helvetica Bold";
-        font-size: 10px 10% 10em 10;
-        background: url(http://example.com);
+        polygon-fill: #ff9900;
+        text-face-name: /* boo yah */ "Helvetica Bold";
+        text-size: 10px 10% 10em 10;
+        polygon-opacity: url(http://example.com);
     }
     
-    * { this: that !important; }
+    * { text-fill: that !important; }
     """
     
     rulesets = parse_stylesheet(s)
@@ -293,5 +432,5 @@ if __name__ == '__main__':
     rules = unroll_rulesets(rulesets)
     
 
-    #pprint.PrettyPrinter(indent=2).pprint(rulesets)
-    pprint.PrettyPrinter(indent=2).pprint(rules)
+    pprint.PrettyPrinter(indent=2).pprint(rulesets)
+    #pprint.PrettyPrinter(indent=2).pprint(rules)
