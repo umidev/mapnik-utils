@@ -46,28 +46,28 @@ class ParseTests(unittest.TestCase):
 class SelectorTests(unittest.TestCase):
     
     def testSpecificity1(self):
-        self.assertEquals('0000 0001 0000', Selector(SelectorElement(['Layer'])).specificity())
+        self.assertEquals((0, 1, 0), Selector(SelectorElement(['Layer'])).specificity())
     
     def testSpecificity2(self):
-        self.assertEquals('0000 0002 0000', Selector(SelectorElement(['Layer']), SelectorElement(['name'])).specificity())
+        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer']), SelectorElement(['name'])).specificity())
     
     def testSpecificity3(self):
-        self.assertEquals('0000 0002 0000', Selector(SelectorElement(['Layer', '.class'])).specificity())
+        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer', '.class'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals('0000 0002 0000', Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
+        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals('0001 0002 0000', Selector(SelectorElement(['Layer', '#id']), SelectorElement(['name'])).specificity())
+        self.assertEquals((1, 2, 0), Selector(SelectorElement(['Layer', '#id']), SelectorElement(['name'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals('0001 0000 0000', Selector(SelectorElement(['#id'])).specificity())
+        self.assertEquals((1, 0, 0), Selector(SelectorElement(['#id'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals('0001 0000 0001', Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b')])).specificity())
+        self.assertEquals((1, 0, 1), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b')])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals('0001 0000 0002', Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
+        self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
 
 if __name__ == '__main__':
     unittest.main()

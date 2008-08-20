@@ -2,16 +2,21 @@ import re
 import sys
 import pprint
 import simplejson
-import cssutils.tokenize2
+import operator
+from binascii import unhexlify as unhex
+from cssutils.tokenize2 import Tokenizer as cssTokenizer
 
 # recognized properties
 
 class color:
-    def __init__(self, hex):
-        self.hex = hex
+    def __init__(self, r, g, b):
+        self.channels = r, g, b
 
     def __repr__(self):
-        return self.hex
+        return '#%02x%02x%02x' % self.channels
+
+    def __str__(self):
+        return repr(self)
 
 class uri:
     pass
@@ -171,7 +176,7 @@ class Selector:
         non_ids = sum((a.countNames() - a.countIDs()) for a in self.elements)
         tests = sum(len(a.tests) for a in self.elements)
         
-        return '%(ids)04d %(non_ids)04d %(tests)04d' % locals()
+        return (ids, non_ids, tests)
 
     def __repr__(self):
         return ' '.join(repr(a) for a in self.elements)
@@ -231,8 +236,30 @@ class Property:
     
         self.name = name
 
+    def group(self):
+        return self.name.split('-')[0]
+    
     def __repr__(self):
         return self.name
+
+    def __str__(self):
+        return repr(self)
+
+class Value:
+    """ A style value.
+    """
+    def __init__(self, value, important):
+        self.value = value
+        self.important = important
+
+    def importance(self):
+        return int(self.important)
+    
+    def __repr__(self):
+        return repr(self.value)
+
+    def __str__(self):
+        return repr(self)
 
 def parse_stylesheet(s):
     """ Parse a string representing a stylesheet into a list of rulesets.
@@ -243,7 +270,7 @@ def parse_stylesheet(s):
     in_property = False # implies in_declaration
     
     rulesets = []
-    tokens = cssutils.tokenize2.Tokenizer().tokenize(s)
+    tokens = cssTokenizer().tokenize(s)
     
     for token in tokens:
         nname, value, line, col = token
@@ -333,10 +360,13 @@ def unroll_rulesets(rulesets):
     for ruleset in rulesets:
         for declaration in ruleset['declarations']:
             for selector in ruleset['selectors']:
-                rules.append({'selector': selector, 'specificity': selector.specificity(), 'property': declaration['property'], 'value': declaration['value'], 'position': declaration['position']})
+                rules.append({'selector': selector,
+                              'property': declaration['property'],
+                              'value': declaration['value'],
+                              'sort key': (declaration['value'].importance(), selector.specificity(), declaration['position'])})
 
     # sort by a css-like method
-    return sorted(rules, key=lambda r: (r['selector'].specificity(), r['position'][0], r['position'][1]))
+    return sorted(rules, key=operator.itemgetter('sort key'))
 
 def trim_extra(tokens):
     """ Trim comments and whitespace from each end of a list of tokens.
@@ -421,6 +451,15 @@ def postprocess_value(tokens, property):
     """
     tokens = trim_extra(tokens)
     
+    if len(tokens) >= 2 and (tokens[-2] == ('CHAR', '!')) and (tokens[-1] == ('IDENT', 'important')):
+        important = True
+        tokens = trim_extra(tokens[:-2])
+
+    else:
+        important = False
+    
+    value = tokens
+    
     if properties[property.name] in (int, str, color) or type(properties[property.name]) is tuple:
         if len(tokens) != 1:
             raise ParseException('Single value only for property "%(property)s"' % locals())
@@ -429,33 +468,40 @@ def postprocess_value(tokens, property):
         if tokens[0][0] != 'NUMBER':
             raise ParseException('Number value only for property "%(property)s"' % locals())
 
-        return int(tokens[0][1])
+        value = int(tokens[0][1])
 
-    if properties[property.name] is str:
+    elif properties[property.name] is str:
         if tokens[0][0] != 'STRING':
             raise ParseException('String value only for property "%(property)s"' % locals())
 
-        return tokens[0][1]
+        value = tokens[0][1]
 
-    if properties[property.name] is color:
+    elif properties[property.name] is color:
         if tokens[0][0] != 'HASH':
             raise ParseException('Hash value only for property "%(property)s"' % locals())
 
         if not re.match(r'^#([0-9a-f]{3}){1,2}$', tokens[0][1], re.I):
             raise ParseException('Unrecognized color value for property "%(property)s"' % locals())
 
-        return color(tokens[0][1])
+        hex = tokens[0][1][1:]
+        
+        if len(hex) == 3:
+            hex = hex[0]+hex[0] + hex[1]+hex[1] + hex[2]+hex[2]
+        
+        rgb = (ord(unhex(h)) for h in (hex[0:2], hex[2:4], hex[4:6]))
+        
+        value = color(*rgb)
 
-    if type(properties[property.name]) is tuple:
+    elif type(properties[property.name]) is tuple:
         if tokens[0][0] != 'IDENT':
             raise ParseException('Identifier value only for property "%(property)s"' % locals())
 
         if tokens[0][1] not in properties[property.name]:
             raise ParseException('Unrecognized value for property "%(property)s"' % locals())
 
-        return tokens[0][1]
+        value = tokens[0][1]
 
-    return tokens
+    return Value(value, important)
 
 if __name__ == '__main__':
 
@@ -470,7 +516,7 @@ if __name__ == '__main__':
         line-cap: square;
     }
     
-    * { text-fill: #ff9900; }
+    * { text-fill: #ff9900 !important; }
     """
     
     rulesets = parse_stylesheet(s)
@@ -478,5 +524,5 @@ if __name__ == '__main__':
     rules = unroll_rulesets(rulesets)
     
 
-    pprint.PrettyPrinter(indent=2).pprint(rulesets)
-    #pprint.PrettyPrinter(indent=2).pprint(rules)
+    #pprint.PrettyPrinter(indent=2).pprint(rulesets)
+    pprint.PrettyPrinter(indent=2).pprint(rules)
