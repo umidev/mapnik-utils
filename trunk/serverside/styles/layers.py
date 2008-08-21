@@ -18,6 +18,23 @@ def load_layers(file):
     """
     return xml.etree.ElementTree.parse(urllib.urlopen(file))
 
+def is_gym_projection(map):
+    """ Return true if the map projection matches that used by VEarth, Google, OSM, etc.
+    """ 
+    # expected
+    gym = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null'
+    gym = dict([p.split('=') for p in gym.split() if '=' in p])
+    
+    # observed
+    srs = map.get('srs', '')
+    srs = dict([p.split('=') for p in srs.split() if '=' in p])
+    
+    for p in gym:
+        if srs.get(p, None) != gym.get(p, None):
+            return False
+
+    return True
+
 def extract_rules(map, base):
     """
     """
@@ -51,6 +68,15 @@ def insert_style(map, layer, style):
     stylename.text = style.get('name')
     stylename.tail = '\n    '
     layer.append(stylename)
+
+def add_map_style(map, declarations):
+    """
+    """
+    property_map = {'map-bgcolor': 'bgcolor'}
+    
+    for (property, value, selector) in declarations:
+        if property.name in property_map:
+            map.set(property_map[property.name], str(value))
 
 def add_polygon_style(map, layer, declarations):
     """
@@ -104,6 +130,17 @@ def add_line_style(map, layer, declarations):
         
         insert_style(map, layer, style)
 
+def get_applicable_declaration(element):
+    """
+    """
+    element_tag = element.tag
+    element_id = element.get('id', None)
+    element_classes = element.get('class', '').split()
+
+    return [(rule['property'], rule['value'], rule['selector'])
+            for rule in rules
+            if rule['selector'].matches(element_tag, element_id, element_classes)]
+
 if __name__ == '__main__':
     
     src = 'example.mml'
@@ -111,16 +148,13 @@ if __name__ == '__main__':
     map = doc.getroot()
     
     rules = extract_rules(map, src)
+    
+    add_map_style(map, get_applicable_declaration(map))
 
     layers = []
     
     for layer in map.findall('Layer'):
-        layer_id = layer.get('id', None)
-        layer_classes = layer.get('class', '').split()
-
-        declarations = [(rule['property'], rule['value'], rule['selector'])
-                        for rule in rules
-                        if rule['selector'].matches(layer_id, layer_classes)]
+        declarations = get_applicable_declaration(layer)
         
         add_polygon_style(map, layer, declarations)
         add_line_style(map, layer, declarations)
@@ -134,7 +168,10 @@ if __name__ == '__main__':
             del layer.attrib['class']
     
         if declarations:
+            layer.set('status', 'on')
             layers.append({'layer': layer, 'rules': declarations})
+        else:
+            layer.set('status', 'off')
             
     pprint.PrettyPrinter(indent=2).pprint(layers)
 

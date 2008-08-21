@@ -29,6 +29,11 @@ class uri:
         return repr(self)
 
 properties = {
+    #--------------- map
+
+    # 
+    'map-bgcolor': color,
+
     #--------------- polygon symbolizer
 
     # 
@@ -108,6 +113,23 @@ properties = {
     # "line" to label along lines instead of by point
     'text-placement': ('point', 'line'),
 
+    #--------------- point symbolizer
+
+    # path to image file
+    'point-file': uri, # none
+
+    # px (default 4)
+    'point-width': int,
+
+    # px (default 4)
+    'point-height': int,
+
+    # png tiff
+    'point-type': None, # png, tiff (derived from file)
+
+    # true/false
+    'point-allow-overlap': None, # ?
+
     #--------------- polygon pattern symbolizer
 
     # path to image file (default none)
@@ -162,7 +184,7 @@ class Selector:
         if len(elements) == 0:
             raise ParseException('At least one element must be present in selectors for Mapnik styles')
 
-        if elements[0].names[0] != 'Layer' and elements[0].names[0][0] not in ('.', '#', '*'):
+        if elements[0].names[0] not in ('Map', 'Layer') and elements[0].names[0][0] not in ('.', '#', '*'):
             raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles')
         
         if len(elements) == 2 and elements[1].countTests():
@@ -185,13 +207,17 @@ class Selector:
         
         return (ids, non_ids, tests)
 
-    def matches(self, id, classes):
+    def matches(self, tag, id, classes):
         """ Given an id and a list of classes, return True if this selector would match.
         """
         element = self.elements[0]
         unmatched_ids = [name[1:] for name in element.names if name.startswith('#')]
         unmatched_classes = [name[1:] for name in element.names if name.startswith('.')]
+        unmatched_tags = [name for name in element.names if name is not '*' and not name.startswith('#') and not name.startswith('.')]
         
+        if tag and tag in unmatched_tags:
+            unmatched_tags.remove(tag)
+
         if id and id in unmatched_ids:
             unmatched_ids.remove(id)
 
@@ -199,7 +225,7 @@ class Selector:
             if class_ in unmatched_classes:
                 unmatched_classes.remove(class_)
         
-        if unmatched_ids or unmatched_classes:
+        if unmatched_tags or unmatched_ids or unmatched_classes:
             return False
 
         else:

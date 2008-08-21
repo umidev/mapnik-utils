@@ -44,6 +44,9 @@ class ParseTests(unittest.TestCase):
     def testRulesets4(self):
         self.assertEqual(3, len(parse_stylesheet('Layer { } /* something */ Layer { } /* extra */ Layer { }')))
 
+    def testRulesets5(self):
+        self.assertEqual(1, len(parse_stylesheet('Map { }')))
+
 class SelectorTests(unittest.TestCase):
     
     def testSpecificity1(self):
@@ -56,40 +59,52 @@ class SelectorTests(unittest.TestCase):
         self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer', '.class'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
+        self.assertEquals((0, 3, 0), Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
     
-    def testSpecificity4(self):
+    def testSpecificity5(self):
         self.assertEquals((1, 2, 0), Selector(SelectorElement(['Layer', '#id']), SelectorElement(['name'])).specificity())
     
-    def testSpecificity4(self):
+    def testSpecificity6(self):
         self.assertEquals((1, 0, 0), Selector(SelectorElement(['#id'])).specificity())
     
-    def testSpecificity4(self):
+    def testSpecificity7(self):
         self.assertEquals((1, 0, 1), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b')])).specificity())
     
-    def testSpecificity4(self):
+    def testSpecificity8(self):
         self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
 
     def testMatch1(self):
-        self.assertEqual(True, Selector(SelectorElement(['Layer'])).matches('foo', []))
+        self.assertEqual(True, Selector(SelectorElement(['Layer'])).matches('Layer', 'foo', []))
 
     def testMatch2(self):
-        self.assertEqual(True, Selector(SelectorElement(['#foo'])).matches('foo', []))
+        self.assertEqual(True, Selector(SelectorElement(['#foo'])).matches('Layer', 'foo', []))
 
     def testMatch3(self):
-        self.assertEqual(False, Selector(SelectorElement(['#foo'])).matches('bar', []))
+        self.assertEqual(False, Selector(SelectorElement(['#foo'])).matches('Layer', 'bar', []))
 
     def testMatch4(self):
-        self.assertEqual(True, Selector(SelectorElement(['.bar'])).matches(None, ['bar']))
+        self.assertEqual(True, Selector(SelectorElement(['.bar'])).matches('Layer', None, ['bar']))
 
     def testMatch5(self):
-        self.assertEqual(True, Selector(SelectorElement(['.bar'])).matches(None, ['bar', 'baz']))
+        self.assertEqual(True, Selector(SelectorElement(['.bar'])).matches('Layer', None, ['bar', 'baz']))
 
     def testMatch6(self):
-        self.assertEqual(True, Selector(SelectorElement(['.bar', '.baz'])).matches(None, ['bar', 'baz']))
+        self.assertEqual(True, Selector(SelectorElement(['.bar', '.baz'])).matches('Layer', None, ['bar', 'baz']))
 
     def testMatch7(self):
-        self.assertEqual(False, Selector(SelectorElement(['.bar', '.baz'])).matches(None, ['bar']))
+        self.assertEqual(False, Selector(SelectorElement(['.bar', '.baz'])).matches('Layer', None, ['bar']))
+
+    def testMatch8(self):
+        self.assertEqual(False, Selector(SelectorElement(['Layer'])).matches('Map', None, []))
+
+    def testMatch9(self):
+        self.assertEqual(False, Selector(SelectorElement(['Map'])).matches('Layer', None, []))
+
+    def testMatch10(self):
+        self.assertEqual(True, Selector(SelectorElement(['*'])).matches('Layer', None, []))
+
+    def testMatch10(self):
+        self.assertEqual(True, Selector(SelectorElement(['*'])).matches('Map', None, []))
 
 class PropertyTests(unittest.TestCase):
 
