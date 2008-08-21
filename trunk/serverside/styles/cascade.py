@@ -19,7 +19,14 @@ class color:
         return repr(self)
 
 class uri:
-    pass
+    def __init__(self, address):
+        self.address = address
+
+    def __repr__(self):
+        return str(self.address) #'url("%(address)s")' % self.__dict__
+
+    def __str__(self):
+        return repr(self)
 
 properties = {
     #--------------- polygon symbolizer
@@ -104,7 +111,7 @@ properties = {
     #--------------- polygon pattern symbolizer
 
     # path to image file (default none)
-    'pattern-file': None, # url
+    'pattern-file': uri,
 
     # px (default 4)
     'pattern-width': int,
@@ -130,7 +137,7 @@ properties = {
     'shield-fill': color,
 
     # 
-    'shield-file': None, # url
+    'shield-file': uri,
 
     # 
     'shield-type': None, # png, tiff (derived from file)
@@ -177,6 +184,26 @@ class Selector:
         tests = sum(len(a.tests) for a in self.elements)
         
         return (ids, non_ids, tests)
+
+    def matches(self, id, classes):
+        """ Given an id and a list of classes, return True if this selector would match.
+        """
+        element = self.elements[0]
+        unmatched_ids = [name[1:] for name in element.names if name.startswith('#')]
+        unmatched_classes = [name[1:] for name in element.names if name.startswith('.')]
+        
+        if id and id in unmatched_ids:
+            unmatched_ids.remove(id)
+
+        for class_ in classes:
+            if class_ in unmatched_classes:
+                unmatched_classes.remove(class_)
+        
+        if unmatched_ids or unmatched_classes:
+            return False
+
+        else:
+            return True
 
     def __repr__(self):
         return ' '.join(repr(a) for a in self.elements)
@@ -371,6 +398,9 @@ def unroll_rulesets(rulesets):
 def trim_extra(tokens):
     """ Trim comments and whitespace from each end of a list of tokens.
     """
+    if len(tokens) == 0:
+        return tokens
+    
     while tokens[0][0] in ('S', 'COMMENT'):
         tokens = tokens[1:]
 
@@ -460,7 +490,7 @@ def postprocess_value(tokens, property):
     
     value = tokens
     
-    if properties[property.name] in (int, str, color) or type(properties[property.name]) is tuple:
+    if properties[property.name] in (int, str, color, uri) or type(properties[property.name]) is tuple:
         if len(tokens) != 1:
             raise ParseException('Single value only for property "%(property)s"' % locals())
 
@@ -492,6 +522,23 @@ def postprocess_value(tokens, property):
         
         value = color(*rgb)
 
+    elif properties[property.name] is uri:
+        if tokens[0][0] != 'URI':
+            raise ParseException('URI value only for property "%(property)s"' % locals())
+
+        raw = tokens[0][1]
+
+        if raw.startswith('url("') and raw.endswith('")'):
+            raw = raw[5:-2]
+            
+        elif raw.startswith("url('") and raw.endswith("')"):
+            raw = raw[5:-2]
+            
+        elif raw.startswith('url(') and raw.endswith(')'):
+            raw = raw[4:-1]
+
+        value = uri(raw)
+            
     elif type(properties[property.name]) is tuple:
         if tokens[0][0] != 'IDENT':
             raise ParseException('Identifier value only for property "%(property)s"' % locals())

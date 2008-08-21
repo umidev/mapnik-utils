@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Map>
-    <Stylesheet src="example.mss"/>
     <Stylesheet>
+        #foo { line-width: 2; }
+        .bar { line-width: 4; }
+        #foo.bar { line-width: 3; }
+
+        Layer
+        {
+            line-width: 1;
+            line-color: #000;
+            polygon-fill: #fff;
+        }
     </Stylesheet>
-    <Layer id="foo" class="foo bar">
+    <Layer class="bar baz" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
+        <Datasource/>
     </Layer>
-    <Layer id="bar" class="foo bar">
+    <Layer id="foo" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
+        <Datasource/>
     </Layer>
 </Map>
