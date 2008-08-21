@@ -18,7 +18,7 @@ def load_layers(file):
     """
     return xml.etree.ElementTree.parse(urllib.urlopen(file))
 
-def extract_rules(map):
+def extract_rules(map, base):
     """
     """
     rules = []
@@ -27,7 +27,7 @@ def extract_rules(map):
         map.remove(stylesheet)
     
         if 'src' in stylesheet.attrib:
-            url = urlparse.urljoin(file, stylesheet.attrib['src'])
+            url = urlparse.urljoin(base, stylesheet.attrib['src'])
             styles = urllib.urlopen(url).read()
 
         elif stylesheet.text:
@@ -41,6 +41,17 @@ def extract_rules(map):
 
     return rules
 
+def insert_style(map, layer, style):
+    """
+    """
+    style.tail = '\n    '
+    map.insert(map._children.index(layer), style)
+    
+    stylename = Element('StyleName')
+    stylename.text = style.get('name')
+    stylename.tail = '\n    '
+    layer.append(stylename)
+
 def add_polygon_style(map, layer, declarations):
     """
     """
@@ -51,27 +62,20 @@ def add_polygon_style(map, layer, declarations):
     
     for (property, value, selector) in reversed(declarations):
         if property.name in property_map and property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[property.name]})
-                parameter.text = str(value)
-                symbolizer.append(parameter)
+            parameter = Element('CssParameter', {'name': property_map[property.name]})
+            parameter.text = str(value)
+            symbolizer.append(parameter)
 
-                encountered.append(property.name)
-                has_polygon = True
+            encountered.append(property.name)
+            has_polygon = True
 
     if has_polygon:
-        style_name = 'poly style %d' % next_counter()
-    
         rule = Element('Rule')
         rule.append(symbolizer)
-        style = Element('Style', {'name': style_name})
+        style = Element('Style', {'name': 'poly style %d' % next_counter()})
         style.append(rule)
-        style.tail = '\n    '
-        map.insert(map._children.index(layer), style)
         
-        stylename = Element('StyleName')
-        stylename.text = style_name
-        stylename.tail = '\n    '
-        layer.append(stylename)
+        insert_style(map, layer, style)
 
 def add_line_style(map, layer, declarations):
     """
@@ -85,34 +89,28 @@ def add_line_style(map, layer, declarations):
     
     for (property, value, selector) in reversed(declarations):
         if property.name in property_map and property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[property.name]})
-                parameter.text = str(value)
-                symbolizer.append(parameter)
+            parameter = Element('CssParameter', {'name': property_map[property.name]})
+            parameter.text = str(value)
+            symbolizer.append(parameter)
 
-                encountered.append(property.name)
-                has_line = True
+            encountered.append(property.name)
+            has_line = True
 
     if has_line:
-        style_name = 'line style %d' % next_counter()
-    
         rule = Element('Rule')
         rule.append(symbolizer)
-        style = Element('Style', {'name': style_name})
+        style = Element('Style', {'name': 'line style %d' % next_counter()})
         style.append(rule)
-        style.tail = '\n    '
-        map.insert(map._children.index(layer), style)
         
-        stylename = Element('StyleName')
-        stylename.text = style_name
-        stylename.tail = '\n    '
-        layer.append(stylename)
+        insert_style(map, layer, style)
 
 if __name__ == '__main__':
     
-    doc = load_layers('example.mml')
+    src = 'example.mml'
+    doc = load_layers(src)
     map = doc.getroot()
     
-    rules = extract_rules(map)
+    rules = extract_rules(map, src)
 
     layers = []
     
