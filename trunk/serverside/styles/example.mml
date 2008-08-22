@@ -10,6 +10,9 @@
         <Datasource/>
     </Layer>
     <Layer id="foo" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
-        <Datasource/>
+        <Datasource>
+            <Parameter name="type">shape</Parameter>
+            <Parameter name="file">../../sample_data/world_borders.shp</Parameter>
+        </Datasource>
     </Layer>
 </Map>
