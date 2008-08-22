@@ -29,10 +29,14 @@ Limitations:
   mapnik source code.
 
 TODO:
-  Add a mode=map like mapserver that uses a default bbox and dimensions/
-  Collect a warnings list that will store notices, such as unhandled wms keys, but that
-   will not throw errors until the HTML is displayed.
-  Add support for reprojection based on EPSG key.
+  Add a mode=map like mapserver that uses a default bbox and dimensions
+  Add a bbox=layer option or if bbox absent, zoom to layers full extent
+  Add a zoom level and lat/long center point method of extents
+  Add Openlayers bbox query that will give projected bbox
+  Turn into a class, to enable use on the command line with single string argument?
+  Collect a notices list to store things such as unhandled wms keys and that will be
+   output when another error is thrown or debug html is displayed.
+  Add support for reprojection based on EPSG key, and spatialreference.org url
   
   
 """
