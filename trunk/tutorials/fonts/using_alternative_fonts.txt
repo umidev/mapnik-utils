@@ -1,0 +1,34 @@
+# To register new fonts to use with the Mapnik TextSymbolizer
+# you must first register the full path to the directory that holds
+# the TrueType fonts (with .ttf extension) and then use the full
+# font face name (not the font file name) in the Text Symbolizer code
+
+# First in your python script, register your new fonts directory
+
+from mapnik import *
+
+# register path to new true type fonts...
+from glob import glob
+NEW_FONTS_DIR = '/usr/share/fonts/truetype/ttf-devanagari-fonts/'
+fonts = glob('%s/*.ttf' % NEW_FONTS_DIR)
+if len( fonts ) == 0:
+    print "### WARNING: No ttf files found in '%s'." % NEW_FONTS_DIR
+else:
+    map(FontEngine.instance().register_font, fonts)
+
+
+
+# Then if you are writing your styles in python do:
+lyr = Layer('My Postgis Layer')
+lyr.datasource = PostGIS(host='', dbname='postgis_enable_db_name', user='postgres', password='', table='postgis_table_name')
+sty = Style()
+rul = Rule()
+rul.symbols.append(TextSymbolizer('mr','gargi Medium',10,Color('white')))
+
+# Or if you are loading an XML mapfile your Style would look like
+
+   <Style name="My Style">
+     <Rule>
+      <TextSymbolizer name="FIELD_NAME" face_name="gargi Medium" size="12" fill="white" halo_fill= "#2E2F39" halo_radius="1" wrap_width="20" spacing="5" allow_overlap="false" avoid_edges="true" min_distance="10"/>
+     </Rule>
+    </Style>
