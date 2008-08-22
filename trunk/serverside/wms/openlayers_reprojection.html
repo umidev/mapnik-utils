@@ -14,25 +14,27 @@
    </style>
     <script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
     <script type="text/javascript">
-        var map, world, wms;
+        var map, world, wms,antarctic_extent;
         function init(){
             var options = {
                 projection: new OpenLayers.Projection("EPSG:3031"),
-                displayProjection: new OpenLayers.Projection("EPSG:4326"),
+                //projection: new OpenLayers.Projection("EPSG:4326"),
                 maxResolution: 'auto',
-		        maxExtent: new OpenLayers.Bounds(4023365.718067833,-1200977.363737322,4362774.330820214,1594402.6525586937)
-		                    };
+		            maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+		        };
             map = new OpenLayers.Map('map', options);
-            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikwms.py?", {layers: 'world', format:'image/png'});
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/wms/mapnikwms.py?", {layers: 'world', format:'image/png'} );
             map.addLayers([wms]);
-            map.fractionalZoom = true;
+            //map.fractionalZoom = true;
             map.addControl(new OpenLayers.Control.MousePosition());
-            map.zoomToMaxExtent();     
+            //map.zoomToMaxExtent();
+            var antarctic_extent = new OpenLayers.Bounds(-3721203.143138902,-951869.332207036, 3560164.0478620003,1844986.6977515414)
+            map.zoomToExtent(antarctic_extent);     
         }                
     </script>
   </head>
   <body onload="init()">
-      <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik WMS Reprojection Test</h2>
+      <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik WMS Reprojection Test (<a href="http://spatialreference.org/ref/epsg/3031/">WGS 84 / Antarctic Polar Stereographic</a></a>)</h2>
     <div id="map">
     </div>
   </body>
