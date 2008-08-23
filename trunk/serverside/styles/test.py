@@ -73,6 +73,9 @@ class SelectorTests(unittest.TestCase):
     def testSpecificity8(self):
         self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
 
+    def testSpecificity9(self):
+        self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 100), SelectorAttributeTest('a', '<', 'b')])).specificity())
+
     def testMatch1(self):
         self.assertEqual(True, Selector(SelectorElement(['Layer'])).matches('Layer', 'foo', []))
 
@@ -105,6 +108,41 @@ class SelectorTests(unittest.TestCase):
 
     def testMatch10(self):
         self.assertEqual(True, Selector(SelectorElement(['*'])).matches('Map', None, []))
+
+    def testRange1(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>', 100)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.inRange(99))
+        self.assertEqual(False, selector.inRange(100))
+        self.assertEqual(True, selector.inRange(1000))
+
+    def testRange2(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>=', 100)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.inRange(99))
+        self.assertEqual(True, selector.inRange(100))
+        self.assertEqual(True, selector.inRange(1000))
+
+    def testRange3(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<', 100)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.inRange(99))
+        self.assertEqual(False, selector.inRange(100))
+        self.assertEqual(False, selector.inRange(1000))
+
+    def testRange4(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<=', 100)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.inRange(99))
+        self.assertEqual(True, selector.inRange(100))
+        self.assertEqual(False, selector.inRange(1000))
+
+    def testRange5(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('nonsense', '<=', 100)]))
+        self.assertEqual(False, selector.isRanged())
+        self.assertEqual(True, selector.inRange(99))
+        self.assertEqual(True, selector.inRange(100))
+        self.assertEqual(True, selector.inRange(1000))
 
 class PropertyTests(unittest.TestCase):
 

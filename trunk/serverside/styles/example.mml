@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Map srs="+proj=latlong +datum=WGS84">
     <Stylesheet src="example.mss"/>
-    <Stylesheet>
+    <Stylesheet><![CDATA[
         *
         {
             line-width: 1;
             line-color: #999;
             polygon-fill: #fff;
+        }
+
+        *[scale-denominator>10000][scale-denominator><20000]
+        {
+            line-color: #f90;
+        }
+        
+        *[scale-denominator>20000][scale-denominator<=40000]
+        {
+            line-color: #f00;
         }
         
         #world-borders CNTRY_NAME
@@ -24,7 +34,7 @@
             text-fill: #000;
             text-placement: point;
         }
-    </Stylesheet>
+    ]]></Stylesheet>
     <Layer id="world-borders" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
         <Datasource>
             <Parameter name="type">shape</Parameter>

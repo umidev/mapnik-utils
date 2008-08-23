@@ -243,6 +243,24 @@ class Selector:
 
         else:
             return True
+    
+    def isRanged(self):
+        """
+        """
+        for test in self.elements[0].tests:
+            if test.isRanged():
+                return True
+
+        return False
+    
+    def inRange(self, value):
+        """
+        """
+        for test in self.elements[0].tests:
+            if not test.inRange(value):
+                return False
+
+        return True
 
     def __repr__(self):
         return ' '.join(repr(a) for a in self.elements)
@@ -292,6 +310,32 @@ class SelectorAttributeTest:
 
     def __repr__(self):
         return '[%(arg1)s%(op)s%(arg2)s]' % self.__dict__
+
+    def isRanged(self):
+        """
+        """
+        return self.arg1 == 'scale-denominator'
+    
+    def inRange(self, scale_denominator):
+        """
+        """
+        if not self.isRanged():
+            # always in range
+            return True
+
+        elif self.op == '>' and scale_denominator > self.arg2:
+            return True
+
+        elif self.op == '>=' and scale_denominator >= self.arg2:
+            return True
+
+        elif self.op == '<=' and scale_denominator <= self.arg2:
+            return True
+
+        elif self.op == '<' and scale_denominator < self.arg2:
+            return True
+
+        return False
 
 class Property:
     """ A style property.
@@ -485,11 +529,14 @@ def postprocess_selector(tokens):
                 in_element = False
                 
         elif in_attribute:
-            if nname == 'IDENT':
+            if nname in ('IDENT', 'NUMBER'):
                 parts.append(value)
                 
             elif nname == 'CHAR' and value in ('<', '=', '>'):
-                parts.append(value)
+                if value is '=' and parts[-1] in ('<', '>'):
+                    parts[-1] += value
+                else:
+                    parts.append(value)
 
             elif nname == 'CHAR' and value == ']':
                 elements[-1].addTest(SelectorAttributeTest(*parts[-3:]))
