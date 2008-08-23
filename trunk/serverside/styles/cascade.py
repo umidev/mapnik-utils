@@ -28,6 +28,19 @@ class uri:
     def __str__(self):
         return repr(self)
 
+class boolean:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        if self.value:
+            return 'true'
+        else:
+            return 'false'
+
+    def __str__(self):
+        return repr(self)
+
 properties = {
     #--------------- map
 
@@ -312,7 +325,7 @@ class Value:
         return repr(self.value)
 
     def __str__(self):
-        return repr(self)
+        return str(self.value)
 
 def parse_stylesheet(s):
     """ Parse a string representing a stylesheet into a list of rulesets.
@@ -530,7 +543,7 @@ def postprocess_value(tokens, property):
         if tokens[0][0] != 'STRING':
             raise ParseException('String value only for property "%(property)s"' % locals())
 
-        value = tokens[0][1]
+        value = tokens[0][1][1:-1]
 
     elif properties[property.name] is color:
         if tokens[0][0] != 'HASH':

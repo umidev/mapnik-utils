@@ -130,6 +130,47 @@ def add_line_style(map, layer, declarations):
         
         insert_style(map, layer, style)
 
+def add_text_style(map, layer, declarations):
+    """
+    """
+    has_text = False
+    symbolizer = Element('TextSymbolizer')
+    property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
+                    'text-ratio': 'text_ratio', 'text-wrap-width': 'wrap_width', 'text-spacing': 'spacing',
+                    'text-label-position-tolerance': 'label_position_tolerance',
+                    'text-max-char-angle-delta': 'max_char_angle_delta', 'text-fill': 'fill',
+                    'text-halo-fill': 'halo_fill', 'text-halo-radius': 'halo_radius',
+                    'text-dx': 'dx', 'text-dy': 'dy',
+                    'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance',
+                    'text-allow-overlap': 'allow_overlap', 'text-placement': 'placement'}
+
+    text_names = {}
+    
+    for (property, value, selector) in declarations:
+        if len(selector.elements) is 2 and len(selector.elements[1].names) is 1:
+            text_name = selector.elements[1].names[0]
+
+            if not text_names.has_key(text_name):
+                text_names[text_name] = {}
+
+            if property.name in property_map:
+                text_names[text_name][property.name] = value
+                has_text = True
+
+    if has_text:
+        for text_name in text_names:
+            symbolizer = Element('TextSymbolizer', {'name': text_name})
+        
+            for property_name in text_names[text_name]:
+                symbolizer.set(property_map[property_name], str(text_names[text_name][property_name]))
+
+            rule = Element('Rule')
+            rule.append(symbolizer)
+            style = Element('Style', {'name': 'text style %d' % next_counter()})
+            style.append(rule)
+
+            insert_style(map, layer, style)
+
 def get_applicable_declaration(element):
     """
     """
@@ -158,6 +199,7 @@ if __name__ == '__main__':
         
         add_polygon_style(map, layer, declarations)
         add_line_style(map, layer, declarations)
+        add_text_style(map, layer, declarations)
         
         layer.set('name', 'layer %d' % next_counter())
         
@@ -173,7 +215,6 @@ if __name__ == '__main__':
         else:
             layer.set('status', 'off')
             
-    pprint.PrettyPrinter(indent=2).pprint(layers)
+    #pprint.PrettyPrinter(indent=2).pprint(layers)
 
     doc.write(sys.stdout)
-    print ''

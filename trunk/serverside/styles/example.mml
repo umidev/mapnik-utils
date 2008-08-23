@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs -tl -r">
+<Map srs="+proj=latlong +datum=WGS84">
     <Stylesheet src="example.mss"/>
     <Stylesheet>
-        Layer#foo { line-width: 2; }
-        Layer.bar { line-width: 4; }
-        Layer#foo.bar { line-width: 3; }
+        *
+        {
+            line-width: 1;
+            line-color: #999;
+            polygon-fill: #fff;
+        }
+        
+        #world-borders CNTRY_NAME
+        {
+            text-face-name: "DejaVu Sans Book";
+            text-size: 10;
+            text-fill: #000;
+            text-placement: point;
+        }
+
+        * FIPS_CNTRY
+        {
+            text-face-name: "DejaVu Sans Book";
+            text-size: 10;
+            text-fill: #000;
+            text-placement: point;
+        }
     </Stylesheet>
-    <Layer class="bar baz" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
-        <Datasource/>
-    </Layer>
-    <Layer id="foo" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
+    <Layer id="world-borders" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
         <Datasource>
             <Parameter name="type">shape</Parameter>
-            <Parameter name="file">../../sample_data/world_borders.shp</Parameter>
+            <Parameter name="file">../../sample_data/world_borders</Parameter>
         </Datasource>
     </Layer>
 </Map>
