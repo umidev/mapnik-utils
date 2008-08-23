@@ -9,12 +9,12 @@
             polygon-fill: #fff;
         }
 
-        *[scale-denominator>10000][scale-denominator><20000]
+        *[scale-denominator>10000][scale-denominator<20000]
         {
             line-color: #f90;
         }
         
-        *[scale-denominator>20000][scale-denominator<=40000]
+        *[scale-denominator>15000][scale-denominator<=40000]
         {
             line-color: #f00;
         }

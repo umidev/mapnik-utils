@@ -2,12 +2,142 @@ import sys
 import pprint
 import urllib
 import urlparse
+from operator import lt, le, eq, ge, gt
 import StringIO
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element
 import cascade
 
 counter = 0
+
+opsort = {lt: 1, le: 2, eq: 3, ge: 4, gt: 5}
+opstr = {lt: '<', le: '<=', eq: '==', ge: '>=', gt: '>'}
+    
+class Range:
+    """ Represents a range for use in min/max scale denominator. Ranges can have
+        a left side, a right side, or both, with sides specified as inclusive
+        or exclusive.
+    """
+    def __init__(self, leftop=None, leftarg=None, rightop=None, rightarg=None):
+        self.leftop = leftop
+        self.leftarg = leftarg
+        self.rightop = rightop
+        self.rightarg = rightarg
+
+    def midpoint(self):
+        """ Return a point guranteed to fall within this range, hopefully near the middle.
+        """
+        minpoint = self.leftarg
+
+        if self.leftop is gt:
+            minpoint += 1
+    
+        maxpoint = self.rightarg
+
+        if self.rightop is lt:
+            maxpoint -= 1
+
+        if minpoint is None:
+            return maxpoint
+            
+        elif maxpoint is None:
+            return minpoint
+            
+        else:
+            return (minpoint + maxpoint) / 2
+    
+    def __repr__(self):
+        """
+        """
+        if self.leftarg == self.rightarg and self.leftop is ge and self.rightop is le:
+            # equivalent to ==
+            return '(=%s)' % self.leftarg
+    
+        try:
+            return '(%s%s ... %s%s)' % (self.leftarg, opstr[self.leftop], opstr[self.rightop], self.rightarg)
+        except KeyError:
+            try:
+                return '(... %s%s)' % (opstr[self.rightop], self.rightarg)
+            except KeyError:
+                return '(%s%s ...)' % (self.leftarg, opstr[self.leftop])
+
+def selectors_ranges(selectors):
+    """
+    """
+    # pprint.PrettyPrinter().pprint(selectors)
+    
+    repeated_breaks = []
+    
+    # start by getting all the range edges from the selectors into a list of break points
+    for selector in selectors:
+        for test in selector.rangeTests():
+            repeated_breaks.append(test.rangeOpEdge())
+
+    repeated_breaks.sort(key=lambda (o, e): (e, opsort[o]))
+    
+    # print repeated_breaks
+    
+    breaks = []
+
+    # next remove repetitions from the list
+    for (i, (op, edge)) in enumerate(repeated_breaks):
+        if i > 0:
+            if op is repeated_breaks[i - 1][0] and edge == repeated_breaks[i - 1][1]:
+                continue
+
+        breaks.append(repeated_breaks[i])
+
+    # print breaks
+    
+    ranges = []
+    
+    # now turn those breakpoints into a list of ranges
+    for (i, (op, edge)) in enumerate(breaks):
+        if i == 0:
+            # get a right-boundary for the first range
+            if op in (lt, le):
+                ranges.append(Range(None, None, op, edge))
+            elif op in (eq, ge):
+                ranges.append(Range(None, None, lt, edge))
+            elif op is gt:
+                ranges.append(Range(None, None, le, edge))
+
+        else:
+            # get a left-boundary based on the previous right-boundary
+            if ranges[-1].rightop is lt:
+                ranges.append(Range(ge, ranges[-1].rightarg))
+            else:
+                ranges.append(Range(gt, ranges[-1].rightarg))
+
+            # get a right-boundary for the current range
+            if op in (lt, le):
+                ranges[-1].rightop, ranges[-1].rightarg = op, edge
+            elif op in (eq, ge):
+                ranges[-1].rightop, ranges[-1].rightarg = lt, edge
+            elif op is gt:
+                ranges[-1].rightop, ranges[-1].rightarg = le, edge
+
+            # equals is a special case
+            if op is eq:
+                if ranges[-1].leftarg == edge:
+                    ranges.pop()
+            
+                ranges.append(Range(ge, edge, le, edge))
+            
+        if i == len(breaks) - 1:
+            # get a left-boundary for the last range
+            if op is lt:
+                ranges.append(Range(ge, edge))
+            else:
+                ranges.append(Range(gt, edge))
+
+    # print ranges
+    
+    if ranges:
+        return ranges
+
+    else:
+        return [Range()]
 
 def next_counter():
     global counter
@@ -55,6 +185,33 @@ def extract_rules(map, base):
 
     return rules
 
+def make_ranged_rule_element(range):
+    """
+    """
+    rule = Element('Rule')
+    
+    if range.leftarg:
+        minscale = Element('MinScaleDenominator')
+        rule.append(minscale)
+    
+        if range.leftop is ge:
+            minscale.text = str(range.leftarg)
+        elif range.leftop is gt:
+            minscale.text = str(range.leftarg + 1)
+    
+    if range.rightarg:
+        maxscale = Element('MaxScaleDenominator')
+        rule.append(maxscale)
+    
+        if range.rightop is le:
+            maxscale.text = str(range.rightarg)
+        elif range.rightop is lt:
+            maxscale.text = str(range.rightarg - 1)
+    
+    rule.tail = '\n        '
+    
+    return rule
+
 def insert_layer_style(map, layer, style):
     """ Given a Map element, a Layer element, and a Style element, insert the
         Style element into the flow and point to it from the Layer element.
@@ -82,26 +239,40 @@ def add_polygon_style(map, layer, declarations):
         consisting of (property, value, selector) tuples, create a new Style element
         with a PolygonSymbolizer, add it to Map and refer to it in Layer.
     """
-    has_polygon = False
-    symbolizer = Element('PolygonSymbolizer')
     property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
-    encountered = []
     
-    # collect all the applicable declarations into a symbolizer element
-    for (property, value, selector) in reversed(declarations):
-        if property.name in property_map and property.name not in encountered:
-            parameter = Element('CssParameter', {'name': property_map[property.name]})
-            parameter.text = str(value)
-            symbolizer.append(parameter)
+    # just the ones we care about here
+    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
 
-            encountered.append(property.name)
-            has_polygon = True
+    rules = []
+    ranges = selectors_ranges([s for (p, v, s) in declarations])
+    
+    for range in ranges:
+        has_poly = False
+        symbolizer = Element('PolygonSymbolizer')
+        encountered = []
+        
+        # collect all the applicable declarations into a symbolizer element
+        for (property, value, selector) in reversed(declarations):
+            if selector.inRange(range.midpoint()) and property.name not in encountered:
+                parameter = Element('CssParameter', {'name': property_map[property.name]})
+                parameter.text = str(value)
+                symbolizer.append(parameter)
+    
+                encountered.append(property.name)
+                has_poly = True
+    
+        if has_poly:
+            rule = make_ranged_rule_element(range)
+            rule.append(symbolizer)
+            rules.append(rule)
 
-    if has_polygon:
-        rule = Element('Rule')
-        rule.append(symbolizer)
+    if rules:
         style = Element('Style', {'name': 'poly style %d' % next_counter()})
-        style.append(rule)
+        style.text = '\n        '
+        
+        for rule in rules:
+            style.append(rule)
         
         insert_layer_style(map, layer, style)
 
@@ -110,28 +281,42 @@ def add_line_style(map, layer, declarations):
         consisting of (property, value, selector) tuples, create a new Style element
         with a LineSymbolizer, add it to Map and refer to it in Layer.
     """
-    has_line = False
-    symbolizer = Element('LineSymbolizer')
     property_map = {'line-color': 'stroke', 'line-width': 'stroke-width',
                     'line-opacity': 'stroke-opacity', 'line-join': 'stroke-linejoin',
                     'line-cap': 'stroke-linecap', 'line-dasharray': 'stroke-dasharray'}
-    encountered = []
     
-    # collect all the applicable declarations into a symbolizer element
-    for (property, value, selector) in reversed(declarations):
-        if property.name in property_map and property.name not in encountered:
-            parameter = Element('CssParameter', {'name': property_map[property.name]})
-            parameter.text = str(value)
-            symbolizer.append(parameter)
+    # just the ones we care about here
+    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
 
-            encountered.append(property.name)
-            has_line = True
+    rules = []
+    ranges = selectors_ranges([s for (p, v, s) in declarations])
+    
+    for range in ranges:
+        has_line = False
+        symbolizer = Element('LineSymbolizer')
+        encountered = []
+        
+        # collect all the applicable declarations into a symbolizer element
+        for (property, value, selector) in reversed(declarations):
+            if selector.inRange(range.midpoint()) and property.name not in encountered:
+                parameter = Element('CssParameter', {'name': property_map[property.name]})
+                parameter.text = str(value)
+                symbolizer.append(parameter)
+    
+                encountered.append(property.name)
+                has_line = True
+    
+        if has_line:
+            rule = make_ranged_rule_element(range)
+            rule.append(symbolizer)
+            rules.append(rule)
 
-    if has_line:
-        rule = Element('Rule')
-        rule.append(symbolizer)
+    if rules:
         style = Element('Style', {'name': 'line style %d' % next_counter()})
-        style.append(rule)
+        style.text = '\n        '
+        
+        for rule in rules:
+            style.append(rule)
         
         insert_layer_style(map, layer, style)
 
@@ -141,7 +326,6 @@ def add_text_styles(map, layer, declarations):
         with a TextSymbolizer, add them to Map and refer to them in Layer.
     """
     has_text = False
-    symbolizer = Element('TextSymbolizer')
     property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
                     'text-ratio': 'text_ratio', 'text-wrap-width': 'wrap_width', 'text-spacing': 'spacing',
                     'text-label-position-tolerance': 'label_position_tolerance',
@@ -153,6 +337,8 @@ def add_text_styles(map, layer, declarations):
 
     text_names = {}
     
+    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
+    
     # first, break up the text declarations among different names (see <TextSymbolizer name=""/>)
     for (property, value, selector) in declarations:
         if len(selector.elements) is 2 and len(selector.elements[1].names) is 1:
@@ -161,9 +347,8 @@ def add_text_styles(map, layer, declarations):
             if not text_names.has_key(text_name):
                 text_names[text_name] = {}
 
-            if property.name in property_map:
-                text_names[text_name][property.name] = value
-                has_text = True
+            text_names[text_name][property.name] = value
+            has_text = True
 
     # make as many styles as are necessary
     if has_text:
@@ -206,6 +391,8 @@ def compile_stylesheet(src):
     
     for layer in map.findall('Layer'):
         declarations = get_applicable_declaration(layer, rules)
+        
+        #pprint.PrettyPrinter().pprint(declarations)
         
         add_polygon_style(map, layer, declarations)
         add_line_style(map, layer, declarations)

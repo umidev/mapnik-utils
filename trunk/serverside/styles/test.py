@@ -18,10 +18,28 @@ class ParseTests(unittest.TestCase):
         self.assertRaises(ParseException, parse_stylesheet, 'Layer foo[this=that] { }')
 
     def testBadSelector5(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer foo#bar { }')
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[this>that] foo { }')
 
     def testBadSelector6(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer foo#bar { }')
+
+    def testBadSelector7(self):
         self.assertRaises(ParseException, parse_stylesheet, 'Layer foo.bar { }')
+
+    def testBadSelectorTest1(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo>] { }')
+
+    def testBadSelectorTest2(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo><bar] { }')
+
+    def testBadSelectorTest3(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo<<bar] { }')
+
+    def testBadSelectorTest4(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[<bar] { }')
+
+    def testBadSelectorTest5(self):
+        self.assertRaises(ParseException, parse_stylesheet, 'Layer[<<bar] { }')
 
     def testBadProperty1(self):
         self.assertRaises(ParseException, parse_stylesheet, 'Layer { unknown-property: none; }')
@@ -143,6 +161,27 @@ class SelectorTests(unittest.TestCase):
         self.assertEqual(True, selector.inRange(99))
         self.assertEqual(True, selector.inRange(100))
         self.assertEqual(True, selector.inRange(1000))
+
+    def testRange6(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>=', 100), SelectorAttributeTest('scale-denominator', '<', 1000)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.inRange(99))
+        self.assertEqual(True, selector.inRange(100))
+        self.assertEqual(False, selector.inRange(1000))
+
+    def testRange7(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>', 100), SelectorAttributeTest('scale-denominator', '<=', 1000)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.inRange(99))
+        self.assertEqual(False, selector.inRange(100))
+        self.assertEqual(True, selector.inRange(1000))
+
+    def testRange8(self):
+        selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<=', 100), SelectorAttributeTest('scale-denominator', '>=', 1000)]))
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.inRange(99))
+        self.assertEqual(False, selector.inRange(100))
+        self.assertEqual(False, selector.inRange(1000))
 
 class PropertyTests(unittest.TestCase):
 

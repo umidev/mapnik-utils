@@ -247,16 +247,23 @@ class Selector:
     def isRanged(self):
         """
         """
+        return bool(self.rangeTests())
+    
+    def rangeTests(self):
+        """
+        """
+        tests = []
+        
         for test in self.elements[0].tests:
             if test.isRanged():
-                return True
+                tests.append(test)
 
-        return False
+        return tests
     
     def inRange(self, value):
         """
         """
-        for test in self.elements[0].tests:
+        for test in self.rangeTests():
             if not test.inRange(value):
                 return False
 
@@ -329,6 +336,9 @@ class SelectorAttributeTest:
         elif self.op == '>=' and scale_denominator >= self.arg2:
             return True
 
+        elif self.op == '=' and scale_denominator == self.arg2:
+            return True
+
         elif self.op == '<=' and scale_denominator <= self.arg2:
             return True
 
@@ -336,6 +346,13 @@ class SelectorAttributeTest:
             return True
 
         return False
+
+    def rangeOpEdge(self):
+        if self.isRanged():
+            ops = {'<': operator.lt, '<=': operator.le, '=': operator.eq, '>=': operator.ge, '>': operator.gt}
+            return ops[self.op], self.arg2
+
+        return None
 
 class Property:
     """ A style property.
@@ -455,8 +472,8 @@ def parse_stylesheet(s):
                     # in a declaration value
                     declaration['value'].append((nname, value))
 
-        except:
-            #print >> sys.stderr, 'Exception at line %(line)d, column %(col)d' % locals()
+        except ParseException, e:
+            #raise ParseException(e.message + ' (line %(line)d, column %(col)d)' % locals())
             raise
 
     return rulesets
@@ -536,10 +553,30 @@ def postprocess_selector(tokens):
                 if value is '=' and parts[-1] in ('<', '>'):
                     parts[-1] += value
                 else:
+                    if len(parts) != 1:
+                        raise ParseException('Comparison operator must be in the middle of selector attribute')
+                
                     parts.append(value)
 
             elif nname == 'CHAR' and value == ']':
-                elements[-1].addTest(SelectorAttributeTest(*parts[-3:]))
+                if len(parts) != 3:
+                    raise ParseException('Incorrect number of items in selector attribute')
+
+                args = parts[-3:]
+                parts = []
+
+                try:
+                    args[2] = int(args[2])
+                except ValueError:
+                    try:
+                        args[2] = float(args[2])
+                    except ValueError:
+                        if args[1] in ('<', '<=', '=>', '>'):
+                            raise ParseException('Selector attribute must use a number for comparison tests')
+                        else:
+                            pass
+                
+                elements[-1].addTest(SelectorAttributeTest(*args))
                 in_attribute = False
 
             elif nname == 'S':
@@ -651,7 +688,7 @@ def postprocess_value(tokens, property):
 if __name__ == '__main__':
 
     s = """
-    Layer#foo.foo[baz>quuz] bar,
+    Layer#foo.foo[baz>10] bar,
     *
     {
         polygon-fill: #f90;
