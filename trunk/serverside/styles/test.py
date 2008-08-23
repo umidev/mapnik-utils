@@ -1,7 +1,7 @@
 import unittest
 from cascade import ParseException, parse_stylesheet
 from cascade import Selector, SelectorElement, SelectorAttributeTest
-from cascade import postprocess_property, postprocess_value
+from cascade import postprocess_property, postprocess_value, Property
 
 class ParseTests(unittest.TestCase):
     
@@ -122,6 +122,65 @@ class PropertyTests(unittest.TestCase):
 
     def testProperty5(self):
         self.assertEquals('shield', postprocess_property([('S', ' '), ('IDENT', 'shield-fill'), ('COMMENT', 'ignored comment')]).group())
+
+class ValueTests(unittest.TestCase):
+
+    def testBadValue1(self):
+        self.assertRaises(ParseException, postprocess_value, [], Property('polygon-opacity'))
+
+    def testBadValue2(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'too'), ('IDENT', 'many')], Property('polygon-opacity'))
+
+    def testBadValue3(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'non-number')], Property('polygon-opacity'))
+
+    def testBadValue4(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'non-string')], Property('text-face-name'))
+
+    def testBadValue5(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'non-hash')], Property('polygon-fill'))
+
+    def testBadValue6(self):
+        self.assertRaises(ParseException, postprocess_value, [('HASH', '#badcolor')], Property('polygon-fill'))
+
+    def testBadValue7(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'non-URI')], Property('point-file'))
+
+    def testBadValue8(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'bad-boolean')], Property('text-avoid-edges'))
+
+    def testBadValue9(self):
+        self.assertRaises(ParseException, postprocess_value, [('STRING', 'not an IDENT')], Property('line-join'))
+
+    def testBadValue10(self):
+        self.assertRaises(ParseException, postprocess_value, [('IDENT', 'not-in-tuple')], Property('line-join'))
+
+    def testValue1(self):
+        self.assertEqual(1.0, postprocess_value([('NUMBER', 1.0)], Property('polygon-opacity')).value)
+
+    def testValue2(self):
+        self.assertEqual(10, postprocess_value([('NUMBER', 10)], Property('line-width')).value)
+
+    def testValue3(self):
+        self.assertEqual('DejaVu', str(postprocess_value([('STRING', '"DejaVu"')], Property('text-face-name'))))
+
+    def testValue4(self):
+        self.assertEqual('#ff9900', str(postprocess_value([('HASH', '#ff9900')], Property('map-bgcolor'))))
+
+    def testValue5(self):
+        self.assertEqual('#ff9900', str(postprocess_value([('HASH', '#f90')], Property('map-bgcolor'))))
+
+    def testValue6(self):
+        self.assertEqual('http://example.com', str(postprocess_value([('URI', 'url("http://example.com")')], Property('point-file'))))
+
+    def testValue7(self):
+        self.assertEqual('true', str(postprocess_value([('IDENT', 'true')], Property('text-avoid-edges'))))
+
+    def testValue8(self):
+        self.assertEqual('false', str(postprocess_value([('IDENT', 'false')], Property('text-avoid-edges'))))
+
+    def testValue9(self):
+        self.assertEqual('bevel', str(postprocess_value([('IDENT', 'bevel')], Property('line-join'))))
 
 if __name__ == '__main__':
     unittest.main()

@@ -53,7 +53,7 @@ properties = {
     'polygon-fill': color,
 
     # 
-    'polygon-opacity': int,
+    'polygon-opacity': float,
 
     #--------------- line symbolizer
 
@@ -64,7 +64,7 @@ properties = {
     'line-width': int,
 
     # 0.0 - 1.0 (default 1.0)
-    'line-opacity': int,
+    'line-opacity': float,
 
     # miter, round, bevel (default miter)
     'line-join': ('miter', 'round', 'bevel'),
@@ -115,13 +115,13 @@ properties = {
     'text-dy': int,
 
     # Boolean to avoid labeling near intersection edges.
-    'text-avoid-edges': None, # ?
+    'text-avoid-edges': boolean,
 
     # Minimum distance between repeated labels such as street names or shield symbols
     'text-min-distance': int,
 
     # Allow labels to overlap other labels
-    'text-allow-overlap': None, # ...
+    'text-allow-overlap': boolean,
 
     # "line" to label along lines instead of by point
     'text-placement': ('point', 'line'),
@@ -529,7 +529,7 @@ def postprocess_value(tokens, property):
     
     value = tokens
     
-    if properties[property.name] in (int, str, color, uri) or type(properties[property.name]) is tuple:
+    if properties[property.name] in (int, float, str, color, uri, boolean) or type(properties[property.name]) is tuple:
         if len(tokens) != 1:
             raise ParseException('Single value only for property "%(property)s"' % locals())
 
@@ -538,6 +538,12 @@ def postprocess_value(tokens, property):
             raise ParseException('Number value only for property "%(property)s"' % locals())
 
         value = int(tokens[0][1])
+
+    elif properties[property.name] is float:
+        if tokens[0][0] != 'NUMBER':
+            raise ParseException('Number value only for property "%(property)s"' % locals())
+
+        value = float(tokens[0][1])
 
     elif properties[property.name] is str:
         if tokens[0][0] != 'STRING':
@@ -578,6 +584,12 @@ def postprocess_value(tokens, property):
 
         value = uri(raw)
             
+    elif properties[property.name] is boolean:
+        if tokens[0][0] != 'IDENT' or tokens[0][1] not in ('true', 'false'):
+            raise ParseException('true/false value only for property "%(property)s"' % locals())
+
+        value = boolean(tokens[0][1] == 'true')
+            
     elif type(properties[property.name]) is tuple:
         if tokens[0][0] != 'IDENT':
             raise ParseException('Identifier value only for property "%(property)s"' % locals())
@@ -600,6 +612,7 @@ if __name__ == '__main__':
         text-size: 10;
         pattern-file: url('http://example.com');
         line-cap: square;
+        text-allow-overlap: false;
     }
     
     * { text-fill: #ff9900 !important; }

@@ -2,6 +2,7 @@ import sys
 import pprint
 import urllib
 import urlparse
+import StringIO
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element
 import cascade
@@ -12,11 +13,6 @@ def next_counter():
     global counter
     counter += 1
     return counter
-
-def load_layers(file):
-    """
-    """
-    return xml.etree.ElementTree.parse(urllib.urlopen(file))
 
 def is_gym_projection(map):
     """ Return true if the map projection matches that used by VEarth, Google, OSM, etc.
@@ -196,10 +192,10 @@ def get_applicable_declaration(element, rules):
             for rule in rules
             if rule['selector'].matches(element_tag, element_id, element_classes)]
 
-if __name__ == '__main__':
-    
-    src = 'example.mml'
-    doc = load_layers(src)
+def compile_stylesheet(src):
+    """
+    """
+    doc = xml.etree.ElementTree.parse(urllib.urlopen(src))
     map = doc.getroot()
     
     rules = extract_rules(map, src)
@@ -228,7 +224,12 @@ if __name__ == '__main__':
             layers.append({'layer': layer, 'rules': declarations})
         else:
             layer.set('status', 'off')
-            
-    #pprint.PrettyPrinter(indent=2).pprint(layers)
 
-    doc.write(sys.stdout)
+    out = StringIO.StringIO()
+    doc.write(out)
+    
+    return out.getvalue()
+
+if __name__ == '__main__':
+
+    print compile_stylesheet('example.mml')
