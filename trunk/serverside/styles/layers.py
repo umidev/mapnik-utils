@@ -155,9 +155,7 @@ def selectors_ranges(selectors):
             else:
                 ranges.append(Range(gt, edge))
 
-    print ranges
     ranges = [range for range in ranges if range.isOpen()]
-    print ranges
     
     # print breaks
     # print ranges
