@@ -26,8 +26,8 @@
             text-fill: #000;
             text-placement: point;
             
-            point-file: url("purple-point.png");
-            pattern-file: url("purple-point.png");
+            /* point-file: url("purple-point.png"); */
+            pattern-file: url("http://www.istockphoto.com/file_thumbview_approve/3055566/2/istockphoto_3055566_crazy_background.jpg");
         }
 
         *[scale-denominator>=10000] FIPS_CNTRY
