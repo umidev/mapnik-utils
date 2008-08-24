@@ -211,6 +211,52 @@ class Selector:
     
         self.elements = elements[:]
 
+    def convertZoomTests(self):
+        """ Modify the tests on this selector to use mapnik-friendly
+            scale-denominator instead of shorthand zoom.
+        """
+        # somewhat-fudged values for mapniks' scale denominator at a range
+        # of zoom levels when using the Google/VEarth mercator projection.
+        zooms = {
+             1: (200000000, 500000000),
+             2: (100000000, 200000000),
+             3: (50000000, 100000000),
+             4: (25000000, 50000000),
+             5: (12500000, 25000000),
+             6: (6500000, 12500000),
+             7: (3000000, 6500000),
+             8: (1500000, 3000000),
+             9: (750000, 1500000),
+            10: (400000, 750000),
+            11: (200000, 400000),
+            12: (100000, 200000),
+            13: (50000, 100000),
+            14: (25000, 50000),
+            15: (12500, 25000),
+            16: (5000, 12500),
+            17: (2500, 5000),
+            18: (1000, 2500)
+            }
+        
+        for test in self.elements[0].tests:
+            if test.arg1 == 'zoom':
+                test.arg1 = 'scale-denominator'
+
+                if test.op == '=':
+                    # zoom level equality implies two tests, so we add one and modify one
+                    self.elements[0].addTest(SelectorAttributeTest('scale-denominator', '<=', max(zooms[test.arg2])))
+                    test.op, test.arg2 = '>=', min(zooms[test.arg2])
+
+                elif test.op == '<':
+                    test.op, test.arg2 = '>', max(zooms[test.arg2])
+                elif test.op == '<=':
+                    test.op, test.arg2 = '>=', min(zooms[test.arg2])
+                elif test.op == '>=':
+                    test.op, test.arg2 = '<=', max(zooms[test.arg2])
+                elif test.op == '>':
+                    test.op, test.arg2 = '<', min(zooms[test.arg2])
+                    
+
     def specificity(self):
         """ Loosely based on http://www.w3.org/TR/REC-CSS2/cascade.html#specificity
         """
@@ -387,10 +433,12 @@ class Value:
     def __str__(self):
         return str(self.value)
 
-def parse_stylesheet(string, base=None):
+def parse_stylesheet(string, base=None, is_gym=False):
     """ Parse a string representing a stylesheet into a list of rulesets.
     
-        Optionally, accept a base string so we know where linked files come from.
+        Optionally, accept a base string so we know where linked files come from,
+        and a flag letting us know whether this is a Google/VEarth mercator projection
+        so we know what to do with zoom/scale-denominator in postprocess_selector().
     """
     in_selectors = False
     in_block = False
@@ -419,13 +467,13 @@ def parse_stylesheet(string, base=None):
             
                 if (nname == 'CHAR' and value == '{'):
                     # open curly-brace means we're on to the actual rule sets
-                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1])
+                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym)
                     in_selectors = False
                     in_block = True
     
                 elif (nname == 'CHAR' and value == ','):
                     # comma means there's a break between selectors
-                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1])
+                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym)
                     ruleset['selectors'].append([])
     
                 elif nname not in ('COMMENT'):
@@ -508,7 +556,7 @@ def trim_extra(tokens):
         
     return tokens
 
-def postprocess_selector(tokens):
+def postprocess_selector(tokens, is_gym):
     """ Convert a list of tokens into a Selector.
     """
     tokens = (token for token in trim_extra(tokens))
@@ -600,6 +648,9 @@ def postprocess_selector(tokens):
         raise ParseException('Only the first element in a selector may have a class in Mapnik styles')
 
     selector = Selector(*elements)
+    
+    if is_gym:
+        selector.convertZoomTests()
     
     return selector
 

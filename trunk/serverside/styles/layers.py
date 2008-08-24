@@ -51,6 +51,18 @@ class Range:
             
         else:
             return (minpoint + maxpoint) / 2
+
+    def isOpen(self):
+        """ Return true if this range has any room in it.
+        """
+        if self.leftedge > self.rightedge:
+            return False
+
+        if self.leftedge == self.rightedge:
+            if self.leftop is gt or self.rightop is lt:
+                return False
+
+        return True
     
     def __repr__(self):
         """
@@ -68,8 +80,11 @@ class Range:
                 return '(%s%s ...)' % (self.leftedge, opstr[self.leftop])
 
 def selectors_ranges(selectors):
-    """ Given a list of selectors, return a list of Ranges that fully
-        describes all possible unique slices within those selectors.
+    """ Given a list of selectors and a map, return a list of Ranges that
+        fully describes all possible unique slices within those selectors.
+        
+        If the map looks like it uses the well-known Google/VEarth maercator
+        projection, accept "zoom" attributes in place of "scale-denominator".
         
         This function was hard to write, it should be hard to read.
     """
@@ -79,7 +94,7 @@ def selectors_ranges(selectors):
     for selector in selectors:
         for test in selector.rangeTests():
             repeated_breaks.append(test.rangeOpEdge())
-
+    
     # from here on out, *order will matter*
     # it's expected that the breaks will be sorted from minimum to maximum,
     # with greater/lesser/equal operators accounted for.
@@ -140,6 +155,8 @@ def selectors_ranges(selectors):
             else:
                 ranges.append(Range(gt, edge))
 
+    ranges = [range for range in ranges if range.isOpen()]
+    
     # print breaks
     # print ranges
     
@@ -193,7 +210,7 @@ def extract_declarations(map, base):
         else:
             continue
             
-        rulesets = cascade.parse_stylesheet(styles, local_base)
+        rulesets = cascade.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map))
         declarations += cascade.unroll_rulesets(rulesets)
 
     return declarations
@@ -203,7 +220,7 @@ def make_ranged_rule_element(range):
         with applicable min/max scale denominator elements.
     """
     rule = Element('Rule')
-    
+
     if range.leftedge:
         minscale = Element('MinScaleDenominator')
         rule.append(minscale)
