@@ -191,23 +191,11 @@ class Selector:
     """ Represents a complete selector with elements and attribute checks.
     """
     def __init__(self, *elements):
-        if len(elements) > 2:
-            raise ParseException('Only two-element selectors are supported for Mapnik styles')
-
-        if len(elements) == 0:
-            raise ParseException('At least one element must be present in selectors for Mapnik styles')
-
-        if elements[0].names[0] not in ('Map', 'Layer') and elements[0].names[0][0] not in ('.', '#', '*'):
-            raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles')
-        
-        if len(elements) == 2 and elements[1].countTests():
-            raise ParseException('Only the first element in a selector may have attributes in Mapnik styles')
-
-        if len(elements) == 2 and elements[1].countIDs():
-            raise ParseException('Only the first element in a selector may have an ID in Mapnik styles')
-    
-        if len(elements) == 2 and elements[1].countClasses():
-            raise ParseException('Only the first element in a selector may have a class in Mapnik styles')
+        assert len(elements) in (1, 2)
+        assert elements[0].names[0] in ('Map', 'Layer') or elements[0].names[0][0] in ('.', '#', '*')
+        assert len(elements) == 1 or not elements[1].countTests()
+        assert len(elements) == 1 or not elements[1].countIDs()
+        assert len(elements) == 1 or not elements[1].countClasses()
     
         self.elements = elements[:]
 
@@ -358,8 +346,7 @@ class Property:
     """ A style property.
     """
     def __init__(self, name):
-        if name not in properties:
-            raise ParseException('"%s" is not a recognized property name' % name)
+        assert name in properties
     
         self.name = name
 
@@ -582,6 +569,24 @@ def postprocess_selector(tokens):
             elif nname == 'S':
                 in_element = False
     
+    if len(elements) > 2:
+        raise ParseException('Only two-element selectors are supported for Mapnik styles')
+
+    if len(elements) == 0:
+        raise ParseException('At least one element must be present in selectors for Mapnik styles')
+
+    if elements[0].names[0] not in ('Map', 'Layer') and elements[0].names[0][0] not in ('.', '#', '*'):
+        raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles')
+    
+    if len(elements) == 2 and elements[1].countTests():
+        raise ParseException('Only the first element in a selector may have attributes in Mapnik styles')
+
+    if len(elements) == 2 and elements[1].countIDs():
+        raise ParseException('Only the first element in a selector may have an ID in Mapnik styles')
+
+    if len(elements) == 2 and elements[1].countClasses():
+        raise ParseException('Only the first element in a selector may have a class in Mapnik styles')
+
     selector = Selector(*elements)
     
     return selector
@@ -596,6 +601,9 @@ def postprocess_property(tokens):
     
     if tokens[0][0] != 'IDENT':
         raise ParseException('Incorrect type of token in property: ' + repr(tokens))
+    
+    if tokens[0][1] not in properties:
+        raise ParseException('"%s" is not a recognized property name' % tokens[0][1])
     
     return Property(tokens[0][1])
 
