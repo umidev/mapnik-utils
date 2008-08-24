@@ -55,9 +55,9 @@ class Range:
     def isOpen(self):
         """ Return true if this range has any room in it.
         """
-        if self.leftedge > self.rightedge:
+        if self.leftedge and self.rightedge and self.leftedge > self.rightedge:
             return False
-
+    
         if self.leftedge == self.rightedge:
             if self.leftop is gt or self.rightop is lt:
                 return False
@@ -155,7 +155,9 @@ def selectors_ranges(selectors):
             else:
                 ranges.append(Range(gt, edge))
 
+    print ranges
     ranges = [range for range in ranges if range.isOpen()]
+    print ranges
     
     # print breaks
     # print ranges
@@ -284,7 +286,7 @@ def add_polygon_style(map, layer, declarations):
         
         # collect all the applicable declarations into a symbolizer element
         for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()) and dec.property.name not in encountered:
+            if (dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged()) and dec.property.name not in encountered:
                 parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
                 parameter.text = str(dec.value)
                 symbolizer.append(parameter)
@@ -328,7 +330,7 @@ def add_line_style(map, layer, declarations):
         
         # collect all the applicable declarations into a symbolizer element
         for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()) and dec.property.name not in encountered:
+            if (dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged()) and dec.property.name not in encountered:
                 parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
                 parameter.text = str(dec.value)
                 symbolizer.append(parameter)
@@ -385,7 +387,7 @@ def add_text_styles(map, layer, declarations):
             symbolizer = Element('TextSymbolizer', {'name': text_name})
             
             for dec in name_declarations:
-                if dec.selector.inRange(range.midpoint()):
+                if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
                     symbolizer.set(property_map[dec.property.name], str(dec.value))
                     has_text = True
             
@@ -425,7 +427,7 @@ def add_point_style(map, layer, declarations, out=None):
         
         # collect all the applicable declarations into a symbolizer element
         for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()):
+            if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
                 symbolizer.set(property_map[dec.property.name], str(dec.value))
     
         if symbolizer.get('file', False):
@@ -482,7 +484,7 @@ def add_pattern_style(map, layer, declarations, out=None):
         
         # collect all the applicable declarations into a symbolizer element
         for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()):
+            if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
                 symbolizer.set(property_map[dec.property.name], str(dec.value))
     
         if symbolizer.get('file', False):
