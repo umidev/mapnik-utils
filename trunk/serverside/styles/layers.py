@@ -133,11 +133,12 @@ def selectors_ranges(selectors):
             
         if i == len(breaks) - 1:
             # get a left-boundary for the final range
-            if op is lt:
+            if op in (lt, ge):
                 ranges.append(Range(ge, edge))
             else:
                 ranges.append(Range(gt, edge))
 
+    # print breaks
     # print ranges
     
     if ranges:
@@ -345,33 +346,41 @@ def add_text_styles(map, layer, declarations):
                     'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance',
                     'text-allow-overlap': 'allow_overlap', 'text-placement': 'placement'}
 
-    text_names = {}
+    # pull out all the names
+    text_names = [dec.selector.elements[1].names[0]
+                  for dec in declarations
+                  if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1]
+
+    # a separate style element for each text name
+    for text_name in set(text_names):
     
-    declarations = [dec for dec in declarations if dec.property.name in property_map]
+        # just the ones we care about here
+        name_declarations = [dec for dec in declarations
+                             if dec.property.name in property_map and dec.selector.elements[1].names[0] == text_name]
     
-    # first, break up the text declarations among different names (see <TextSymbolizer name=""/>)
-    for dec in declarations:
-        if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1:
-            text_name = dec.selector.elements[1].names[0]
-
-            if not text_names.has_key(text_name):
-                text_names[text_name] = {}
-
-            text_names[text_name][dec.property.name] = dec.value
-            has_text = True
-
-    # make as many styles as are necessary
-    if has_text:
-        for text_name in text_names:
-            symbolizer = Element('TextSymbolizer', {'name': text_name})
+        # a place to put rule elements
+        rules = []
         
-            for property_name in text_names[text_name]:
-                symbolizer.set(property_map[property_name], str(text_names[text_name][property_name]))
+        for range in selectors_ranges([dec.selector for dec in name_declarations]):
+            has_text = False
+            symbolizer = Element('TextSymbolizer', {'name': text_name})
+            
+            for dec in name_declarations:
+                if dec.selector.inRange(range.midpoint()):
+                    symbolizer.set(property_map[dec.property.name], str(dec.value))
+                    has_text = True
+            
+            if has_text:
+                rule = make_ranged_rule_element(range)
+                rule.append(symbolizer)
+                rules.append(rule)
 
-            rule = Element('Rule')
-            rule.append(symbolizer)
-            style = Element('Style', {'name': 'text style %d' % next_counter()})
-            style.append(rule)
+        if rules:
+            style = Element('Style', {'name': 'text style %d (%s)' % (next_counter(), text_name)})
+            style.text = '\n        '
+            
+            for rule in rules:
+                style.append(rule)
 
             insert_layer_style(map, layer, style)
 

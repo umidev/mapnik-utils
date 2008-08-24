@@ -19,7 +19,7 @@
             line-color: #f00;
         }
         
-        #world-borders CNTRY_NAME
+        #world-borders[scale-denominator<10000] CNTRY_NAME
         {
             text-face-name: "DejaVu Sans Book";
             text-size: 10;
@@ -27,7 +27,7 @@
             text-placement: point;
         }
 
-        * FIPS_CNTRY
+        *[scale-denominator>=10000] FIPS_CNTRY
         {
             text-face-name: "DejaVu Sans Book";
             text-size: 10;
