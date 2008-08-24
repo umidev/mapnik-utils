@@ -187,6 +187,18 @@ properties = {
 class ParseException(Exception):
     pass
 
+class Declaration:
+    """ Bundle with a selector, single property and value.
+    """
+    def __init__(self, selector, property, value, sort_key):
+        self.selector = selector
+        self.property = property
+        self.value = value
+        self.sort_key = sort_key
+
+    def __repr__(self):
+        return '%(selector)s { %(property)s: %(value)s }' % self.__dict__
+
 class Selector:
     """ Represents a complete selector with elements and attribute checks.
     """
@@ -469,18 +481,16 @@ def unroll_rulesets(rulesets):
     """ Convert a list of rulesets (as returned by parse_stylesheet)
         into an ordered list of individual selectors and declarations.
     """
-    rules = []
+    declarations = []
     
     for ruleset in rulesets:
         for declaration in ruleset['declarations']:
             for selector in ruleset['selectors']:
-                rules.append({'selector': selector,
-                              'property': declaration['property'],
-                              'value': declaration['value'],
-                              'sort key': (declaration['value'].importance(), selector.specificity(), declaration['position'])})
+                declarations.append(Declaration(selector, declaration['property'], declaration['value'],
+                                                (declaration['value'].importance(), selector.specificity(), declaration['position'])))
 
     # sort by a css-like method
-    return sorted(rules, key=operator.itemgetter('sort key'))
+    return sorted(declarations, key=operator.attrgetter('sort_key'))
 
 def trim_extra(tokens):
     """ Trim comments and whitespace from each end of a list of tokens.
@@ -712,8 +722,8 @@ if __name__ == '__main__':
     
     rulesets = parse_stylesheet(s)
     
-    rules = unroll_rulesets(rulesets)
+    declarations = unroll_rulesets(rulesets)
     
 
     #pprint.PrettyPrinter(indent=2).pprint(rulesets)
-    pprint.PrettyPrinter(indent=2).pprint(rules)
+    pprint.PrettyPrinter(indent=2).pprint(declarations)

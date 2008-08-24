@@ -171,11 +171,11 @@ def is_gym_projection(map):
 
     return True
 
-def extract_rules(map, base):
+def extract_declarations(map, base):
     """ Given a Map element and a URL base string, remove and return a complete
         list of style declarations from any Stylesheet elements found within.
     """
-    rules = []
+    declarations = []
     
     for stylesheet in map.findall('Stylesheet'):
         map.remove(stylesheet)
@@ -191,9 +191,9 @@ def extract_rules(map, base):
             continue
             
         rulesets = cascade.parse_stylesheet(styles)
-        rules += cascade.unroll_rulesets(rulesets)
+        declarations += cascade.unroll_rulesets(rulesets)
 
-    return rules
+    return declarations
 
 def make_ranged_rule_element(range):
     """ Given a Range, return a Rule element prepopulated
@@ -240,9 +240,9 @@ def add_map_style(map, declarations):
     """
     property_map = {'map-bgcolor': 'bgcolor'}
     
-    for (property, value, selector) in declarations:
-        if property.name in property_map:
-            map.set(property_map[property.name], str(value))
+    for dec in declarations:
+        if dec.property.name in property_map:
+            map.set(property_map[dec.property.name], str(dec.value))
 
 def add_polygon_style(map, layer, declarations):
     """ Given a Map element, a Layer element, and a list of declarations
@@ -252,24 +252,24 @@ def add_polygon_style(map, layer, declarations):
     property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
     
     # just the ones we care about here
-    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
 
     # place to put rule elements
     rules = []
     
-    for range in selectors_ranges([s for (p, v, s) in declarations]):
+    for range in selectors_ranges([dec.selector for dec in declarations]):
         has_poly = False
         symbolizer = Element('PolygonSymbolizer')
         encountered = []
         
         # collect all the applicable declarations into a symbolizer element
-        for (property, value, selector) in reversed(declarations):
-            if selector.inRange(range.midpoint()) and property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[property.name]})
-                parameter.text = str(value)
+        for dec in reversed(declarations):
+            if dec.selector.inRange(range.midpoint()) and dec.property.name not in encountered:
+                parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
+                parameter.text = str(dec.value)
                 symbolizer.append(parameter)
     
-                encountered.append(property.name)
+                encountered.append(dec.property.name)
                 has_poly = True
     
         if has_poly:
@@ -296,24 +296,24 @@ def add_line_style(map, layer, declarations):
                     'line-cap': 'stroke-linecap', 'line-dasharray': 'stroke-dasharray'}
     
     # just the ones we care about here
-    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
 
     # a place to put rule elements
     rules = []
     
-    for range in selectors_ranges([s for (p, v, s) in declarations]):
+    for range in selectors_ranges([dec.selector for dec in declarations]):
         has_line = False
         symbolizer = Element('LineSymbolizer')
         encountered = []
         
         # collect all the applicable declarations into a symbolizer element
-        for (property, value, selector) in reversed(declarations):
-            if selector.inRange(range.midpoint()) and property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[property.name]})
-                parameter.text = str(value)
+        for dec in reversed(declarations):
+            if dec.selector.inRange(range.midpoint()) and dec.property.name not in encountered:
+                parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
+                parameter.text = str(dec.value)
                 symbolizer.append(parameter)
     
-                encountered.append(property.name)
+                encountered.append(dec.property.name)
                 has_line = True
     
         if has_line:
@@ -347,17 +347,17 @@ def add_text_styles(map, layer, declarations):
 
     text_names = {}
     
-    declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
     
     # first, break up the text declarations among different names (see <TextSymbolizer name=""/>)
-    for (property, value, selector) in declarations:
-        if len(selector.elements) is 2 and len(selector.elements[1].names) is 1:
-            text_name = selector.elements[1].names[0]
+    for dec in declarations:
+        if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1:
+            text_name = dec.selector.elements[1].names[0]
 
             if not text_names.has_key(text_name):
                 text_names[text_name] = {}
 
-            text_names[text_name][property.name] = value
+            text_names[text_name][dec.property.name] = dec.value
             has_text = True
 
     # make as many styles as are necessary
@@ -375,17 +375,16 @@ def add_text_styles(map, layer, declarations):
 
             insert_layer_style(map, layer, style)
 
-def get_applicable_declarations(element, rules):
-    """ Given an XML element and a list of rules, return the ones
+def get_applicable_declarations(element, declarations):
+    """ Given an XML element and a list of declarations, return the ones
         that match as a list of (property, value, selector) tuples.
     """
     element_tag = element.tag
     element_id = element.get('id', None)
     element_classes = element.get('class', '').split()
 
-    return [(rule['property'], rule['value'], rule['selector'])
-            for rule in rules
-            if rule['selector'].matches(element_tag, element_id, element_classes)]
+    return [dec for dec in declarations
+            if dec.selector.matches(element_tag, element_id, element_classes)]
 
 def compile_stylesheet(src):
     """
@@ -393,12 +392,12 @@ def compile_stylesheet(src):
     doc = xml.etree.ElementTree.parse(urllib.urlopen(src))
     map = doc.getroot()
     
-    rules = extract_rules(map, src)
+    declarations = extract_declarations(map, src)
     
-    add_map_style(map, get_applicable_declarations(map, rules))
+    add_map_style(map, get_applicable_declarations(map, declarations))
 
     for layer in map.findall('Layer'):
-        declarations = get_applicable_declarations(layer, rules)
+        declarations = get_applicable_declarations(layer, declarations)
         
         #pprint.PrettyPrinter().pprint(declarations)
         
