@@ -19,5 +19,9 @@ m.zoom_to_box(lyr.envelope())
 filepath = 'georeferenced'
 raster = '%s.png' % filepath
 world_file = '%s.wld' % filepath
+mapfile = '%s.xml' % filepath
 render_to_file(m, raster, 'png256')
 render_to_wld(m, world_file)
+# write out mapfile for a reference of the styles generated
+# using the python bindings
+save_map(m, mapfile)
