@@ -14,25 +14,29 @@ opsort = {lt: 1, le: 2, eq: 3, ge: 4, gt: 5}
 opstr = {lt: '<', le: '<=', eq: '==', ge: '>=', gt: '>'}
     
 class Range:
-    """ Represents a range for use in min/max scale denominator. Ranges can have
-        a left side, a right side, or both, with sides specified as inclusive
-        or exclusive.
+    """ Represents a range for use in min/max scale denominator.
+    
+        Ranges can have a left side, a right side, neither, or both,
+        with sides specified as inclusive or exclusive.
     """
-    def __init__(self, leftop=None, leftarg=None, rightop=None, rightarg=None):
+    def __init__(self, leftop=None, leftedge=None, rightop=None, rightedge=None):
+        assert leftop in (lt, le, eq, ge, gt, None)
+        assert rightop in (lt, le, eq, ge, gt, None)
+
         self.leftop = leftop
-        self.leftarg = leftarg
         self.rightop = rightop
-        self.rightarg = rightarg
+        self.leftedge = leftedge
+        self.rightedge = rightedge
 
     def midpoint(self):
         """ Return a point guranteed to fall within this range, hopefully near the middle.
         """
-        minpoint = self.leftarg
+        minpoint = self.leftedge
 
         if self.leftop is gt:
             minpoint += 1
     
-        maxpoint = self.rightarg
+        maxpoint = self.rightedge
 
         if self.rightop is lt:
             maxpoint -= 1
@@ -49,20 +53,21 @@ class Range:
     def __repr__(self):
         """
         """
-        if self.leftarg == self.rightarg and self.leftop is ge and self.rightop is le:
+        if self.leftedge == self.rightedge and self.leftop is ge and self.rightop is le:
             # equivalent to ==
-            return '(=%s)' % self.leftarg
+            return '(=%s)' % self.leftedge
     
         try:
-            return '(%s%s ... %s%s)' % (self.leftarg, opstr[self.leftop], opstr[self.rightop], self.rightarg)
+            return '(%s%s ... %s%s)' % (self.leftedge, opstr[self.leftop], opstr[self.rightop], self.rightedge)
         except KeyError:
             try:
-                return '(... %s%s)' % (opstr[self.rightop], self.rightarg)
+                return '(... %s%s)' % (opstr[self.rightop], self.rightedge)
             except KeyError:
-                return '(%s%s ...)' % (self.leftarg, opstr[self.leftop])
+                return '(%s%s ...)' % (self.leftedge, opstr[self.leftop])
 
 def selectors_ranges(selectors):
-    """
+    """ Given a list of selectors, return a list of Ranges that fully
+        describes all possible unique slices within those selectors.
     """
     # pprint.PrettyPrinter().pprint(selectors)
     
@@ -105,21 +110,21 @@ def selectors_ranges(selectors):
         else:
             # get a left-boundary based on the previous right-boundary
             if ranges[-1].rightop is lt:
-                ranges.append(Range(ge, ranges[-1].rightarg))
+                ranges.append(Range(ge, ranges[-1].rightedge))
             else:
-                ranges.append(Range(gt, ranges[-1].rightarg))
+                ranges.append(Range(gt, ranges[-1].rightedge))
 
             # get a right-boundary for the current range
             if op in (lt, le):
-                ranges[-1].rightop, ranges[-1].rightarg = op, edge
+                ranges[-1].rightop, ranges[-1].rightedge = op, edge
             elif op in (eq, ge):
-                ranges[-1].rightop, ranges[-1].rightarg = lt, edge
+                ranges[-1].rightop, ranges[-1].rightedge = lt, edge
             elif op is gt:
-                ranges[-1].rightop, ranges[-1].rightarg = le, edge
+                ranges[-1].rightop, ranges[-1].rightedge = le, edge
 
             # equals is a special case
             if op is eq:
-                if ranges[-1].leftarg == edge:
+                if ranges[-1].leftedge == edge:
                     ranges.pop()
             
                 ranges.append(Range(ge, edge, le, edge))
@@ -137,6 +142,7 @@ def selectors_ranges(selectors):
         return ranges
 
     else:
+        # if all else fails, return a Range that covers everything
         return [Range()]
 
 def next_counter():
@@ -186,27 +192,28 @@ def extract_rules(map, base):
     return rules
 
 def make_ranged_rule_element(range):
-    """
+    """ Given a Range, return a Rule element prepopulated
+        with applicable min/max scale denominator elements.
     """
     rule = Element('Rule')
     
-    if range.leftarg:
+    if range.leftedge:
         minscale = Element('MinScaleDenominator')
         rule.append(minscale)
     
         if range.leftop is ge:
-            minscale.text = str(range.leftarg)
+            minscale.text = str(range.leftedge)
         elif range.leftop is gt:
-            minscale.text = str(range.leftarg + 1)
+            minscale.text = str(range.leftedge + 1)
     
-    if range.rightarg:
+    if range.rightedge:
         maxscale = Element('MaxScaleDenominator')
         rule.append(maxscale)
     
         if range.rightop is le:
-            maxscale.text = str(range.rightarg)
+            maxscale.text = str(range.rightedge)
         elif range.rightop is lt:
-            maxscale.text = str(range.rightarg - 1)
+            maxscale.text = str(range.rightedge - 1)
     
     rule.tail = '\n        '
     
@@ -244,10 +251,10 @@ def add_polygon_style(map, layer, declarations):
     # just the ones we care about here
     declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
 
+    # place to put rule elements
     rules = []
-    ranges = selectors_ranges([s for (p, v, s) in declarations])
     
-    for range in ranges:
+    for range in selectors_ranges([s for (p, v, s) in declarations]):
         has_poly = False
         symbolizer = Element('PolygonSymbolizer')
         encountered = []
@@ -288,10 +295,10 @@ def add_line_style(map, layer, declarations):
     # just the ones we care about here
     declarations = [(p, v, s) for (p, v, s) in declarations if p.name in property_map]
 
+    # a place to put rule elements
     rules = []
-    ranges = selectors_ranges([s for (p, v, s) in declarations])
     
-    for range in ranges:
+    for range in selectors_ranges([s for (p, v, s) in declarations]):
         has_line = False
         symbolizer = Element('LineSymbolizer')
         encountered = []
@@ -365,7 +372,7 @@ def add_text_styles(map, layer, declarations):
 
             insert_layer_style(map, layer, style)
 
-def get_applicable_declaration(element, rules):
+def get_applicable_declarations(element, rules):
     """ Given an XML element and a list of rules, return the ones
         that match as a list of (property, value, selector) tuples.
     """
@@ -385,12 +392,10 @@ def compile_stylesheet(src):
     
     rules = extract_rules(map, src)
     
-    add_map_style(map, get_applicable_declaration(map, rules))
+    add_map_style(map, get_applicable_declarations(map, rules))
 
-    layers = []
-    
     for layer in map.findall('Layer'):
-        declarations = get_applicable_declaration(layer, rules)
+        declarations = get_applicable_declarations(layer, rules)
         
         #pprint.PrettyPrinter().pprint(declarations)
         
@@ -408,7 +413,6 @@ def compile_stylesheet(src):
     
         if declarations:
             layer.set('status', 'on')
-            layers.append({'layer': layer, 'rules': declarations})
         else:
             layer.set('status', 'off')
 
