@@ -150,14 +150,12 @@ properties = {
     # path to image file (default none)
     'pattern-file': uri,
 
-    # px (default 4)
+    # px (default 4), generally omit this and let PIL handle it
     'pattern-width': int,
-
-    # px (default 4)
     'pattern-height': int,
 
-    # png tiff (default none)
-    'pattern-type': None, # png, tiff (derived from file)
+    # image type: png or tiff, omitted thanks to PIL
+    'pattern-type': None,
 
     #--------------- shield symbolizer
 

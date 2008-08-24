@@ -386,10 +386,12 @@ def add_text_styles(map, layer, declarations):
 
             insert_layer_style(map, layer, style)
 
-def add_point_style(map, layer, declarations):
+def add_point_style(map, layer, declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a PointSymbolizer, add it to Map
         and refer to it in Layer.
+        
+        Optionally provide an output directory for local copies of image files.
     """
     property_map = {'point-file': 'file', 'point-width': 'width',
                     'point-height': 'height', 'point-type': 'type',
@@ -417,7 +419,7 @@ def add_point_style(map, layer, declarations):
             img = PIL.Image.open(img_file)
             
             # save the image to a tempfile, making it a png no matter what
-            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-point-')
+            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-point-', out)
             os.close(handle)
             
             img.save(path)
@@ -442,6 +444,63 @@ def add_point_style(map, layer, declarations):
         
         insert_layer_style(map, layer, style)
 
+def add_pattern_style(map, layer, declarations, out=None):
+    """ Given a Map element, a Layer element, and a list of declarations,
+        create a new Style element with a PolygonPatternSymbolizer, add it to Map
+        and refer to it in Layer.
+        
+        Optionally provide an output directory for local copies of image files.
+    """
+    property_map = {'pattern-file': 'file', 'pattern-width': 'width',
+                    'pattern-height': 'height', 'pattern-type': 'type'}
+    
+    # just the ones we care about here
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
+
+    # a place to put rule elements
+    rules = []
+    
+    for range in selectors_ranges([dec.selector for dec in declarations]):
+        symbolizer = Element('PolygonPatternSymbolizer')
+        
+        # collect all the applicable declarations into a symbolizer element
+        for dec in reversed(declarations):
+            if dec.selector.inRange(range.midpoint()):
+                symbolizer.set(property_map[dec.property.name], str(dec.value))
+    
+        if symbolizer.get('file', False):
+            # read the image to get some more details
+            img_path = symbolizer.get('file')
+            img_data = urllib.urlopen(img_path).read()
+            img_file = StringIO.StringIO(img_data)
+            img = PIL.Image.open(img_file)
+            
+            # save the image to a tempfile, making it a png no matter what
+            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-pattern-', out)
+            os.close(handle)
+            
+            img.save(path)
+            symbolizer.set('file', path)
+            symbolizer.set('type', 'png')
+            
+            # if no width/height have been provided, set them
+            if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
+                symbolizer.set('width', str(img.size[0]))
+                symbolizer.set('height', str(img.size[1]))
+            
+            rule = make_ranged_rule_element(range)
+            rule.append(symbolizer)
+            rules.append(rule)
+
+    if rules:
+        style = Element('Style', {'name': 'pattern style %d' % next_counter()})
+        style.text = '\n        '
+        
+        for rule in rules:
+            style.append(rule)
+        
+        insert_layer_style(map, layer, style)
+
 def get_applicable_declarations(element, declarations):
     """ Given an XML element and a list of declarations, return the ones
         that match as a list of (property, value, selector) tuples.
@@ -453,7 +512,7 @@ def get_applicable_declarations(element, declarations):
     return [dec for dec in declarations
             if dec.selector.matches(element_tag, element_id, element_classes)]
 
-def compile_stylesheet(src):
+def compile_stylesheet(src, out=None):
     """
     """
     doc = xml.etree.ElementTree.parse(urllib.urlopen(src))
@@ -469,9 +528,10 @@ def compile_stylesheet(src):
         #pprint.PrettyPrinter().pprint(declarations)
         
         add_polygon_style(map, layer, declarations)
+        add_pattern_style(map, layer, declarations, out)
         add_line_style(map, layer, declarations)
         add_text_styles(map, layer, declarations)
-        add_point_style(map, layer, declarations)
+        add_point_style(map, layer, declarations, out)
         
         layer.set('name', 'layer %d' % next_counter())
         

@@ -27,6 +27,7 @@
             text-placement: point;
             
             point-file: url("purple-point.png");
+            pattern-file: url("purple-point.png");
         }
 
         *[scale-denominator>=10000] FIPS_CNTRY
