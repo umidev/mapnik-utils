@@ -68,9 +68,9 @@ class Range:
 def selectors_ranges(selectors):
     """ Given a list of selectors, return a list of Ranges that fully
         describes all possible unique slices within those selectors.
+        
+        This function was hard to write, it should be hard to read.
     """
-    # pprint.PrettyPrinter().pprint(selectors)
-    
     repeated_breaks = []
     
     # start by getting all the range edges from the selectors into a list of break points
@@ -78,9 +78,10 @@ def selectors_ranges(selectors):
         for test in selector.rangeTests():
             repeated_breaks.append(test.rangeOpEdge())
 
+    # from here on out, *order will matter*
+    # it's expected that the breaks will be sorted from minimum to maximum,
+    # with greater/lesser/equal operators accounted for.
     repeated_breaks.sort(key=lambda (o, e): (e, opsort[o]))
-    
-    # print repeated_breaks
     
     breaks = []
 
@@ -92,8 +93,6 @@ def selectors_ranges(selectors):
 
         breaks.append(repeated_breaks[i])
 
-    # print breaks
-    
     ranges = []
     
     # now turn those breakpoints into a list of ranges
@@ -107,7 +106,7 @@ def selectors_ranges(selectors):
             elif op is gt:
                 ranges.append(Range(None, None, le, edge))
 
-        else:
+        elif i > 0:
             # get a left-boundary based on the previous right-boundary
             if ranges[-1].rightop is lt:
                 ranges.append(Range(ge, ranges[-1].rightedge))
@@ -122,15 +121,18 @@ def selectors_ranges(selectors):
             elif op is gt:
                 ranges[-1].rightop, ranges[-1].rightedge = le, edge
 
-            # equals is a special case
+            # equals is a special case, sometimes
+            # an extra element may need to sneak in.
             if op is eq:
                 if ranges[-1].leftedge == edge:
+                    # the previous range also covered just this one slice.
                     ranges.pop()
             
+                # equals is expressed as greater-than-equals and less-than-equals.
                 ranges.append(Range(ge, edge, le, edge))
             
         if i == len(breaks) - 1:
-            # get a left-boundary for the last range
+            # get a left-boundary for the final range
             if op is lt:
                 ranges.append(Range(ge, edge))
             else:
@@ -152,6 +154,8 @@ def next_counter():
 
 def is_gym_projection(map):
     """ Return true if the map projection matches that used by VEarth, Google, OSM, etc.
+    
+        Will be useful for a zoom-level shorthand for scale-denominator.
     """ 
     # expected
     gym = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null'
@@ -230,7 +234,6 @@ def insert_layer_style(map, layer, style):
     stylename.text = style.get('name')
     stylename.tail = '\n        '
     layer.insert(layer._children.index(layer.find('Datasource')), stylename)
-    #layer.append(stylename)
 
 def add_map_style(map, declarations):
     """
