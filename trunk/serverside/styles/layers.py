@@ -1,12 +1,14 @@
-import sys
+import os, sys
 import pprint
 import urllib
 import urlparse
-from operator import lt, le, eq, ge, gt
+import tempfile
 import StringIO
+from operator import lt, le, eq, ge, gt
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element
 import cascade
+import PIL.Image
 
 counter = 0
 
@@ -183,15 +185,15 @@ def extract_declarations(map, base):
     
         if 'src' in stylesheet.attrib:
             url = urlparse.urljoin(base, stylesheet.attrib['src'])
-            styles = urllib.urlopen(url).read()
+            styles, local_base = urllib.urlopen(url).read(), url
 
         elif stylesheet.text:
-            styles = stylesheet.text
+            styles, local_base = stylesheet.text, base
 
         else:
             continue
             
-        rulesets = cascade.parse_stylesheet(styles)
+        rulesets = cascade.parse_stylesheet(styles, local_base)
         declarations += cascade.unroll_rulesets(rulesets)
 
     return declarations
@@ -246,9 +248,9 @@ def add_map_style(map, declarations):
             map.set(property_map[dec.property.name], str(dec.value))
 
 def add_polygon_style(map, layer, declarations):
-    """ Given a Map element, a Layer element, and a list of declarations
-        consisting of (property, value, selector) tuples, create a new Style element
-        with a PolygonSymbolizer, add it to Map and refer to it in Layer.
+    """ Given a Map element, a Layer element, and a list of declarations,
+        create a new Style element with a PolygonSymbolizer, add it to Map
+        and refer to it in Layer.
     """
     property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
     
@@ -288,9 +290,9 @@ def add_polygon_style(map, layer, declarations):
         insert_layer_style(map, layer, style)
 
 def add_line_style(map, layer, declarations):
-    """ Given a Map element, a Layer element, and a list of declarations
-        consisting of (property, value, selector) tuples, create a new Style element
-        with a LineSymbolizer, add it to Map and refer to it in Layer.
+    """ Given a Map element, a Layer element, and a list of declarations,
+        create a new Style element with a LineSymbolizer, add it to Map
+        and refer to it in Layer.
     """
     property_map = {'line-color': 'stroke', 'line-width': 'stroke-width',
                     'line-opacity': 'stroke-opacity', 'line-join': 'stroke-linejoin',
@@ -332,9 +334,9 @@ def add_line_style(map, layer, declarations):
         insert_layer_style(map, layer, style)
 
 def add_text_styles(map, layer, declarations):
-    """ Given a Map element, a Layer element, and a list of declarations
-        consisting of (property, value, selector) tuples, create new Style elements
-        with a TextSymbolizer, add them to Map and refer to them in Layer.
+    """ Given a Map element, a Layer element, and a list of declarations,
+        create new Style elements with a TextSymbolizer, add them to Map
+        and refer to them in Layer.
     """
     has_text = False
     property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
@@ -384,6 +386,62 @@ def add_text_styles(map, layer, declarations):
 
             insert_layer_style(map, layer, style)
 
+def add_point_style(map, layer, declarations):
+    """ Given a Map element, a Layer element, and a list of declarations,
+        create a new Style element with a PointSymbolizer, add it to Map
+        and refer to it in Layer.
+    """
+    property_map = {'point-file': 'file', 'point-width': 'width',
+                    'point-height': 'height', 'point-type': 'type',
+                    'point-allow-overlap': 'allow_overlap'}
+    
+    # just the ones we care about here
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
+
+    # a place to put rule elements
+    rules = []
+    
+    for range in selectors_ranges([dec.selector for dec in declarations]):
+        symbolizer = Element('PointSymbolizer')
+        
+        # collect all the applicable declarations into a symbolizer element
+        for dec in reversed(declarations):
+            if dec.selector.inRange(range.midpoint()):
+                symbolizer.set(property_map[dec.property.name], str(dec.value))
+    
+        if symbolizer.get('file', False):
+            # read the image to get some more details
+            img_path = symbolizer.get('file')
+            img_data = urllib.urlopen(img_path).read()
+            img_file = StringIO.StringIO(img_data)
+            img = PIL.Image.open(img_file)
+            
+            # save the image to a tempfile, making it a png no matter what
+            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-point-')
+            os.close(handle)
+            
+            img.save(path)
+            symbolizer.set('file', path)
+            symbolizer.set('type', 'png')
+            
+            # if no width/height have been provided, set them
+            if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
+                symbolizer.set('width', str(img.size[0]))
+                symbolizer.set('height', str(img.size[1]))
+            
+            rule = make_ranged_rule_element(range)
+            rule.append(symbolizer)
+            rules.append(rule)
+
+    if rules:
+        style = Element('Style', {'name': 'point style %d' % next_counter()})
+        style.text = '\n        '
+        
+        for rule in rules:
+            style.append(rule)
+        
+        insert_layer_style(map, layer, style)
+
 def get_applicable_declarations(element, declarations):
     """ Given an XML element and a list of declarations, return the ones
         that match as a list of (property, value, selector) tuples.
@@ -413,6 +471,7 @@ def compile_stylesheet(src):
         add_polygon_style(map, layer, declarations)
         add_line_style(map, layer, declarations)
         add_text_styles(map, layer, declarations)
+        add_point_style(map, layer, declarations)
         
         layer.set('name', 'layer %d' % next_counter())
         

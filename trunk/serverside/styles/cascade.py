@@ -1,6 +1,7 @@
 import re
 import sys
 import pprint
+import urlparse
 import simplejson
 import operator
 from binascii import unhexlify as unhex
@@ -19,8 +20,11 @@ class color:
         return repr(self)
 
 class uri:
-    def __init__(self, address):
-        self.address = address
+    def __init__(self, address, base=None):
+        if base:
+            self.address = urlparse.urljoin(base, address)
+        else:
+            self.address = address
 
     def __repr__(self):
         return str(self.address) #'url("%(address)s")' % self.__dict__
@@ -131,17 +135,15 @@ properties = {
     # path to image file
     'point-file': uri, # none
 
-    # px (default 4)
+    # px (default 4), generally omit this and let PIL handle it
     'point-width': int,
-
-    # px (default 4)
     'point-height': int,
 
-    # png tiff
-    'point-type': None, # png, tiff (derived from file)
+    # image type: png or tiff, omitted thanks to PIL
+    'point-type': None,
 
     # true/false
-    'point-allow-overlap': None, # ?
+    'point-allow-overlap': boolean,
 
     #--------------- polygon pattern symbolizer
 
@@ -387,8 +389,10 @@ class Value:
     def __str__(self):
         return str(self.value)
 
-def parse_stylesheet(s):
+def parse_stylesheet(string, base=None):
     """ Parse a string representing a stylesheet into a list of rulesets.
+    
+        Optionally, accept a base string so we know where linked files come from.
     """
     in_selectors = False
     in_block = False
@@ -396,7 +400,7 @@ def parse_stylesheet(s):
     in_property = False # implies in_declaration
     
     rulesets = []
-    tokens = cssTokenizer().tokenize(s)
+    tokens = cssTokenizer().tokenize(string)
     
     for token in tokens:
         nname, value, line, col = token
@@ -464,7 +468,7 @@ def parse_stylesheet(s):
             
                 if nname == 'CHAR' and value == ';':
                     # end of declaration
-                    declaration['value'] = postprocess_value(declaration['value'], declaration['property'])
+                    declaration['value'] = postprocess_value(declaration['value'], declaration['property'], base)
                     in_declaration = False
     
                 elif nname not in ('COMMENT'):
@@ -617,7 +621,7 @@ def postprocess_property(tokens):
     
     return Property(tokens[0][1])
 
-def postprocess_value(tokens, property):
+def postprocess_value(tokens, property, base=None):
     """
     """
     tokens = trim_extra(tokens)
@@ -684,7 +688,7 @@ def postprocess_value(tokens, property):
         elif raw.startswith('url(') and raw.endswith(')'):
             raw = raw[4:-1]
 
-        value = uri(raw)
+        value = uri(raw, base)
             
     elif properties[property.name] is boolean:
         if tokens[0][0] != 'IDENT' or tokens[0][1] not in ('true', 'false'):
