@@ -4,11 +4,20 @@ import urllib
 import urlparse
 import tempfile
 import StringIO
+import optparse
 from operator import lt, le, eq, ge, gt
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element
-import cascade
+import style
 import PIL.Image
+
+def main(file, dir):
+    """ Given an input layers file and a directory, print the compiled
+        XML file to stdout and save any encountered external image files
+        to the named directory.
+    """
+    print compile(file, dir)
+    return 0
 
 counter = 0
 
@@ -210,8 +219,8 @@ def extract_declarations(map, base):
         else:
             continue
             
-        rulesets = cascade.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map))
-        declarations += cascade.unroll_rulesets(rulesets)
+        rulesets = style.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map))
+        declarations += style.unroll_rulesets(rulesets)
 
     return declarations
 
@@ -529,7 +538,7 @@ def get_applicable_declarations(element, declarations):
     return [dec for dec in declarations
             if dec.selector.matches(element_tag, element_id, element_classes)]
 
-def compile_stylesheet(src, out=None):
+def compile(src, dir=None):
     """
     """
     doc = xml.etree.ElementTree.parse(urllib.urlopen(src))
@@ -545,10 +554,10 @@ def compile_stylesheet(src, out=None):
         #pprint.PrettyPrinter().pprint(declarations)
         
         add_polygon_style(map, layer, declarations)
-        add_pattern_style(map, layer, declarations, out)
+        add_pattern_style(map, layer, declarations, dir)
         add_line_style(map, layer, declarations)
         add_text_styles(map, layer, declarations)
-        add_point_style(map, layer, declarations, out)
+        add_point_style(map, layer, declarations, dir)
         
         layer.set('name', 'layer %d' % next_counter())
         
@@ -568,6 +577,22 @@ def compile_stylesheet(src, out=None):
     
     return out.getvalue()
 
+parser = optparse.OptionParser(usage="""compile.py [options]
+
+Example map of San Francisco and Oakland:
+    python compose.py -o out.png -p MICROSOFT_ROAD -d 800 800 -c 37.8 -122.3 11
+
+Map provider and output image dimensions MUST be specified before extent
+or center/zoom. Multiple extents and center/zooms may be specified, but
+only the last will be used.""")
+
+parser.add_option('-d', '--dir', dest='directory',
+                  help='Write to output directory')
+
 if __name__ == '__main__':
 
-    print compile_stylesheet('example.mml')
+    (options, args) = parser.parse_args()
+    
+    layersfile = args[0]
+
+    sys.exit(main(layersfile, options.directory))

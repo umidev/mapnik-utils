@@ -1,7 +1,7 @@
 import unittest
-from cascade import ParseException, parse_stylesheet
-from cascade import Selector, SelectorElement, SelectorAttributeTest
-from cascade import postprocess_property, postprocess_value, Property
+from style import ParseException, parse_stylesheet
+from style import Selector, SelectorElement, SelectorAttributeTest
+from style import postprocess_property, postprocess_value, Property
 
 class ParseTests(unittest.TestCase):
     

@@ -81,9 +81,6 @@ properties = {
 
     #--------------- text symbolizer
 
-    # This is the query field you want to use for the label text, ie "street_name"
-    'text-name': None, # (use selector for this)
-
     # Font name
     'text-face-name': str,
 
