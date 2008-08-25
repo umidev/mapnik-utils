@@ -1,9 +1,9 @@
-Map
+*
 {
     map-bgcolor: #69f;
 }
 
-Layer
+.world-borders, .some-other-class
 {
     line-width: 0.5;
     line-color: #030;
@@ -13,7 +13,7 @@ Layer
     pattern-file: url("http://www.inkycircus.com/jargon/images/grass_by_conformity.jpg");
 }
 
-Layer[zoom>10] NAME
+.world-borders.countries[zoom>10] NAME
 {
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
@@ -26,7 +26,7 @@ Layer[zoom>10] NAME
     text-dy: 10;
 }
 
-Layer[zoom<=10] FIPS
+.world-borders.countries[zoom<=10] FIPS
 {
     text-face-name: "DejaVu Sans Book";
     text-size: 10;

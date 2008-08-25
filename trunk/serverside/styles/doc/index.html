@@ -47,6 +47,17 @@
     to web designers.
 </p>
 
+<p>
+    The examples show:
+</p>
+
+<ol>
+    <li>Basic fill and stroke styles.</li>
+    <li>Text, ID selectors.</li>
+    <li>Images, class selector, projections.</li>
+    <li>Externally-linked files, expanded class selectors.</li>
+</ol>
+
 <h2>Example 1</h2>
 
 <p>
@@ -122,24 +133,30 @@
     in the output XML below.
 </p>
 
+<p>
+    We've also added an <i>id</i> attribute to the Layer, and used it in place
+    of <em>Layer</em> for two of the selectors. The first block has been changed
+    to a wildcard, <i>*</i>.
+</p>
+
 <h3>Input example2.mml</h3>
 
 <pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;Map srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
     &lt;Stylesheet&gt;&lt;![CDATA[
-        Map
+        <em>*</em>
         {
             map-bgcolor: #69f;
         }
 
-        Layer
+        <em>#world-borders</em>
         {
             line-width: 1;
             line-color: #696;
             polygon-fill: #6f9;
         }
 
-<em>        Layer NAME
+<em>        #world-borders NAME
         {
             text-face-name: "DejaVu Sans Book";
             text-size: 10;
@@ -151,7 +168,7 @@
             text-avoid-edges: true;
         }</em>
     ]]&gt;&lt;/Stylesheet&gt;
-    &lt;Layer srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
+    &lt;Layer <em>id="world-borders"</em> srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
         &lt;Datasource&gt;
             &lt;Parameter name="type"&gt;shape&lt;/Parameter&gt;
             &lt;Parameter name="file"&gt;world_borders&lt;/Parameter&gt;
@@ -196,6 +213,16 @@
     PNG and TIFF images, we use <a href="http://www.pythonware.com/library/">PIL</a>
     to convert all images to PNG's and save them in a temporary location for
     Mapnik's use. All the text has been offset by 10 pixels to make room.
+</p>
+
+<p>
+    The ID selectors from above have been replaced by class selectors, referring
+    to the <i>class="world-borders"</i> attribute of the Layer. These work just like
+    you'd expect from CSS. It is expected that a document has just one example of
+    each ID, but potentially many mixed examples of each class.
+</p>
+
+<p>
     We've also switched to a mercator projection.
 </p>
 
@@ -204,19 +231,19 @@
 <pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;Map <em>srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null"</em>&gt;
     &lt;Stylesheet&gt;&lt;![CDATA[
-        Map
+        *
         {
             map-bgcolor: #69f;
         }
 
-        Layer
+        <em>.world-borders</em>
         {
             line-width: 1;
             line-color: #696;
             polygon-fill: #6f9;
         }
 
-        Layer NAME
+        <em>.world-borders NAME</em>
         {
             text-face-name: "DejaVu Sans Book";
             text-size: 10;
@@ -231,7 +258,7 @@
             text-dy: 10;</em>
         }
     ]]&gt;&lt;/Stylesheet&gt;
-    &lt;Layer srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
+    &lt;Layer <em>class="world-borders"</em> srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
         &lt;Datasource&gt;
             &lt;Parameter name="type"&gt;shape&lt;/Parameter&gt;
             &lt;Parameter name="file"&gt;world_borders&lt;/Parameter&gt;
@@ -275,8 +302,15 @@
 <p>
     Since the stylesheet has started to grow a little large, we've moved it off
     to a separate file, <i>example4.mss</i>. We've introduced a pattern background
-    for each country pulled from a remote server by URL, and also introduced
-    the scale selection attribute selector syntax, e.g. <i>[zoom>10]</i>.
+    for each country pulled from a remote server by URL.
+</p>
+
+<p>
+    The selector syntax has been extended in two ways.
+</p>
+
+<p>
+    First, note the scale selection attribute selector syntax, e.g. <i>[zoom>10]</i>.
     The use of the <i>zoom</i> variable as a shorthand for MinScaleDenominator
     and MaxScaleDenominator is only meaningful when we use this exact projection
     SRS, which matches that used by OpenStreetMap, Google Maps, Virtual Earth,
@@ -284,12 +318,20 @@
     scale support, we'd use something like <i>[scale-denominator>=400000]</i> instead.
 </p>
 
+<p>
+    Second, we see how multiple class names can be give to a single Layer, and how
+    multiple matches can be used in selectors. In these examples there's only a single
+    defined layer, but the <em>.some-other-class</em> line in <i>example4.mss</i>
+    shows how it's possible to use single blocks of rules to affect numerous layers
+    concurrently.
+</p>
+
 <h3>Input example4.mml</h3>
 
 <pre>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null"&gt;
 <em>    &lt;Stylesheet src="example4.mss"/&gt;</em>
-    &lt;Layer id="world-borders" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
+    &lt;Layer <em>class="world-borders countries"</em> srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs"&gt;
         &lt;Datasource&gt;
             &lt;Parameter name="type"&gt;shape&lt;/Parameter&gt;
             &lt;Parameter name="file"&gt;world_borders&lt;/Parameter&gt;
@@ -299,12 +341,12 @@
 
 <h3>example4.mss</h3>
 
-<pre>Map
+<pre>*
 {
     map-bgcolor: #69f;
 }
 
-Layer
+<em>.world-borders, .some-other-class</em>
 {
     line-width: 0.5;
     line-color: #030;
@@ -314,7 +356,7 @@ Layer
 <em>    pattern-file: url("http://www.inkycircus.com/jargon/images/grass_by_conformity.jpg");</em>
 }
 
-Layer<em>[zoom&gt;10]</em> NAME
+<em>.world-borders.countries[zoom>10] NAME</em>
 {
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
@@ -327,7 +369,7 @@ Layer<em>[zoom&gt;10]</em> NAME
     text-dy: 10;
 }
 
-Layer<em>[zoom&lt;=10]</em> FIPS
+<em>.world-borders.countries[zoom<=10] FIPS</em>
 {
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
