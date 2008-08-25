@@ -65,7 +65,7 @@ properties = {
     'line-color': color,
 
     # 0.0 - n (default 1.0)
-    'line-width': int,
+    'line-width': float,
 
     # 0.0 - 1.0 (default 1.0)
     'line-opacity': float,
