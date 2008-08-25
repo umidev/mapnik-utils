@@ -1,52 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null">
+    <Stylesheet>
+        Map { map-bgcolor: #ccc; }
+    </Stylesheet>
     <Stylesheet src="example.mss"/>
-    <Stylesheet><![CDATA[
-        *
-        {
-            line-width: 1;
-            line-color: #999;
-            polygon-fill: #fff;
-            
-            /* point-file: url("purple-point.png"); */
-            pattern-file: url("http://www.istockphoto.com/file_thumbview_approve/3055566/2/istockphoto_3055566_crazy_background.jpg");
-        }
-
-        *[zoom>=6][zoom<12]
-        {
-            line-color: #f90;
-        }
-        
-        *[zoom=12]
-        {
-            line-color: #f0f;
-        }
-        
-        *[zoom>12]
-        {
-            line-color: #f00;
-        }
-        
-        #world-borders[zoom<10] CNTRY_NAME
-        {
-            text-face-name: "DejaVu Sans Book";
-            text-size: 10;
-            text-fill: #000;
-            text-placement: point;
-        }
-
-        *[zoom>=10] FIPS_CNTRY
-        {
-            text-face-name: "DejaVu Sans Book";
-            text-size: 10;
-            text-fill: #000;
-            text-placement: point;
-        }
-    ]]></Stylesheet>
     <Layer id="world-borders" srs="+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">
         <Datasource>
             <Parameter name="type">shape</Parameter>
-            <Parameter name="file">../../sample_data/world_borders</Parameter>
+            <Parameter name="file">world_borders</Parameter>
         </Datasource>
     </Layer>
 </Map>
