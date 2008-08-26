@@ -182,7 +182,9 @@ properties = {
 }
 
 class ParseException(Exception):
-    pass
+    
+    def __init__(self, msg, line, col):
+        Exception.__init__(self, '%(msg)s (line %(line)d, column %(col)d)' % locals())
 
 class Declaration:
     """ Bundle with a selector, single property and value.
@@ -452,7 +454,7 @@ def parse_stylesheet(string, base=None, is_gym=False):
             if not in_selectors and not in_block:
                 if nname == 'CHAR' and value == '{':
                     # 
-                    raise ParseException('Encountered unexpected opening "{"')
+                    raise ParseException('Encountered unexpected opening "{"', line, col)
 
                 elif (nname in ('IDENT', 'HASH')) or (nname == 'CHAR' and value != '{'):
                     # beginning of a 
@@ -464,13 +466,13 @@ def parse_stylesheet(string, base=None, is_gym=False):
             
                 if (nname == 'CHAR' and value == '{'):
                     # open curly-brace means we're on to the actual rule sets
-                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym)
+                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym, line, col)
                     in_selectors = False
                     in_block = True
     
                 elif (nname == 'CHAR' and value == ','):
                     # comma means there's a break between selectors
-                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym)
+                    ruleset['selectors'][-1] = postprocess_selector(ruleset['selectors'][-1], is_gym, line, col)
                     ruleset['selectors'].append([])
     
                 elif nname not in ('COMMENT'):
@@ -492,14 +494,14 @@ def parse_stylesheet(string, base=None, is_gym=False):
 
                 elif nname not in ('S', 'COMMENT'):
                     # something else
-                    raise ParseException('Unexpected %(nname)s while looking for a property' % locals())
+                    raise ParseException('Unexpected %(nname)s while looking for a property' % locals(), line, col)
     
             elif in_declaration and in_property:
                 declaration = rulesets[-1]['declarations'][-1]
             
                 if nname == 'CHAR' and value == ':':
                     # end of property
-                    declaration['property'] = postprocess_property(declaration['property'])
+                    declaration['property'] = postprocess_property(declaration['property'], line, col)
                     in_property = False
     
                 elif nname not in ('COMMENT'):
@@ -511,7 +513,7 @@ def parse_stylesheet(string, base=None, is_gym=False):
             
                 if nname == 'CHAR' and value == ';':
                     # end of declaration
-                    declaration['value'] = postprocess_value(declaration['value'], declaration['property'], base)
+                    declaration['value'] = postprocess_value(declaration['value'], declaration['property'], base, line, col)
                     in_declaration = False
     
                 elif nname not in ('COMMENT'):
@@ -519,7 +521,7 @@ def parse_stylesheet(string, base=None, is_gym=False):
                     declaration['value'].append((nname, value))
 
         except ParseException, e:
-            #raise ParseException(e.message + ' (line %(line)d, column %(col)d)' % locals())
+            #raise ParseException(e.message + ' (line %(line)d, column %(col)d)' % locals(), line, col)
             raise
 
     return rulesets
@@ -553,7 +555,7 @@ def trim_extra(tokens):
         
     return tokens
 
-def postprocess_selector(tokens, is_gym):
+def postprocess_selector(tokens, is_gym, line=0, col=0):
     """ Convert a list of tokens into a Selector.
     """
     tokens = (token for token in trim_extra(tokens))
@@ -598,13 +600,13 @@ def postprocess_selector(tokens, is_gym):
                     parts[-1] += value
                 else:
                     if len(parts) != 1:
-                        raise ParseException('Comparison operator must be in the middle of selector attribute')
+                        raise ParseException('Comparison operator must be in the middle of selector attribute', line, col)
                 
                     parts.append(value)
 
             elif nname == 'CHAR' and value == ']':
                 if len(parts) != 3:
-                    raise ParseException('Incorrect number of items in selector attribute')
+                    raise ParseException('Incorrect number of items in selector attribute', line, col)
 
                 args = parts[-3:]
                 parts = []
@@ -616,7 +618,7 @@ def postprocess_selector(tokens, is_gym):
                         args[2] = float(args[2])
                     except ValueError:
                         if args[1] in ('<', '<=', '=>', '>'):
-                            raise ParseException('Selector attribute must use a number for comparison tests')
+                            raise ParseException('Selector attribute must use a number for comparison tests', line, col)
                         else:
                             pass
                 
@@ -627,22 +629,22 @@ def postprocess_selector(tokens, is_gym):
                 in_element = False
     
     if len(elements) > 2:
-        raise ParseException('Only two-element selectors are supported for Mapnik styles')
+        raise ParseException('Only two-element selectors are supported for Mapnik styles', line, col)
 
     if len(elements) == 0:
-        raise ParseException('At least one element must be present in selectors for Mapnik styles')
+        raise ParseException('At least one element must be present in selectors for Mapnik styles', line, col)
 
     if elements[0].names[0] not in ('Map', 'Layer') and elements[0].names[0][0] not in ('.', '#', '*'):
-        raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles')
+        raise ParseException('All non-ID, non-class first elements must be "Layer" Mapnik styles', line, col)
     
     if len(elements) == 2 and elements[1].countTests():
-        raise ParseException('Only the first element in a selector may have attributes in Mapnik styles')
+        raise ParseException('Only the first element in a selector may have attributes in Mapnik styles', line, col)
 
     if len(elements) == 2 and elements[1].countIDs():
-        raise ParseException('Only the first element in a selector may have an ID in Mapnik styles')
+        raise ParseException('Only the first element in a selector may have an ID in Mapnik styles', line, col)
 
     if len(elements) == 2 and elements[1].countClasses():
-        raise ParseException('Only the first element in a selector may have a class in Mapnik styles')
+        raise ParseException('Only the first element in a selector may have a class in Mapnik styles', line, col)
 
     selector = Selector(*elements)
     
@@ -651,23 +653,23 @@ def postprocess_selector(tokens, is_gym):
     
     return selector
 
-def postprocess_property(tokens):
+def postprocess_property(tokens, line=0, col=0):
     """ Convert a one-element list of tokens into a Property.
     """
     tokens = trim_extra(tokens)
     
     if len(tokens) != 1:
-        raise ParseException('Too many tokens in property: ' + repr(tokens))
+        raise ParseException('Too many tokens in property: ' + repr(tokens), line, col)
     
     if tokens[0][0] != 'IDENT':
-        raise ParseException('Incorrect type of token in property: ' + repr(tokens))
+        raise ParseException('Incorrect type of token in property: ' + repr(tokens), line, col)
     
     if tokens[0][1] not in properties:
-        raise ParseException('"%s" is not a recognized property name' % tokens[0][1])
+        raise ParseException('"%s" is not a recognized property name' % tokens[0][1], line, col)
     
     return Property(tokens[0][1])
 
-def postprocess_value(tokens, property, base=None):
+def postprocess_value(tokens, property, base=None, line=0, col=0):
     """
     """
     tokens = trim_extra(tokens)
@@ -679,36 +681,40 @@ def postprocess_value(tokens, property, base=None):
     else:
         important = False
     
+    if properties[property.name] in (int, float) and len(tokens) == 2 and tokens[0] == ('CHAR', '-') and tokens[1][0] == 'NUMBER':
+        # put the negative sign on the number
+        tokens = [(tokens[1][0], '-' + tokens[1][1])]
+    
     value = tokens
     
     if properties[property.name] in (int, float, str, color, uri, boolean) or type(properties[property.name]) is tuple:
         if len(tokens) != 1:
-            raise ParseException('Single value only for property "%(property)s"' % locals())
+            raise ParseException('Single value only for property "%(property)s"' % locals(), line, col)
 
     if properties[property.name] is int:
         if tokens[0][0] != 'NUMBER':
-            raise ParseException('Number value only for property "%(property)s"' % locals())
+            raise ParseException('Number value only for property "%(property)s"' % locals(), line, col)
 
         value = int(tokens[0][1])
 
     elif properties[property.name] is float:
         if tokens[0][0] != 'NUMBER':
-            raise ParseException('Number value only for property "%(property)s"' % locals())
+            raise ParseException('Number value only for property "%(property)s"' % locals(), line, col)
 
         value = float(tokens[0][1])
 
     elif properties[property.name] is str:
         if tokens[0][0] != 'STRING':
-            raise ParseException('String value only for property "%(property)s"' % locals())
+            raise ParseException('String value only for property "%(property)s"' % locals(), line, col)
 
         value = tokens[0][1][1:-1]
 
     elif properties[property.name] is color:
         if tokens[0][0] != 'HASH':
-            raise ParseException('Hash value only for property "%(property)s"' % locals())
+            raise ParseException('Hash value only for property "%(property)s"' % locals(), line, col)
 
         if not re.match(r'^#([0-9a-f]{3}){1,2}$', tokens[0][1], re.I):
-            raise ParseException('Unrecognized color value for property "%(property)s"' % locals())
+            raise ParseException('Unrecognized color value for property "%(property)s"' % locals(), line, col)
 
         hex = tokens[0][1][1:]
         
@@ -721,7 +727,7 @@ def postprocess_value(tokens, property, base=None):
 
     elif properties[property.name] is uri:
         if tokens[0][0] != 'URI':
-            raise ParseException('URI value only for property "%(property)s"' % locals())
+            raise ParseException('URI value only for property "%(property)s"' % locals(), line, col)
 
         raw = tokens[0][1]
 
@@ -738,16 +744,16 @@ def postprocess_value(tokens, property, base=None):
             
     elif properties[property.name] is boolean:
         if tokens[0][0] != 'IDENT' or tokens[0][1] not in ('true', 'false'):
-            raise ParseException('true/false value only for property "%(property)s"' % locals())
+            raise ParseException('true/false value only for property "%(property)s"' % locals(), line, col)
 
         value = boolean(tokens[0][1] == 'true')
             
     elif type(properties[property.name]) is tuple:
         if tokens[0][0] != 'IDENT':
-            raise ParseException('Identifier value only for property "%(property)s"' % locals())
+            raise ParseException('Identifier value only for property "%(property)s"' % locals(), line, col)
 
         if tokens[0][1] not in properties[property.name]:
-            raise ParseException('Unrecognized value for property "%(property)s"' % locals())
+            raise ParseException('Unrecognized value for property "%(property)s"' % locals(), line, col)
 
         value = tokens[0][1]
 
@@ -765,6 +771,7 @@ if __name__ == '__main__':
         pattern-file: url('http://example.com');
         line-cap: square;
         text-allow-overlap: false;
+        text-dx: -10;
     }
     
     * { text-fill: #ff9900 !important; }

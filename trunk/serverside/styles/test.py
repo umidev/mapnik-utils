@@ -1,3 +1,4 @@
+import sys
 import unittest
 from style import ParseException, parse_stylesheet
 from style import Selector, SelectorElement, SelectorAttributeTest
@@ -233,10 +234,13 @@ class ValueTests(unittest.TestCase):
         self.assertRaises(ParseException, postprocess_value, [('IDENT', 'not-in-tuple')], Property('line-join'))
 
     def testValue1(self):
-        self.assertEqual(1.0, postprocess_value([('NUMBER', 1.0)], Property('polygon-opacity')).value)
+        self.assertEqual(1.0, postprocess_value([('NUMBER', '1.0')], Property('polygon-opacity')).value)
 
     def testValue2(self):
-        self.assertEqual(10, postprocess_value([('NUMBER', 10)], Property('line-width')).value)
+        self.assertEqual(10, postprocess_value([('NUMBER', '10')], Property('line-width')).value)
+
+    def testValue2b(self):
+        self.assertEqual(-10, postprocess_value([('CHAR', '-'), ('NUMBER', '10')], Property('text-dx')).value)
 
     def testValue3(self):
         self.assertEqual('DejaVu', str(postprocess_value([('STRING', '"DejaVu"')], Property('text-face-name'))))
@@ -258,6 +262,18 @@ class ValueTests(unittest.TestCase):
 
     def testValue9(self):
         self.assertEqual('bevel', str(postprocess_value([('IDENT', 'bevel')], Property('line-join'))))
+
+# class BlockTests(unittest.TestCase):
+# 
+#     def testBlock1(self):
+#         s = """
+#             Layer
+#             {
+#                 text-dx: -10;
+#                 text-dy: -10;
+#             }
+#         """
+#         print >> sys.stderr, parse_stylesheet(s)
 
 if __name__ == '__main__':
     unittest.main()
