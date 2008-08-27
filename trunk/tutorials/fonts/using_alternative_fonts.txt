@@ -1,9 +1,17 @@
 # To register new fonts to use with the Mapnik TextSymbolizer
 # you must first register the full path to the directory that holds
-# the TrueType fonts (with .ttf extension) and then use the full
+# the TrueType (or OpenType) fonts (with .ttf extension) and then use the full
 # font face name (not the font file name) in the Text Symbolizer code
 
-# First in your python script, register your new fonts directory
+# Download a sample OpenType font with indic glyphs:
+
+wget http://download.savannah.gnu.org/releases/gargi/gargi.ttf
+
+# or on linux apt-get install then update the font cache
+apt-get install ttf-devanagari-fonts
+fc-cache
+
+# Then in your python script, register your new fonts directory
 
 from mapnik import *
 
@@ -15,8 +23,6 @@ if len( fonts ) == 0:
     print "### WARNING: No ttf files found in '%s'." % NEW_FONTS_DIR
 else:
     map(FontEngine.instance().register_font, fonts)
-
-
 
 # Then if you are writing your styles in python do:
 lyr = Layer('My Postgis Layer')
