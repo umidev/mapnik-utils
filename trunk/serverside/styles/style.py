@@ -9,6 +9,34 @@ from cssutils.tokenize2 import Tokenizer as cssTokenizer
 
 # recognized properties
 
+def main(file):
+    """ Given an input file containing nothing but styles, print out an
+        unrolled list of declarations in cascade order.
+    """
+    input = open(file, 'r').read()
+    rulesets = parse_stylesheet(input)
+    
+    for dec in unroll_rulesets(rulesets):
+        print dec.selector,
+        print '{',
+        print dec.property.name+':',
+        
+        if properties[dec.property.name] in (color, boolean):
+            print str(dec.value.value)+';',
+        
+        elif properties[dec.property.name] is uri:
+            print 'url("'+str(dec.value.value)+'");',
+        
+        elif properties[dec.property.name] is str:
+            print '"'+str(dec.value.value)+'";',
+        
+        elif properties[dec.property.name] in (int, float) or type(properties[dec.property.name]) is tuple:
+            print str(dec.value.value)+';',
+        
+        print '}'
+    
+    return 0
+
 class color:
     def __init__(self, r, g, b):
         self.channels = r, g, b
@@ -761,26 +789,6 @@ def postprocess_value(tokens, property, base=None, line=0, col=0):
 
 if __name__ == '__main__':
 
-    s = """
-    Layer#foo.foo[baz>10] bar,
-    *
-    {
-        polygon-fill: #f90;
-        text-face-name: /* boo yah */ "Helvetica Bold";
-        text-size: 10;
-        pattern-file: url('http://example.com');
-        line-cap: square;
-        text-allow-overlap: false;
-        text-dx: -10;
-    }
-    
-    * { text-fill: #ff9900 !important; }
-    """
-    
-    rulesets = parse_stylesheet(s)
-    
-    declarations = unroll_rulesets(rulesets)
-    
+    stylefile = sys.argv[1]
 
-    #pprint.PrettyPrinter(indent=2).pprint(rulesets)
-    pprint.PrettyPrinter(indent=2).pprint(declarations)
+    sys.exit(main(stylefile))
