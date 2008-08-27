@@ -1,6 +1,6 @@
 import sys
 import unittest
-from style import ParseException, parse_stylesheet
+from style import ParseException, parse_stylesheet, unroll_rulesets
 from style import Selector, SelectorElement, SelectorAttributeTest
 from style import postprocess_property, postprocess_value, Property
 
@@ -263,17 +263,120 @@ class ValueTests(unittest.TestCase):
     def testValue9(self):
         self.assertEqual('bevel', str(postprocess_value([('IDENT', 'bevel')], Property('line-join'))))
 
-# class BlockTests(unittest.TestCase):
-# 
-#     def testBlock1(self):
-#         s = """
-#             Layer
-#             {
-#                 text-dx: -10;
-#                 text-dy: -10;
-#             }
-#         """
-#         print >> sys.stderr, parse_stylesheet(s)
+class CascadeTests(unittest.TestCase):
+
+    def testCascade1(self):
+        s = """
+            Layer
+            {
+                text-dx: -10;
+                text-dy: -10;
+            }
+        """
+        rulesets = parse_stylesheet(s)
+        
+        self.assertEqual(1, len(rulesets))
+        self.assertEqual(1, len(rulesets[0]['selectors']))
+        self.assertEqual(1, len(rulesets[0]['selectors'][0].elements))
+
+        self.assertEqual(2, len(rulesets[0]['declarations']))
+        self.assertEqual('text-dx', rulesets[0]['declarations'][0]['property'].name)
+        self.assertEqual(-10, rulesets[0]['declarations'][0]['value'].value)
+        
+        declarations = unroll_rulesets(rulesets)
+        
+        self.assertEqual(2, len(declarations))
+        self.assertEqual('text-dx', declarations[0].property.name)
+        self.assertEqual('text-dy', declarations[1].property.name)
+
+    def testCascade2(self):
+        s = """
+            * { text-fill: #ff9900 !important; }
+
+            Layer#foo.foo[baz>10] bar,
+            *
+            {
+                polygon-fill: #f90;
+                text-face-name: /* boo yah */ "Helvetica Bold";
+                text-size: 10;
+                pattern-file: url('http://example.com');
+                line-cap: square;
+                text-allow-overlap: false;
+                text-dx: -10;
+            }
+        """
+        rulesets = parse_stylesheet(s)
+        
+        self.assertEqual(2, len(rulesets))
+        self.assertEqual(1, len(rulesets[0]['selectors']))
+        self.assertEqual(1, len(rulesets[0]['selectors'][0].elements))
+        self.assertEqual(2, len(rulesets[1]['selectors']))
+        self.assertEqual(2, len(rulesets[1]['selectors'][0].elements))
+        self.assertEqual(1, len(rulesets[1]['selectors'][1].elements))
+        
+        declarations = unroll_rulesets(rulesets)
+
+        self.assertEqual(15, len(declarations))
+
+        self.assertEqual('*', str(declarations[0].selector))
+        self.assertEqual('polygon-fill', declarations[0].property.name)
+        self.assertEqual('#ff9900', str(declarations[0].value))
+
+        self.assertEqual('*', str(declarations[1].selector))
+        self.assertEqual('text-face-name', declarations[1].property.name)
+        self.assertEqual('Helvetica Bold', str(declarations[1].value))
+
+        self.assertEqual('*', str(declarations[2].selector))
+        self.assertEqual('text-size', declarations[2].property.name)
+        self.assertEqual('10', str(declarations[2].value))
+
+        self.assertEqual('*', str(declarations[3].selector))
+        self.assertEqual('pattern-file', declarations[3].property.name)
+        self.assertEqual('http://example.com', str(declarations[3].value))
+
+        self.assertEqual('*', str(declarations[4].selector))
+        self.assertEqual('line-cap', declarations[4].property.name)
+        self.assertEqual('square', str(declarations[4].value))
+
+        self.assertEqual('*', str(declarations[5].selector))
+        self.assertEqual('text-allow-overlap', declarations[5].property.name)
+        self.assertEqual('false', str(declarations[5].value))
+
+        self.assertEqual('*', str(declarations[6].selector))
+        self.assertEqual('text-dx', declarations[6].property.name)
+        self.assertEqual('-10', str(declarations[6].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[7].selector))
+        self.assertEqual('polygon-fill', declarations[7].property.name)
+        self.assertEqual('#ff9900', str(declarations[7].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[8].selector))
+        self.assertEqual('text-face-name', declarations[8].property.name)
+        self.assertEqual('Helvetica Bold', str(declarations[8].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[9].selector))
+        self.assertEqual('text-size', declarations[9].property.name)
+        self.assertEqual('10', str(declarations[9].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[10].selector))
+        self.assertEqual('pattern-file', declarations[10].property.name)
+        self.assertEqual('http://example.com', str(declarations[10].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[11].selector))
+        self.assertEqual('line-cap', declarations[11].property.name)
+        self.assertEqual('square', str(declarations[11].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[12].selector))
+        self.assertEqual('text-allow-overlap', declarations[12].property.name)
+        self.assertEqual('false', str(declarations[12].value))
+
+        self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[13].selector))
+        self.assertEqual('text-dx', declarations[13].property.name)
+        self.assertEqual('-10', str(declarations[13].value))
+
+        self.assertEqual('*', str(declarations[14].selector))
+        self.assertEqual('text-fill', declarations[14].property.name)
+        self.assertEqual('#ff9900', str(declarations[14].value))
 
 if __name__ == '__main__':
     unittest.main()
