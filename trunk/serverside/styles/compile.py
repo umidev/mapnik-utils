@@ -382,23 +382,33 @@ def add_text_styles(map, layer, declarations):
     # a separate style element for each text name
     for text_name in set(text_names):
     
-        # just the ones we care about here
+        # just the ones we care about here.
+        # the complicated conditional means: get all declarations that
+        # apply to this text_name specifically, or text in general.
         name_declarations = [dec for dec in declarations
-                             if dec.property.name in property_map and dec.selector.elements[1].names[0] == text_name]
+                             if dec.property.name in property_map
+                                and (len(dec.selector.elements) == 1
+                                     or (len(dec.selector.elements) == 2
+                                         and dec.selector.elements[1].names[0] in (text_name, '*')))]
     
         # a place to put rule elements
         rules = []
         
         for range in selectors_ranges([dec.selector for dec in name_declarations]):
             has_text = False
-            symbolizer = Element('TextSymbolizer', {'name': text_name})
+            symbolizer = Element('TextSymbolizer')
             
             for dec in name_declarations:
                 if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
                     symbolizer.set(property_map[dec.property.name], str(dec.value))
                     has_text = True
+                    
+                    # the 'name' attribute will be used as a flag in a few
+                    # lines to determine if this symbolizer is worth keeping.
+                    if len(dec.selector.elements) == 2 and (len(dec.selector.elements) == 1 or dec.selector.elements[1].names[0] == text_name):
+                        symbolizer.set('name', text_name)
             
-            if has_text:
+            if has_text and symbolizer.get('name', False):
                 rule = make_ranged_rule_element(range)
                 rule.append(symbolizer)
                 rules.append(rule)

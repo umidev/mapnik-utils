@@ -5,7 +5,7 @@
     polygon-fill: #fff;
     
     /* point-file: url("purple-point.png"); */
-    pattern-file: url("http://www.istockphoto.com/file_thumbview_approve/3055566/2/istockphoto_3055566_crazy_background.jpg");
+    /* pattern-file: url("http://www.istockphoto.com/file_thumbview_approve/3055566/2/istockphoto_3055566_crazy_background.jpg"); */
 }
 
 *[zoom>=6][zoom<12]
@@ -23,18 +23,19 @@
     line-color: #f00;
 }
 
-#world-borders[zoom<10] NAME
+Layer
 {
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
-    text-fill: #000;
     text-placement: point;
+}
+
+#world-borders[zoom<10] NAME
+{
+    text-fill: #333;
 }
 
 *[zoom>=10] FIPS
 {
-    text-face-name: "DejaVu Sans Book";
-    text-size: 10;
     text-fill: #000;
-    text-placement: point;
 }
