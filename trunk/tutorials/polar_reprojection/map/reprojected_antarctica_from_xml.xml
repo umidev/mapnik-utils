@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" bgcolor="#4682b4">
+    <Style name="My Style">
+        <Rule>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#f2eff9</CssParameter>
+            </PolygonSymbolizer>
+            <LineSymbolizer>
+                <CssParameter name="stroke">#808080</CssParameter>
+                <CssParameter name="stroke-width">0.1</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="world" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="0">
+        <StyleName>My Style</StyleName>
+        <Datasource>
+            <Parameter name="file">../../sample_data/world_borders</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+</Map>
