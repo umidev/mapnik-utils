@@ -18,17 +18,16 @@
         function init(){
             var options = {
                 projection: new OpenLayers.Projection("EPSG:3031"),
-                //projection: new OpenLayers.Projection("EPSG:4326"),
-                maxResolution: 'auto',
-		            maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+                maxResolution: 'auto', //433918.4389105067
+		        maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
 		        };
             map = new OpenLayers.Map('map', options);
             wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/wms/mapnikwms.py?", {layers: 'world', format:'image/png'} );
             map.addLayers([wms]);
-            //map.fractionalZoom = true;
+            map.fractionalZoom = true;
             map.addControl(new OpenLayers.Control.MousePosition());
             //map.zoomToMaxExtent();
-            var antarctic_extent = new OpenLayers.Bounds(-3721203.143138902,-951869.332207036, 3560164.0478620003,1844986.6977515414)
+            antarctic_extent = new OpenLayers.Bounds(-2600000, -2200000, 2700000, 2200000);
             map.zoomToExtent(antarctic_extent);     
         }                
     </script>
