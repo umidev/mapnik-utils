@@ -263,7 +263,7 @@ def extract_declarations(map, base):
 
     return declarations
 
-def make_rule_element(range, filter=Filter()):
+def make_rule_element(range, filter):
     """ Given a Range, return a Rule element prepopulated
         with applicable min/max scale denominator elements.
     """
@@ -310,7 +310,7 @@ def insert_layer_style(map, layer, style):
     stylename.tail = '\n        '
     layer.insert(layer._children.index(layer.find('Datasource')), stylename)
 
-def is_applicable_selector(selector, range, filter=Filter()):
+def is_applicable_selector(selector, range, filter):
     """
     """
     if not selector.inRange(range.midpoint()) and selector.isRanged():
@@ -462,24 +462,29 @@ def add_text_styles(map, layer, declarations):
         # a place to put rule elements
         rules = []
         
-        for range in selectors_ranges([dec.selector for dec in name_declarations]):
-            has_text = False
-            symbolizer = Element('TextSymbolizer')
-            
-            for dec in name_declarations:
-                if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
-                    symbolizer.set(property_map[dec.property.name], str(dec.value))
-                    has_text = True
-                    
-                    # the 'name' attribute will be used as a flag in a few
-                    # lines to determine if this symbolizer is worth keeping.
-                    if len(dec.selector.elements) == 2 and (len(dec.selector.elements) == 1 or dec.selector.elements[1].names[0] == text_name):
-                        symbolizer.set('name', text_name)
-            
-            if has_text and symbolizer.get('name', False):
-                rule = make_rule_element(range)
-                rule.append(symbolizer)
-                rules.append(rule)
+        # a matrix of checks for filter and min/max scale limitations
+        ranges = selectors_ranges([dec.selector for dec in name_declarations])
+        filters = selectors_filters([dec.selector for dec in name_declarations])
+    
+        for range in ranges:
+            for filter in filters:
+                has_text = False
+                symbolizer = Element('TextSymbolizer')
+                
+                for dec in name_declarations:
+                    if is_applicable_selector(dec.selector, range, filter):
+                        symbolizer.set(property_map[dec.property.name], str(dec.value))
+                        has_text = True
+                        
+                        # the 'name' attribute will be used as a flag in a few
+                        # lines to determine if this symbolizer is worth keeping.
+                        if len(dec.selector.elements) == 2 and (len(dec.selector.elements) == 1 or dec.selector.elements[1].names[0] == text_name):
+                            symbolizer.set('name', text_name)
+                
+                if has_text and symbolizer.get('name', False):
+                    rule = make_rule_element(range, filter)
+                    rule.append(symbolizer)
+                    rules.append(rule)
 
         if rules:
             style = Element('Style', {'name': 'text style %d (%s)' % (next_counter(), text_name)})
@@ -507,37 +512,42 @@ def add_point_style(map, layer, declarations, out=None):
     # a place to put rule elements
     rules = []
     
-    for range in selectors_ranges([dec.selector for dec in declarations]):
-        symbolizer = Element('PointSymbolizer')
-        
-        # collect all the applicable declarations into a symbolizer element
-        for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
-                symbolizer.set(property_map[dec.property.name], str(dec.value))
+    # a matrix of checks for filter and min/max scale limitations
+    ranges = selectors_ranges([dec.selector for dec in declarations])
+    filters = selectors_filters([dec.selector for dec in declarations])
     
-        if symbolizer.get('file', False):
-            # read the image to get some more details
-            img_path = symbolizer.get('file')
-            img_data = urllib.urlopen(img_path).read()
-            img_file = StringIO.StringIO(img_data)
-            img = PIL.Image.open(img_file)
+    for range in ranges:
+        for filter in filters:
+            symbolizer = Element('PointSymbolizer')
             
-            # save the image to a tempfile, making it a png no matter what
-            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-point-', out)
-            os.close(handle)
-            
-            img.save(path)
-            symbolizer.set('file', path)
-            symbolizer.set('type', 'png')
-            
-            # if no width/height have been provided, set them
-            if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
-                symbolizer.set('width', str(img.size[0]))
-                symbolizer.set('height', str(img.size[1]))
-            
-            rule = make_rule_element(range)
-            rule.append(symbolizer)
-            rules.append(rule)
+            # collect all the applicable declarations into a symbolizer element
+            for dec in reversed(declarations):
+                if is_applicable_selector(dec.selector, range, filter):
+                    symbolizer.set(property_map[dec.property.name], str(dec.value))
+        
+            if symbolizer.get('file', False):
+                # read the image to get some more details
+                img_path = symbolizer.get('file')
+                img_data = urllib.urlopen(img_path).read()
+                img_file = StringIO.StringIO(img_data)
+                img = PIL.Image.open(img_file)
+                
+                # save the image to a tempfile, making it a png no matter what
+                (handle, path) = tempfile.mkstemp('.png', 'cascadenik-point-', out)
+                os.close(handle)
+                
+                img.save(path)
+                symbolizer.set('file', path)
+                symbolizer.set('type', 'png')
+                
+                # if no width/height have been provided, set them
+                if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
+                    symbolizer.set('width', str(img.size[0]))
+                    symbolizer.set('height', str(img.size[1]))
+                
+                rule = make_rule_element(range, filter)
+                rule.append(symbolizer)
+                rules.append(rule)
 
     if rules:
         style = Element('Style', {'name': 'point style %d' % next_counter()})
@@ -564,37 +574,42 @@ def add_pattern_style(map, layer, declarations, out=None):
     # a place to put rule elements
     rules = []
     
-    for range in selectors_ranges([dec.selector for dec in declarations]):
-        symbolizer = Element('PolygonPatternSymbolizer')
-        
-        # collect all the applicable declarations into a symbolizer element
-        for dec in reversed(declarations):
-            if dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged():
-                symbolizer.set(property_map[dec.property.name], str(dec.value))
+    # a matrix of checks for filter and min/max scale limitations
+    ranges = selectors_ranges([dec.selector for dec in declarations])
+    filters = selectors_filters([dec.selector for dec in declarations])
     
-        if symbolizer.get('file', False):
-            # read the image to get some more details
-            img_path = symbolizer.get('file')
-            img_data = urllib.urlopen(img_path).read()
-            img_file = StringIO.StringIO(img_data)
-            img = PIL.Image.open(img_file)
+    for range in ranges:
+        for filter in filters:
+            symbolizer = Element('PolygonPatternSymbolizer')
             
-            # save the image to a tempfile, making it a png no matter what
-            (handle, path) = tempfile.mkstemp('.png', 'cascadenik-pattern-', out)
-            os.close(handle)
-            
-            img.save(path)
-            symbolizer.set('file', path)
-            symbolizer.set('type', 'png')
-            
-            # if no width/height have been provided, set them
-            if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
-                symbolizer.set('width', str(img.size[0]))
-                symbolizer.set('height', str(img.size[1]))
-            
-            rule = make_rule_element(range)
-            rule.append(symbolizer)
-            rules.append(rule)
+            # collect all the applicable declarations into a symbolizer element
+            for dec in reversed(declarations):
+                if is_applicable_selector(dec.selector, range, filter):
+                    symbolizer.set(property_map[dec.property.name], str(dec.value))
+        
+            if symbolizer.get('file', False):
+                # read the image to get some more details
+                img_path = symbolizer.get('file')
+                img_data = urllib.urlopen(img_path).read()
+                img_file = StringIO.StringIO(img_data)
+                img = PIL.Image.open(img_file)
+                
+                # save the image to a tempfile, making it a png no matter what
+                (handle, path) = tempfile.mkstemp('.png', 'cascadenik-pattern-', out)
+                os.close(handle)
+                
+                img.save(path)
+                symbolizer.set('file', path)
+                symbolizer.set('type', 'png')
+                
+                # if no width/height have been provided, set them
+                if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
+                    symbolizer.set('width', str(img.size[0]))
+                    symbolizer.set('height', str(img.size[1]))
+                
+                rule = make_rule_element(range, filter)
+                rule.append(symbolizer)
+                rules.append(rule)
 
     if rules:
         style = Element('Style', {'name': 'pattern style %d' % next_counter()})
