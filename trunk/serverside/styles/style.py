@@ -325,11 +325,15 @@ class Selector:
     def rangeTests(self):
         """
         """
+        return [test for test in self.allTests() if test.isRanged()]
+    
+    def allTests(self):
+        """
+        """
         tests = []
         
         for test in self.elements[0].tests:
-            if test.isRanged():
-                tests.append(test)
+            tests.append(test)
 
         return tests
     
@@ -391,6 +395,22 @@ class SelectorAttributeTest:
     def __repr__(self):
         return '[%(arg1)s%(op)s%(arg2)s]' % self.__dict__
 
+    def isSimple(self):
+        """
+        """
+        return self.op == '=' and not self.isRanged()
+    
+    def inverse(self):
+        """
+        """
+        assert self.isSimple()
+        
+        if self.op == '=':
+            return SelectorAttributeTest(self.arg1, '!=', self.arg2)
+        
+        elif self.op == '!=':
+            return SelectorAttributeTest(self.arg1, '=', self.arg2)
+    
     def isRanged(self):
         """
         """
@@ -420,6 +440,19 @@ class SelectorAttributeTest:
 
         return False
 
+    def inFilter(self, tests):
+        """
+        """
+        for test in tests:
+            if self.arg1 == test.arg1:
+                if test.op == '=' and self.arg2 != test.arg2:
+                    return False
+
+                if test.op == '!=' and self.arg2 == test.arg2:
+                    return False
+
+        return True
+    
     def rangeOpEdge(self):
         if self.isRanged():
             ops = {'<': operator.lt, '<=': operator.le, '=': operator.eq, '>=': operator.ge, '>': operator.gt}

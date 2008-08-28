@@ -1,4 +1,5 @@
 import os, sys
+import math
 import pprint
 import urllib
 import urlparse
@@ -88,6 +89,12 @@ class Range:
             except KeyError:
                 return '(%s%s ...)' % (self.leftedge, opstr[self.leftop])
 
+class Filter:
+    """
+    """
+    def __init__(self, *tests):
+        self.tests = list(tests)
+
 def selectors_ranges(selectors):
     """ Given a list of selectors and a map, return a list of Ranges that
         fully describes all possible unique slices within those selectors.
@@ -176,6 +183,38 @@ def selectors_ranges(selectors):
         # if all else fails, return a Range that covers everything
         return [Range()]
 
+def selectors_filters(selectors):
+    """ Given a list of selectors and a map, return a list of Filters that
+        fully describes all possible unique equality tests within those selectors.
+    """
+    tests = {}
+    arg1s = set()
+    
+    # get all the tests and test.arg1 values out of the selectors
+    for selector in selectors:
+        for test in selector.allTests():
+            if test.isSimple():
+                tests[str(test)] = test
+                arg1s.add(test.arg1)
+
+    filters = []
+    
+    for arg1 in arg1s:
+        arg_filters = [Filter()]
+        
+        for test in tests.values():
+            if test.arg1 == arg1:
+                arg_filters[0].tests.append(test.inverse())
+                arg_filters.append(Filter(test))
+
+        filters += arg_filters
+
+    if len(filters):
+        return filters
+
+    # if no filters have been defined, return a blank one that matches anything
+    return [Filter()]
+
 def next_counter():
     global counter
     counter += 1
@@ -224,15 +263,15 @@ def extract_declarations(map, base):
 
     return declarations
 
-def make_ranged_rule_element(range):
+def make_rule_element(range, filter=Filter()):
     """ Given a Range, return a Rule element prepopulated
         with applicable min/max scale denominator elements.
     """
-    rule = Element('Rule')
+    rule_element = Element('Rule')
 
     if range.leftedge:
         minscale = Element('MinScaleDenominator')
-        rule.append(minscale)
+        rule_element.append(minscale)
     
         if range.leftop is ge:
             minscale.text = str(range.leftedge)
@@ -241,16 +280,23 @@ def make_ranged_rule_element(range):
     
     if range.rightedge:
         maxscale = Element('MaxScaleDenominator')
-        rule.append(maxscale)
+        rule_element.append(maxscale)
     
         if range.rightop is le:
             maxscale.text = str(range.rightedge)
         elif range.rightop is lt:
             maxscale.text = str(range.rightedge - 1)
     
-    rule.tail = '\n        '
+    filter_text = ' and '.join("[%s] %s '%s'" % (test.arg1, test.op, test.arg2) for test in filter.tests)
     
-    return rule
+    if filter_text:
+        filter_element = Element('Filter')
+        filter_element.text = filter_text
+        rule_element.append(filter_element)
+    
+    rule_element.tail = '\n        '
+    
+    return rule_element
 
 def insert_layer_style(map, layer, style):
     """ Given a Map element, a Layer element, and a Style element, insert the
@@ -263,6 +309,18 @@ def insert_layer_style(map, layer, style):
     stylename.text = style.get('name')
     stylename.tail = '\n        '
     layer.insert(layer._children.index(layer.find('Datasource')), stylename)
+
+def is_applicable_selector(selector, range, filter=Filter()):
+    """
+    """
+    if not selector.inRange(range.midpoint()) and selector.isRanged():
+        return False
+
+    for test in selector.allTests():
+        if not test.inFilter(filter.tests):
+            return False
+    
+    return True
 
 def add_map_style(map, declarations):
     """
@@ -286,25 +344,30 @@ def add_polygon_style(map, layer, declarations):
     # place to put rule elements
     rules = []
     
-    for range in selectors_ranges([dec.selector for dec in declarations]):
-        has_poly = False
-        symbolizer = Element('PolygonSymbolizer')
-        encountered = []
+    # a matrix of checks for filter and min/max scale limitations
+    ranges = selectors_ranges([dec.selector for dec in declarations])
+    filters = selectors_filters([dec.selector for dec in declarations])
+    
+    for range in ranges:
+        for filter in filters:
+            has_poly = False
+            symbolizer = Element('PolygonSymbolizer')
+            encountered = []
+            
+            # collect all the applicable declarations into a symbolizer element
+            for dec in reversed(declarations):
+                if is_applicable_selector(dec.selector, range, filter) and dec.property.name not in encountered:
+                    parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
+                    parameter.text = str(dec.value)
+                    symbolizer.append(parameter)
         
-        # collect all the applicable declarations into a symbolizer element
-        for dec in reversed(declarations):
-            if (dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged()) and dec.property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
-                parameter.text = str(dec.value)
-                symbolizer.append(parameter)
-    
-                encountered.append(dec.property.name)
-                has_poly = True
-    
-        if has_poly:
-            rule = make_ranged_rule_element(range)
-            rule.append(symbolizer)
-            rules.append(rule)
+                    encountered.append(dec.property.name)
+                    has_poly = True
+        
+            if has_poly:
+                rule = make_rule_element(range, filter)
+                rule.append(symbolizer)
+                rules.append(rule)
 
     if rules:
         style = Element('Style', {'name': 'poly style %d' % next_counter()})
@@ -330,25 +393,30 @@ def add_line_style(map, layer, declarations):
     # a place to put rule elements
     rules = []
     
-    for range in selectors_ranges([dec.selector for dec in declarations]):
-        has_line = False
-        symbolizer = Element('LineSymbolizer')
-        encountered = []
+    # a matrix of checks for filter and min/max scale limitations
+    ranges = selectors_ranges([dec.selector for dec in declarations])
+    filters = selectors_filters([dec.selector for dec in declarations])
+    
+    for range in ranges:
+        for filter in filters:
+            has_line = False
+            symbolizer = Element('LineSymbolizer')
+            encountered = []
+            
+            # collect all the applicable declarations into a symbolizer element
+            for dec in reversed(declarations):
+                if is_applicable_selector(dec.selector, range, filter) and dec.property.name not in encountered:
+                    parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
+                    parameter.text = str(dec.value)
+                    symbolizer.append(parameter)
         
-        # collect all the applicable declarations into a symbolizer element
-        for dec in reversed(declarations):
-            if (dec.selector.inRange(range.midpoint()) or not dec.selector.isRanged()) and dec.property.name not in encountered:
-                parameter = Element('CssParameter', {'name': property_map[dec.property.name]})
-                parameter.text = str(dec.value)
-                symbolizer.append(parameter)
-    
-                encountered.append(dec.property.name)
-                has_line = True
-    
-        if has_line:
-            rule = make_ranged_rule_element(range)
-            rule.append(symbolizer)
-            rules.append(rule)
+                    encountered.append(dec.property.name)
+                    has_line = True
+        
+            if has_line:
+                rule = make_rule_element(range, filter)
+                rule.append(symbolizer)
+                rules.append(rule)
 
     if rules:
         style = Element('Style', {'name': 'line style %d' % next_counter()})
@@ -409,7 +477,7 @@ def add_text_styles(map, layer, declarations):
                         symbolizer.set('name', text_name)
             
             if has_text and symbolizer.get('name', False):
-                rule = make_ranged_rule_element(range)
+                rule = make_rule_element(range)
                 rule.append(symbolizer)
                 rules.append(rule)
 
@@ -467,7 +535,7 @@ def add_point_style(map, layer, declarations, out=None):
                 symbolizer.set('width', str(img.size[0]))
                 symbolizer.set('height', str(img.size[1]))
             
-            rule = make_ranged_rule_element(range)
+            rule = make_rule_element(range)
             rule.append(symbolizer)
             rules.append(rule)
 
@@ -524,7 +592,7 @@ def add_pattern_style(map, layer, declarations, out=None):
                 symbolizer.set('width', str(img.size[0]))
                 symbolizer.set('height', str(img.size[1]))
             
-            rule = make_ranged_rule_element(range)
+            rule = make_rule_element(range)
             rule.append(symbolizer)
             rules.append(rule)
 
