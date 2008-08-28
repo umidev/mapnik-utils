@@ -27,7 +27,7 @@
         function init(){
             var mapOptions = { maxResolution: 1.6, numZoomLevels: 21};
             map = new OpenLayers.Map('map', mapOptions);
-            var wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikwms.py?", {layers: 'world', format:'image/png'} );
+            var wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/wms/mapnikwms.py?", {layers: 'world', format:'image/png'} );
             map.addLayers([wms]);
             map.addControl(new OpenLayers.Control.LayerSwitcher());
             map.fractionalZoom = true;

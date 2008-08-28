@@ -6,7 +6,7 @@ PROJ4_STRING = '+init=epsg:4326'
 
 # Switch to these settings to used data in mercator projection from: http://tile.openstreetmap.org/world_boundaries-spherical.tgz 
 #PROJ4_STRING = '+init=epsg:3395'
-#SHAPEFILE = '../../world_boundaries_m'
+#SHAPEFILE = '/Users/spring/projects/mapnik-utils/trunk/sample_data/world_boundaries_m'
 
 # Example query string for reprojected data:
 # http://localhost/cgi-bin/wms/mapnikwms.py?LAYERS=world&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&FORMAT=image%2Fpng&SRS=EPSG%3A3395&BBOX=-20037400.000000,-19929239.110000,%2020037400.000000,18375854.709643&WIDTH=256&HEIGHT=256

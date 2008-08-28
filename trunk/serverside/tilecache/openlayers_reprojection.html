@@ -11,37 +11,32 @@
       height: 100%;
     }
 
-   </style>
+    </style>
     <script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
-<script type="text/javascript">
-        var map, antarctic_extent;
+    <script type="text/javascript">
+        var map, tms, tilecache, antarctic_extent;
         function init() { 
-            map = new OpenLayers.Map($('map'),
-            {   controls: [],
-                maxResolution: 'auto',
-		        maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+            var options = {
                 projection: new OpenLayers.Projection("EPSG:3031"),
-                });
-          
-            var tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
-                "tilecache.cgi/", { serviceVersion: "1.0.0", layername: "polar",  type: "png" });
-            var tilecache = new OpenLayers.Layer.TileCache(
-                "TileCache Server Static Cache (only if exists)", "../cache",
+                resolution: 10945.273631840791,
+                units: 'm',
+                maxResolution: 'auto', //433918.4389105067
+		        maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+		        };
+            map = new OpenLayers.Map('map', options);
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/wms/mapnikwms.py?", {layers: 'world', format:'image/png'} );
+            tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
+                "http://localhost/tilecache/tilecache.cgi/", { serviceVersion: "1.0.0", layername: "polar",  type: "png" });
+            tilecache = new OpenLayers.Layer.TileCache(
+                "TileCache Server Static Cache (only if exists)", "http://localhost/cache",
                 "polar", { format: "image/png", });
  
-            map.addLayers([tms, tilecache]);
-            map.setBaseLayer(tms);
+            map.addLayers([wms, tms, tilecache]);
+            //map.setBaseLayer(tms);
  
-            map.addControl(new OpenLayers.Control.Navigation()); 
-            map.addControl(new OpenLayers.Control.PanZoom());
-            map.addControl(new OpenLayers.Control.Permalink());
             map.addControl(new OpenLayers.Control.MousePosition());
             map.addControl(new OpenLayers.Control.LayerSwitcher());
-            
-            antarctic_extent = new OpenLayers.Bounds(-139217830.1606086, -70736708.18503937, -137261149.51105773, -69906011.25919357)
-            map.zoomToExtent(antarctic_extent);
-            
-           var control = new OpenLayers.Control();
+            var control = new OpenLayers.Control();
             OpenLayers.Util.extend(control, {
                 draw: function () {
                     // this Handler.Box will intercept the shift-drag zoomBox
@@ -50,9 +45,7 @@
                         {keyMask: OpenLayers.Handler.MOD_ALT});
                     this.box.activate();
                 },
-
-              
-            notice: function (bounds) {
+                notice: function (bounds) {
  						var display =  new OpenLayers.Projection("EPSG:4326")
                         var ll_merc = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
                         var ll = ll_merc.transform(map.getProjectionObject(), display);
@@ -64,8 +57,21 @@
                         document.getElementsByName("ol").ol.value = openlayers_bounds;
                     }
            });
-        map.addControl(control);
-     
+            map.addControl(control);
+            //map.fractionalZoom = true;
+
+            map.zoomToMaxExtent()
+            
+            //antarctic_extent = new OpenLayers.Bounds(-139217830.1606086, -70736708.18503937, -137261149.51105773, -69906011.25919357)
+            //map.zoomToExtent(antarctic_extent);
+            
+            //antarctic_extent = new OpenLayers.Bounds(-2600000, -2200000, 2700000, 2200000);
+            //map.zoomToExtent(antarctic_extent)
+            
+            //var center = new OpenLayers.LonLat(-138073999,-70303512)
+            //map.setCenter(center,7)
+            //map.setCenter(center,8)
+            
         }
   </script>
   </head>

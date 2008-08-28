@@ -24,9 +24,9 @@
                 maxZoomLevel: 19  });
           
             var tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
-                "tilecache.cgi/", { serviceVersion: "1.0.0", layername: "world",  type: "png" });
+                "http://localhost/tilecache/tilecache.cgi/", { serviceVersion: "1.0.0", layername: "world",  type: "png" });
             var tilecache = new OpenLayers.Layer.TileCache(
-                "TileCache Server Static Cache (only if exists)", "../cache",
+                "TileCache Server Static Cache (only if exists)", "http://localhost/cache",
                 "world", { format: "image/png", });
  
             map.addLayers([tms, tilecache]);
