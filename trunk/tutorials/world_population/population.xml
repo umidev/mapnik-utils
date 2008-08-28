@@ -123,7 +123,7 @@
     <StyleName>countries_label</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">data/thematic_mapping_world</Parameter>
+      <Parameter name="file">../world_population/data/thematic_mapping_world</Parameter>
     </Datasource>
   </Layer>
 
