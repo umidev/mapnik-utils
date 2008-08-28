@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Mapnik TMS Layer Test</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    html, body { height: 100%; }
+    body {margin: 0px;}
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+   </style>
+    <script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
+<script type="text/javascript">
+        var map, antarctic_extent;
+        function init() { 
+            map = new OpenLayers.Map($('map'),
+            {   controls: [],
+                maxResolution: 'auto',
+		        maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+                projection: new OpenLayers.Projection("EPSG:3031"),
+                });
+          
+            var tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
+                "tilecache.cgi/", { serviceVersion: "1.0.0", layername: "polar",  type: "png" });
+            var tilecache = new OpenLayers.Layer.TileCache(
+                "TileCache Server Static Cache (only if exists)", "../cache",
+                "polar", { format: "image/png", });
+ 
+            map.addLayers([tms, tilecache]);
+            map.setBaseLayer(tms);
+ 
+            map.addControl(new OpenLayers.Control.Navigation()); 
+            map.addControl(new OpenLayers.Control.PanZoom());
+            map.addControl(new OpenLayers.Control.Permalink());
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            
+            antarctic_extent = new OpenLayers.Bounds(-139217830.1606086, -70736708.18503937, -137261149.51105773, -69906011.25919357)
+            map.zoomToExtent(antarctic_extent);
+            
+           var control = new OpenLayers.Control();
+            OpenLayers.Util.extend(control, {
+                draw: function () {
+                    // this Handler.Box will intercept the shift-drag zoomBox
+                    this.box = new OpenLayers.Handler.Box( control,
+                        {"done": this.notice},
+                        {keyMask: OpenLayers.Handler.MOD_ALT});
+                    this.box.activate();
+                },
+
+              
+            notice: function (bounds) {
+ 						var display =  new OpenLayers.Projection("EPSG:4326")
+                        var ll_merc = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+                        var ll = ll_merc.transform(map.getProjectionObject(), display);
+                        var ur_merc = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+                        var ur = ur_merc.transform(map.getProjectionObject(), display);
+                        var mapnik_envelop = ('Envelope(' + ll.lon.toFixed(4) + ", " + ll.lat.toFixed(4) + ", " + ur.lon.toFixed(4) + ", " + ur.lat.toFixed(4) + ')');
+                        document.getElementsByName("mapnik").mapnik.value = mapnik_envelop;
+                        var openlayers_bounds = ('new OpenLayers.Bounds(' + ll.lon.toFixed(4) + ", " + ll.lat.toFixed(4) + ", " + ur.lon.toFixed(4) + ", " + ur.lat.toFixed(4) + ')');
+                        document.getElementsByName("ol").ol.value = openlayers_bounds;
+                    }
+           });
+        map.addControl(control);
+     
+        }
+  </script>
+  </head>
+  <body onload="init()">
+     <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik TMS Layer Test</h2>
+    <div id="map">
+    </div>
+        <div id="bounds" style="font-size: small; left:10px; position:absolute; bottom: 30px; z-index:10000">
+    <input type="textarea" size= "65" id='mapnik' name="mapnik" value="Hold alt and drag to fetch a Mapnik Envelope()" />
+    </div>
+        <div id="bounds" style="font-size: small; left:10px; position:absolute; bottom: 60px; z-index:10000">
+    <input type="textarea" size= "65" id='ol' name="ol" value="Hold alt and drag to fetch an OpenLayers Bounds" />
+       </div>
+  </body>
+</html>
