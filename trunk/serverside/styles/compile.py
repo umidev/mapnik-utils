@@ -95,6 +95,51 @@ class Filter:
     def __init__(self, *tests):
         self.tests = list(tests)
 
+    def isOpen(self):
+        """
+        """
+        equals = {}
+        
+        for test in self.tests:
+            if test.op == '=':
+                if equals.has_key(test.arg1) and test.arg2 != equals[test.arg1]:
+                    # a contradiction!
+                    return False
+                    
+                equals[test.arg1] = test.arg2
+        
+        return True
+
+    def clone(self):
+        """
+        """
+        return Filter(*self.tests[:])
+    
+    def minusExtras(self):
+        """ Return a new Filter that's equal to this one,
+            without extra terms that don't add meaning.
+        """
+        assert self.isOpen()
+        
+        trimmed = self.clone()
+        
+        equals = {}
+        
+        for test in trimmed.tests:
+            if test.op == '=':
+                equals[test.arg1] = test.arg2
+
+        extras = []
+
+        for (i, test) in enumerate(trimmed.tests):
+            if test.op == '!=' and equals.has_key(test.arg1) and equals[test.arg1] != test.arg2:
+                extras.append(i)
+
+        while extras:
+            trimmed.tests.pop(extras.pop())
+
+        return trimmed
+
 def selectors_ranges(selectors):
     """ Given a list of selectors and a map, return a list of Ranges that
         fully describes all possible unique slices within those selectors.
@@ -197,17 +242,21 @@ def selectors_filters(selectors):
                 tests[str(test)] = test
                 arg1s.add(test.arg1)
 
+    tests = tests.values()
     filters = []
     
-    for arg1 in arg1s:
-        arg_filters = [Filter()]
-        
-        for test in tests.values():
-            if test.arg1 == arg1:
-                arg_filters[0].tests.append(test.inverse())
-                arg_filters.append(Filter(test))
+    # create something like a truth table
+    for i in range(int(math.pow(2, len(tests)))):
+        filter = Filter()
+    
+        for (j, test) in enumerate(tests):
+            if bool(i & (0x01 << j)):
+                filter.tests.append(test)
+            else:
+                filter.tests.append(test.inverse())
 
-        filters += arg_filters
+        if filter.isOpen():
+            filters.append(filter.minusExtras())
 
     if len(filters):
         return filters

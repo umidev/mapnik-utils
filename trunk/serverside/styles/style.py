@@ -398,7 +398,7 @@ class SelectorAttributeTest:
     def isSimple(self):
         """
         """
-        return self.op == '=' and not self.isRanged()
+        return self.op in ('=', '!=') and not self.isRanged()
     
     def inverse(self):
         """
@@ -441,14 +441,20 @@ class SelectorAttributeTest:
         return False
 
     def inFilter(self, tests):
-        """
+        """ Given a collection of tests, return false if this test contradicts any of them.
         """
         for test in tests:
             if self.arg1 == test.arg1:
-                if test.op == '=' and self.arg2 != test.arg2:
+                if test.op == '=' and self.op == '=' and self.arg2 != test.arg2:
+                    # equal different things
                     return False
 
-                if test.op == '!=' and self.arg2 == test.arg2:
+                elif test.op == '!=' and self.op == '=' and self.arg2 == test.arg2:
+                    # contradict: equal vs. not equal
+                    return False
+
+                elif test.op == '=' and self.op == '!=' and self.arg2 == test.arg2:
+                    # contradict: equal vs. not equal
                     return False
 
         return True
@@ -656,8 +662,8 @@ def postprocess_selector(tokens, is_gym, line=0, col=0):
             if nname in ('IDENT', 'NUMBER'):
                 parts.append(value)
                 
-            elif nname == 'CHAR' and value in ('<', '=', '>'):
-                if value is '=' and parts[-1] in ('<', '>'):
+            elif nname == 'CHAR' and value in ('<', '=', '>', '!'):
+                if value is '=' and parts[-1] in ('<', '>', '!'):
                     parts[-1] += value
                 else:
                     if len(parts) != 1:
