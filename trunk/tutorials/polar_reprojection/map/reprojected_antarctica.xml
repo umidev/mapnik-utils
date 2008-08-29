@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Map srs="+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" bgcolor="#4682b4">
+<Map srs="+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" bgcolor="#000000">
     <Style name="My Style">
         <Rule>
             <PolygonSymbolizer>
-                <CssParameter name="fill">#f2eff9</CssParameter>
+                <CssParameter name="fill">#92ba8d</CssParameter>
             </PolygonSymbolizer>
             <LineSymbolizer>
-                <CssParameter name="stroke">#808080</CssParameter>
-                <CssParameter name="stroke-width">0.1</CssParameter>
+                <CssParameter name="stroke">#89bd1f</CssParameter>
+                <CssParameter name="stroke-width">0.4</CssParameter>
             </LineSymbolizer>
         </Rule>
     </Style>

@@ -3,13 +3,13 @@
 from mapnik import *
 
 # EPSG:3031
-m = Map(600,500, '+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs')
+m = Map(500,400, '+proj=stere +lat_0=-90 +lat_ts=-71 +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs')
 
-m.background = Color('steelblue')
+m.background = Color('transparent')
 s = Style()
 r=Rule()
-r.symbols.append(PolygonSymbolizer(Color('#f2eff9')))
-r.symbols.append(LineSymbolizer(Color('rgb(50%,50%,50%)'),0.1))
+r.symbols.append(PolygonSymbolizer(Color('#92BA8D')))
+r.symbols.append(LineSymbolizer(Color('#89BD1F'),0.4))
 s.rules.append(r)
 m.append_style('My Style',s)
 lyr = Layer('world')

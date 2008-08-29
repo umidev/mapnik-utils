@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from mapnik import *
-m = Map(600,500)
+m = Map(500,400)
 m.background = Color('steelblue')
 load_map(m, 'mapfile.xml')
 
