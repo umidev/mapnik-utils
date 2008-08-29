@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=latlong +datum=WGS84" bgcolor="transparent">
+    <Style name="My Style">
+        <Rule>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#D9D953</CssParameter>
+            </PolygonSymbolizer>
+            <LineSymbolizer>
+                <CssParameter name="stroke">#F5F55D</CssParameter>
+                <CssParameter name="stroke-width">.3</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>    
+
+    <Layer name="world" srs="+proj=latlong +datum=WGS84" status="1">
+        <StyleName>My Style</StyleName>
+        <Datasource>
+            <Parameter name="file">../../sample_data/tm_wgs84_sans_antarctica</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>
