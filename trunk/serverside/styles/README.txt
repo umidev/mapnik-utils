@@ -1,5 +1,9 @@
 - Usage -
 
+Run `make` to download a copy of cssutils, or get it directly from the source:
+
+    http://code.google.com/p/cssutils/
+
 Unroll the rules in example.mss and show their cascade order:
 
     % python style.py example.mss > example-ordered-unrolled.mss
