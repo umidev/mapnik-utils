@@ -299,7 +299,7 @@ class CascadeTests(unittest.TestCase):
                 polygon-fill: #f90;
                 text-face-name: /* boo yah */ "Helvetica Bold";
                 text-size: 10;
-                pattern-file: url('http://example.com');
+                polygon-pattern-file: url('http://example.com');
                 line-cap: square;
                 text-allow-overlap: false;
                 text-dx: -10;
@@ -331,7 +331,7 @@ class CascadeTests(unittest.TestCase):
         self.assertEqual('10', str(declarations[2].value))
 
         self.assertEqual('*', str(declarations[3].selector))
-        self.assertEqual('pattern-file', declarations[3].property.name)
+        self.assertEqual('polygon-pattern-file', declarations[3].property.name)
         self.assertEqual('http://example.com', str(declarations[3].value))
 
         self.assertEqual('*', str(declarations[4].selector))
@@ -359,7 +359,7 @@ class CascadeTests(unittest.TestCase):
         self.assertEqual('10', str(declarations[9].value))
 
         self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[10].selector))
-        self.assertEqual('pattern-file', declarations[10].property.name)
+        self.assertEqual('polygon-pattern-file', declarations[10].property.name)
         self.assertEqual('http://example.com', str(declarations[10].value))
 
         self.assertEqual('Layer#foo.foo[baz>10] bar', str(declarations[11].selector))

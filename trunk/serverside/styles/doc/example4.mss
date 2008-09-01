@@ -10,7 +10,7 @@
     polygon-fill: #6f9;
 
     point-file: url("purple-point.png");
-    pattern-file: url("http://www.inkycircus.com/jargon/images/grass_by_conformity.jpg");
+    polygon-pattern-file: url("http://www.inkycircus.com/jargon/images/grass_by_conformity.jpg");
 }
 
 .world-borders.countries[zoom>10] NAME

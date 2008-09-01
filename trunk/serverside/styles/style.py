@@ -173,14 +173,26 @@ properties = {
     #--------------- polygon pattern symbolizer
 
     # path to image file (default none)
-    'pattern-file': uri,
+    'polygon-pattern-file': uri,
 
     # px (default 4), generally omit this and let PIL handle it
-    'pattern-width': int,
-    'pattern-height': int,
+    'polygon-pattern-width': int,
+    'polygon-pattern-height': int,
 
     # image type: png or tiff, omitted thanks to PIL
-    'pattern-type': None,
+    'polygon-pattern-type': None,
+
+    #--------------- line pattern symbolizer
+
+    # path to image file (default none)
+    'line-pattern-file': uri,
+
+    # px (default 4), generally omit this and let PIL handle it
+    'line-pattern-width': int,
+    'line-pattern-height': int,
+
+    # image type: png or tiff, omitted thanks to PIL
+    'line-pattern-type': None,
 
     #--------------- shield symbolizer
 
