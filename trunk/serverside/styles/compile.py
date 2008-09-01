@@ -461,6 +461,8 @@ def add_line_style(map, layer, declarations):
         
                     encountered.append(dec.property.name)
                     has_line = True
+
+            # TODO: handle outline- properties here, now that we know how wide the line ought to be?
         
             if has_line:
                 rule = make_rule_element(range, filter)
@@ -753,16 +755,16 @@ def compile(src, dir=None):
     add_map_style(map, get_applicable_declarations(map, declarations))
 
     for layer in map.findall('Layer'):
-        declarations = get_applicable_declarations(layer, declarations)
+        layer_declarations = get_applicable_declarations(layer, declarations)
         
-        #pprint.PrettyPrinter().pprint(declarations)
+        #pprint.PrettyPrinter().pprint(layer_declarations)
         
-        add_polygon_style(map, layer, declarations)
-        add_polygon_pattern_style(map, layer, declarations, dir)
-        add_line_style(map, layer, declarations)
-        add_line_pattern_style(map, layer, declarations, dir)
-        add_text_styles(map, layer, declarations)
-        add_point_style(map, layer, declarations, dir)
+        add_polygon_style(map, layer, layer_declarations)
+        add_polygon_pattern_style(map, layer, layer_declarations, dir)
+        add_line_style(map, layer, layer_declarations)
+        add_line_pattern_style(map, layer, layer_declarations, dir)
+        add_text_styles(map, layer, layer_declarations)
+        add_point_style(map, layer, layer_declarations, dir)
         
         layer.set('name', 'layer %d' % next_counter())
         
@@ -772,7 +774,7 @@ def compile(src, dir=None):
         if 'class' in layer.attrib:
             del layer.attrib['class']
     
-        if declarations:
+        if layer_declarations:
             layer.set('status', 'on')
         else:
             layer.set('status', 'off')
