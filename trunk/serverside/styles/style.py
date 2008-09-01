@@ -107,6 +107,26 @@ properties = {
     # d0,d1, ... (default none)
     'line-dasharray': None, # Number(s)
 
+    #--------------- line symbolizer for outlines
+
+    # CSS colour (default "black")
+    'outline-color': color,
+
+    # 0.0 - n (default 1.0)
+    'outline-width': float,
+
+    # 0.0 - 1.0 (default 1.0)
+    'outline-opacity': float,
+
+    # miter, round, bevel (default miter)
+    'outline-join': ('miter', 'round', 'bevel'),
+
+    # round, butt, square (default butt)
+    'outline-cap': ('butt', 'round', 'square'),
+
+    # d0,d1, ... (default none)
+    'outline-dasharray': None, # Number(s)
+
     #--------------- text symbolizer
 
     # Font name
