@@ -21,7 +21,7 @@ def main(file):
         print '{',
         print dec.property.name+':',
         
-        if properties[dec.property.name] in (color, boolean):
+        if properties[dec.property.name] in (color, boolean, floats):
             print str(dec.value.value)+';',
         
         elif properties[dec.property.name] is uri:
@@ -73,6 +73,16 @@ class boolean:
     def __str__(self):
         return repr(self)
 
+class floats:
+    def __init__(self, *values):
+        self.values = values
+
+    def __repr__(self):
+        return ','.join(map(str, self.values))
+
+    def __str__(self):
+        return repr(self)
+
 properties = {
     #--------------- map
 
@@ -105,7 +115,7 @@ properties = {
     'line-cap': ('butt', 'round', 'square'),
 
     # d0,d1, ... (default none)
-    'line-dasharray': None, # Number(s)
+    'line-dasharray': floats, # Number(s)
 
     #--------------- line symbolizer for outlines
 
@@ -855,6 +865,31 @@ def postprocess_value(tokens, property, base=None, line=0, col=0):
             raise ParseException('Unrecognized value for property "%(property)s"' % locals(), line, col)
 
         value = tokens[0][1]
+            
+    elif properties[property.name] is floats:
+        values = []
+        
+        # strip the list down to what we think goes number, comma, number, etc.
+        relevant_tokens = [token for token in tokens
+                           if token[0] == 'NUMBER' or token == ('CHAR', ',')]
+        
+        for (i, token) in enumerate(relevant_tokens):
+            if (i % 2) == 0 and token[0] == 'NUMBER':
+                try:
+                    value = int(token[1])
+                except ValueError:
+                    value = float(token[1])
+
+                values.append(value)
+
+            elif (i % 2) == 1 and token[0] == 'CHAR':
+                # fine, it's a comma
+                continue
+
+            else:
+                raise ParseException('Value for property "%(property)s" should be a comma-delimited list of numbers' % locals(), line, col)
+
+        value = floats(*values)
 
     return Value(value, important)
 

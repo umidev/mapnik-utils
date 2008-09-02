@@ -233,6 +233,9 @@ class ValueTests(unittest.TestCase):
     def testBadValue10(self):
         self.assertRaises(ParseException, postprocess_value, [('IDENT', 'not-in-tuple')], Property('line-join'))
 
+    def testBadValue11(self):
+        self.assertRaises(ParseException, postprocess_value, [('NUMBER', '1'), ('CHAR', ','), ('CHAR', ','), ('NUMBER', '3')], Property('line-dasharray'))
+
     def testValue1(self):
         self.assertEqual(1.0, postprocess_value([('NUMBER', '1.0')], Property('polygon-opacity')).value)
 
@@ -262,6 +265,12 @@ class ValueTests(unittest.TestCase):
 
     def testValue9(self):
         self.assertEqual('bevel', str(postprocess_value([('IDENT', 'bevel')], Property('line-join'))))
+
+    def testValue10(self):
+        self.assertEqual('1,2,3', str(postprocess_value([('NUMBER', '1'), ('CHAR', ','), ('NUMBER', '2'), ('CHAR', ','), ('NUMBER', '3')], Property('line-dasharray'))))
+
+    def testValue11(self):
+        self.assertEqual('1,2.0,3', str(postprocess_value([('NUMBER', '1'), ('CHAR', ','), ('S', ' '), ('NUMBER', '2.0'), ('CHAR', ','), ('NUMBER', '3')], Property('line-dasharray'))))
 
 class CascadeTests(unittest.TestCase):
 
