@@ -21,7 +21,7 @@ def main(file):
         print '{',
         print dec.property.name+':',
         
-        if properties[dec.property.name] in (color, boolean, floats):
+        if properties[dec.property.name] in (color, boolean, numbers):
             print str(dec.value.value)+';',
         
         elif properties[dec.property.name] is uri:
@@ -73,7 +73,7 @@ class boolean:
     def __str__(self):
         return repr(self)
 
-class floats:
+class numbers:
     def __init__(self, *values):
         self.values = values
 
@@ -115,7 +115,7 @@ properties = {
     'line-cap': ('butt', 'round', 'square'),
 
     # d0,d1, ... (default none)
-    'line-dasharray': floats, # Number(s)
+    'line-dasharray': numbers, # Number(s)
 
     #--------------- line symbolizer for outlines
 
@@ -866,7 +866,7 @@ def postprocess_value(tokens, property, base=None, line=0, col=0):
 
         value = tokens[0][1]
             
-    elif properties[property.name] is floats:
+    elif properties[property.name] is numbers:
         values = []
         
         # strip the list down to what we think goes number, comma, number, etc.
@@ -889,7 +889,7 @@ def postprocess_value(tokens, property, base=None, line=0, col=0):
             else:
                 raise ParseException('Value for property "%(property)s" should be a comma-delimited list of numbers' % locals(), line, col)
 
-        value = floats(*values)
+        value = numbers(*values)
 
     return Value(value, important)
 
