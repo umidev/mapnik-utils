@@ -274,7 +274,7 @@ def next_counter():
     counter += 1
     return counter
 
-def is_gym_projection(map):
+def is_gym_projection(map_el):
     """ Return true if the map projection matches that used by VEarth, Google, OSM, etc.
     
         Will be useful for a zoom-level shorthand for scale-denominator.
@@ -284,7 +284,7 @@ def is_gym_projection(map):
     gym = dict([p.split('=') for p in gym.split() if '=' in p])
     
     # observed
-    srs = map.get('srs', '')
+    srs = map_el.get('srs', '')
     srs = dict([p.split('=') for p in srs.split() if '=' in p])
     
     for p in gym:
@@ -293,14 +293,14 @@ def is_gym_projection(map):
 
     return True
 
-def extract_declarations(map, base):
+def extract_declarations(map_el, base):
     """ Given a Map element and a URL base string, remove and return a complete
         list of style declarations from any Stylesheet elements found within.
     """
     declarations = []
     
-    for stylesheet in map.findall('Stylesheet'):
-        map.remove(stylesheet)
+    for stylesheet in map_el.findall('Stylesheet'):
+        map_el.remove(stylesheet)
     
         if 'src' in stylesheet.attrib:
             url = urlparse.urljoin(base, stylesheet.attrib['src'])
@@ -312,20 +312,20 @@ def extract_declarations(map, base):
         else:
             continue
             
-        rulesets = style.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map))
+        rulesets = style.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map_el))
         declarations += style.unroll_rulesets(rulesets)
 
     return declarations
 
-def make_rule_element(range, filter, *symbolizers):
+def make_rule_element(range, filter, *symbolizer_els):
     """ Given a Range, return a Rule element prepopulated
         with applicable min/max scale denominator elements.
     """
-    rule_element = Element('Rule')
+    rule_el = Element('Rule')
 
     if range.leftedge:
         minscale = Element('MinScaleDenominator')
-        rule_element.append(minscale)
+        rule_el.append(minscale)
     
         if range.leftop is ge:
             minscale.text = str(range.leftedge)
@@ -334,7 +334,7 @@ def make_rule_element(range, filter, *symbolizers):
     
     if range.rightedge:
         maxscale = Element('MaxScaleDenominator')
-        rule_element.append(maxscale)
+        rule_el.append(maxscale)
     
         if range.rightop is le:
             maxscale.text = str(range.rightedge)
@@ -344,29 +344,29 @@ def make_rule_element(range, filter, *symbolizers):
     filter_text = ' and '.join("[%s] %s '%s'" % (test.arg1, test.op, test.arg2) for test in filter.tests)
     
     if filter_text:
-        filter_element = Element('Filter')
-        filter_element.text = filter_text
-        rule_element.append(filter_element)
+        filter_el = Element('Filter')
+        filter_el.text = filter_text
+        rule_el.append(filter_el)
     
-    rule_element.tail = '\n        '
+    rule_el.tail = '\n        '
     
-    for symbolizer in symbolizers:
-        if symbolizer:
-            rule_element.append(symbolizer)
+    for symbolizer_el in symbolizer_els:
+        if symbolizer_el != False:
+            rule_el.append(symbolizer_el)
     
-    return rule_element
+    return rule_el
 
-def insert_layer_style(map, layer, style):
+def insert_layer_style(map_el, layer_el, style_el):
     """ Given a Map element, a Layer element, and a Style element, insert the
         Style element into the flow and point to it from the Layer element.
     """
-    style.tail = '\n    '
-    map.insert(map._children.index(layer), style)
+    style_el.tail = '\n    '
+    map_el.insert(map_el._children.index(layer_el), style_el)
     
     stylename = Element('StyleName')
-    stylename.text = style.get('name')
+    stylename.text = style_el.get('name')
     stylename.tail = '\n        '
-    layer.insert(layer._children.index(layer.find('Datasource')), stylename)
+    layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename)
 
 def is_applicable_selector(selector, range, filter):
     """
@@ -380,23 +380,24 @@ def is_applicable_selector(selector, range, filter):
     
     return True
 
-def add_map_style(map, declarations):
+def add_map_style(map_el, declarations):
     """
     """
     property_map = {'map-bgcolor': 'bgcolor'}
     
     for dec in declarations:
         if dec.property.name in property_map:
-            map.set(property_map[dec.property.name], str(dec.value))
+            map_el.set(property_map[dec.property.name], str(dec.value))
 
-def ranged_filtered_property_declarations(map, layer, declarations, property_map):
-    """ Given a Map element, a Layer element, a list of declarations, and a map
-        of properties, return a list of rule tuples: (range, filter, parameter_values).
+def ranged_filtered_property_declarations(declarations, property_map):
+    """ Given a list of declarations and a map of properties, return a list
+        of rule tuples: (range, filter, parameter_values), where parameter_values
+        is a list of (parameter, value) tuples.
     """
     # just the ones we care about here
     declarations = [dec for dec in declarations if dec.property.name in property_map]
 
-    # a place to put rule elements
+    # a place to put rules
     rules = []
     
     # a matrix of checks for filter and min/max scale limitations
@@ -418,7 +419,7 @@ def ranged_filtered_property_declarations(map, layer, declarations, property_map
 
     return rules
 
-def add_polygon_style(map, layer, declarations):
+def add_polygon_style(map_el, layer_el, declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a PolygonSymbolizer, add it to Map
         and refer to it in Layer.
@@ -426,92 +427,95 @@ def add_polygon_style(map, layer, declarations):
     property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
     
     # a place to put rule elements
-    rule_elements = []
+    rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(map, layer, declarations, property_map):
-        symbolizer = Element('PolygonSymbolizer')
+    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+        symbolizer_el = Element('PolygonSymbolizer')
         
         for (parameter, value) in parameter_values.items():
             parameter = Element('CssParameter', {'name': parameter})
             parameter.text = str(value)
-            symbolizer.append(parameter)
+            symbolizer_el.append(parameter)
 
-        rule_element = make_rule_element(range, filter, symbolizer)
-        rule_elements.append(rule_element)
+        rule_el = make_rule_element(range, filter, symbolizer_el)
+        rule_els.append(rule_el)
     
-    if rule_elements:
-        style = Element('Style', {'name': 'polygon style %d' % next_counter()})
-        style.text = '\n        '
+    if rule_els:
+        style_el = Element('Style', {'name': 'polygon style %d' % next_counter()})
+        style_el.text = '\n        '
         
-        for rule_element in rule_elements:
-            style.append(rule_element)
+        for rule_el in rule_els:
+            style_el.append(rule_el)
         
-        insert_layer_style(map, layer, style)
+        insert_layer_style(map_el, layer_el, style_el)
 
-def add_line_style(map, layer, declarations):
+def add_line_style(map_el, layer_el, declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a LineSymbolizer, add it to Map
         and refer to it in Layer.
+        
+        This function is wise to both line-<foo> and outline-<foo> properties,
+        and will generate pairs of LineSymbolizers if necessary.
     """
     property_map = {'line-color': 'stroke', 'line-width': 'stroke-width',
                     'line-opacity': 'stroke-opacity', 'line-join': 'stroke-linejoin',
                     'line-cap': 'stroke-linecap', 'line-dasharray': 'stroke-dasharray'}
 
-    # temporarily prepend parameter names with 'in-' and 'out-' to be removed later
+    # temporarily prepend parameter names with 'in:' and 'out:' to be removed later
     for (name, value) in property_map.items():
-        property_map['out' + name] = 'out-' + value
-        property_map[name] = 'in-' + value
+        property_map['out' + name] = 'out:' + value
+        property_map[name] = 'in:' + value
     
     # a place to put rule elements
-    rule_elements = []
+    rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(map, layer, declarations, property_map):
-        if 'in-stroke-width' in parameter_values:
+    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+        if 'in:stroke-width' in parameter_values:
             insymbolizer = Element('LineSymbolizer')
         else:
             # we can do nothing with a weightless line
             continue
         
-        if 'out-stroke-width' in parameter_values:
+        if 'out:stroke-width' in parameter_values:
             outsymbolizer = Element('LineSymbolizer')
         else:
+            # we can do nothing with a weightless outline
             outsymbolizer = False
         
         for (parameter, value) in parameter_values.items():
-            if parameter.startswith('in-'):
-                # knock off the leading 'in-' from above
+            if parameter.startswith('in:'):
+                # knock off the leading 'in:' from above
                 parameter = Element('CssParameter', {'name': parameter[3:]})
                 parameter.text = str(value)
                 insymbolizer.append(parameter)
 
-            elif parameter.startswith('out-') and outsymbolizer != False:
-                if parameter == 'out-stroke-width':
+            elif parameter.startswith('out:') and outsymbolizer != False:
+                if parameter == 'out:stroke-width':
                     # fatten up the stroke because it's an outline
-                    value = parameter_values['in-stroke-width'].value + 2 * value.value
+                    value = parameter_values['in:stroke-width'].value + 2 * value.value
             
-                # knock off the leading 'out-' from above
+                # knock off the leading 'out:' from above
                 parameter = Element('CssParameter', {'name': parameter[4:]})
                 parameter.text = str(value)
                 outsymbolizer.append(parameter)
 
-        rule_element = make_rule_element(range, filter, outsymbolizer, insymbolizer)
-        rule_elements.append(rule_element)
+        rule_el = make_rule_element(range, filter, outsymbolizer, insymbolizer)
+        rule_els.append(rule_el)
     
-    if rule_elements:
-        style_element = Element('Style', {'name': 'line style %d' % next_counter()})
-        style_element.text = '\n        '
+    if rule_els:
+        style_el = Element('Style', {'name': 'line style %d' % next_counter()})
+        style_el.text = '\n        '
         
-        for rule_element in rule_elements:
-            style_element.append(rule_element)
+        for rule_el in rule_els:
+            style_el.append(rule_el)
         
-        insert_layer_style(map, layer, style_element)
+        insert_layer_style(map_el, layer_el, style_el)
 
-def add_text_styles(map, layer, declarations):
+def add_text_styles(map_el, layer_el, declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
         create new Style elements with a TextSymbolizer, add them to Map
         and refer to them in Layer.
     """
-    has_text = False
     property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
                     'text-ratio': 'text_ratio', 'text-wrap-width': 'wrap_width', 'text-spacing': 'spacing',
                     'text-label-position-tolerance': 'label_position_tolerance',
@@ -537,47 +541,33 @@ def add_text_styles(map, layer, declarations):
                                 and (len(dec.selector.elements) == 1
                                      or (len(dec.selector.elements) == 2
                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
-    
-        # a place to put rule elements
-        rules = []
         
-        # a matrix of checks for filter and min/max scale limitations
-        ranges = selectors_ranges([dec.selector for dec in name_declarations])
-        filters = selectors_filters([dec.selector for dec in name_declarations])
-    
-        for range in ranges:
-            for filter in filters:
-                has_text = False
-                symbolizer = Element('TextSymbolizer')
-                
-                for dec in name_declarations:
-                    if is_applicable_selector(dec.selector, range, filter):
-                        symbolizer.set(property_map[dec.property.name], str(dec.value))
-                        has_text = True
-                        
-                        # the 'name' attribute will be used as a flag in a few
-                        # lines to determine if this symbolizer is worth keeping.
-                        if len(dec.selector.elements) == 2 and (len(dec.selector.elements) == 1 or dec.selector.elements[1].names[0] == text_name):
-                            symbolizer.set('name', text_name)
-                
-                if has_text and symbolizer.get('name', False):
-                    rule = make_rule_element(range, filter, symbolizer)
-                    rules.append(rule)
-
-        if rules:
-            style = Element('Style', {'name': 'text style %d (%s)' % (next_counter(), text_name)})
-            style.text = '\n        '
+        # a place to put rule elements
+        rule_els = []
+        
+        for (range, filter, parameter_values) in ranged_filtered_property_declarations(name_declarations, property_map):
+            symbolizer_el = Element('TextSymbolizer')
             
-            for rule in rules:
-                style.append(rule)
+            for (parameter, value) in parameter_values.items():
+                symbolizer_el.set(parameter, str(value))
+    
+            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_els.append(rule_el)
+        
+        if rule_els:
+            style_el = Element('Style', {'name': 'text style %d (%s)' % (next_counter(), text_name)})
+            style_el.text = '\n        '
+            
+            for rule_el in rule_els:
+                style_el.append(rule_el)
+            
+            insert_layer_style(map_el, layer_el, style_el)
 
-            insert_layer_style(map, layer, style)
-
-def postprocess_symbolizer_image_file(symbolizer, out, temp_name):
+def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
     """
     """
     # read the image to get some more details
-    img_path = symbolizer.get('file')
+    img_path = symbolizer_el.get('file')
     img_data = urllib.urlopen(img_path).read()
     img_file = StringIO.StringIO(img_data)
     img = PIL.Image.open(img_file)
@@ -587,15 +577,15 @@ def postprocess_symbolizer_image_file(symbolizer, out, temp_name):
     os.close(handle)
     
     img.save(path)
-    symbolizer.set('file', path)
-    symbolizer.set('type', 'png')
+    symbolizer_el.set('file', path)
+    symbolizer_el.set('type', 'png')
     
     # if no width/height have been provided, set them
-    if not (symbolizer.get('width', False) and symbolizer.get('height', False)):
-        symbolizer.set('width', str(img.size[0]))
-        symbolizer.set('height', str(img.size[1]))
+    if not (symbolizer_el.get('width', False) and symbolizer_el.get('height', False)):
+        symbolizer_el.set('width', str(img.size[0]))
+        symbolizer_el.set('height', str(img.size[1]))
 
-def add_point_style(map, layer, declarations, out=None):
+def add_point_style(map_el, layer_el, declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a PointSymbolizer, add it to Map
         and refer to it in Layer.
@@ -607,31 +597,31 @@ def add_point_style(map, layer, declarations, out=None):
                     'point-allow-overlap': 'allow_overlap'}
     
     # a place to put rule elements
-    rule_elements = []
+    rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(map, layer, declarations, property_map):
-        symbolizer = Element('PointSymbolizer')
+    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+        symbolizer_el = Element('PointSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
         for (parameter, value) in parameter_values.items():
-            symbolizer.set(parameter, str(value))
+            symbolizer_el.set(parameter, str(value))
     
-        if symbolizer.get('file', False):
-            postprocess_symbolizer_image_file(symbolizer, out, 'point')
+        if symbolizer_el.get('file', False):
+            postprocess_symbolizer_image_file(symbolizer_el, out, 'point')
             
-            rule_element = make_rule_element(range, filter, symbolizer)
-            rule_elements.append(rule_element)
+            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_els.append(rule_el)
     
-    if rule_elements:
-        style = Element('Style', {'name': 'point style %d' % next_counter()})
-        style.text = '\n        '
+    if rule_els:
+        style_el = Element('Style', {'name': 'point style %d' % next_counter()})
+        style_el.text = '\n        '
         
-        for rule_element in rule_elements:
-            style.append(rule_element)
+        for rule_el in rule_els:
+            style_el.append(rule_el)
         
-        insert_layer_style(map, layer, style)
+        insert_layer_style(map_el, layer_el, style_el)
 
-def add_polygon_pattern_style(map, layer, declarations, out=None):
+def add_polygon_pattern_style(map_el, layer_el, declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a PolygonPatternSymbolizer, add it to Map
         and refer to it in Layer.
@@ -642,31 +632,31 @@ def add_polygon_pattern_style(map, layer, declarations, out=None):
                     'polygon-pattern-height': 'height', 'polygon-pattern-type': 'type'}
     
     # a place to put rule elements
-    rule_elements = []
+    rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(map, layer, declarations, property_map):
-        symbolizer = Element('PolygonPatternSymbolizer')
+    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+        symbolizer_el = Element('PolygonPatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
         for (parameter, value) in parameter_values.items():
-            symbolizer.set(parameter, str(value))
+            symbolizer_el.set(parameter, str(value))
     
-        if symbolizer.get('file', False):
-            postprocess_symbolizer_image_file(symbolizer, out, 'polygon-pattern')
+        if symbolizer_el.get('file', False):
+            postprocess_symbolizer_image_file(symbolizer_el, out, 'polygon-pattern')
             
-            rule_element = make_rule_element(range, filter, symbolizer)
-            rule_elements.append(rule_element)
+            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_els.append(rule_el)
     
-    if rule_elements:
-        style = Element('Style', {'name': 'polygon pattern style %d' % next_counter()})
-        style.text = '\n        '
+    if rule_els:
+        style_el = Element('Style', {'name': 'polygon pattern style %d' % next_counter()})
+        style_el.text = '\n        '
         
-        for rule_element in rule_elements:
-            style.append(rule_element)
+        for rule_el in rule_els:
+            style_el.append(rule_el)
         
-        insert_layer_style(map, layer, style)
+        insert_layer_style(map_el, layer_el, style_el)
 
-def add_line_pattern_style(map, layer, declarations, out=None):
+def add_line_pattern_style(map_el, layer_el, declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a LinePatternSymbolizer, add it to Map
         and refer to it in Layer.
@@ -677,29 +667,29 @@ def add_line_pattern_style(map, layer, declarations, out=None):
                     'line-pattern-height': 'height', 'line-pattern-type': 'type'}
     
     # a place to put rule elements
-    rule_elements = []
+    rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(map, layer, declarations, property_map):
-        symbolizer = Element('LinePatternSymbolizer')
+    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+        symbolizer_el = Element('LinePatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
         for (parameter, value) in parameter_values.items():
-            symbolizer.set(parameter, str(value))
+            symbolizer_el.set(parameter, str(value))
     
-        if symbolizer.get('file', False):
-            postprocess_symbolizer_image_file(symbolizer, out, 'line-pattern')
+        if symbolizer_el.get('file', False):
+            postprocess_symbolizer_image_file(symbolizer_el, out, 'line-pattern')
             
-            rule_element = make_rule_element(range, filter, symbolizer)
-            rule_elements.append(rule_element)
+            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_els.append(rule_el)
     
-    if rule_elements:
-        style = Element('Style', {'name': 'line pattern style %d' % next_counter()})
-        style.text = '\n        '
+    if rule_els:
+        style_el = Element('Style', {'name': 'line pattern style %d' % next_counter()})
+        style_el.text = '\n        '
         
-        for rule_element in rule_elements:
-            style.append(rule_element)
+        for rule_el in rule_els:
+            style_el.append(rule_el)
         
-        insert_layer_style(map, layer, style)
+        insert_layer_style(map_el, layer_el, style_el)
 
 def get_applicable_declarations(element, declarations):
     """ Given an XML element and a list of declarations, return the ones
