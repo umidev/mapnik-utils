@@ -90,13 +90,15 @@ class Range:
                 return '(%s%s ...)' % (self.leftedge, opstr[self.leftop])
 
 class Filter:
-    """
+    """ Represents a filter of some sort for use in stylesheet rules.
+    
+        Composed of a list of tests.
     """
     def __init__(self, *tests):
         self.tests = list(tests)
 
     def isOpen(self):
-        """
+        """ Return true if this filter is not trivially false, i.e. self-contradictory.
         """
         equals = {}
         
@@ -369,7 +371,8 @@ def insert_layer_style(map_el, layer_el, style_el):
     layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename)
 
 def is_applicable_selector(selector, range, filter):
-    """
+    """ Given a Selector, Range, and Filter, return True if the Selector is
+        compatible with the given Range and Filter, and False if they contradict.
     """
     if not selector.inRange(range.midpoint()) and selector.isRanged():
         return False
@@ -462,44 +465,45 @@ def add_line_style(map_el, layer_el, declarations):
                     'line-cap': 'stroke-linecap', 'line-dasharray': 'stroke-dasharray'}
 
     # temporarily prepend parameter names with 'in:' and 'out:' to be removed later
-    for (name, value) in property_map.items():
-        property_map['out' + name] = 'out:' + value
-        property_map[name] = 'in:' + value
+    for (property_name, parameter) in property_map.items():
+        property_map['out' + property_name] = 'out:' + parameter
+        property_map[property_name] = 'in:' + parameter
     
     # a place to put rule elements
     rule_els = []
     
     for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
         if 'in:stroke-width' in parameter_values:
-            insymbolizer = Element('LineSymbolizer')
+            insymbolizer_el = Element('LineSymbolizer')
         else:
             # we can do nothing with a weightless line
             continue
         
         if 'out:stroke-width' in parameter_values:
-            outsymbolizer = Element('LineSymbolizer')
+            outsymbolizer_el = Element('LineSymbolizer')
         else:
             # we can do nothing with a weightless outline
-            outsymbolizer = False
+            outsymbolizer_el = False
         
         for (parameter, value) in parameter_values.items():
             if parameter.startswith('in:'):
                 # knock off the leading 'in:' from above
                 parameter = Element('CssParameter', {'name': parameter[3:]})
                 parameter.text = str(value)
-                insymbolizer.append(parameter)
+                insymbolizer_el.append(parameter)
 
-            elif parameter.startswith('out:') and outsymbolizer != False:
+            elif parameter.startswith('out:') and outsymbolizer_el != False:
+                # for the width...
                 if parameter == 'out:stroke-width':
-                    # fatten up the stroke because it's an outline
+                    # ...double the weight and add the interior to make a proper outline
                     value = parameter_values['in:stroke-width'].value + 2 * value.value
             
                 # knock off the leading 'out:' from above
                 parameter = Element('CssParameter', {'name': parameter[4:]})
                 parameter.text = str(value)
-                outsymbolizer.append(parameter)
+                outsymbolizer_el.append(parameter)
 
-        rule_el = make_rule_element(range, filter, outsymbolizer, insymbolizer)
+        rule_el = make_rule_element(range, filter, outsymbolizer_el, insymbolizer_el)
         rule_els.append(rule_el)
     
     if rule_els:
@@ -564,7 +568,9 @@ def add_text_styles(map_el, layer_el, declarations):
             insert_layer_style(map_el, layer_el, style_el)
 
 def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
-    """
+    """ Given a sumbolizer element, output directory name, and temporary
+        file name, find the "file" attribute in the symbolizer and save it
+        to a temporary location as a PING while noting its dimensions.
     """
     # read the image to get some more details
     img_path = symbolizer_el.get('file')
@@ -572,7 +578,7 @@ def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
     img_file = StringIO.StringIO(img_data)
     img = PIL.Image.open(img_file)
     
-    # save the image to a tempfile, making it a png no matter what
+    # save the image to a tempfile, making it a PNG no matter what
     (handle, path) = tempfile.mkstemp('.png', 'cascadenik-%s-' % temp_name, out)
     os.close(handle)
     
