@@ -2,7 +2,6 @@ import re
 import sys
 import pprint
 import urlparse
-import simplejson
 import operator
 from binascii import unhexlify as unhex
 from cssutils.tokenize2 import Tokenizer as cssTokenizer
