@@ -10,7 +10,7 @@
       </PolygonSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[STATE] <> 'Washington'</Filter>
+      <Filter>[STATE] &lt;&gt; 'Washington'</Filter>
       <LineSymbolizer>
   <CssParameter name="fill">#888888</CssParameter>
         <CssParameter name="stroke-opacity">0.25</CssParameter>
@@ -21,7 +21,7 @@
  
   <Style name="mountains">
     <Rule>
-      <PointSymbolizer file="../viewer/images/info.png" type="png" width="32" height="32" allow_overlap="true"/>
+      <PointSymbolizer file="info.png" type="png" width="32" height="32" allow_overlap="true"/>
     </Rule>
   </Style>
   <Style name="mountain_labels">
