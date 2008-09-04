@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<!-- Sample Mapnik XML -->
+<Map srs="+proj=latlong +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+  <Style name="states">
+    <Rule>
+      <Filter>[STATE] = 'Washington'</Filter>
+      <PolygonSymbolizer>
+  <CssParameter name="fill">#cfdea7</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[STATE] <> 'Washington'</Filter>
+      <LineSymbolizer>
+  <CssParameter name="fill">#888888</CssParameter>
+        <CssParameter name="stroke-opacity">0.25</CssParameter>
+        <CssParameter name="stroke-dasharray">10,6</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+ 
+  <Style name="mountains">
+    <Rule>
+      <PointSymbolizer file="../viewer/images/info.png" type="png" width="32" height="32" allow_overlap="true"/>
+    </Rule>
+  </Style>
+  <Style name="mountain_labels">
+    <Rule>
+      <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="12" fill="black" halo_fill="#DFDBE3" allow_overlap="true" dx="64" dy="-8"/>
+    </Rule>
+  </Style>
+  
+</Map>
