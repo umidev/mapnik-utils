@@ -13,7 +13,7 @@
 def usage (name):
   print
   color_print(3, "===========================================================================")
-  color_print(2,"Usage: %s -m  <mapnik.xml> -o <image.png> -o [<format>]" % name)
+  color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
   color_print(4,"-option\tstatus\t\t\tdescription")
   print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
   print "-o\t<required>\t\tImage: Set the output filename"
@@ -31,7 +31,6 @@ def color_print(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
-    print
     print "\033[9%sm%s\033[0m" % (color,text)
     
 def output_error(msg, usage=False):
@@ -74,7 +73,7 @@ if __name__ == "__main__":
         #var['d'] = arg        
     #elif opt == "-v":
         #run_verbose = True
-    elif opt == "-h" or opt == "help" or opt == "--help":
+    elif opt == "-h":
         usage(sys.argv[0])
         sys.exit(1)
     
@@ -144,10 +143,8 @@ if __name__ == "__main__":
           mapnik.render_to_file(mapnik_map,'%s_%s%s' % (o,k,v), k)
         except Exception, E:
           output_error("Error when rendering to file",E)
-  except Exception, E:
-    output_error("Error when rendering to file",E)
-  try:  
-    mapnik.render_to_file(mapnik_map,var['o'], var['i'])
+    elif var['i']:
+      mapnik.render_to_file(mapnik_map,var['o'], var['i'])
   except KeyError:
     mapnik.render_to_file(mapnik_map,var['o'])  
   except Exception, E:
