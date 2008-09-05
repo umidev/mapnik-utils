@@ -18,10 +18,10 @@ def usage (name):
   print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
   print "-o\t<required>\t\tImage: Set the output filename"
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
-  print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
+  #print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
   #print "-d\tDatavalue[default: None]: Switch out a value, ie override the projection"
-  print "-v\t[default:off]\t\tRun with verbose output"
+  #print "-v\t[default:off]\t\tRun with verbose output"
   print "-h\t[default:off]\t\tPrints this usage information"
   color_print(3, "===========================================================================")
   color_print(7,"Dane Springmeyer, dbsgeo a-t gmail.com")
