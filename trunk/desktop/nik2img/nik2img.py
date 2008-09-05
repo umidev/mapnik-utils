@@ -8,6 +8,7 @@
   * Support variable substitution
   * Support verbose output
   * Cascadenik integration
+  * Add an option for setting data directory to allow mapfile datasource to be found
 '''
 
 def usage (name):
@@ -56,7 +57,8 @@ if __name__ == "__main__":
     output_error(err,yield_usage=True)
   
   if len(sys.argv) <= 1:
-    output_error('Too few arguments',yield_usage=True)
+    usage(sys.argv[0])
+    sys.exit(1)
   
   for opt, arg in opts:
     if opt == "-m":
