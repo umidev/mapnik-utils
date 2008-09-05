@@ -56,5 +56,23 @@ MAP
       END
     END # class
   END # layer
+
+  LAYER 
+    NAME         thomas
+    DATA         world_borders.shp
+    STATUS      ON
+    TYPE          POLYGON
+    CLASS
+      NAME       "World"
+      STYLE
+        COLOR                 242 239 249
+      END
+      STYLE
+        OUTLINECOLOR   127 127 127
+        OPACITY 10
+        WIDTH 1
+      END
+    END # class
+  END # layer
   
 END  # map
