@@ -6,6 +6,9 @@
 # once you have installed the mapserv cgi use this url:
 # http://localhost/cgi-bin/mapserv?map=/path/to/this/mapfile/world.map&layers=world&mode=map
 
+# For reference on opacity trick to match mapnik agg rendering see:
+# http://www.nabble.com/Re%3A-Fractional-line-widths--p19231113.html
+
 MAP
   IMAGETYPE        AGG
   EXTENT             -180 -93 180 86
@@ -17,7 +20,6 @@ MAP
    NAME 'AGG' 
    DRIVER AGG/PNG 
    IMAGEMODE RGB
-   MIMETYPE "image/png"
   END
 
   LAYER 
@@ -25,7 +27,6 @@ MAP
     DATA         world_borders.shp
     STATUS      ON
     TYPE          POLYGON
-
     CLASS
       NAME       "World"
       STYLE
@@ -33,7 +34,27 @@ MAP
         OUTLINECOLOR   127 127 127
         WIDTH 1
       END
-      
-    END
-  END 
-END 
+    END # class
+  END # layer
+  
+  LAYER 
+    NAME         world_opacity
+    DATA         world_borders.shp
+    STATUS      ON
+    TYPE          POLYGON
+    CLASS
+      NAME       "World"
+      STYLE
+        COLOR                 242 239 249
+        OUTLINECOLOR    -1 -1 -1
+      END
+      STYLE
+        COLOR                 -1 -1 -1
+        OUTLINECOLOR   127 127 127
+        OPACITY 50
+        WIDTH 1
+      END
+    END # class
+  END # layer
+  
+END  # map
