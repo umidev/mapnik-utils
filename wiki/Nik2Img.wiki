@@ -1,0 +1,36 @@
+#labels Featured
+== nik2img.py ==
+
+A lightweight command line utility to take a mapnik xml file as input and output an image.
+
+Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility.
+
+=== Usage ===
+
+{{{
+$ python nik2img.py -h
+
+===========================================================================
+Usage: nik2img.py -m <mapnik.xml> -o <image.png>
+-option status                  description
+-m      <required>              Mapfile: Path to xml map file to load styles from.
+-o      <required>              Image: Set the output filename
+-i      [default: png]          Format: Choose the output format (all, png, png256, jpeg)
+-e      [default: max extent]   Minx,Miny,Maxx,Maxy: Set the extents to render
+-s      [default: 600,300]      Width,Height: Set the image size in pixels
+-v      [default:off]           Run with verbose output
+-h      [default:off]           Prints this usage information
+===========================================================================
+
+}}}
+
+=== Usage Example ===
+Output an 8-bit png image:
+{{{
+$ python nik2img.py -m mapfile.xml -o mapnik_image.png -i png256
+}}}
+
+Loop through outputting all possible image formats (and generating maps with a custom size):
+{{{
+$ python nik2img.py -m mapfile.xml -o mapnik_image -i all -s 700,400
+}}}
