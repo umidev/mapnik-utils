@@ -33,9 +33,9 @@ def color_print(color,text):
     """
     print "\033[9%sm%s\033[0m" % (color,text)
     
-def output_error(msg, usage=False):
+def output_error(msg, yield_usage=False):
     color_print(1, '// --> %s' % msg)
-    if usage:
+    if yield_usage:
       usage(sys.argv[0])
     sys.exit(1)
 
@@ -53,10 +53,10 @@ if __name__ == "__main__":
   try:
     opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:vh")
   except getopt.GetoptError, err:
-    output_error(err,usage=True)
+    output_error(err,yield_usage=True)
   
   if len(sys.argv) <= 1:
-    output_error('Too few arguments',usage=True)
+    output_error('Too few arguments',yield_usage=True)
   
   for opt, arg in opts:
     if opt == "-m":
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         sys.exit(1)
     
   if len(var) < 2:
-    output_error('Make sure to specify the -m <input mapfile.xml> and -o <output image>',usage=True)
+    output_error('Make sure to specify the -m <input mapfile.xml> and -o <output image>',yield_usage=True)
   else:
     run = True
     import os
