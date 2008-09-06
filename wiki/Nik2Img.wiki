@@ -12,11 +12,10 @@ $ python nik2img.py -h
 
 ===========================================================================
 Usage: nik2img.py -m <mapnik.xml> -o <image.png>
--option status                  description
+option status                  description
 -m      <required>              Mapfile: Path to xml map file to load styles from.
 -o      <required>              Image: Set the output filename
 -i      [default: png]          Format: Choose the output format (all, png, png256, jpeg)
--e      [default: max extent]   Minx,Miny,Maxx,Maxy: Set the extents to render
 -s      [default: 600,300]      Width,Height: Set the image size in pixels
 -v      [default:off]           Run with verbose output
 -h      [default:off]           Prints this usage information
