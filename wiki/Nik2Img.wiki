@@ -3,7 +3,7 @@
 
 A lightweight command line utility to take a mapnik xml file as input and output an image.
 
-Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility.
+Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility. Not all of the shp2img functionality is currently supported, but all is planned.
 
 === Usage ===
 
