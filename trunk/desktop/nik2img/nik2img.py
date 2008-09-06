@@ -1,15 +1,44 @@
 #!/usr/bin/env python
 
-'''
- ToDo
-  * Code comments
-  * Support cairo formats
-  * Built in testing framework
-  * Support variable substitution
-  * Support verbose output
-  * Cascadenik integration
-  * Add an option for setting data directory to allow mapfile datasource to be found
-'''
+"""
+
+nik2img.py - In Mapnik xml, out Map image
+
+Summary:
+  A command line tool for generating map images by simply pointing to an XML file.
+  Seeks to match the shp2img utility used in the MapServer project. Thanks MapServer!
+  http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
+ 
+Source:
+ http://code.google.com/p/mapnik-utils/
+
+Dependencies:
+  Requires Python and Mapnik installed with the python bindings
+
+Usage:
+  # Copy the script to your path then:
+  $ nik2img.py -h # help on usage
+  $ nik2img.py -m mapfile.xml -o yourmap.png
+
+Limitations:
+  Paths to file system datasources in the XML files loaded will be relative to your dir.
+  Very sparse on the error handling so far.
+ 
+ToDo
+  * Add docstrings and code comments.
+  * Support cairo renderer and formats.
+  * Add ability to override map extents
+  * Add a verbose output setting with timing tests and mapfile debugging.
+  * Support variable substitution to allow reprojection, etc.
+  * Cascadenik integration | ability to read in css.mml or css.mss.
+  * Allow for setting the path to datasources.
+  
+"""
+
+__author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com"
+__copyright__ = "Copyright 2008, Dane Springmeyer"
+__version__ = "0.1 $Rev: 1 $"
+__license__ = "GPLv2"
 
 def usage (name):
   print
@@ -21,7 +50,7 @@ def usage (name):
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
   #print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
-  #print "-d\tDatavalue[default: None]: Switch out a value, ie override the projection"
+  #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
   #print "-v\t[default:off]\t\tRun with verbose output"
   print "-h\t[default:off]\t\tPrints this usage information"
   color_print(3, "===========================================================================")
