@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-# forward.py
+# inverse.py
 #
-# Description: reproject a csv file from a given projection back to geographic coordinates
+# Description: reproject a csv file from a given projection back to geographic coordinates.
 #
 # Usage: ./inverse.py test_3395.csv 1 2 EPSG:3595
 #
