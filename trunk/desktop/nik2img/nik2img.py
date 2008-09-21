@@ -46,9 +46,9 @@ def usage (name):
   color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
   color_print(4,"-option\tstatus\t\t\tdescription")
   print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
-  print "-o\t<required>\t\tImage: Set the output filename"
+  print "-o\t<required>\t\tImage: Set the output filename (use .ext) or directory name (no .ext)"
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
-  #print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
+  print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
   #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
   #print "-v\t[default:off]\t\tRun with verbose output"
@@ -69,19 +69,32 @@ def output_error(msg, yield_usage=False):
       usage(sys.argv[0])
     sys.exit(1)
 
+def is_file(name):
+    if name.find('.') > -1 and name.count('.') == 1:
+        return True
+    elif name.rfind('.') - (len(name)+1) == -3:
+        return True
+    elif name.find('.') > -1 and name.count('.') <> 1:
+        output_error("Unknown output type; cannot guess whether it's a file or directory")
+    else:
+        return False
+
 if __name__ == "__main__":
-  import sys, getopt
+  import os, sys, getopt
   
   WIDTH = 600
   HEIGHT = 300
   AGG_FORMATS = {'png':'.png','png256':'.png','jpeg':'.jpg'}
-  
+  ZOOM_LEVELS = [x*.1 for x in range(1,10)]
+  ZOOM_LEVELS.reverse()
+  FORMAT = 'png'
   run = False  
   run_verbose = False
+  built_test_outputs = False
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:vh")
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:tvh")
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -104,6 +117,8 @@ if __name__ == "__main__":
         #var['d'] = arg        
     #elif opt == "-v":
         #run_verbose = True
+    elif opt == "-t":
+        built_test_outputs = True
     elif opt == "-h":
         usage(sys.argv[0])
         sys.exit(1)
@@ -155,7 +170,7 @@ if __name__ == "__main__":
     mapnik_map = mapnik.Map(WIDTH,HEIGHT)
   except Exception, E:
     output_error("Problem initiating map",E)
-
+    
   try:    
     mapnik.load_map(mapnik_map, var['m'])  
   except Exception, E:
@@ -165,18 +180,46 @@ if __name__ == "__main__":
     mapnik_map.zoom_all()
   except Exception, E:
     output_error("Problem Zooming to all layers",E)
-
-  try:
-    if var['i'] == 'all':
-      o = var['o'].split('.')[0]
-      for k, v in AGG_FORMATS.iteritems():
-        try:  
-          mapnik.render_to_file(mapnik_map,'%s_%s%s' % (o,k,v), k)
-        except Exception, E:
-          output_error("Error when rendering to file",E)
-    elif var['i']:
-      mapnik.render_to_file(mapnik_map,var['o'], var['i'])
-  except KeyError:
-    mapnik.render_to_file(mapnik_map,var['o'])  
-  except Exception, E:
-    output_error("Error when rendering to file",E)
+  
+  o = var['o']
+  if not is_file(o):
+      try:
+        os.mkdir(o)
+      except OSError:
+        color_print(1,'// -- Directory already exists, doing nothing...')
+      o = '%s/%s.%s' % (o,o,FORMAT)
+  if not built_test_outputs:    
+    try:
+      if var['i'] == 'all':
+        o = o.split('.')[0]
+        for k, v in AGG_FORMATS.iteritems():
+          try:  
+            mapnik.render_to_file(mapnik_map,'%s_%s%s' % (o,k,v), k)
+          except Exception, E:
+            output_error("Error when rendering to file",E)
+      elif var['i']:
+        mapnik.render_to_file(mapnik_map,o, var['i'])
+    except KeyError:
+      mapnik.render_to_file(mapnik_map,o,FORMAT)  
+    except Exception, E:
+      output_error("Error when rendering to file",E)
+  else:
+    for lev in ZOOM_LEVELS:
+      mapnik_map.zoom(lev)
+      print mapnik_map.scale()
+      o_name = '%s_level-%s' % (o.split('.')[0],lev)
+      try:
+        if var['i'] == 'all':
+          for k, v in AGG_FORMATS.iteritems():
+            try:
+              file = '%s_%s%s' % (o_name,k,v)
+              color_print (1,file)
+              mapnik.render_to_file(mapnik_map,file, k)
+            except Exception, E:
+              output_error("Error when rendering to file",E)
+        elif var['i']:
+            mapnik.render_to_file(mapnik_map,o_name, var['i'])
+      except KeyError:
+        mapnik.render_to_file(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
+      except Exception, E:
+        output_error("Error when rendering to file",E)
