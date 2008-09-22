@@ -47,7 +47,8 @@ def usage (name):
   print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
   print "-o\t<required>\t\tImage: Set the output filename (use .ext) or directory name (no .ext)"
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
-  print "-e\t[default: max extent of all layers]\tMinx,Miny,Maxx,Maxy: Set the extents to render" 
+  print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates"
+  #print "-p\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
   #print "-l\t[default:all enabled in mapfile]\t\tSet layers to enable (quote and comma separate if several)"  
   #print "-v\t[default:off]\t\tRun with verbose output"
@@ -58,23 +59,6 @@ def usage (name):
   color_print(3, "===========================================================================")
   color_print(7,"Dane Springmeyer, dbsgeo a-t gmail.com")
   print
-
-
-shp2img -m mapfile [-o image] [-e minx miny maxx maxy] [-s sizex sizey]
-         [-l "layer1 [layers2...]"] [-i format]
-         [-all_debug n] [-map_debug n] [-layer_debug n] [-p n] [-c n] [-d
-        layername datavalue]
- -m mapfile: Map file to operate on - required
- -i format: Override the IMAGETYPE value to pick output format
- -o image: output filename (stdout if not provided)
- -e minx miny maxx maxy: extents to render
- -s sizex sizey: output image size
- -l layers: layers to enable - make sure they are quoted and space 
-                               seperated if more than one listed
- -all_debug n: Set debug level for map and all layers
- -map_debug n: Set map debug level
- -layer_debug layer_name n: Set layer debug level
- 
  
 def color_print(color,text):
     """
@@ -195,11 +179,15 @@ if __name__ == "__main__":
     mapnik.load_map(mapnik_map, var['m'])  
   except Exception, E:
     output_error("Problem loading map",E)
-
+  
   if var.has_key('e'):
     try:
       bbox = [float(x) for x in var['e'].split(",")]
       bbox = mapnik.Envelope(*bbox)
+      if not mapnik_map.srs == '+proj=latlong +datum=WGS84': # other geographic proj?
+        p = mapnik.Projection("%s" % mapnik_map.srs)
+        print '// -- Initialized projection: %s' % p.params()
+        bbox = mapnik.forward_(bbox, p)
     except Exception, E:
        output_error("Problem setting Bounding Box", E)
     mapnik_map.zoom_to_box(bbox)
