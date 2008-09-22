@@ -32,14 +32,13 @@ ToDo
   * Add query mode, which will output mapfile stuff and not render map.
   * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
   * Need to check if removed layers were active or inactive
-  * Use has_key rather than try statements throughout.
+  * Further test the zoom resolutions feature (not sure about mapniks starting scale)
   * Add ability to set specific resolutions for ZOOM_LEVELS with flag
   * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
   * Add a verbose output setting with timing tests and mapfile debugging.
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Implement variable substitution within the mapfile.
-  * Ability to turn layers on and off (enable).
   * Map draw looping
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources.
@@ -55,15 +54,15 @@ def usage (name):
   print
   color_print(3, "%s" % make_line('=',75))
   color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
-  color_print(4,"Option\tDefault\t\t\tDescription")
+  color_print(4,"Option\tDefault\t\tDescription")
   print "-m\t<required>\tMapfile: Path to xml map file to load styles from."
   print "-o\t<required>\tImage: Set the output filename (or a directory name - with no .ext%s)" % color_text(3,'*')
   print "-i\t[png]\t\tFormat: Choose the output format: png, png256, jpeg, or all (will loop through all formats)"
   print "-e\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates%s" % color_text(3,'*')
-  print "-r\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile%s" % color_text(3,'*')
+  print "-r\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
   print "-s\t[600,300]\tWidth,Height: Set the image size in pixels"
   print "-p\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(3,'*')
-  print "-l\t[all enabled in mapfile]\t\tSet layers to enable (quote and comma-separate if several)"  
+  print "-l\t[all enabled]\tSet layers to enable (quote and comma-separate if several)"  
   #print "-v\t[off]\t\tRun with verbose output"
   #print "-c\t[1]\t\tDraw map n number of times" 
   print "-t\t[0]\t\tPause n seconds after reading the map"
@@ -112,6 +111,11 @@ def is_file(name):
     else:
         return False
 
+def generate_levels(N=10):
+  levels = [x*.1 for x in range(1,N)]
+  levels.reverse()
+  return levels
+
 if __name__ == "__main__":
   import os
   import sys
@@ -121,8 +125,7 @@ if __name__ == "__main__":
   WIDTH = 600
   HEIGHT = 300
   AGG_FORMATS = {'png':'.png','png256':'.png','jpeg':'.jpg'}
-  ZOOM_LEVELS = [x*.1 for x in range(1,10)]
-  ZOOM_LEVELS.reverse()
+  ZOOM_LEVELS = generate_levels(10)
   FORMAT = 'png'
   run = False  
   run_verbose = False
@@ -130,7 +133,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:l:vh", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:l:z:vh", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -157,6 +160,8 @@ if __name__ == "__main__":
         var['s'] = arg
     elif opt == "-l":
         var['l'] = arg   
+    elif opt == "-z":
+        var['z'] = arg
     #elif opt == "-c":
         #var['c'] = arg   
     #elif opt == "-d":
@@ -208,7 +213,15 @@ if __name__ == "__main__":
     mapnik_map = mapnik.Map(WIDTH,HEIGHT)
   except Exception, E:
     output_error("Problem initiating map",E)
-    
+
+  if var.has_key('z'):
+    levels = var['z']
+    try:
+      levels= int(levels) + 1
+    except Exception, E:
+      output_error("Zoom level number must be an integer",E)
+    ZOOM_LEVELS = generate_levels(levels)
+      
   try:    
     mapnik.load_map(mapnik_map, var['m'])  
   except Exception, E:
