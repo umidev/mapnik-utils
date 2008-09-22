@@ -8,18 +8,28 @@ Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/refer
 === Usage ===
 
 {{{
-$ python nik2img.py -h
+$ nik2img.py -h
 
 ===========================================================================
-Usage: nik2img.py -m <mapnik.xml> -o <image.png>
-option status                  description
--m      <required>              Mapfile: Path to xml map file to load styles from.
--o      <required>              Image: Set the output filename
--i      [default: png]          Format: Choose the output format (all, png, png256, jpeg)
--s      [default: 600,300]      Width,Height: Set the image size in pixels
--v      [default:off]           Run with verbose output
--h      [default:off]           Prints this usage information
+Usage: /usr/local/bin/nik2img.py -m <mapnik.xml> -o <image.png>
+Option  Default         Description
+-m      <required>      Mapfile: Path to xml map file to load styles from.
+-o      <required>      Image: Set the output filename (or a directory name - with no .ext*)
+-i      [png]           Format: Choose the output format: png, png256, jpeg, or all (will loop through all formats)
+-e      [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates*
+-r      [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile*
+-s      [600,300]       Width,Height: Set the image size in pixels
+-p      [mapfile srs]   Reproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'*
+-l      [all enabled in mapfile]                Set layers to enable (quote and comma-separate if several)
+-t      [0]             Pause n seconds after reading the map
+-z      [10]            N number of zoom levels generate graphics for*
+-h      [off]           Prints this usage information
+---------------------------------------------------------------------------
+ * Additional features in nik2img not part of shp2img
+ Note: nik2img does not support sending image to STDOUT (default in shp2img)
 ===========================================================================
+Dane Springmeyer, dbsgeo (a-t) gmail.com
+
 
 }}}
 
@@ -32,4 +42,9 @@ $ python nik2img.py -m mapfile.xml -o mapnik_image.png -i png256
 Loop through outputting all possible image formats (and generating maps with a custom size):
 {{{
 $ python nik2img.py -m mapfile.xml -o mapnik_image -i all -s 700,400
+}}}
+
+General all image formats within a folder in spherical mercator projection with custom bbox in projected coordinates and pause 2 seconds after reading mapfile:
+{{{
+$ python nik2img.py -m mapfile.xml -o yourmapsfolder -i all -p epsg:900913 -r 1003750,-1706377,10037508,2810502 -t 2
 }}}
