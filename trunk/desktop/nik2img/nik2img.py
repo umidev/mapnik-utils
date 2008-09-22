@@ -26,9 +26,13 @@ Limitations:
  
 ToDo
   * Add docstrings and code comments.
+  * Use has_key rather than try statements.
+  * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
   * Add a verbose output setting with timing tests and mapfile debugging.
-  * Support variable substitution to allow reprojection, etc.
+  * Support variable substitution.
+  * Ability to turn layers on and off (enable).
+  * Map draw looping
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources.
   
@@ -48,12 +52,13 @@ def usage (name):
   print "-o\t<required>\t\tImage: Set the output filename (use .ext) or directory name (no .ext)"
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
   print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates"
-  #print "-p\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
+  print "-r\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
+  print "-p\t[default: srs of mapfile]\tproj4 string: Set map display projection using -p <epsg:code>, ie epsg:900913"
   #print "-l\t[default:all enabled in mapfile]\t\tSet layers to enable (quote and comma separate if several)"  
   #print "-v\t[default:off]\t\tRun with verbose output"
   #print "-c\t[default:1]\t\tDraw map n number of times" 
-  #print "-p\t[default:0]\t\tPause n seconds after reading the map"  
+  print "-t\t[default:0]\t\tPause n seconds after reading the map"  
   #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
   print "-h\t[default:off]\t\tPrints this usage information"
   color_print(3, "===========================================================================")
@@ -86,7 +91,10 @@ def is_file(name):
         return False
 
 if __name__ == "__main__":
-  import os, sys, getopt
+  import os
+  import sys
+  import getopt
+  import time
   
   WIDTH = 600
   HEIGHT = 300
@@ -100,7 +108,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:tvh")
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:vh")
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -117,6 +125,12 @@ if __name__ == "__main__":
         var['i'] = arg
     elif opt == "-e":
         var['e'] = arg
+    elif opt == "-p":
+        var['p'] = arg
+    elif opt == "-r":
+        var['r'] = arg
+    elif opt == "-t":
+        var['t'] = arg
     elif opt == "-s":
         var['s'] = arg
     #elif opt == "-d":
@@ -148,12 +162,6 @@ if __name__ == "__main__":
   except IOError:
     output_error("Cannot open XML file: %s" % var['m'])
 
-  #try:
-    #image = open(var['o'], "wb")
-    #print "Touched output image: %s" % var['o']
-  #except:
-    #output_error("Cannot create output image: %s" % var['o'])
-
   if not run:
     sys.exit(1)
 
@@ -179,17 +187,35 @@ if __name__ == "__main__":
     mapnik.load_map(mapnik_map, var['m'])  
   except Exception, E:
     output_error("Problem loading map",E)
-  
+
+  if var.has_key('t'):
+    time.sleep(float(var['t']))
+
+  if var.has_key('p'):
+    if var['p'] == "epsg:900913":
+      google_merc = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
+      epsg = mapnik.Projection(google_merc)
+    else:
+      epsg = mapnik.Projection("+init=%s" % var['p'])
+    mapnik_map.srs = epsg.params()
+       
   if var.has_key('e'):
     try:
       bbox = [float(x) for x in var['e'].split(",")]
       bbox = mapnik.Envelope(*bbox)
-      if not mapnik_map.srs == '+proj=latlong +datum=WGS84': # other geographic proj?
-        p = mapnik.Projection("%s" % mapnik_map.srs)
+      p = mapnik.Projection("%s" % mapnik_map.srs)
+      if not p.geographic:
         print '// -- Initialized projection: %s' % p.params()
         bbox = mapnik.forward_(bbox, p)
     except Exception, E:
-       output_error("Problem setting Bounding Box", E)
+       output_error("Problem setting geographic bounding box", E)
+    mapnik_map.zoom_to_box(bbox)
+  elif var.has_key('r'):
+    try:
+      bbox = [float(x) for x in var['r'].split(",")]
+      bbox = mapnik.Envelope(*bbox)
+    except Exception, E:
+       output_error("Problem setting projected bounding box", E)
     mapnik_map.zoom_to_box(bbox)
   else:
     try:    
