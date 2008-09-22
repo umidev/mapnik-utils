@@ -5,9 +5,9 @@
 nik2img.py - In Mapnik xml, out Map image
 
 Summary:
-  A command line tool for generating map images by simply pointing to an XML file.
-  Seeks to match the shp2img utility used in the MapServer project. Thanks MapServer!
-  http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
+  A command line tool for generating map images by pointing to an XML file.
+  Mirrors the shp2img utility developed by the MapServer project.
+  shp2img reference: http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
  
 Source:
  http://code.google.com/p/mapnik-utils/
@@ -19,6 +19,7 @@ Usage:
   # Copy the script to your path then:
   $ nik2img.py -h # help on usage
   $ nik2img.py -m mapfile.xml -o yourmap.png
+  $ nik2img.py -m mapfile.xml -o yourmapsfolder -i all --debug -p epsg:900913 -r 1003750,-1706377,10037508,2810502 -t 2
 
 Limitations:
   Paths to file system datasources in the XML files loaded will be relative to your dir.
@@ -26,10 +27,12 @@ Limitations:
  
 ToDo
   * Add docstrings and code comments.
-  * Use has_key rather than try statements.
+  * Use has_key rather than try statements throughout.
+  * Add ability to set resolutions for ZOOM_LEVELS
   * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
   * Add a verbose output setting with timing tests and mapfile debugging.
+  * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Support variable substitution.
   * Ability to turn layers on and off (enable).
   * Map draw looping
@@ -58,7 +61,8 @@ def usage (name):
   #print "-l\t[default:all enabled in mapfile]\t\tSet layers to enable (quote and comma separate if several)"  
   #print "-v\t[default:off]\t\tRun with verbose output"
   #print "-c\t[default:1]\t\tDraw map n number of times" 
-  print "-t\t[default:0]\t\tPause n seconds after reading the map"  
+  print "-t\t[default:0]\t\tPause n seconds after reading the map"
+  print "--debug\t[default:0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)" 
   #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
   print "-h\t[default:off]\t\tPrints this usage information"
   color_print(3, "===========================================================================")
@@ -108,7 +112,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:vh")
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:vh", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -133,11 +137,15 @@ if __name__ == "__main__":
         var['t'] = arg
     elif opt == "-s":
         var['s'] = arg
+    #elif opt == "-l":
+        #var['l'] = arg   
+    #elif opt == "-c":
+        #var['c'] = arg   
     #elif opt == "-d":
         #var['d'] = arg        
     #elif opt == "-v":
         #run_verbose = True
-    elif opt == "-t":
+    elif opt == "--debug":
         built_test_outputs = True
     elif opt == "-h":
         usage(sys.argv[0])
