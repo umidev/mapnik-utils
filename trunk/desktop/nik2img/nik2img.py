@@ -6,8 +6,10 @@ nik2img.py - In Mapnik xml, out Map image
 
 Summary:
   A command line tool for generating map images by pointing to an XML file.
+  
   Mirrors the shp2img utility developed by the MapServer project.
   shp2img reference: http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
+  shp2img code: http://trac.osgeo.org/mapserver/browser/trunk/mapserver/shp2img.c
  
 Source:
  http://code.google.com/p/mapnik-utils/
@@ -27,13 +29,16 @@ Limitations:
  
 ToDo
   * Add docstrings and code comments.
+  * Add query mode, which will output mapfile stuff and not render map.
+  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
+  * Need to check if removed layers were active or inactive
   * Use has_key rather than try statements throughout.
-  * Add ability to set resolutions for ZOOM_LEVELS
+  * Add ability to set specific resolutions for ZOOM_LEVELS with flag
   * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
   * Add a verbose output setting with timing tests and mapfile debugging.
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
-  * Support variable substitution.
+  * Implement variable substitution within the mapfile.
   * Ability to turn layers on and off (enable).
   * Map draw looping
   * Cascadenik integration | ability to read in css.mml or css.mss.
@@ -48,33 +53,46 @@ __license__ = "GPLv2"
 
 def usage (name):
   print
-  color_print(3, "===========================================================================")
+  color_print(3, "%s" % make_line('=',75))
   color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
-  color_print(4,"-option\tstatus\t\t\tdescription")
-  print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
-  print "-o\t<required>\t\tImage: Set the output filename (use .ext) or directory name (no .ext)"
-  print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
-  print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates"
-  print "-r\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
-  print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
-  print "-p\t[default: srs of mapfile]\tproj4 string: Set map display projection using -p <epsg:code>, ie epsg:900913"
-  #print "-l\t[default:all enabled in mapfile]\t\tSet layers to enable (quote and comma separate if several)"  
-  #print "-v\t[default:off]\t\tRun with verbose output"
-  #print "-c\t[default:1]\t\tDraw map n number of times" 
-  print "-t\t[default:0]\t\tPause n seconds after reading the map"
-  print "--debug\t[default:0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)" 
-  #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
-  print "-h\t[default:off]\t\tPrints this usage information"
-  color_print(3, "===========================================================================")
-  color_print(7,"Dane Springmeyer, dbsgeo a-t gmail.com")
+  color_print(4,"Option\tDefault\t\t\tDescription")
+  print "-m\t<required>\tMapfile: Path to xml map file to load styles from."
+  print "-o\t<required>\tImage: Set the output filename (or a directory name - with no .ext%s)" % color_text(3,'*')
+  print "-i\t[png]\t\tFormat: Choose the output format: png, png256, jpeg, or all (will loop through all formats)"
+  print "-e\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates%s" % color_text(3,'*')
+  print "-r\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile%s" % color_text(3,'*')
+  print "-s\t[600,300]\tWidth,Height: Set the image size in pixels"
+  print "-p\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(3,'*')
+  print "-l\t[all enabled in mapfile]\t\tSet layers to enable (quote and comma-separate if several)"  
+  #print "-v\t[off]\t\tRun with verbose output"
+  #print "-c\t[1]\t\tDraw map n number of times" 
+  print "-t\t[0]\t\tPause n seconds after reading the map"
+  print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
+  print "-z\t[10]\t\tN number of zoom levels generate graphics for%s" % color_text(3,'*')
+  #print "-d\tDatavalue[None]: Variable substitution, ie find and replace any value within mapfile"
+  print "-h\t[off]\t\tPrints this usage information"
+  print "%s\n %s Additional features in nik2img not part of shp2img" % (make_line('-',75), color_text(3,'*'))
+  print " %s nik2img does not support sending image to STDOUT (default in shp2img)" % color_text(3,'Note:')
+  color_print(3, "%s" % make_line('=',75))
+  color_print(7,"Dane Springmeyer, dbsgeo (a-t) gmail.com")
   print
- 
+
+def make_line(character, n):
+    line = character*n
+    return line
+
 def color_print(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
     print "\033[9%sm%s\033[0m" % (color,text)
-    
+
+def color_text(color,text):
+    """
+    1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
+    """
+    return "\033[9%sm%s\033[0m" % (color,text)
+
 def output_error(msg, E=None, yield_usage=False):
     if E:
       color_print(1, '// --> %s: \n\n %s' % (msg, E))
@@ -112,7 +130,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:vh", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:l:vh", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -137,8 +155,8 @@ if __name__ == "__main__":
         var['t'] = arg
     elif opt == "-s":
         var['s'] = arg
-    #elif opt == "-l":
-        #var['l'] = arg   
+    elif opt == "-l":
+        var['l'] = arg   
     #elif opt == "-c":
         #var['c'] = arg   
     #elif opt == "-d":
@@ -160,15 +178,15 @@ if __name__ == "__main__":
     try:
         import mapnik
         color_print (4,'Loading mapnik python bindings...')
-    except:
-        output_error('Could not load mapnik python bindings')
+    except Exception, E:
+        output_error('Could not load mapnik python bindings', E)
 
   try:
     xml = open(var['m'], "r");
     print "//-- Confirmed path to XML file: %s" % var['m']
     xml.close()
-  except IOError:
-    output_error("Cannot open XML file: %s" % var['m'])
+  except IOError, E:
+    output_error("Cannot open XML file: %s" % var['m'], E)
 
   if not run:
     sys.exit(1)
@@ -199,6 +217,16 @@ if __name__ == "__main__":
   if var.has_key('t'):
     time.sleep(float(var['t']))
 
+  if var.has_key('l'):
+    layers = var['l'].split(",")
+    mapfile_layers = mapnik_map.layers
+    for layer_num in range(len(mapnik_map.layers)-1, -1, -1):
+          l = mapnik_map.layers[layer_num]
+          if l.name not in layers:
+              del mapnik_map.layers[layer_num]
+              color_print (6, "Removed layer %s loaded from mapfile, not in list: %s" % (l.name, layers))
+
+  # TODO: Accept spatialreference.org url
   if var.has_key('p'):
     if var['p'] == "epsg:900913":
       google_merc = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
@@ -206,7 +234,8 @@ if __name__ == "__main__":
     else:
       epsg = mapnik.Projection("+init=%s" % var['p'])
     mapnik_map.srs = epsg.params()
-       
+
+  #TODO: refactor zoom function
   if var.has_key('e'):
     try:
       bbox = [float(x) for x in var['e'].split(",")]
@@ -231,6 +260,7 @@ if __name__ == "__main__":
     except Exception, E:
       output_error("Problem Zooming to all layers",E)
   
+  # TODO: cleanup this crappy code.
   o = var['o']
   if not is_file(o):
       try:
