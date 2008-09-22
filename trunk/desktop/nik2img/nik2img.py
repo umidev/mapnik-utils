@@ -38,7 +38,11 @@ ToDo
   * Support cairo renderer and formats.
   * Add a verbose output setting with timing tests and mapfile debugging.
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
-  * Implement variable substitution within the mapfile.
+  * Implement datavalue substitute within mapfile using boost python access to map elements.
+      ie. -d <layer/style:datavalue:newvalue>, -d world:file:'/new/path/to/datasource', -d 'my style':fill:green
+  * Until datavalue substitution with native objects, get string parsing going
+      ie. -d <currentvalue:newvalue:first/all>
+  * Implement prepared variable substitution within the mapfile.
   * Map draw looping
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources.
@@ -68,7 +72,7 @@ def usage (name):
   print "-t\t[0]\t\tPause n seconds after reading the map"
   print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
   print "-z\t[10]\t\tN number of zoom levels generate graphics for%s" % color_text(3,'*')
-  #print "-d\tDatavalue[None]: Variable substitution, ie find and replace any value within mapfile"
+  print "-d\t[None]\t\tFind and replace of any text string within a mapfile (modifies mapfile in memory)"
   print "-h\t[off]\t\tPrints this usage information"
   print "%s\n %s Additional features in nik2img not part of shp2img" % (make_line('-',75), color_text(3,'*'))
   print " %s nik2img does not support sending image to STDOUT (default in shp2img)" % color_text(3,'Note:')
@@ -133,7 +137,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:d:r:p:t:l:z:vh", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:vh", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -164,8 +168,8 @@ if __name__ == "__main__":
         var['z'] = arg
     #elif opt == "-c":
         #var['c'] = arg   
-    #elif opt == "-d":
-        #var['d'] = arg        
+    elif opt == "-d":
+        var['d'] = arg        
     #elif opt == "-v":
         #run_verbose = True
     elif opt == "--debug":
@@ -221,12 +225,30 @@ if __name__ == "__main__":
     except Exception, E:
       output_error("Zoom level number must be an integer",E)
     ZOOM_LEVELS = generate_levels(levels)
-      
-  try:    
-    mapnik.load_map(mapnik_map, var['m'])  
-  except Exception, E:
-    output_error("Problem loading map",E)
-
+    
+  if not var.has_key('d'):
+    try:    
+      mapnik.load_map(mapnik_map, var['m'])  
+    except Exception, E:
+      output_error("Problem loading map",E)
+  else:
+    # TODO: implement elementtree option for name:value control
+    # TODO: allow remote mapfile
+    #try:
+    #  from xml.etree import ElementTree
+    #except:
+    #  print 'ElementTree needed for XML find and replace approach'
+    import tempfile
+    find_replace = var['d'].split(':')
+    find_this, replace_this = find_replace[0], find_replace[1]
+    mapfile_string = open(var['m']).read().replace(find_this,replace_this)
+    tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
+    tmp.write(mapfile_string)
+    tmp.flush()
+    try:
+      mapnik.load_map(mapnik_map, tmp.name )  
+    except Exception, E:
+      output_error("Problem loading map from variable parsed temporary (in memory) mapfile",E)
   if var.has_key('t'):
     time.sleep(float(var['t']))
 
