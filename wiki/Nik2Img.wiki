@@ -20,10 +20,11 @@ Option  Default         Description
 -r      [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile*
 -s      [600,300]       Width,Height: Set the image size in pixels
 -p      [mapfile srs]   Reproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'*
--l      [all enabled in mapfile]                Set layers to enable (quote and comma-separate if several)
+-l      [all enabled]   Set layers to enable (quote and comma-separate if several)
 -t      [0]             Pause n seconds after reading the map
 -z      [10]            N number of zoom levels generate graphics for*
 -h      [off]           Prints this usage information
+
 ---------------------------------------------------------------------------
  * Additional features in nik2img not part of shp2img
  Note: nik2img does not support sending image to STDOUT (default in shp2img)
