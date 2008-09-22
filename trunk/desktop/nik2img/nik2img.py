@@ -48,7 +48,7 @@ def usage (name):
   print "-m\t<required>\t\tMapfile: Path to xml map file to load styles from."
   print "-o\t<required>\t\tImage: Set the output filename (use .ext) or directory name (no .ext)"
   print "-i\t[default: png]\t\tFormat: Choose the output format (all, png, png256, jpeg)"
-  print "-e\t[default: max extent]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
+  print "-e\t[default: max extent of all layers]\tMinx,Miny,Maxx,Maxy: Set the extents to render"
   print "-s\t[default: 600,300]\tWidth,Height: Set the image size in pixels"
   #print "-d\tDatavalue[default: None]: Variable substitution, ie override the projection"
   #print "-v\t[default:off]\t\tRun with verbose output"
@@ -63,8 +63,11 @@ def color_print(color,text):
     """
     print "\033[9%sm%s\033[0m" % (color,text)
     
-def output_error(msg, yield_usage=False):
-    color_print(1, '// --> %s' % msg)
+def output_error(msg, E=None, yield_usage=False):
+    if E:
+      color_print(1, '// --> %s: \n\n %s' % (msg, E))
+    else:
+      color_print(1, '// --> %s' % msg)    
     if yield_usage:
       usage(sys.argv[0])
     sys.exit(1)
@@ -151,10 +154,8 @@ if __name__ == "__main__":
   if not run:
     sys.exit(1)
 
-  try:
-    if var['s']:
-      WIDTH,HEIGHT = var['s'].split(',')
-  except: pass
+  if var.has_key('s'):
+    WIDTH,HEIGHT = var['s'].split(',')
   
   try:
     WIDTH = int(WIDTH)
@@ -176,10 +177,18 @@ if __name__ == "__main__":
   except Exception, E:
     output_error("Problem loading map",E)
 
-  try:    
-    mapnik_map.zoom_all()
-  except Exception, E:
-    output_error("Problem Zooming to all layers",E)
+  if var.has_key('e'):
+    try:
+      bbox = [float(x) for x in var['e'].split(",")]
+      bbox = mapnik.Envelope(*bbox)
+    except Exception, E:
+       output_error("Problem setting Bounding Box", E)
+    mapnik_map.zoom_to_box(bbox)
+  else:
+    try:    
+      mapnik_map.zoom_all()
+    except Exception, E:
+      output_error("Problem Zooming to all layers",E)
   
   o = var['o']
   if not is_file(o):
