@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 """
 
 nik2img.py - In Mapnik xml, out Map image
@@ -54,6 +55,10 @@ __copyright__ = "Copyright 2008, Dane Springmeyer"
 __version__ = "0.1 $Rev: 1 $"
 __license__ = "GPLv2"
 
+
+import os
+import sys
+
 def usage (name):
   print
   color_print(3, "%s" % make_line('=',75))
@@ -89,13 +94,19 @@ def color_print(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
-    print "\033[9%sm%s\033[0m" % (color,text)
+    if not os.name == 'nt':
+      print "\033[9%sm%s\033[0m" % (color,text)
+    else:
+      print text
 
 def color_text(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
-    return "\033[9%sm%s\033[0m" % (color,text)
+    if not os.name == 'nt':
+      return "\033[9%sm%s\033[0m" % (color,text)
+    else:
+      return text
 
 def output_error(msg, E=None, yield_usage=False):
     if E:
@@ -172,8 +183,6 @@ def output_time():
       pass
 
 if __name__ == "__main__":
-  import os
-  import sys
   import getopt
   import time
   import timeit
