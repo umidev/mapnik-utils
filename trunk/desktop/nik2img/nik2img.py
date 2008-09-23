@@ -112,6 +112,8 @@ def output_message(msg, warning=False):
         color_print(1, '// --> WARNING: %s' % msg)    
       else:
         color_print(2, '// --> %s' % msg)
+        output_time()
+        print
     else:
       pass # no debugging messages
 
@@ -134,18 +136,47 @@ def layers_in_extent():
     mapfile_layers = mapnik_map.layers
     map_envelope = mapnik_map.envelope()
     for layer_num in range(len(mapnik_map.layers)-1, -1, -1):
-          l = mapnik_map.layers[layer_num]
+          l = mapfile_layers[layer_num]
           layer_envelope = l.envelope()
           if map_envelope.intersects(layer_envelope):
               output_message("Map layer '%s' intersects Map envelope" % l.name)
           else:
               output_message("Map layer '%s' does not intersect with Map envelope" % l.name, warning=True)
 
+def render(*args):
+  if var.has_key('c'):
+    for graphic in range(1, int(var['c'])):
+      mapnik.render_to_file(*args)
+      output_message('map rendered %s times' % graphic)
+  else:
+    mapnik.render_to_file(*args)
+    output_message('map rendered .........')
+
+def get_time(time):
+    if time/60 < 1:
+      seconds = '%s seconds' % str(time)
+      return seconds
+    else:
+      minutes = '%s minutes' % str(time/60)
+      return minutes
+
+def elapsed(last_step):
+    total = (time.time() - start)
+    last = (time.time() - last_step)
+    return 'Total time: %s | Last step: %s' % (get_time(total), get_time(last))
+
+def output_time():
+    if STARTED:
+      color_print(3,elapsed(timeit.time.time()))
+    else:
+      pass
+
 if __name__ == "__main__":
   import os
   import sys
   import getopt
   import time
+  import timeit
   
   WIDTH = 600
   HEIGHT = 300
@@ -157,6 +188,7 @@ if __name__ == "__main__":
   VERBOSE = False
   QUIET = False
   DRY_RUN = False
+  STARTED = False
   built_test_outputs = False
   var = {}        # In/Out paths
 
@@ -205,6 +237,9 @@ if __name__ == "__main__":
     elif opt == "-h":
         usage(sys.argv[0])
         sys.exit(1)
+    else:
+        usage(sys.argv[0])
+        sys.exit(1)
     
   if len(var) < 2:
     output_error('Make sure to specify the -m <input mapfile.xml> and -o <output image>',yield_usage=True)
@@ -213,17 +248,8 @@ if __name__ == "__main__":
     
     if QUIET:
       output_message('Quite mode requested')
-      #sys.stderr = open(os.devnull,"w")
       errors = sys.__stderr__.fileno()
       os.close(errors) # suppress the errors, mostly mapnik debug
-      #os.dup2(devnull.fileno(), suppressed_errors
-      #sys.stdout = open(os.devnull,"w")
-    
-    try:
-        import mapnik
-        output_message('Loaded mapnik python bindings')
-    except Exception, E:
-        output_error('Could not load mapnik python bindings', E)
 
     if not os.path.isfile(var['m']):
       output_error("Cannot open XML mapfile: '%s'" % var['m'])
@@ -247,6 +273,15 @@ if __name__ == "__main__":
   except Exception, E:
     output_error("Height must be an integer",E)
 
+  start = timeit.time.time()
+  STARTED = True
+  
+  try:
+      import mapnik
+      output_message('Loaded mapnik python bindings')
+  except Exception, E:
+      output_error('Could not load mapnik python bindings', E)
+
   try:
     mapnik_map = mapnik.Map(WIDTH,HEIGHT)
     output_message('Map object created successfully')
@@ -260,7 +295,7 @@ if __name__ == "__main__":
       ZOOM_LEVELS = generate_levels(levels)
     except Exception, E:
       output_error("Zoom level number must be an integer",E)
-    
+
   if not var.has_key('d'):
     try:    
       mapnik.load_map(mapnik_map, var['m'])
@@ -269,7 +304,6 @@ if __name__ == "__main__":
       output_error("Problem loading map",E)
   else:
     # TODO: implement elementtree option for name:value control
-    # TODO: allow remote mapfile
     #try:
     #  from xml.etree import ElementTree
     #except:
@@ -346,57 +380,54 @@ if __name__ == "__main__":
   # Check for which layers intersect with map envelope
   layers_in_extent()
   
-  # TODO: cleanup this crappy code.
   if DRY_RUN:
     output_error('Dry run complete')
 
-render(*args)
-  if var.has_key('c'):
-    loop = len(var['c']
-    for map in loop:
-      mapnik.render_to_file(*args)
-  else:
-    mapnik.render_to_file(*args)
-  
+  # TODO: cleanup this crappy code.
   o = var['o']
   if not is_file(o):
       try:
         os.mkdir(o)
       except OSError:
+        # do we dare remove the directory?
         output_message('Directory already exists, doing nothing...', warning=True)
       o = '%s/%s.%s' % (o,o,FORMAT)
   if not built_test_outputs:    
     try:
-      if var['i'] == 'all':
-        o = o.split('.')[0]
-        for k, v in AGG_FORMATS.iteritems():
-          try:  
-            render(mapnik_map,'%s_%s%s' % (o,k,v), k)
-          except Exception, E:
-            output_error("Error when rendering to file",E)
-      elif var['i']:
-        render(mapnik_map,o, var['i'])
-    except KeyError:
-      render(mapnik_map,o,FORMAT)  
+      if var.has_key('i'):
+        if var['i'] == 'all':
+          o = o.split('.')[0]
+          for k, v in AGG_FORMATS.iteritems():
+            try:  
+              render(mapnik_map,'%s_%s%s' % (o,k,v), k)
+            except Exception, E:
+              output_error("Error when rendering to file",E)
+        else:
+          render(mapnik_map,o, var['i'])
+      else:
+          render(mapnik_map,o,FORMAT)
     except Exception, E:
       output_error("Error when rendering to file",E)
   else:
     for lev in ZOOM_LEVELS:
       mapnik_map.zoom(lev)
-      output_message('%s' % mapnik_map.scale())
+      output_message('Map Scale: %s' % mapnik_map.scale())
       o_name = '%s_level-%s' % (o.split('.')[0],lev)
       try:
-        if var['i'] == 'all':
-          for k, v in AGG_FORMATS.iteritems():
-            try:
-              file = '%s_%s%s' % (o_name,k,v)
-              color_print (1,file)
-              render(mapnik_map,file, k)
-            except Exception, E:
-              output_error("Error when rendering to file",E)
-        elif var['i']:
+        if var.has_key('i'):
+          if var['i'] == 'all':
+            for k, v in AGG_FORMATS.iteritems():
+              try:
+                file = '%s_%s%s' % (o_name,k,v)
+                output_message('File output: %s' % file)
+                # check for feature intersection here
+                # warn when none
+                render(mapnik_map,file, k)
+              except Exception, E:
+                output_error("Error when rendering to file",E)
+          else:
             render(mapnik_map,o_name, var['i'])
-      except KeyError:
-        render(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
+        else:
+            render(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
       except Exception, E:
         output_error("Error when rendering to file",E)
