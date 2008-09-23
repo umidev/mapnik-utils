@@ -67,8 +67,9 @@ def usage (name):
   print "-s\t[600,300]\tWidth,Height: Set the image size in pixels"
   print "-p\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(3,'*')
   print "-l\t[all enabled]\tSet layers to enable (quote and comma-separate if several)"  
-  #print "-v\t[off]\t\tRun with verbose output"
+  print "-v\t[off]\t\tRun with verbose output"
   #print "-c\t[1]\t\tDraw map n number of times" 
+  print "-n\t[0]\t\tDry run mode: no map output"
   print "-t\t[0]\t\tPause n seconds after reading the map"
   print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
   print "-z\t[10]\t\tN number of zoom levels generate graphics for%s" % color_text(3,'*')
@@ -100,10 +101,19 @@ def output_error(msg, E=None, yield_usage=False):
     if E:
       color_print(1, '// --> %s: \n\n %s' % (msg, E))
     else:
-      color_print(1, '// --> %s' % msg)    
+      color_print(1, '\\ --> %s' % msg)    
     if yield_usage:
       usage(sys.argv[0])
     sys.exit(1)
+
+def output_message(msg, warning=False):
+    if VERBOSE:
+      if warning:
+        color_print(1, '// --> WARNING: %s' % msg)    
+      else:
+        color_print(2, '// --> %s' % msg)
+    else:
+      pass # no debugging messages
 
 def is_file(name):
     if name.find('.') > -1 and name.count('.') == 1:
@@ -120,6 +130,17 @@ def generate_levels(N=10):
   levels.reverse()
   return levels
 
+def layers_in_extent():
+    mapfile_layers = mapnik_map.layers
+    map_envelope = mapnik_map.envelope()
+    for layer_num in range(len(mapnik_map.layers)-1, -1, -1):
+          l = mapnik_map.layers[layer_num]
+          layer_envelope = l.envelope()
+          if map_envelope.intersects(layer_envelope):
+              output_message("Map layer '%s' intersects Map envelope" % l.name)
+          else:
+              output_message("Map layer '%s' does not intersect with Map envelope" % l.name, warning=True)
+
 if __name__ == "__main__":
   import os
   import sys
@@ -129,15 +150,18 @@ if __name__ == "__main__":
   WIDTH = 600
   HEIGHT = 300
   AGG_FORMATS = {'png':'.png','png256':'.png','jpeg':'.jpg'}
+  CAIRO_FORMATS = {'svg':'.svg','pdf':'.pdf','ps':'.ps'}
   ZOOM_LEVELS = generate_levels(10)
   FORMAT = 'png'
   run = False  
-  run_verbose = False
+  VERBOSE = False
+  QUIET = False
+  DRY_RUN = False
   built_test_outputs = False
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:vh", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:nvhq", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -169,9 +193,13 @@ if __name__ == "__main__":
     #elif opt == "-c":
         #var['c'] = arg   
     elif opt == "-d":
-        var['d'] = arg        
-    #elif opt == "-v":
-        #run_verbose = True
+        var['d'] = arg
+    elif opt == "-n":
+        DRY_RUN = True
+    elif opt == "-v":
+        VERBOSE = True
+    elif opt == "-q":
+        QUIET = True
     elif opt == "--debug":
         built_test_outputs = True
     elif opt == "-h":
@@ -182,26 +210,32 @@ if __name__ == "__main__":
     output_error('Make sure to specify the -m <input mapfile.xml> and -o <output image>',yield_usage=True)
   else:
     run = True
-    import os
+    
+    if QUIET:
+      output_message('Quite mode requested')
+      #sys.stderr = open(os.devnull,"w")
+      errors = sys.__stderr__.fileno()
+      os.close(errors) # suppress the errors, mostly mapnik debug
+      #os.dup2(devnull.fileno(), suppressed_errors
+      #sys.stdout = open(os.devnull,"w")
     
     try:
         import mapnik
-        color_print (4,'Loading mapnik python bindings...')
+        output_message('Loaded mapnik python bindings')
     except Exception, E:
         output_error('Could not load mapnik python bindings', E)
 
-  try:
-    xml = open(var['m'], "r");
-    print "//-- Confirmed path to XML file: %s" % var['m']
-    xml.close()
-  except IOError, E:
-    output_error("Cannot open XML file: %s" % var['m'], E)
+    if not os.path.isfile(var['m']):
+      output_error("Cannot open XML mapfile: '%s'" % var['m'])
+    else:
+      output_message("Confirmed path to XML mapfile: %s" % var['m'])
 
   if not run:
     sys.exit(1)
 
   if var.has_key('s'):
     WIDTH,HEIGHT = var['s'].split(',')
+    output_message('Custom dimensions requested of %s (width), and %s (height) pixels' % (WIDTH,HEIGHT))
   
   try:
     WIDTH = int(WIDTH)
@@ -215,6 +249,7 @@ if __name__ == "__main__":
 
   try:
     mapnik_map = mapnik.Map(WIDTH,HEIGHT)
+    output_message('Map object created successfully')
   except Exception, E:
     output_error("Problem initiating map",E)
 
@@ -222,13 +257,14 @@ if __name__ == "__main__":
     levels = var['z']
     try:
       levels= int(levels) + 1
+      ZOOM_LEVELS = generate_levels(levels)
     except Exception, E:
       output_error("Zoom level number must be an integer",E)
-    ZOOM_LEVELS = generate_levels(levels)
     
   if not var.has_key('d'):
     try:    
-      mapnik.load_map(mapnik_map, var['m'])  
+      mapnik.load_map(mapnik_map, var['m'])
+      output_message('XML mapfile loaded successfully')
     except Exception, E:
       output_error("Problem loading map",E)
   else:
@@ -246,39 +282,49 @@ if __name__ == "__main__":
     tmp.write(mapfile_string)
     tmp.flush()
     try:
-      mapnik.load_map(mapnik_map, tmp.name )  
+      mapnik.load_map(mapnik_map, tmp.name )
+      output_message('XML mapfile loaded and parsed successfully')
     except Exception, E:
       output_error("Problem loading map from variable parsed temporary (in memory) mapfile",E)
-  if var.has_key('t'):
-    time.sleep(float(var['t']))
 
   if var.has_key('l'):
     layers = var['l'].split(",")
     mapfile_layers = mapnik_map.layers
+    output_message('Scanning %s layers' % len(mapnik_map.layers))
     for layer_num in range(len(mapnik_map.layers)-1, -1, -1):
           l = mapnik_map.layers[layer_num]
           if l.name not in layers:
               del mapnik_map.layers[layer_num]
-              color_print (6, "Removed layer %s loaded from mapfile, not in list: %s" % (l.name, layers))
+              output_message("Removed layer '%s' loaded from mapfile, not in list: %s" % (l.name, layers))
 
   # TODO: Accept spatialreference.org url
   if var.has_key('p'):
+    output_message('Reprojecting map output')
     if var['p'] == "epsg:900913":
+      output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
       google_merc = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
       epsg = mapnik.Projection(google_merc)
     else:
       epsg = mapnik.Projection("+init=%s" % var['p'])
+      output_message("Mapnik projection successfully initiated with epsg code: '%s'" % epsg.params())
     mapnik_map.srs = epsg.params()
 
-  #TODO: refactor zoom function
+  if var.has_key('t'):
+    output_message('Pausing for %s seconds...' % var['t'])
+    for sec in range(1, int(var['t'])):
+      output_message('%s' % sec)
+      time.sleep(1)
+
+  #TODO: refactor, test zoom function
   if var.has_key('e'):
     try:
       bbox = [float(x) for x in var['e'].split(",")]
       bbox = mapnik.Envelope(*bbox)
       p = mapnik.Projection("%s" % mapnik_map.srs)
       if not p.geographic:
-        print '// -- Initialized projection: %s' % p.params()
+        output_message('Initialized projection: %s' % p.params())
         bbox = mapnik.forward_(bbox, p)
+        output_message('BBOX in projected coordinates is: %s' % bbox)
     except Exception, E:
        output_error("Problem setting geographic bounding box", E)
     mapnik_map.zoom_to_box(bbox)
@@ -286,22 +332,30 @@ if __name__ == "__main__":
     try:
       bbox = [float(x) for x in var['r'].split(",")]
       bbox = mapnik.Envelope(*bbox)
+      output_message('BBOX is: %s' % bbox)
     except Exception, E:
        output_error("Problem setting projected bounding box", E)
     mapnik_map.zoom_to_box(bbox)
   else:
     try:    
       mapnik_map.zoom_all()
+      output_message('BBOX (max extent of all layers) is: %s' % mapnik_map.envelope())
     except Exception, E:
       output_error("Problem Zooming to all layers",E)
   
+  # Check for which layers intersect with map envelope
+  layers_in_extent()
+  
   # TODO: cleanup this crappy code.
+  if DRY_RUN:
+    output_error('Dry run complete')
+
   o = var['o']
   if not is_file(o):
       try:
         os.mkdir(o)
       except OSError:
-        color_print(1,'// -- Directory already exists, doing nothing...')
+        output_message('Directory already exists, doing nothing...', warning=True)
       o = '%s/%s.%s' % (o,o,FORMAT)
   if not built_test_outputs:    
     try:
@@ -321,7 +375,7 @@ if __name__ == "__main__":
   else:
     for lev in ZOOM_LEVELS:
       mapnik_map.zoom(lev)
-      print mapnik_map.scale()
+      output_message('%s' % mapnik_map.scale())
       o_name = '%s_level-%s' % (o.split('.')[0],lev)
       try:
         if var['i'] == 'all':
