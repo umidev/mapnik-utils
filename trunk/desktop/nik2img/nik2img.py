@@ -29,21 +29,21 @@ Limitations:
  
 ToDo
   * Add docstrings and code comments.
-  * Add query mode, which will output mapfile stuff and not render map.
+  * Add mapfile stats output.
+  * Add timeit module.
   * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
   * Need to check if removed layers were active or inactive
   * Further test the zoom resolutions feature (not sure about mapniks starting scale)
   * Add ability to set specific resolutions for ZOOM_LEVELS with flag
   * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
-  * Add a verbose output setting with timing tests and mapfile debugging.
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Implement datavalue substitute within mapfile using boost python access to map elements.
       ie. -d <layer/style:datavalue:newvalue>, -d world:file:'/new/path/to/datasource', -d 'my style':fill:green
-  * Until datavalue substitution with native objects, get string parsing going
-      ie. -d <currentvalue:newvalue:first/all>
-  * Implement prepared variable substitution within the mapfile.
-  * Map draw looping
+  * Until datavalue substitution with native objects, perhaps using ElementTree
+      ie. -d <currentvalue:newvalue:find/findall>
+  * Implement a prepared variable substitution ability within the mapfile.
+  * Map draw looping n times
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources.
   
@@ -68,7 +68,7 @@ def usage (name):
   print "-p\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(3,'*')
   print "-l\t[all enabled]\tSet layers to enable (quote and comma-separate if several)"  
   print "-v\t[off]\t\tRun with verbose output"
-  #print "-c\t[1]\t\tDraw map n number of times" 
+  print "-c\t[1]\t\tDraw map n number of times" 
   print "-n\t[0]\t\tDry run mode: no map output"
   print "-t\t[0]\t\tPause n seconds after reading the map"
   print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
@@ -161,7 +161,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:nvhq", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvhq", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -190,8 +190,8 @@ if __name__ == "__main__":
         var['l'] = arg   
     elif opt == "-z":
         var['z'] = arg
-    #elif opt == "-c":
-        #var['c'] = arg   
+    elif opt == "-c":
+        var['c'] = arg   
     elif opt == "-d":
         var['d'] = arg
     elif opt == "-n":
@@ -350,6 +350,14 @@ if __name__ == "__main__":
   if DRY_RUN:
     output_error('Dry run complete')
 
+render(*args)
+  if var.has_key('c'):
+    loop = len(var['c']
+    for map in loop:
+      mapnik.render_to_file(*args)
+  else:
+    mapnik.render_to_file(*args)
+  
   o = var['o']
   if not is_file(o):
       try:
@@ -363,13 +371,13 @@ if __name__ == "__main__":
         o = o.split('.')[0]
         for k, v in AGG_FORMATS.iteritems():
           try:  
-            mapnik.render_to_file(mapnik_map,'%s_%s%s' % (o,k,v), k)
+            render(mapnik_map,'%s_%s%s' % (o,k,v), k)
           except Exception, E:
             output_error("Error when rendering to file",E)
       elif var['i']:
-        mapnik.render_to_file(mapnik_map,o, var['i'])
+        render(mapnik_map,o, var['i'])
     except KeyError:
-      mapnik.render_to_file(mapnik_map,o,FORMAT)  
+      render(mapnik_map,o,FORMAT)  
     except Exception, E:
       output_error("Error when rendering to file",E)
   else:
@@ -383,12 +391,12 @@ if __name__ == "__main__":
             try:
               file = '%s_%s%s' % (o_name,k,v)
               color_print (1,file)
-              mapnik.render_to_file(mapnik_map,file, k)
+              render(mapnik_map,file, k)
             except Exception, E:
               output_error("Error when rendering to file",E)
         elif var['i']:
-            mapnik.render_to_file(mapnik_map,o_name, var['i'])
+            render(mapnik_map,o_name, var['i'])
       except KeyError:
-        mapnik.render_to_file(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
+        render(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
       except Exception, E:
         output_error("Error when rendering to file",E)
