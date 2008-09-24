@@ -44,6 +44,7 @@ ToDo
   * Until datavalue substitution with native objects, perhaps using ElementTree
       ie. -d <currentvalue:newvalue:find/findall>
   * Implement a prepared variable substitution ability within the mapfile.
+     ie. http://mapserver.gis.umn.edu/docs/reference/mapfile/variable_sub
   * Map draw looping n times
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources.
@@ -76,6 +77,7 @@ def usage (name):
   print "-c\t[1]\t\tDraw map n number of times" 
   print "-n\t[0]\t\tDry run mode: no map output"
   print "-t\t[0]\t\tPause n seconds after reading the map"
+  print "-a\t[0]\t\tPause n seconds after each step"
   print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
   print "-z\t[10]\t\tN number of zoom levels generate graphics for%s" % color_text(3,'*')
   print "-d\t[None]\t\tFind and replace of any text string within a mapfile (modifies mapfile in memory)"
@@ -108,6 +110,18 @@ def color_text(color,text):
     else:
       return text
 
+def pause_for(sec):
+  try:
+    sec = int(sec)
+    for second in range(1, int(sec)):
+      print color_text(5,second),
+      time.sleep(1)
+      sys.stdout.flush()
+    color_print (5,'.'*(sec+1))
+  except Exception, E:
+    output_error('Time in seconds but be integer value', E)
+
+
 def output_error(msg, E=None, yield_usage=False):
     if E:
       color_print(1, '// --> %s: \n\n %s' % (msg, E))
@@ -122,8 +136,13 @@ def output_message(msg, warning=False):
       if warning:
         color_print(1, '// --> WARNING: %s' % msg)    
       else:
-        color_print(2, '// --> %s' % msg)
-        output_time()
+        if var.has_key('a'):
+          color_print(2, '// --> %s' % msg)
+          output_time()
+          pause_for(var['a'])
+        else:
+          color_print(2, '// --> %s' % msg)
+          output_time()         
         print
     else:
       pass # no debugging messages
@@ -182,6 +201,12 @@ def output_time():
     else:
       pass
 
+# =============================================================================
+#
+# Program mainline.
+#
+# =============================================================================
+
 if __name__ == "__main__":
   import getopt
   import time
@@ -202,7 +227,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvhq", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:a:nvhq", ['debug'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
   
@@ -225,6 +250,8 @@ if __name__ == "__main__":
         var['r'] = arg
     elif opt == "-t":
         var['t'] = arg
+    elif opt == "-a":
+        var['a'] = arg
     elif opt == "-s":
         var['s'] = arg
     elif opt == "-l":
@@ -340,10 +367,10 @@ if __name__ == "__main__":
               del mapnik_map.layers[layer_num]
               output_message("Removed layer '%s' loaded from mapfile, not in list: %s" % (l.name, layers))
 
-  # TODO: Accept spatialreference.org url
+  # TODO: Accept spatialreference.org url, or OSGEO:codes
   if var.has_key('p'):
     output_message('Reprojecting map output')
-    if var['p'] == "epsg:900913":
+    if var['p'] == "epsg:900913" or var['p'] == "epsg:3785":
       output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
       google_merc = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
       epsg = mapnik.Projection(google_merc)
@@ -354,9 +381,7 @@ if __name__ == "__main__":
 
   if var.has_key('t'):
     output_message('Pausing for %s seconds...' % var['t'])
-    for sec in range(1, int(var['t'])):
-      output_message('%s' % sec)
-      time.sleep(1)
+    pause_for(var['t'])
 
   #TODO: refactor, test zoom function
   if var.has_key('e'):
