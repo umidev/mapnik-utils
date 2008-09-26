@@ -7,13 +7,14 @@ nik2img.py - In Mapnik xml, out Map image
 
 Summary:
   A command line tool for generating map images by pointing to an XML file.
-  
-  Mirrors the shp2img utility developed by the MapServer project.
+  Docs: http://code.google.com/p/mapnik-utils/wiki/Nik2Img
+
+  Mirrors and extends the shp2img utility developed by the MapServer project.
   shp2img reference: http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
   shp2img code: http://trac.osgeo.org/mapserver/browser/trunk/mapserver/shp2img.c
- 
+
 Source:
- http://code.google.com/p/mapnik-utils/
+  http://code.google.com/p/mapnik-utils/
 
 Dependencies:
   Requires Python and Mapnik installed with the python bindings
@@ -26,18 +27,21 @@ Usage:
 
 Limitations:
   Paths to file system datasources in the XML files loaded will be relative to your dir.
-  Very sparse on the error handling so far.
- 
-ToDo
-  * Add docstrings and code comments.
-  * Add mapfile stats output.
-  * Add timeit module.
-  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
-  * Need to check if removed layers were active or inactive
-  * Further test the zoom resolutions feature (not sure about mapniks starting scale)
-  * Add ability to set specific resolutions for ZOOM_LEVELS with flag
+
+Wishlist:
+  * Cascadenik integration | ability to read in css.mml or css.mss.
   * Refactor into a single function when run as main.
   * Support cairo renderer and formats.
+  * Allow for setting the path to datasources (will need patch to mapnik core)
+  
+Todo:
+  * Add docstrings and code comments.
+  * Set all tabs to 4 spaces
+  * Add more mapfile statistics output.
+  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
+  * Further test the zoom levels/resolutions feature (not sure about mapnik's starting scale)
+
+Remaining shp2img features:
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Implement datavalue substitute within mapfile using boost python access to map elements.
       ie. -d <layer/style:datavalue:newvalue>, -d world:file:'/new/path/to/datasource', -d 'my style':fill:green
@@ -45,48 +49,31 @@ ToDo
       ie. -d <currentvalue:newvalue:find/findall>
   * Implement a prepared variable substitution ability within the mapfile.
      ie. http://mapserver.gis.umn.edu/docs/reference/mapfile/variable_sub
-  * Map draw looping n times
-  * Cascadenik integration | ability to read in css.mml or css.mss.
-  * Allow for setting the path to datasources.
-  
+
+
 """
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.1 $Rev: 1 $"
+__version__ = "0.1.0 $Rev: 1 $"
 __license__ = "GPLv2"
 
 
 import os
 import sys
+try:
+    import pdb
+    HAS_PDB = True
+except:
+    HAS_PDB = False
 
-def usage (name):
-  print
-  color_print(3, "%s" % make_line('=',75))
-  color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
-  color_print(4,"Option\tDefault\t\tDescription")
-  print "-m\t<required>\tMapfile: Path to xml map file to load styles from."
-  print "-o\t<required>\tImage: Set the output filename (or a directory name - with no .ext%s)" % color_text(3,'*')
-  print "-i\t[png]\t\tFormat: Choose the output format: png, png256, jpeg, or all (will loop through all formats)"
-  print "-e\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates%s" % color_text(3,'*')
-  print "-r\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
-  print "-s\t[600,300]\tWidth,Height: Set the image size in pixels"
-  print "-p\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(3,'*')
-  print "-l\t[all enabled]\tSet layers to enable (quote and comma-separate if several)"  
-  print "-v\t[off]\t\tRun with verbose output"
-  print "-c\t[1]\t\tDraw map n number of times" 
-  print "-n\t[0]\t\tDry run mode: no map output"
-  print "-t\t[0]\t\tPause n seconds after reading the map"
-  print "-a\t[0]\t\tPause n seconds after each step"
-  print "--debug\t[0]\t\tLoop through all formats and zoom levels generating map graphics (more opt later)%s" % color_text(3,'*')
-  print "-z\t[10]\t\tN number of zoom levels generate graphics for%s" % color_text(3,'*')
-  print "-d\t[None]\t\tFind and replace of any text string within a mapfile (modifies mapfile in memory)"
-  print "-h\t[off]\t\tPrints this usage information"
-  print "%s\n %s Additional features in nik2img not part of shp2img" % (make_line('-',75), color_text(3,'*'))
-  print " %s nik2img does not support sending image to STDOUT (default in shp2img)" % color_text(3,'Note:')
-  color_print(3, "%s" % make_line('=',75))
-  color_print(7,"Dane Springmeyer, dbsgeo (a-t) gmail.com")
-  print
+
+# =============================================================================
+#
+# Nik2img Functions.
+#
+# =============================================================================
+
 
 def make_line(character, n):
     line = character*n
@@ -96,7 +83,7 @@ def color_print(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
-    if not os.name == 'nt':
+    if not os.name == 'nt' and not var.has_key('nocolor'):
       print "\033[9%sm%s\033[0m" % (color,text)
     else:
       print text
@@ -105,45 +92,63 @@ def color_text(color,text):
     """
     1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
     """
-    if not os.name == 'nt':
-      return "\033[9%sm%s\033[0m" % (color,text)
+    if not os.name == 'nt' and not var.has_key('nocolor'):
+        return "\033[9%sm%s\033[0m" % (color,text)
     else:
-      return text
+        return text
 
 def pause_for(sec):
-  try:
-    sec = int(sec)
-    for second in range(1, int(sec)):
-      print color_text(5,second),
-      time.sleep(1)
-      sys.stdout.flush()
-    color_print (5,'.'*(sec+1))
-  except Exception, E:
-    output_error('Time in seconds but be integer value', E)
-
+    try:
+        sec = int(sec)
+        for second in range(1, int(sec+1)):
+            print color_text(5,second),
+            time.sleep(1)
+            sys.stdout.flush()
+    except Exception, E:
+        output_error('Time in seconds but be integer value', E)
 
 def output_error(msg, E=None, yield_usage=False):
-    if E:
-      color_print(1, '// --> %s: \n\n %s' % (msg, E))
-    else:
-      color_print(1, '\\ --> %s' % msg)    
     if yield_usage:
-      usage(sys.argv[0])
+        usage(sys.argv[0])
+    if E:
+        color_print(1, '// --> %s: \n\n %s' % (msg, E))
+    else:
+        color_print(1, '\\ --> %s' % msg)    
     sys.exit(1)
 
+def set_trace():
+    global HAS_PDB
+    if HAS_PDB:
+      print '>>> Entering PDB interpreter'
+      print '>>> Do you want to print out all mapnik variables? (yes or no)'
+      response = raw_input()
+      if response == 'yes':
+        color_print(1,'How to use pdb? see: http://docs.python.org/lib/module-pdb.html')
+        color_print(1,"\n\nType 'continue' to leave pdb") 
+        print 'Sorry, variable printing not yet implemented'
+        pdb.set_trace()
+      else:
+        pdb.set_trace()
+    else:
+      print "import pdb' failed, passing..."
+
 def output_message(msg, warning=False):
-    if VERBOSE:
+    global STEP, VERBOSE
+    if VERBOSE:      
       if warning:
-        color_print(1, '// --> WARNING: %s' % msg)    
+        color_print(1, 'STEP: %s | --> WARNING: %s' % (STEP, msg)) 
       else:
         if var.has_key('a'):
-          color_print(2, '// --> %s' % msg)
+          color_print(2, 'STEP: %s // --> %s' % (STEP, msg))
           output_time()
           pause_for(var['a'])
         else:
-          color_print(2, '// --> %s' % msg)
+          color_print(2, 'STEP: %s // --> %s' % (STEP, msg))
           output_time()         
         print
+      STEP += 1
+      if var.has_key('pdb') and STEP == int(var['pdb']):
+          set_trace() 
     else:
       pass # no debugging messages
 
@@ -158,9 +163,9 @@ def is_file(name):
         return False
 
 def generate_levels(N=10):
-  levels = [x*.1 for x in range(1,N)]
-  levels.reverse()
-  return levels
+    levels = [x*.1 for x in range(1,N)]
+    levels.reverse()
+    return levels
 
 def layers_in_extent():
     mapfile_layers = mapnik_map.layers
@@ -170,17 +175,18 @@ def layers_in_extent():
           layer_envelope = l.envelope()
           if map_envelope.intersects(layer_envelope):
               output_message("Map layer '%s' intersects Map envelope" % l.name)
+              output_message("Map layer '%s' intersects Map envelope" % l.name)
           else:
-              output_message("Map layer '%s' does not intersect with Map envelope" % l.name, warning=True)
-
+              output_message("Map layer '%s' does not intersect with Map envelope, skipping details" % l.name, warning=True)
+              
 def render(*args):
-  if var.has_key('c'):
-    for graphic in range(1, int(var['c'])):
-      mapnik.render_to_file(*args)
-      output_message('map rendered %s times' % graphic)
-  else:
-    mapnik.render_to_file(*args)
-    output_message('map rendered .........')
+    if var.has_key('c'):
+      for graphic in range(1, int(var['c'])):
+        mapnik.render_to_file(*args)
+        output_message("Map rendered to '%s', %s times" % (args[1], graphic))
+    else:
+        mapnik.render_to_file(*args)
+        output_message("Map rendered to '%s'" % args[1])
 
 def get_time(time):
     if time/60 < 1:
@@ -196,10 +202,58 @@ def elapsed(last_step):
     return 'Total time: %s | Last step: %s' % (get_time(total), get_time(last))
 
 def output_time():
+    global STARTED
     if STARTED:
-      color_print(3,elapsed(timeit.time.time()))
+      color_print(4,elapsed(timeit.time.time()))
     else:
       pass
+
+def puff_bbox(bbox, unit):
+    bbox.expand_to_include(bbox.minx-unit,bbox.miny-unit)
+    bbox.expand_to_include(bbox.maxx+unit,bbox.maxy+unit)
+    return bbox
+
+
+# =============================================================================
+#
+# Usage.
+#
+# =============================================================================
+
+
+def usage (name):
+  print
+  color_print(3, "%s" % make_line('=',75))
+  color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
+  color_print(4,"Option\t\tDefault\t\tDescription")
+  print "-m\t\t<required>\tMapfile: Path to xml map file to load styles from."
+  print "-o\t\t<required>\tImage: Set the output filename (or a directory name - with no .ext%s)" % color_text(4,'*')
+  print "-i\t\t[png]\t\tFormat: Choose the output format: png, png256, jpeg, or all (will loop through all formats)"
+  print "-e\t\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates%s" % color_text(4,'*')
+  print "-r\t\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
+  print "--expand\t[0]\t\tExpand bbox in all directions by n map units"  
+  print "-s\t\t[600,300]\tWidth,Height: Set the image size in pixels"
+  print "-p\t\t[mapfile srs]\tReproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'%s" % color_text(4,'*')
+  print "-l\t\t[all enabled]\tSet layers to enable (quote and comma-separate if several)"  
+  print "-v\t\t[off]\t\tRun with verbose output"
+  print "-c\t\t[1]\t\tDraw map n number of times" 
+  print "-n\t\toff\t\tTurn on dry run mode: no map output"
+  print "-t\t\t[0]\t\tPause n seconds after reading the map"
+  print "-a\t\t[0]\t\tPause n seconds after each step"
+  print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
+  print "--pdb\t\t[none]\t\tSet a pdb trace (python debugger) at step n%s" % color_text(4,'*')
+  print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
+  print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
+  print "--nocolor\t[colored]\tTurn off colored terminal output%s" % color_text(4,'*')
+  print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s" % color_text(4,'*')
+  print "-d\t\t[None]\t\tFind and replace of any text string within a mapfile (modifies mapfile in memory)"
+  print "-h\t\t[off]\t\tPrints this usage information"
+  print "%s\n %s Additional features in nik2img not part of shp2img" % (make_line('-',75), color_text(4,'*'))
+  print " %s nik2img does not support sending image to STDOUT (default in shp2img)" % color_text(4,'Note:')
+  color_print(3, "%s" % make_line('=',75))
+  color_print(7,"Dane Springmeyer, dbsgeo (a-t) gmail.com")
+  print
+
 
 # =============================================================================
 #
@@ -223,19 +277,23 @@ if __name__ == "__main__":
   QUIET = False
   DRY_RUN = False
   STARTED = False
+  STEP = 0
+  SET_TRACE = False
   built_test_outputs = False
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:a:nvhq", ['debug'])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:a:nvhq", ['quiet','debug','nocolor','pdb=', 'levels=', 'resolutions=', 'expand='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
-  
+
   if len(sys.argv) <= 1:
     usage(sys.argv[0])
     sys.exit(1)
   
   for opt, arg in opts:
+    if arg.find('--') > -1:
+      output_error("Arguments can't have a '--', did you forget to specify a value for an option %s?" % opt)
     if opt == "-m":
          var['m'] = arg
     elif opt == "-o":
@@ -256,8 +314,6 @@ if __name__ == "__main__":
         var['s'] = arg
     elif opt == "-l":
         var['l'] = arg   
-    elif opt == "-z":
-        var['z'] = arg
     elif opt == "-c":
         var['c'] = arg   
     elif opt == "-d":
@@ -266,10 +322,21 @@ if __name__ == "__main__":
         DRY_RUN = True
     elif opt == "-v":
         VERBOSE = True
-    elif opt == "-q":
-        QUIET = True
+    elif opt == "--quiet":
+        var['quiet'] = True
+    elif opt == "--nocolor":
+        var['nocolor'] = True
+    elif opt == "--expand":
+        var['expand'] = arg
     elif opt == "--debug":
-        built_test_outputs = True
+        var['debug'] = arg
+        DEBUG =True
+    elif opt == "--levels":
+        var['levels'] = arg
+    elif opt == "--resolutions":
+        var['resolutions'] = arg
+    elif opt == "--pdb":
+        var['pdb'] = arg
     elif opt == "-h":
         usage(sys.argv[0])
         sys.exit(1)
@@ -281,11 +348,36 @@ if __name__ == "__main__":
     output_error('Make sure to specify the -m <input mapfile.xml> and -o <output image>',yield_usage=True)
   else:
     run = True
-    
-    if QUIET:
-      output_message('Quite mode requested')
+
+    if var.has_key('p'):
+      if var['p'] == 'db':
+        output_error("Did you mean to specify '--pdb'?")
+
+    if var.has_key('pdb'):
+      try:
+        int(var['pdb'])
+      except:
+        output_error('Requires integer input')
+
+    if not var.has_key('debug') and (var.has_key('levels') or var.has_key('resolutions')):
+      output_error('Must be in debug mode to output multple graphics resolutions (--debug)')
+
+    if var.has_key('l'):
+      print var['l']
+      if var['l'] == 'evels':
+        output_error("Did you mean to specify '--levels'?")
+
+    if var.has_key('pdb') and not var.has_key('v'):
+      VERBOSE = True
+      output_message('PDB trace requested, automatically entering VERBOSE mode')
+      if var.has_key('quiet'):
+        QUIET = False
+        output_message('Quiet mode requested but not possible (nor smart)', warning=True)
+
+    if var.has_key('quiet') and QUIET:
+      output_message('Quite mode requested, careful: no errors will be output')
       errors = sys.__stderr__.fileno()
-      os.close(errors) # suppress the errors, mostly mapnik debug
+      os.close(errors) # suppress the errors, mostly mapnik debug but unfortunately also tracebacks
 
     if not os.path.isfile(var['m']):
       output_error("Cannot open XML mapfile: '%s'" % var['m'])
@@ -324,14 +416,20 @@ if __name__ == "__main__":
   except Exception, E:
     output_error("Problem initiating map",E)
 
-  if var.has_key('z'):
-    levels = var['z']
+  if var.has_key('resolutions') and var.has_key('levels'):
+    output_error('Only accepts one of either --resolutions or --levels options')
+  elif var.has_key('resolutions'):
+    ZOOM_LEVELS = [float(r) for r in var['resolutions'].split(',')]
+    output_message('Using custom zoom levels: %s' % ZOOM_LEVELS)
+  elif var.has_key('levels'):
+    levels = var['levels']
     try:
       levels= int(levels) + 1
       ZOOM_LEVELS = generate_levels(levels)
+      output_message('Using %s zoom levels: %s' % (levels, ZOOM_LEVELS))
     except Exception, E:
       output_error("Zoom level number must be an integer",E)
-
+      
   if not var.has_key('d'):
     try:    
       mapnik.load_map(mapnik_map, var['m'])
@@ -358,14 +456,34 @@ if __name__ == "__main__":
       output_error("Problem loading map from variable parsed temporary (in memory) mapfile",E)
 
   if var.has_key('l'):
+    info = ''
+    found_layer = False
     layers = var['l'].split(",")
     mapfile_layers = mapnik_map.layers
     output_message('Scanning %s layers' % len(mapnik_map.layers))
     for layer_num in range(len(mapnik_map.layers)-1, -1, -1):
-          l = mapnik_map.layers[layer_num]
-          if l.name not in layers:
-              del mapnik_map.layers[layer_num]
-              output_message("Removed layer '%s' loaded from mapfile, not in list: %s" % (l.name, layers))
+        l = mapnik_map.layers[layer_num]
+        if l.name not in layers:
+            del mapnik_map.layers[layer_num]
+            if l.active == True:
+              output_message("Removed previously ACTIVE layer '%s'" % l.name)
+            else:
+              output_message("Removed layer '%s'" % l.name)              
+        else:
+          found_layer = True
+          output_message("Found layer '%s' out of %s total in mapfile" % (l.name,len(mapnik_map.layers)) )
+          for group in l.datasource.describe().split('\n\n'):
+            for item in group.split('\n'):
+              if item.find('name')> -1:
+                info += '\n%s\t' % item
+              else:
+                info += '%s\t' % item 
+          output_message("'%s' Datasource:\n %s\n" % (l.name, info))
+    if not found_layer:
+        if len(layers) == 1:
+          output_error("Layer '%s' not found" % layers[0])
+        else:
+          output_error('No requested layers found')    
 
   # TODO: Accept spatialreference.org url, or OSGEO:codes
   if var.has_key('p'):
@@ -374,6 +492,13 @@ if __name__ == "__main__":
       output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
       google_merc = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
       epsg = mapnik.Projection(google_merc)
+    elif var['p'].find('http') > -1:
+      try:
+        import urllib
+        proj4 = urllib.urlopen('%sproj4/' % var['p']).read()
+        epsg = mapnik.Projection(proj4)
+      except Exception, E:
+        output_error('Tried to read from www.spatialreference.org, failed to fetch proj4 code', E)
     else:
       epsg = mapnik.Projection("+init=%s" % var['p'])
       output_message("Mapnik projection successfully initiated with epsg code: '%s'" % epsg.params())
@@ -410,23 +535,30 @@ if __name__ == "__main__":
       output_message('BBOX (max extent of all layers) is: %s' % mapnik_map.envelope())
     except Exception, E:
       output_error("Problem Zooming to all layers",E)
-  
+
+  if var.has_key('expand'):
+    puff_by = int(var['expand'])
+    puffed_bbox = puff_bbox(mapnik_map.envelope(), puff_by)
+    mapnik_map.zoom_to_box(puffed_bbox)
+    # TODO: need to validate that the expanded bbox still makes sense
+    output_message('BBOX expanded by %s units to: %s' % (puff_by, puffed_bbox))
+
   # Check for which layers intersect with map envelope
   layers_in_extent()
-  
+    
   if DRY_RUN:
     output_error('Dry run complete')
 
-  # TODO: cleanup this crappy code.
+  # TODO: cleanup this code.
   o = var['o']
   if not is_file(o):
       try:
         os.mkdir(o)
       except OSError:
         # do we dare remove the directory?
-        output_message('Directory already exists, doing nothing...', warning=True)
+        output_error('Directory already exists, please delete before proceeding...')
       o = '%s/%s.%s' % (o,o,FORMAT)
-  if not built_test_outputs:    
+  if not var.has_key('debug'):    
     try:
       if var.has_key('i'):
         if var['i'] == 'all':
@@ -454,7 +586,7 @@ if __name__ == "__main__":
               try:
                 file = '%s_%s%s' % (o_name,k,v)
                 output_message('File output: %s' % file)
-                # check for feature intersection here
+                # TODO: check for feature intersection here
                 # warn when none
                 render(mapnik_map,file, k)
               except Exception, E:
@@ -465,3 +597,17 @@ if __name__ == "__main__":
             render(mapnik_map,'%s.%s' % (o_name,FORMAT),FORMAT)  
       except Exception, E:
         output_error("Error when rendering to file",E)
+    
+    # open result
+  try:
+    import platform
+    if os.name == 'nt':
+      os.system('start %s' % var['o'])
+    elif platform.uname()[0] == 'Linux':
+      # TODO figure out how to open a folder on linux
+      os.system('gthumb %s' % var['o'])
+    elif platform.uname()[0] == 'Darwin':
+      os.system('open %s' % var['o'])
+    output_message("Completed, opening '%s' <%s'" %   (var['o'], color_text(3, "%s" % make_line('=',55)),))
+  except:
+    print 'Completed'
