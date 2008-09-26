@@ -7,7 +7,11 @@ Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/refer
 
 Download the beta release here:
 
-View the SVN Trunk (working) source code here: http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py
+Download the first release at the downloads page.
+
+View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py SVN Trunk]
+
+
 === Usage ===
 
 {{{
