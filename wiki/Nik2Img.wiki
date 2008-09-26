@@ -1,18 +1,18 @@
 #labels Featured,Phase-Deploy
-== nik2img.py ==
+== Nik2img.py ==
 
 A command line utility to take a mapnik xml file as input and output an image.
 
-Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility. Not all of the shp2img functionality is currently supported, but all is planned.
+ * Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility. Not all of the shp2img functionality is currently supported, but all is planned.
 
-Download the first release: [http://mapnik-utils.googlecode.com/files/nik2img-0_1_0.tar 0.1.0].
+ * Download the first release: [http://mapnik-utils.googlecode.com/files/nik2img-0_1_0.tar 0.1.0].
 
-The uncompressed script and readme is included in the .tar and also [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/ available here]
+ * The 0.1.0 release `nik2img.py` script and readme is included in the .tar and also [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/ available here]
 
-View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py SVN Trunk]
+ * View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py SVN Trunk]
 
 
-=== Usage ===
+=== Features ===
 
 {{{
 $ nik2img.py -h
@@ -48,10 +48,35 @@ Option		Default		Description
 ===========================================================================
 Dane Springmeyer, dbsgeo (a-t) gmail.com
 
-
 }}}
 
-=== Usage Example ===
+
+=== Installation ===
+
+To run this program:
+ * Make sure you have Mapnik installed
+ * Download, install, untar, make executable, and place in your path like:
+
+{{{
+$ wget http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0.tar
+$ tar xvf nik2img-0_1_0.tar
+$ cd nik2img-0_1_0
+$ sudo cp nik2img.py /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/nik2img.py
+}}}
+
+Or just fetch the script from: http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/nik2img.py
+Then launch a python interpreter in the same directory and run:
+
+{{{
+$ python nik2img.py -h
+}}}
+
+
+=== Usage Examples ===
+
+ * For more examples see: http://trac.mapnik.org/wiki/Nik2Img
+
 Output an 8-bit png image:
 {{{
 $ nik2img.py -m mapfile.xml -o map.png -i png256
