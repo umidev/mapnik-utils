@@ -1,13 +1,13 @@
-#labels Featured
+#labels Featured,Phase-Deploy
 == nik2img.py ==
 
 A command line utility to take a mapnik xml file as input and output an image.
 
 Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility. Not all of the shp2img functionality is currently supported, but all is planned.
 
-Download the beta release here:
+Download the first release: [http://mapnik-utils.googlecode.com/files/nik2img-0_1_0.tar 0.1.0].
 
-Download the first release at the downloads page.
+The uncompressed script and readme is included in the .tar and also [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/ available here]
 
 View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py SVN Trunk]
 
@@ -19,19 +19,29 @@ $ nik2img.py -h
 
 ===========================================================================
 Usage: /usr/local/bin/nik2img.py -m <mapnik.xml> -o <image.png>
-Option  Default         Description
--m      <required>      Mapfile: Path to xml map file to load styles from.
--o      <required>      Image: Set the output filename (or a directory name - with no .ext*)
--i      [png]           Format: Choose the output format: png, png256, jpeg, or all (will loop through all formats)
--e      [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates*
--r      [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile*
--s      [600,300]       Width,Height: Set the image size in pixels
--p      [mapfile srs]   Reproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'*
--l      [all enabled]   Set layers to enable (quote and comma-separate if several)
--t      [0]             Pause n seconds after reading the map
--z      [10]            N number of zoom levels generate graphics for*
--h      [off]           Prints this usage information
-
+Option		Default		Description
+-m		<required>	Mapfile: Path to xml map file to load styles from.
+-o		<required>	Image: Set the output filename (or a directory name: just use no .ext*)
+-i		[png]		Format: Choose the output format: png, png256, jpeg, or all (will loop through all formats)
+-e		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates*
+-r		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile
+--expand	[0]		Expand bbox in all directions by n map units
+-s		[600,300]	Width,Height: Set the image size in pixels
+-p		[mapfile srs]	Reproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'*
+-l		[all enabled]	Set layers to enable (quote and comma-separate if several)
+-v		[off]		Run with verbose output
+-c		[1]		Draw map n number of times
+-n		off		Turn on dry run mode: no map output
+-t		[0]		Pause n seconds after reading the map
+--pause		[0]		Pause n seconds after each step*
+--debug		[0]		Loop through all formats and zoom levels generating map graphics*
+--pdb		[none]		Set a pdb trace (python debugger) at step n*
+--levels	[10]		N number of zoom levels at which to generate graphics*
+--resolutions	[none]		Set specific rendering resolutions (ie 0.1,0.05,0.025)*
+--nocolor	[colored]	Turn off colored terminal output*
+--quiet		[off]		Turn on quiet mode to suppress the mapnik c++ debug printing and all python errors*
+-d		[None]		Find and replace of any text string within a mapfile, separated with ':' like find_this:replace_this
+-h		[off]		Prints this usage/help information
 ---------------------------------------------------------------------------
  * Additional features in nik2img not part of shp2img
  Note: nik2img does not support sending image to STDOUT (default in shp2img)
@@ -44,15 +54,15 @@ Dane Springmeyer, dbsgeo (a-t) gmail.com
 === Usage Example ===
 Output an 8-bit png image:
 {{{
-$ python nik2img.py -m mapfile.xml -o mapnik_image.png -i png256
+$ nik2img.py -m mapfile.xml -o map.png -i png256
 }}}
 
-Loop through outputting all possible image formats (and generating maps with a custom size):
+Loop through verbosely outputting all possible image formats, for a range of zoom levels, and a custom tile size:
 {{{
-$ python nik2img.py -m mapfile.xml -o mapnik_image -i all -s 700,400
+$ nik2img.py -m mapfile.xml -o maps -i all -s 256,256 --debug -v
 }}}
 
 General all image formats within a folder in spherical mercator projection with custom bbox in projected coordinates and pause 2 seconds after reading mapfile:
 {{{
-$ python nik2img.py -m mapfile.xml -o yourmapsfolder -i all -p epsg:900913 -r 1003750,-1706377,10037508,2810502 -t 2
+$ nik2img.py -m mapfile.xml -o maps -i all -p epsg:900913 -r 1003750,-1706377,10037508,2810502 -t 2
 }}}
