@@ -138,10 +138,10 @@ def output_message(msg, warning=False):
       if warning:
         color_print(1, 'STEP: %s | --> WARNING: %s' % (STEP, msg)) 
       else:
-        if var.has_key('a'):
+        if var.has_key('pause'):
           color_print(2, 'STEP: %s // --> %s' % (STEP, msg))
           output_time()
-          pause_for(var['a'])
+          pause_for(var['pause'])
         else:
           color_print(2, 'STEP: %s // --> %s' % (STEP, msg))
           output_time()         
@@ -227,7 +227,7 @@ def usage (name):
   color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
   color_print(4,"Option\t\tDefault\t\tDescription")
   print "-m\t\t<required>\tMapfile: Path to xml map file to load styles from."
-  print "-o\t\t<required>\tImage: Set the output filename (or a directory name - with no .ext%s)" % color_text(4,'*')
+  print "-o\t\t<required>\tImage: Set the output filename (or a directory name: just use no .ext%s)" % color_text(4,'*')
   print "-i\t\t[png]\t\tFormat: Choose the output format: png, png256, jpeg, or all (will loop through all formats)"
   print "-e\t\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates%s" % color_text(4,'*')
   print "-r\t\t[max extent]\tMinx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile"
@@ -239,15 +239,15 @@ def usage (name):
   print "-c\t\t[1]\t\tDraw map n number of times" 
   print "-n\t\toff\t\tTurn on dry run mode: no map output"
   print "-t\t\t[0]\t\tPause n seconds after reading the map"
-  print "-a\t\t[0]\t\tPause n seconds after each step"
+  print "--pause\t\t[0]\t\tPause n seconds after each step%s" % color_text(4,'*')
   print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
   print "--pdb\t\t[none]\t\tSet a pdb trace (python debugger) at step n%s" % color_text(4,'*')
   print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
   print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
   print "--nocolor\t[colored]\tTurn off colored terminal output%s" % color_text(4,'*')
   print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s" % color_text(4,'*')
-  print "-d\t\t[None]\t\tFind and replace of any text string within a mapfile (modifies mapfile in memory)"
-  print "-h\t\t[off]\t\tPrints this usage information"
+  print "-d\t\t[None]\t\tFind and replace of any text string within a mapfile, separated with ':' like find_this:replace_this"
+  print "-h\t\t[off]\t\tPrints this usage/help information"
   print "%s\n %s Additional features in nik2img not part of shp2img" % (make_line('-',75), color_text(4,'*'))
   print " %s nik2img does not support sending image to STDOUT (default in shp2img)" % color_text(4,'Note:')
   color_print(3, "%s" % make_line('=',75))
@@ -283,7 +283,7 @@ if __name__ == "__main__":
   var = {}        # In/Out paths
 
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:a:nvhq", ['quiet','debug','nocolor','pdb=', 'levels=', 'resolutions=', 'expand='])
+    opts, args = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','pause=','pdb=', 'levels=', 'resolutions=', 'expand='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -308,8 +308,8 @@ if __name__ == "__main__":
         var['r'] = arg
     elif opt == "-t":
         var['t'] = arg
-    elif opt == "-a":
-        var['a'] = arg
+    elif opt == "--pause":
+        var['pause'] = arg
     elif opt == "-s":
         var['s'] = arg
     elif opt == "-l":
@@ -324,6 +324,7 @@ if __name__ == "__main__":
         VERBOSE = True
     elif opt == "--quiet":
         var['quiet'] = True
+        QUIET = True
     elif opt == "--nocolor":
         var['nocolor'] = True
     elif opt == "--expand":
