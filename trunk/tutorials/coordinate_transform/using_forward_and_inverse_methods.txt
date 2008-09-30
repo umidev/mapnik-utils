@@ -6,12 +6,14 @@
 
 
 # With Mapnik you can transform data back and forth between a projected system
-# and an unprojected, geographic coordinates (ie Longitude, and Latitude).
+# and unprojected, geographic coordinates (ie Longitude, and Latitude).
 # Mapnik does not currently support transformations between two projected 
-# systems, see: http://trac.mapnik.org/ticket/117
+# systems in the python bindings, see: http://trac.mapnik.org/ticket/117
 
 
-# Use forward to go from geographic coordinates to projected coordinates by initiating the projected coordinate system you'd like to convert into.
+# Use `forward` to go from geographic coordinates to projected coordinates by
+# initiating the projected coordinate system you'd like to convert into.
+
 
 # Thus from WGS84 to World Mercator:
 
@@ -20,6 +22,8 @@ p = Projection('+init=epsg:3395')
 long_lat = Coord(-122.0, 48.0)
 mercator = p.forward(long_lat)
 print mercator
+
+
 # And to go from World Mercator to WGS84:
 
 from mapnik import Coord, Projection
@@ -28,13 +32,14 @@ mercator = Coord(-13580977.8768,6075085.09006)
 long_lat = p.inverse(mercator)
 print long_lat
 
+
 # Note: it is easy to make the mistake of creating a Mapnik Projection Object in 
 # the WGS84/geographic projection when needing to convert to and from this geographic
 # projection and a projected system. Like in the above examples you need to create
 # the projection object in a projected system.
 
 # For example, this is wrong (but should be harmless since forwarding
-# and inversing a geographic projection should do nothing):
+# and inverting a geographic projection should do nothing):
 
 from mapnik import Coord, Projection
 p = Projection('+init=epsg:4326')
