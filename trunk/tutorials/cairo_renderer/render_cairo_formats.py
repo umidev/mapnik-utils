@@ -4,7 +4,7 @@ import cairo
 from mapnik import *
 
 map_output = 'world'
-m = Map(600,300,'+proj=latlong +datum=WGS84')
+m = Map(256,256,'+proj=latlong +datum=WGS84')
 
 m.background = Color('steelblue')
 s = Style()
@@ -18,6 +18,7 @@ lyr.datasource = Shapefile(file='../../sample_data/world_borders')
 lyr.styles.append('My Style')
 m.layers.append(lyr)
 m.zoom_to_box(lyr.envelope())
+m.zoom(.2)
 
 file_formats = {'svg': cairo.SVGSurface,
                        'pdf':cairo.PDFSurface,
@@ -25,6 +26,7 @@ file_formats = {'svg': cairo.SVGSurface,
                        }
 
 for format in file_formats:
+    print '// --  Rendering %s -----------------------------' % format
     file = open('%s.%s' % (map_output, format), 'w')
     surface = file_formats[format](file.name, m.width, m.height)
     render(m, surface)
@@ -38,6 +40,7 @@ image_formats = {'FORMAT_A1': cairo.FORMAT_A1,
                             }
 
 for format in image_formats:
+    print '// --  Rendering %s -----------------------------' % format
     surface = cairo.ImageSurface(image_formats[format], m.width, m.height)
     render(m, surface)
     surface.write_to_png('%s_%s.png' % (map_output, format))
