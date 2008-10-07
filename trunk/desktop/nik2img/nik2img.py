@@ -106,6 +106,7 @@ __license__ = "GPLv2"
 import os
 import sys
 import getopt
+import re
 import time
 import timeit
 
@@ -117,9 +118,9 @@ except Exception, E:
 
 try:
   import cairo
+  HAS_CAIRO = True
 except Exception, E:
-  print 'PyCairo is not installed or available, therefore your cannot write to svg or pdf'
-
+  HAS_CAIRO = False
 
 no_color_global = False
 
@@ -233,7 +234,7 @@ class nik2img(object):
       self.mapnik_map = None
       self.mapnik_objects = {}
       self.m_bbox = None
-      self.mapnik_layers = []
+      self.mapnik_layers = {}
       self.mapnik_proj = None
       self.bbox = None
 
@@ -242,27 +243,19 @@ class nik2img(object):
     # Function for handling printed terminal output when verbose = True or a pdb trace is requested
     # ==========================================================
 
-
     def output_message(self,msg, warning=False):
-      if self.verbose:      
-        if warning:
+      if warning:
           color_print(1, 'STEP: %s | --> WARNING: %s' % (self.STEP, msg)) 
-        else:
-          if self.post_step_pause:
-            color_print(2, 'STEP: %s // --> %s' % (self.STEP, msg))
-            self.output_time()
-            pause_for(self.post_step_pause)
-          else:
-            color_print(2, 'STEP: %s // --> %s' % (self.STEP, msg))
-            self.output_time()         
-          print
-        self.STEP += 1
-        if self.trace_steps:
-          if self.STEP in self.trace_steps:
-            self.set_trace()
-      else:
-        pass # verbose or pdb flag not set so no printed output...
-
+      elif self.verbose:      
+          color_print(2, 'STEP: %s // --> %s' % (self.STEP, msg))
+          self.output_time()
+      if self.post_step_pause:
+        pause_for(self.post_step_pause)
+      if self.trace_steps:
+        if self.STEP in self.trace_steps:
+          self.set_trace()
+      self.STEP += 1
+      
     # =================
     # Functions for script timing
     # =================
@@ -289,15 +282,21 @@ class nik2img(object):
     # =================
     
     def set_trace(self):
-        print '>>> Entering PDB interpreter'
-        print '>>> Do you want to print out all mapnik map object names? (yes or no)'
-        response = raw_input()
-        if response == 'yes':
-          color_print(1,'%s' % ', '.join(self.mapnik_objects))
-        color_print(1,'Usage: http://docs.python.org/lib/module-pdb.html')
-        color_print(1,"\n\nType 'continue' or 'c' to leave pdb") 
-        import pdb
-        pdb.set_trace()
+        try:
+          print '>>> Entering PDB interpreter'
+          print '>>> Do you want to print out all mapnik map object names? (yes or no)'
+          response = raw_input()
+          if response == 'yes':
+            if self.mapnik_objects:
+              color_print(1,'Mapnik objects: %s' % ', '.join(self.mapnik_objects))
+            else:
+              color_print(1,'No mapnik objects available in namespace yet...')
+          color_print(1,'Usage: http://docs.python.org/lib/module-pdb.html')
+          color_print(1,"Type 'continue' or 'c' to leave pdb") 
+          import pdb
+          pdb.set_trace()
+        except KeyboardInterrupt:
+          pass
     
     # TODO replace with os.isdir()
     def is_file(self, name):
@@ -319,6 +318,13 @@ class nik2img(object):
   # Functions involving mapnik objects
   # ================================================
 
+    def mapfile_validate(self, m):
+        for layer in m.layers:
+            if not layer.datasource:
+              self.output_message("Datasource not found for layer '%s': hint check permissions and if using a shapefile remove the .shp ext" % layer.name, warning=True)
+            if not layer.srs:
+              self.output_message('Layer has no projection, assumed to be WGS84 (epsg:4326)', warning=True)
+        
     def layers_in_extent(self, m):
         mapfile_layers = m.layers
         map_envelope = m.envelope()
@@ -338,11 +344,10 @@ class nik2img(object):
         return bbox
 
     def local_render_wrapper(self,*args): #modifed mapnik.render_to_file to accept cairo formats
-        
         if args[2] in self.CAIRO_FILE_FORMATS:
             self.render_cairo(*args)
         elif args[2] in self.AGG_FORMATS:
-            mapnik.render_to_file(*args)
+            self.render_agg(*args)
         
     def render_cairo(self,*args):
         context = [args[1], self.mapnik_map.width, self.mapnik_map.height]
@@ -372,22 +377,25 @@ class nik2img(object):
             
 
     def call_CAIRO_FORMATS(self, basename):
-        for k, v in self.CAIRO_FILE_FORMATS.iteritems():
-            path = '%s_%s%s' % (basename,k,v)
-            self.render_cairo(self.mapnik_map,path,k)
-        for k, v in self.CAIRO_IMAGE_FORMATS.iteritems():
-            path = '%s_%s%s' % (basename,k,v)
-            self.render_cairo(self.mapnik_map,path,k)
+        if not HAS_CAIRO:
+          self.output_message('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png', warning=True)
+        else:
+          for k, v in self.CAIRO_FILE_FORMATS.iteritems():
+              path = '%s_%s%s' % (basename,k,v)
+              self.render_cairo(self.mapnik_map,path,k)
+          for k, v in self.CAIRO_IMAGE_FORMATS.iteritems():
+              path = '%s_%s%s' % (basename,k,v)
+              self.render_cairo(self.mapnik_map,path,k)
 
       
     def render_agg(self,*args):
         if self.re_render_times:
           for n in range(1, int(self.re_render_times)):
-            self.local_render_wrapper(*args)
+            mapnik.render_to_file(*args)
             self.output_message("Map rendered to '%s', %s times" % (args[1], n))
         else:
-            self.local_render_wrapper(*args)
-            self.output_message("Map rendered to '%s'" % args[1])
+          mapnik.render_to_file(*args)
+          self.output_message("Map rendered to '%s'" % args[1])
         
     def call_AGG_FORMATS(self, basename):
         for k, v in self.AGG_FORMATS.iteritems():
@@ -515,7 +523,8 @@ class nik2img(object):
         tmp.write(mapfile_string)
         tmp.flush()
         try:
-          mapnik.load_map(self.mapnik_map, tmp.name )
+          mapnik.load_map(self.mapnik_map, tmp.name)
+          self.mapfile_validate(self.mapnik_map)
           self.output_message('XML mapfile loaded and parsed successfully')
         except Exception, E:
           output_error("Problem loading map from parsed in memory mapfile",E)
@@ -559,6 +568,7 @@ class nik2img(object):
           self.output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
           google_proj4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
           mapnik_proj = mapnik.Projection(google_proj4)
+          self.output_message("Mapnik projection successfully initiated with custom Google Spherical Mercator proj.4 string: '%s'" % mapnik_proj.params())
         elif self.srs.startswith('http://'):
           try:
             # Refactor to use gdal based osr layer or simliar code with handling of response codes.
@@ -566,11 +576,17 @@ class nik2img(object):
             import urllib
             web_proj4 = urllib.urlopen('%sproj4/' % self.srs ).read()
             mapnik_proj = mapnik.Projection(web_proj4)
+            self.output_message("Mapnik projection successfully initiated with url-fetched proj.4 string: '%s'" % mapnik_proj.params())
           except Exception, E:
             output_error('Tried to read from www.spatialreference.org, failed to fetch usable proj4 code', E)
-        else:
+        elif re.match('^epsg:\d+$', self.srs):
           mapnik_proj = mapnik.Projection("+init=%s" % self.srs)
-          self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % epsg.params())
+          self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
+        elif re.match('^\+proj=.+$', self.srs):
+          mapnik_proj = mapnik.Projection(self.srs)
+          self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
+        else:
+          output_error('Could not parse the supplied projection information')
         self.mapnik_map.srs = mapnik_proj.params()
         self.mapnik_objects['mapnik_proj'] = mapnik_proj
     
@@ -578,7 +594,6 @@ class nik2img(object):
         self.output_message('Pausing for %s seconds...' % self.post_map_pause)
         pause_for(self.post_map_pause)
     
-      #TODO: refactor, test zoom function
       if self.bbox_geographic:
         try:
           bbox = [float(x) for x in self.bbox_geographic.split(",")]
@@ -599,9 +614,10 @@ class nik2img(object):
         try:
           bbox = [float(x) for x in self.bbox_projected.split(",")]
           bbox = mapnik.Envelope(*bbox)
+          p = mapnik.Projection("%s" % self.mapnik_map.srs)
           if not p.geographic:
             self.mapnik_objects['bbox'] = bbox
-            self.output_message('Map and bbox in projected coordinates (hopefully they match), BBOX left unchanged')
+            self.output_message('Map and bbox in projected coordinates (hopefully the srs matches), newly assigned BBOX left unprojected.')
           else:
             self.output_message('Map is in geographic coordinates and you supplied projected coordinates', warning=True)
             output_error('Inverse method not yet supported')        
@@ -639,7 +655,7 @@ class nik2img(object):
       self.layers_in_extent(self.mapnik_map)
 
       if self.dry_run:
-        output_error('Dry run complete') # cut things short
+        output_error('Dry run complete')
         # output custom stats here?
 
         
@@ -648,7 +664,6 @@ class nik2img(object):
     # =====================================
 
     def render(self, method=None): 
-
 
       out = self.map_out
       if not self.is_file(out):
@@ -675,11 +690,10 @@ class nik2img(object):
           else:
                 self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)         
 
-    # =====================================
-    # Open the file or folder - this needs to get much smarter
-    # =====================================    
+    # ===============================================
+    # Open the file or folder - this needs to get much smarter, particularly on linux
+    # ===============================================    
     
-    # open result
     def open(self, method='Desktop', app=None):
       if not method == 'Desktop':
         output_error('no other method supported at this time')
@@ -697,14 +711,6 @@ class nik2img(object):
           os.system('open %s' % self.map_out)
         self.output_message("Completed, opening '%s' <%s'" %   (self.map_out, color_text(3, "%s" % make_line('=',55)),))
 
-    # =====================================
-    # Utility function to build, render, and open when run as main
-    # =====================================
-
-    def render_and_open(self):
-       self.build()
-       self.render() # need methods
-       self.open()
 
 # =============================================================================
 #
@@ -743,6 +749,7 @@ if __name__ == "__main__":
     #print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
     #print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
 
+    print "--noopen\t" + "[opens]\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
     
@@ -765,7 +772,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','pause=','pdb=', 'levels=', 'resolutions=', 'expand='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -804,6 +811,7 @@ if __name__ == "__main__":
         
     elif option == "-l":
         mapping['l'] = argument
+
     elif option == "-c":
         mapping['c'] = argument
         
@@ -827,6 +835,9 @@ if __name__ == "__main__":
     elif option == "--nocolor":
         mapping['nocolor'] = True
         no_color_global = True
+
+    elif option == "--noopen":
+        mapping['noopen'] = True
         
     elif option == "--expand":
         mapping['expand'] = argument
@@ -856,7 +867,6 @@ if __name__ == "__main__":
     usage(sys.argv[0])
     sys.exit(1)
 
-  
   if has('s'):
       mapping['width'],mapping['height'] = mapping['s'].split(',')
   
@@ -869,7 +879,12 @@ if __name__ == "__main__":
                       post_map_pause=get('t'), post_step_pause=get('pause'), trace_steps=get('pdb'),
                       levels=get('levels'), resolutions=get('resolutions'), find_and_replace=get('d'), 
                       no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-                      debug=has('debug')
+                      debug=has('debug'),
                       )
+                      
   nik_map.build()
-  nik_map.render_and_open()
+  if has('noopen'):
+    nik_map.render()
+  else:
+    nik_map.render()
+    nik_map.open()
