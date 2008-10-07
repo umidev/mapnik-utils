@@ -22,7 +22,7 @@
                 numZoomLevels: 20,
                 minZoomLevel: 0,
                 maxZoomLevel: 19  });
-          
+            //FORCE=1 to not cache
             var tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
                 "http://localhost/tilecache/tilecache.cgi/", { serviceVersion: "1.0.0", layername: "world",  type: "png" });
             var tilecache = new OpenLayers.Layer.TileCache(

@@ -2,6 +2,8 @@
 
 A companion to the tutorial here: http://www.paolocorti.net/2008/08/06/a-day-with-tilecache-generating-kml-super-overlays/
 
+see also: http://osdir.com/ml/gis.openstreetmap.devel/2006-12/msg00063.html
+
 # Note, Mac OS comes pre-installed with Apache so only mod_python is needed.
 
 # Install mod_python
