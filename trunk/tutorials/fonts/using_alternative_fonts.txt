@@ -16,6 +16,7 @@ fc-cache
 from mapnik import *
 
 # register path to new true type fonts...
+# or just place them in mapniks custom directory (usually /usr/local/lib/mapnik/fonts/)
 from glob import glob
 NEW_FONTS_DIR = '/usr/share/fonts/truetype/ttf-devanagari-fonts/'
 fonts = glob('%s/*.ttf' % NEW_FONTS_DIR)
