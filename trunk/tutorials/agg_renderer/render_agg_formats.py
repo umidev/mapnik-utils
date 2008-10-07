@@ -3,7 +3,7 @@
 from mapnik import *
 
 map_output = 'world'
-m = Map(600,300,'+proj=latlong +datum=WGS84')
+m = Map(256,256,'+proj=latlong +datum=WGS84')
 
 m.background = Color('steelblue')
 s = Style()
@@ -17,8 +17,13 @@ lyr.datasource = Shapefile(file='../../sample_data/world_borders')
 lyr.styles.append('My Style')
 m.layers.append(lyr)
 m.zoom_to_box(lyr.envelope())
+m.zoom(.2)
 
 agg_formats = {'png':'.png','png256':'.png','jpeg':'.jpg'}
 
 for k,v in agg_formats.items():
-    render_to_file(m, '%s_%s%s' % (map_output,k,v))
+    print '// --  Rendering %s -----------------------------' % k
+    if k == 'png256':
+       render_to_file (m,'%s_%s%s' % (map_output,k,v), k)
+    else:
+       render_to_file(m, '%s_%s%s' % (map_output,k,v))
