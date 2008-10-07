@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="white" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">  
+  <Style name="roads">
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' or [HIGHWAY] = 'primary_link'</Filter>
+      <MaxScaleDenominator>1000000</MaxScaleDenominator>
+      <MinScaleDenominator>25000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#e46d71</CssParameter>
+        <CssParameter name="stroke-width">8</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="true" placement="line" />
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' or [HIGHWAY] = 'primary_link'</Filter>
+      <MaxScaleDenominator>25000</MaxScaleDenominator>
+      <MinScaleDenominator>5000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#e46d71</CssParameter>
+        <CssParameter name="stroke-width">10</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>
+    
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' or [HIGHWAY] = 'primary_link'</Filter>
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>1000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#e46d71</CssParameter>
+        <CssParameter name="stroke-width">14</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>
+    
+    <!-- level 11 ..-->
+   <Rule>
+      <Filter>[HIGHWAY] = 'secondary' or [HIGHWAY] = 'secondary_link'</Filter>
+      <MaxScaleDenominator>150000</MaxScaleDenominator>
+      <MinScaleDenominator>75000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>
+    
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' or [HIGHWAY] = 'secondary_link'</Filter>
+      <MaxScaleDenominator>75000</MaxScaleDenominator>
+      <MinScaleDenominator>25000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">8</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>
+    
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' or [HIGHWAY] = 'secondary_link'</Filter>
+      <MaxScaleDenominator>25000</MaxScaleDenominator>
+      <MinScaleDenominator>5000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">10</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' or [HIGHWAY] = 'secondary_link'</Filter>
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <MinScaleDenominator>1000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">14</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="11" fill="white" halo_fill= "#2E2F39" halo_radius="1" allow_overlap="false" avoid_edges="true" placement="line" />
+    </Rule>    
+  </Style>
+ 
+
+  <Style name="roads-shields">
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' and [LENGTH] = 1</Filter>
+      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#e46d71" placement="line" file="primary_shield1.png" type="png" width="17" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' and [LENGTH] = 2</Filter>
+      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#e46d71" placement="line" file="primary_shield2.png" type="png" width="24" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' and [LENGTH] = 3</Filter>
+      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#e46d71" placement="line" file="primary_shield3.png" type="png" width="31" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' and [LENGTH] = 4</Filter>
+      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#e46d71" placement="line" file="primary_shield4.png" type="png" width="38" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'primary' and [LENGTH] = 5</Filter>
+      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#e46d71" placement="line" file="primary_shield5.png" type="png" width="45" height="17" min_distance="100"/>
+    </Rule>
+
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' and [LENGTH] = 1</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#fdbf6f" placement="line" file="secondary_shield1.png" type="png" width="17" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' and [LENGTH] = 2</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#fdbf6f" placement="line" file="secondary_shield2.png" type="png" width="24" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' and [LENGTH] = 3</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#fdbf6f" placement="line" file="secondary_shield3.png" type="png" width="31" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' and [LENGTH] = 4</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#fdbf6f" placement="line" file="secondary_shield4.png" type="png" width="38" height="17" min_distance="100"/>
+    </Rule>
+    <Rule>
+      <Filter>[HIGHWAY] = 'secondary' and [LENGTH] = 5</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>100</MinScaleDenominator>
+      <ShieldSymbolizer name="REF" face_name="DejaVu Sans Book" size="11" fill="#fdbf6f" placement="line" file="secondary_shield5.png" type="png" width="45" height="17" min_distance="100"/>
+    </Rule>
+  </Style>
+
+  
+  <Layer name="roads" status="on" srs="+proj=merc +datum=WGS84  +k=1.0 +units=m +over +no_defs">
+    <StyleName>roads</StyleName>
+     <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">shield_symbolizer_test</Parameter>
+    </Datasource>
+  </Layer>
+  
+
+  <Layer name="text" status="on" srs="+proj=merc +datum=WGS84  +k=1.0 +units=m +over +no_defs">
+    <StyleName>roads-shields</StyleName>
+     <Datasource>
+       <Parameter name="type">shape</Parameter>
+       <Parameter name="file">shield_symbolizer_test</Parameter>
+     </Datasource>
+  </Layer>
+</Map>
