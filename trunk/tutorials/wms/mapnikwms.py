@@ -4,12 +4,12 @@
 # http://blog.cleverelephant.ca/2008/05/fastcgi-on-osx-leopard.html
 
 import sys
-sys.path.append('/Users/spring/projects/mapnik-utils/trunk/serverside/wms/')
+sys.path.append('/Users/spring/projects/mapnik-utils/trunk/tutorials/wms/')
 
 from mapnik.ogcserver.cgiserver import Handler
 from jon import fcgi
 
 class OGCServerHandler(Handler):
-    configpath = '/Users/spring/projects/mapnik-utils/trunk/serverside/wms/ogcserver.conf'
+    configpath = '/Users/spring/projects/mapnik-utils/trunk/tutorials/wms/ogcserver.conf'
 
 fcgi.Server({fcgi.FCGI_RESPONDER: OGCServerHandler}).run()
