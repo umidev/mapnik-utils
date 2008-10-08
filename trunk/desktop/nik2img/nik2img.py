@@ -42,6 +42,9 @@ Debugging:
   
 Todo:
   * extended help output
+  * accept formats as list
+  * flag for setting extent from a center point and radius in lon/lat
+  * read xml into memory and memcache
   * change zoom levels to accept high and low
   * debug the custom resolutions input (set mapnik's starting scale)
   * refactor all class methods to accept **kwargs
@@ -147,7 +150,7 @@ def pause_for(sec):
             time.sleep(1)
             sys.stdout.flush()
     else:
-        output_error('Time in seconds must be integer value')
+        output_error("Time in seconds must be integer value")
 
 def make_line(character, n):
     line = character*n
@@ -192,7 +195,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class nik2img(object):
-    def __init__(self, mapfile_in, map_out, format=None, bbox_geographic=None, bbox_projected=None, radius=None, width=None, height=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
+    def __init__(self, mapfile_in, map_out, format=None, bbox_geographic=None, bbox_projected=None, zoom_to=None, radius=None, width=None, height=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
       
       # Required
       self.mapfile_in = mapfile_in
@@ -206,6 +209,7 @@ class nik2img(object):
       # Optional arguments
       self.bbox_geographic = bbox_geographic
       self.bbox_projected = bbox_projected
+      self.zoom_to = zoom_to
       self.radius = radius
       self.srs = srs
       self.layers = layers
@@ -243,12 +247,12 @@ class nik2img(object):
     # Function for handling printed terminal output when verbose = True or a pdb trace is requested
     # ==========================================================
 
-    def output_message(self,msg, warning=False):
+    def output_message(self,msg, warning=False, print_time=True):
       if warning:
           color_print(1, 'STEP: %s | --> WARNING: %s' % (self.STEP, msg)) 
       elif self.verbose:      
           color_print(2, 'STEP: %s // --> %s' % (self.STEP, msg))
-          self.output_time()
+          self.output_time(print_time)
       if self.post_step_pause:
         pause_for(self.post_step_pause)
       if self.trace_steps:
@@ -273,8 +277,8 @@ class nik2img(object):
         last = (time.time() - last_step)
         return 'Total time: %s | Last step: %s' % (self.get_time(total), self.get_time(last))
     
-    def output_time(self):
-        if self.TIMING_STARTED:
+    def output_time(self, print_time):
+        if self.TIMING_STARTED and print_time:
           color_print(4,self.elapsed(timeit.time.time()))
 
     # =================
@@ -283,16 +287,14 @@ class nik2img(object):
     
     def set_trace(self):
         try:
-          print '>>> Entering PDB interpreter'
-          print '>>> Do you want to print out all mapnik map object names? (yes or no)'
+          print ">>> Entering PDB interpreter (press 'c' to leave)"
+          print '>>> Print out current mapnik object names? (yes or no)'
           response = raw_input()
           if response == 'yes':
             if self.mapnik_objects:
               color_print(1,'Mapnik objects: %s' % ', '.join(self.mapnik_objects))
             else:
               color_print(1,'No mapnik objects available in namespace yet...')
-          color_print(1,'Usage: http://docs.python.org/lib/module-pdb.html')
-          color_print(1,"Type 'continue' or 'c' to leave pdb") 
           import pdb
           pdb.set_trace()
         except KeyboardInterrupt:
@@ -331,11 +333,12 @@ class nik2img(object):
         for layer_num in range(len(m.layers)-1, -1, -1):
             l = mapfile_layers[layer_num]
             layer_envelope = l.envelope()
-            if map_envelope.intersects(layer_envelope):
-                self.output_message("Map layer '%s' intersects Map envelope" % l.name)
+            if layer_envelope.intersects(map_envelope):
+                self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
+                self.output_message("Center point of layer '%s' is %s" % (l.name, layer_envelope.center()))
             else:
-                self.output_message("Map layer '%s' does not intersect with Map envelope" % l.name, warning=True)
-                self.output_message("Map layer envelope is: %s  |  Map envelope is %s" % (layer_envelope, map_envelope), warning=True)
+                self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
+                self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_envelope, map_envelope), warning=True)
 
     def puff_bbox(self, bbox, delta):
         bbox.expand_to_include(bbox.minx-delta, bbox.miny-delta)
@@ -420,7 +423,7 @@ class nik2img(object):
         if is_int(self.width):
           self.width = int(self.width)
         else:
-          output_error('width must be an integer',E)
+          output_error("width must be an integer",E)
       else:
         self.width = 600
       
@@ -491,7 +494,7 @@ class nik2img(object):
         output_error("Problem initiating map",E)
     
       if self.resolutions and self.levels:
-        output_error('Only accepts one of either --resolutions or --levels options')
+        output_error("Only accepts one of either --resolutions or --levels options")
       elif self.resolutions:
         self.ZOOM_LEVELS = [float(r) for r in self.resolutions.split(',')]
         self.output_message('Using custom zoom levels: %s' % self.ZOOM_LEVELS)
@@ -504,11 +507,12 @@ class nik2img(object):
           output_error("Zoom level number must be an integer")
           
       if not self.find_and_replace:
+        self.output_message('Attempting to load XML mapfile...')
         try:    
           mapnik.load_map(self.mapnik_map, self.mapfile_in)
-          self.output_message('XML mapfile loaded successfully')
+          self.output_message('XML mapfile loaded successfully...')
         except Exception, E:
-          output_error("Problem loading map",E)
+          output_error("Problem loading XML Mapfile",E)
       else:
         # TODO: implement elementtree optionion for name:value control
         #try:
@@ -559,7 +563,7 @@ class nik2img(object):
             if len(layers) == 1:
               output_error("Layer '%s' not found" % layers[0])
             else:
-              output_error('No requested layers found')    
+              output_error("No requested layers found")    
     
       # TODO: accept <OSGEO:code>
       if self.srs:
@@ -578,7 +582,7 @@ class nik2img(object):
             mapnik_proj = mapnik.Projection(web_proj4)
             self.output_message("Mapnik projection successfully initiated with url-fetched proj.4 string: '%s'" % mapnik_proj.params())
           except Exception, E:
-            output_error('Tried to read from www.spatialreference.org, failed to fetch usable proj4 code', E)
+            output_error("Tried to read from www.spatialreference.org, failed to fetch usable proj4 code", E)
         elif re.match('^epsg:\d+$', self.srs):
           mapnik_proj = mapnik.Projection("+init=%s" % self.srs)
           self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
@@ -586,7 +590,7 @@ class nik2img(object):
           mapnik_proj = mapnik.Projection(self.srs)
           self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
         else:
-          output_error('Could not parse the supplied projection information')
+          output_error("Could not parse the supplied projection information")
         self.mapnik_map.srs = mapnik_proj.params()
         self.mapnik_objects['mapnik_proj'] = mapnik_proj
     
@@ -604,9 +608,11 @@ class nik2img(object):
             bbox = mapnik.forward_(bbox, p)
             self.mapnik_objects['bbox'] = bbox
             self.output_message('BBOX has been reprojected to: %s' % bbox)
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
           else:
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map is in unprojected, geographic coordinates, BBOX left unchanged')
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,True) )
         except Exception, E:
            output_error("Problem setting geographic bounding box", E)
         self.mapnik_map.zoom_to_box(bbox)
@@ -618,9 +624,10 @@ class nik2img(object):
           if not p.geographic:
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map and bbox in projected coordinates (hopefully the srs matches), newly assigned BBOX left unprojected.')
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
           else:
             self.output_message('Map is in geographic coordinates and you supplied projected coordinates', warning=True)
-            output_error('Inverse method not yet supported')        
+            output_error("Inverse method not yet supported")        
         except Exception, E:
            output_error("Problem setting projected bounding box", E)
         
@@ -628,34 +635,58 @@ class nik2img(object):
         self.mapnik_map.zoom_to_box(bbox)
         self.m_bbox = self.mapnik_map.envelope()
         self.output_message('Map bbox (after zooming to your input) is now: %s' % self.m_bbox)
+        if not p.geographic:
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
+        else:
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,True) )            
         self.mapnik_objects['self.m_bbox'] = self.m_bbox
-        
-  
+      
+      elif self.zoom_to:
+        try:
+          lon,lat,delta = map(float, self.zoom_to.split(","))
+          zoom_to_bbox = mapnik.Envelope(lon - delta, lat - delta, lon + delta, lat + delta)
+          p = mapnik.Projection("%s" % self.mapnik_map.srs)
+          if not p.geographic:
+              projected_bbox = mapnik.forward_(zoom_to_bbox, p)
+              self.m_bbox = projected_bbox
+          else:
+              self.m_bbox = zoom_to_bbox
+          self.mapnik_map.zoom_to_box(self.m_bbox)
+          self.mapnik_objects['self.m_bbox'] = self.m_bbox
+          self.output_message('BBOX resulting from lon,lat,delta of %s,%s,%s is: %s' % (lon,lat,delta,self.m_bbox))
+        except Exception, E:
+          output_error("Problem setting lon,lat,delta to use for custom BBOX",E)          
+
       else:
         try:    
-          # If no bounding box supplied then zoom to the extent of all layers
+          # If no custom bounding box supplied then zoom to the extent of all layers
           self.mapnik_map.zoom_all()
           self.m_bbox = self.mapnik_map.envelope()
           self.output_message('Map bbox (max extent of all layers) is now: %s' % self.m_bbox)
+          p = mapnik.Projection("%s" % self.mapnik_map.srs)
+          if not p.geographic:
+              self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
+          else:
+              self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,True) )    
           self.mapnik_objects['self.m_bbox'] = self.m_bbox
         except Exception, E:
           output_error("Problem Zooming to all layers",E)
-    
+      
       if self.radius:
         if is_int(self.radius):
           self.m_bbox = self.puff_bbox(self.mapnik_map.envelope(), int(self.radius))
           self.mapnik_map.zoom_to_box(self.m_bbox)
           self.mapnik_objects['self.m_bbox'] = self.m_bbox
           # TODO: need to validate that the expanded bbox still makes sense
-          self.output_message('BBOX expanded by %s units to: %s' % (int(self.radius), self.m_bbox))
+          self.output_message('BBOX radius expanded by %s units to: %s' % (int(self.radius), self.m_bbox))
         else:
-          output_error('Radius must be an integer')
-    
+          output_error("Radius must be an integer")
+
       # Check for which layers intersect with map envelope
       self.layers_in_extent(self.mapnik_map)
 
       if self.dry_run:
-        output_error('Dry run complete')
+        output_error("Dry run complete")
         # output custom stats here?
 
         
@@ -669,13 +700,16 @@ class nik2img(object):
       if not self.is_file(out):
         if not os.path.exists('%s' % out):
           os.mkdir(out)
-        out = '%s/%s.%s' % (out,out,self.format) # place in folder using default format
+        out = '%s/%s' % (out,out) # place in folder using default format
+        self.output_message("Directory output requested, will write to: '%s'" % out)
       if not self.debug:
           if self.format == 'all':
               basename = out.split('.')[0]
+              self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
               self.call_AGG_FORMATS(basename)
               self.call_CAIRO_FORMATS(basename)
           else:
+              self.output_message("Beginning rendering, this may take a while...")
               self.local_render_wrapper(self.mapnik_map, out, self.format)
       else:
         # look into mapnik scale demoninators
@@ -685,10 +719,12 @@ class nik2img(object):
           basename = out.split('.')[0]
           level_name = '%s_level-%s' % (basename,lev)
           if self.format == 'all':
-                self.call_AGG_FORMATS(level_name)
-                self.call_CAIRO_FORMATS(level_name)
+              self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
+              self.call_AGG_FORMATS(level_name)
+              self.call_CAIRO_FORMATS(level_name)
           else:
-                self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)         
+              self.output_message("Beginning rendering, this may take a while...")              
+              self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)         
 
     # ===============================================
     # Open the file or folder - this needs to get much smarter, particularly on linux
@@ -696,7 +732,7 @@ class nik2img(object):
     
     def open(self, method='Desktop', app=None):
       if not method == 'Desktop':
-        output_error('no other method supported at this time')
+        output_error("no other method supported at this time")
       else:
         import platform
         if os.name == 'nt':
@@ -744,6 +780,7 @@ if __name__ == "__main__":
 
     # these apis are going to change so restricting for now...
     #print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
+    #print "--zoomto\t[0]\t\tZoom to a given lon/lat coordinate and radius in degrees (ie. -122,48,7)%s." % color_text(4,'*')
     #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
     #print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
     #print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
@@ -772,7 +809,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','profile'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -841,7 +878,10 @@ if __name__ == "__main__":
         
     elif option == "--expand":
         mapping['expand'] = argument
-        
+
+    elif option == "--zoomto":
+        mapping['zoomto'] = argument
+      
     elif option == "--debug":
         mapping['debug'] = True
         
@@ -853,6 +893,9 @@ if __name__ == "__main__":
         
     elif option == "--pdb":
         mapping['pdb'] = argument
+
+    elif option == "--profile":
+        mapping['profile'] = True
         
     elif option == "-h":
         usage(sys.argv[0])
@@ -872,8 +915,9 @@ if __name__ == "__main__":
   
   mapfile_in, map_out = mapping['m'], mapping['o']
 
-  nik_map = nik2img( mapfile_in, map_out,
-                      format=get('i'), bbox_geographic=get('e'),
+  def main():
+    nik_map = nik2img( mapfile_in, map_out,
+                      format=get('i'), bbox_geographic=get('e'), zoom_to=get('zoomto'),
                       bbox_projected=get('r'), radius=get('expand'), width=get('width'),
                       height=get('height'), srs=get('p'), layers=get('l'), re_render_times=get('c'),
                       post_map_pause=get('t'), post_step_pause=get('pause'), trace_steps=get('pdb'),
@@ -882,9 +926,16 @@ if __name__ == "__main__":
                       debug=has('debug'),
                       )
                       
-  nik_map.build()
-  if has('noopen'):
-    nik_map.render()
+    nik_map.build()
+    if has('noopen'):
+      nik_map.render()
+    else:
+      nik_map.render()
+      nik_map.open()
+
+  if has('profile'):
+   import cProfile
+   cProfile.run('main()', sort=1)
+   #cProfile.runctx('main()', globals(), locals())
   else:
-    nik_map.render()
-    nik_map.open()
+   main()
