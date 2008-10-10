@@ -39,8 +39,8 @@ You should see a small tile of the world.
 
 === Step 4 ===
 
- Open the `openlayers.html` to test your wms served into OpenLayers
+ Open the `openlayers.html` to test your wms served into !OpenLayers
  
 === Step 5 ===
 
- Set up TileCache
+ Set up !TileCache
