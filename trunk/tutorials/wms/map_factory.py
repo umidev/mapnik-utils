@@ -12,6 +12,7 @@ PROJ4_STRING = '+init=epsg:4326'
 # http://localhost/cgi-bin/wms/mapnikwms.py?LAYERS=world&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&FORMAT=image%2Fpng&SRS=EPSG%3A3395&BBOX=-20037400.000000,-19929239.110000,%2020037400.000000,18375854.709643&WIDTH=256&HEIGHT=256
 
 # note, this required patch from http://trac.mapnik.org/ticket/129
+'''
 class WMSFactory(BaseWMSFactory):
   def __init__(self):
     BaseWMSFactory.__init__(self)
@@ -35,4 +36,3 @@ class WMSFactory(BaseWMSFactory):
     lyr.datasource = Shapefile(file=SHAPEFILE)
     self.register_layer(lyr,'s',('s',))
     self.finalize()
-'''
