@@ -9,13 +9,15 @@ All files can be found in http://mapnik-utils.googlecode.com/svn/trunk/tutorials
 === Step 1 ===
 
  * Install the wms prequisites listed at: http://trac.mapnik.org/wiki/OgcServer
- * Install mod_fastcgi or mod_fcgi within apache with these hints:
-  * http://blog.brandonking.net//2008/01/django-app-modfcgid-apache-2-setup-on.html/
-  * http://blog.cleverelephant.ca/2008/05/fastcgi-on-osx-leopard.html
+ * Decide whether to run as cgi or fastcgi (the server works with either)
+ * If you want to run in fastcgi mode then install mod_fastcgi or mod_fcgi within apache
+  * These hints might help:
+   * http://blog.brandonking.net//2008/01/django-app-modfcgid-apache-2-setup-on.html/
+   * http://blog.cleverelephant.ca/2008/05/fastcgi-on-osx-leopard.html
  
 === Step 2 ===
 
- Configure Apache to allow python cgi execution in a specific directory, like the cgi-bin by either renaming the script to mapnikserv.cgi or adding an Apache directive for your cgi directory like:
+ Configure Apache to allow python cgi execution in a specific directory, like the cgi-bin by either renaming the script to mapnikserv.cgi or adding an Apache directive to a custom directory like:
  {{{
    AddHandler cgi-script .cgi .py # add .py 
  }}}
@@ -47,9 +49,11 @@ sudo chmod -R g+rws /path/to/wms/
 === Step 3 ===
 
  Place the `ogcserver.conf` and `world_map_factory.py` beside each other in your location of choice.
- Fix the paths inside `mapnikwms.py` to point to the `ogcserver.conf` location.
+ Fix the hardcoded paths:
+  * The paths inside `mapnikwms.py` must point to the `ogcserver.conf` location.
+  * The paths inside  `map_factory` must point to the correct location of the datasource.
 
-=== Step 3 ===
+=== Step 4 ===
 
  Go to your browser and open:
   * http://localhost/cgi-bin/mapnikwms.py?LAYERS=world&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX=-180.0000000000001,-90,119.46385052802589,209.463850528026&WIDTH=256&HEIGHT=256
@@ -57,10 +61,10 @@ sudo chmod -R g+rws /path/to/wms/
 
 You should see a small tile of the world.
 
-=== Step 4 ===
-
- Open the `openlayers.html` to test your wms served into !OpenLayers
- 
 === Step 5 ===
+
+ Open the `openlayers.html` (you will likely need to edit the base path in the html) to test your wms served into !OpenLayers
+ 
+=== Step 6 ===
 
  Set up !TileCache
