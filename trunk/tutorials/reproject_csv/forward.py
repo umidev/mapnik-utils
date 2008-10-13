@@ -2,7 +2,7 @@
 
 # forward.py
 #
-# Description: reproject a csv file with geographic coordinates
+# Description: reproject a csv file with geographic coordinates into projected coordinates
 #
 # Usage: ./forward.py 1 2 EPSG:3395
 #
