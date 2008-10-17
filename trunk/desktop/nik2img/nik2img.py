@@ -13,7 +13,7 @@ Summary:
   shp2img reference: http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img
   shp2img code: http://trac.osgeo.org/mapserver/browser/trunk/mapserver/shp2img.c
   
-  Shares simliarities with the OSM script generate_tiles.py / generate_image.py
+  Shares simliarities with the OSM scripts: generate_tiles.py / generate_image.py
   http://trac.openstreetmap.org/changeset/1594/utils/mapnik/generate_tiles.py
 
 Source:
@@ -23,10 +23,9 @@ Dependencies:
   Requires Python and Mapnik installed with the python bindings
 
 Usage:
-  # Copy the script to your path then:
+  Copy the script to your path then:
   $ nik2img.py -h # help on usage
   $ nik2img.py -m mapfile.xml -o yourmap.png
-  $ nik2img.py -m mapfile.xml -o yourmapsfolder -i all --debug -p epsg:900913 -r 1003750,-1706377,10037508,2810502 -t 2
 
 Limitations:
   Paths to file system datasources in the XML files loaded will be relative to your dir.
@@ -35,68 +34,36 @@ Wishlist:
   * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources (will need patch to mapnik core)
   * Support for loading in python styles module/rules
-
-Debugging:
-  * Cairo xml crashes with floating point exception: http://mail.python.org/pipermail/c++-sig/2002-May/001023.html
-  * http://www.python.org/doc/2.5.2/lib/module-fpectl.html
   
 Todo:
   * extended help output
+  * Add docstrings and code comments.
   * accept formats as list
-  * flag for setting extent from a center point and radius in lon/lat
   * read xml into memory and memcache
   * change zoom levels to accept high and low
   * debug the custom resolutions input (set mapnik's starting scale)
   * refactor all class methods to accept **kwargs
   * read format from file extension
   * set mapnik_object like layers and proj even if not changed
-  * make mapnik_objects available as class attributes
   * move mapnik and cairo imports into class or otherwise only imported once needed
   * create an --all-formats flag and do away with -i == 'all'
   * Ability to render to images and pipe to stdout
   * Better url srs support/error checking
-  * Add docstrings and code comments.
+     sr_org_responses = {'text/xml': 'gml', 'text/proj4': 'proj4', 'application/proj4': 'proj4', 'application/x-proj4': 'proj4', 'application/x-ogcwkt': 'ogcwkt', } 
   * Set all tabs to 4 spaces
   * Add more mapfile statistics output.
   * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
-  * Debug the zoom levels/resolutions feature
 
 Remaining shp2img features:
   * Pipe to stdout?
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Implement datavalue substitute within mapfile using boost python access to map elements.
       ie. -d <layer/style:datavalue:newvalue>, -d world:file:'/new/path/to/datasource', -d 'my style':fill:green
-  * Until datavalue substitution with native objects, perhaps using ElementTree or a 
+  * Until datavalue substitution with native objects, perhaps use ElementTree or a 
      regex approach to grab django like variable objects ( {{ shapefile }} )
       ie. -d <currentvalue:newvalue:find/findall>
   * Implement a prepared mapfile substitution ability within the mapfile.
      ie. http://mapserver.gis.umn.edu/docs/reference/mapfile/variable_sub
-
-formats = {'text/xml': 'gml', 'text/proj4': 'proj4', 'application/proj4': 'proj4', 'application/x-proj4': 'proj4', 'application/x-ogcwkt': 'ogcwkt', } 
-
-
-
-for y in range(tile_count_y):
-  for x in range(tile_count_x):
-    if not os.path.exists("tiles/%d/%d/" % (map_scale, y)):
-      os.makedirs("tiles/%d/%d/" % (map_scale, y))
-      render_tile_to_file(m, x*tile_size, y*tile_size, tile_size, tile_size,'tiles/%d/%d/%d.png' % (map_scale,y,x), 'png')
-
-im = Image(512, 512)
-render(m, im)
-view = im.view(128,128,256,256) # x,y,width,height
-view.save(tile_uri,'png')
-
-def generate_image(self, format):
-  image = mapnik.Image(mapnik_map.width, mapnik_map.height)
-  image.background = mapnik.Color("green")
-  mapnik.render(mapnik_map, image)
-  image_string = image.tostring("%s" % format)
-  if format == "png256":
-    output_headers("image/png", "map.png", len(image_string))  
-  else:
-    output_headers("image/%s" % (format), "map.%s" % (format), len(image_string))
-  print image_string
 
 """
 
@@ -195,7 +162,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class nik2img(object):
-    def __init__(self, mapfile_in, map_out, format=None, bbox_geographic=None, bbox_projected=None, zoom_to=None, radius=None, width=None, height=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
+    def __init__(self, mapfile_in, map_out, format=None, bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_layer=None, radius=None, width=None, height=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
       
       # Required
       self.mapfile_in = mapfile_in
@@ -210,6 +177,7 @@ class nik2img(object):
       self.bbox_geographic = bbox_geographic
       self.bbox_projected = bbox_projected
       self.zoom_to = zoom_to
+      self.zoom_to_layer = zoom_to_layer
       self.radius = radius
       self.srs = srs
       self.layers = layers
@@ -335,10 +303,20 @@ class nik2img(object):
             layer_envelope = l.envelope()
             if layer_envelope.intersects(map_envelope):
                 self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
-                self.output_message("Center point of layer '%s' is %s" % (l.name, layer_envelope.center()))
+                self.output_message("Center point of layer '%s' is %s" % (l.name, layer_envelope.center()),print_time=False)
+                self.output_message("Layer's minzoom = '%s' and maxzoom = '%s'"  % (l.minzoom, l.maxzoom) )
             else:
                 self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
                 self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_envelope, map_envelope), warning=True)
+
+    def get_layer_extent_and_srs(self, m, layer_name):
+        layer_obj = [l for l in m.layers if l.name.lower() == layer_name.lower()]
+        if layer_obj:
+          return layer_obj[0].envelope(), layer_obj[0].srs
+        else:
+          layers = ', '.join([l.name for l in m.layers])
+          output_error("Could not find a layer named '%s', in these map layers: %s" % (layer_name, layers))
+        
 
     def puff_bbox(self, bbox, delta):
         bbox.expand_to_include(bbox.minx-delta, bbox.miny-delta)
@@ -657,6 +635,27 @@ class nik2img(object):
         except Exception, E:
           output_error("Problem setting lon,lat,delta to use for custom BBOX",E)          
 
+      elif self.zoom_to_layer:
+          layer_bbox, layer_srs = self.get_layer_extent_and_srs(self.mapnik_map, self.zoom_to_layer)
+          layer_p = mapnik.Projection("%s" % layer_srs)
+          map_p = mapnik.Projection("%s" % self.mapnik_map.srs)
+          if map_p.geographic and layer_p.geographic:
+              self.m_bbox = layer_bbox
+          elif not map_p.geographic and layer_p.geographic:
+              projected_bbox = mapnik.forward_(layer_bbox, map_p)
+              self.m_bbox = projected_bbox
+          elif map_p.geographic and not layer_p.geographic:
+              geographic_bbox = mapnik.inverse_(layer_bbox, layer_p)
+              self.m_bbox = geographic_bbox
+          elif not map_p.geographic and not layer_p.geographic:
+              if layer_p.params() == map_p.params():
+                self.m_bbox = layer_bbox
+              else:
+                output_error("Mapnik's python bindings do not support transformation between projected coordinates, see http://trac.mapnik.org/ticket/117")
+          self.mapnik_map.zoom_to_box(self.m_bbox)
+          self.mapnik_objects['self.m_bbox'] = self.m_bbox
+          self.output_message('BBOX resulting from zooming to extent of "%s" layer is now: %s' % (self.zoom_to_layer,self.m_bbox))    
+
       else:
         try:    
           # If no custom bounding box supplied then zoom to the extent of all layers
@@ -781,6 +780,7 @@ if __name__ == "__main__":
     # these apis are going to change so restricting for now...
     #print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
     #print "--zoomto\t[0]\t\tZoom to a given lon/lat coordinate and radius in degrees (ie. -122,48,7)%s." % color_text(4,'*')
+    #print "--zoomlyr\t[0]\t\tZoom to an extent for a given layer%s." % color_text(4,'*')
     #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
     #print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
     #print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
@@ -809,7 +809,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','profile'])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','profile'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -881,6 +881,9 @@ if __name__ == "__main__":
 
     elif option == "--zoomto":
         mapping['zoomto'] = argument
+
+    elif option == "--zoomlyr":
+        mapping['zoomlyr'] = argument
       
     elif option == "--debug":
         mapping['debug'] = True
@@ -917,7 +920,7 @@ if __name__ == "__main__":
 
   def main():
     nik_map = nik2img( mapfile_in, map_out,
-                      format=get('i'), bbox_geographic=get('e'), zoom_to=get('zoomto'),
+                      format=get('i'), bbox_geographic=get('e'), zoom_to=get('zoomto'), zoom_to_layer=get('zoomlyr'),
                       bbox_projected=get('r'), radius=get('expand'), width=get('width'),
                       height=get('height'), srs=get('p'), layers=get('l'), re_render_times=get('c'),
                       post_map_pause=get('t'), post_step_pause=get('pause'), trace_steps=get('pdb'),
