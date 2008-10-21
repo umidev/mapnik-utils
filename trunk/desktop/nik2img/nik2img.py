@@ -56,7 +56,6 @@ Todo:
   * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
 
 Remaining shp2img features:
-  * Pipe to stdout?
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
   * Implement datavalue substitute within mapfile using boost python access to map elements.
       ie. -d <layer/style:datavalue:newvalue>, -d world:file:'/new/path/to/datasource', -d 'my style':fill:green
@@ -171,17 +170,16 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image, width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
         """
         ----
 
-        Initialize a nik2img Map object either from the commandline or as a class import. Then build, render, and
-        open the map image.
+        Initialize a nik2img Map object either from the commandline or as a class import.
         
-        Required arguments:
-        --> Argument\t Type\t Description
+        Then build() and either provide an output image path and user render_file() or pipe the output of render_stream()
+        
+        Required argument:
         --> mapfile\t string\t path to the mapnik xml file
-        --> image\t string\t path of output file or directory
         
         Optional **kwargs:
         --> See the commandline usage
@@ -191,7 +189,7 @@ class Map(object):
         >>> m = Map('world_styles.xml','map.png')
         >>> m.test()
         >>> m.build()
-        >>> m.render()
+        >>> m.render_file()
         >>> m.open()
 
         ----
@@ -480,7 +478,8 @@ class Map(object):
       Can be run indepedently or will be automatically called during build()
       """
       if verbose: self.verbose = True
-            
+       
+      self.format = self.format.lower().replace('image/','')      
       # do some validation and special handling for a few arguments
       if not self.max_resolution:
         self.max_resolution = 1.0
@@ -644,11 +643,11 @@ class Map(object):
             self.output_message("Mapnik projection successfully initiated with url-fetched proj.4 string: '%s'" % mapnik_proj.params())
           except Exception, E:
             output_error("Tried to read from www.spatialreference.org, failed to fetch usable proj4 code", E)
-        elif re.match('^epsg:\d+$', self.srs):
-          mapnik_proj = mapnik.Projection("+init=%s" % self.srs)
+        elif re.match('^epsg:\d+$', self.srs.lower()):
+          mapnik_proj = mapnik.Projection("+init=%s" % self.srs.lower())
           self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
-        elif re.match('^\+proj=.+$', self.srs):
-          mapnik_proj = mapnik.Projection(self.srs)
+        elif re.match('^\+proj=.+$', self.srs.lower()):
+          mapnik_proj = mapnik.Projection(self.srs.lower())
           self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
         else:
           output_error("Could not parse the supplied projection information")
@@ -686,9 +685,12 @@ class Map(object):
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map and bbox in projected coordinates (hopefully the srs matches), newly assigned BBOX left unprojected.')
             self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
+          elif self.srs == 'epsg:4326':
+            pass #geographic coordinates fed to wrong parameter.
           else:
             self.output_message('Map is in geographic coordinates and you supplied projected coordinates', warning=True)
-            output_error("Inverse method not yet supported")        
+            bbox = mapnik.inverse_(bbox, p)
+            self.mapnik_objects['bbox'] = bbox
         except Exception, E:
            output_error("Problem setting projected bounding box", E)
         
@@ -794,43 +796,58 @@ class Map(object):
 
         
     # =====================================
-    # Render to the desired format using the desired method
+    # Render to the desired format to a file
     # =====================================
 
-    def render(self, method=None): 
+    def render_file(self): 
         """
         Routine to render the output image(s) for all requested formats and resolutions.
         """
-        out = self.image
-        if not self.is_file(out):
-          if not os.path.exists('%s' % out):
-            os.mkdir(out)
-          out = '%s/%s' % (out,out)
-          self.output_message("Directory output requested, will write to: '%s'" % out)
-        if not self.debug:
-            if self.format == 'all':
-                basename = out.split('.')[0]
-                self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
-                self.call_AGG_FORMATS(basename)
-                self.call_CAIRO_FORMATS(basename)
-            else:
-                self.output_message("Beginning rendering, this may take a while...")
-                self.local_render_wrapper(self.mapnik_map, out, self.format)
+        if not self.image:
+          output_error("Image output name not defined.")
         else:
-          for lev in self.ZOOM_LEVELS:
-            self.mapnik_map.zoom(lev)
-            self.output_message('Map Scale: %s' % self.mapnik_map.scale(),print_time=False)
-            p = mapnik.Projection("%s" % self.mapnik_map.srs)
-            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic),print_time=False)
-            basename = out.split('.')[0]
-            level_name = '%s_level-%s' % (basename,lev)
-            if self.format == 'all':
-                self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
-                self.call_AGG_FORMATS(level_name)
-                self.call_CAIRO_FORMATS(level_name)
-            else:
-                self.output_message("Beginning rendering, this may take a while...")              
-                self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)         
+          out = self.image
+          if not self.is_file(out):
+            if not os.path.exists('%s' % out):
+              os.mkdir(out)
+            out = '%s/%s' % (out,out)
+            self.output_message("Directory output requested, will write to: '%s'" % out)
+          if not self.debug:
+              if self.format == 'all':
+                  basename = out.split('.')[0]
+                  self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
+                  self.call_AGG_FORMATS(basename)
+                  self.call_CAIRO_FORMATS(basename)
+              else:
+                  self.output_message("Beginning rendering, this may take a while...")
+                  self.local_render_wrapper(self.mapnik_map, out, self.format)
+          else:
+            for lev in self.ZOOM_LEVELS:
+              self.mapnik_map.zoom(lev)
+              self.output_message('Map Scale: %s' % self.mapnik_map.scale(),print_time=False)
+              p = mapnik.Projection("%s" % self.mapnik_map.srs)
+              self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic),print_time=False)
+              basename = out.split('.')[0]
+              level_name = '%s_level-%s' % (basename,lev)
+              if self.format == 'all':
+                  self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
+                  self.call_AGG_FORMATS(level_name)
+                  self.call_CAIRO_FORMATS(level_name)
+              else:
+                  self.output_message("Beginning rendering, this may take a while...")              
+                  self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)
+
+    # =====================================
+    # Render to the desired format to a string
+    # =====================================
+
+    def stream(self): 
+        """
+        Routine to render the an image to a string
+        """
+        im = mapnik.Image(self.width,self.height)
+        mapnik.render(self.mapnik_map,im)
+        return im.tostring(self.format)
 
     # ===============================================
     # Open the file or folder - this needs to get much smarter, particularly on linux
@@ -872,7 +889,7 @@ if __name__ == "__main__":
     color_print(4,"Option\t\tDefault\t\tDescription")
     
     print "-m\t\t" + "<required>\t" + "Mapfile input: Set the path for the xml map file."
-    print "-o\t\t" + "<required>\t" + "Image filename: Set the output filename (or a directory name)."
+    print "-o\t\t" + "[stdout]\t" + "Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT."
     print "-i\t\t" + "[png]\t\t" + "Image format: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats)."
     print "-e\t\t" + "[max extent]\t" + "Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates."
     print "-r\t\t" + "[max extent]\t" + "Minx,Miny,Maxx,Maxy: Set map extent in the projected coordinates of mapfile."
@@ -903,7 +920,6 @@ if __name__ == "__main__":
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
     
     print "%s\n %s Additional features in nik2img not part of shp2img." % (make_line('-',75), color_text(4,'*'))
-    print " %s nik2img does not support sending image to STDOUT (default in shp2img)." % color_text(4,'Note:')
     print "%s" % make_line('-',75)
     print " More info: http://code.google.com/p/mapnik-utils/wiki/Nik2Img"
     color_print(3, "%s" % make_line('=',75))
@@ -1026,8 +1042,8 @@ if __name__ == "__main__":
         usage(sys.argv[0])
         sys.exit(1)
     
-  if len(mapping) < 2:
-    color_print(1, 'Make sure to specify the -m <input mapfile.xml> and -o <output image>')
+  if len(mapping) < 1:
+    color_print(1, 'Make sure to specify the -m <input mapfile.xml>')
     usage(sys.argv[0])
     sys.exit(1)
 
@@ -1036,14 +1052,12 @@ if __name__ == "__main__":
   else:
       mapping['width'],mapping['height'] = 600, 400
 
-  mapfile, image = mapping['m'], mapping['o']
-
   def main():
     """
     Utility function called when run from the command line.
     Will initiate a map, then build, render, and open the resulting image.
     """
-    nik_map = Map( mapfile, image,
+    nik_map = Map( mapping['m'], image=get('o'),
                       format=get('i'), bbox_geographic=get('e'), zoom_to=get('zoomto'), zoom_to_radius=get('zoomrad'),
                       zoom_to_layer=get('zoomlyr'), bbox_projected=get('r'), expand=get('expand'), width=get('width'),
                       height=get('height'), srs=get('p'), layers=get('l'), re_render_times=get('c'),
@@ -1054,11 +1068,14 @@ if __name__ == "__main__":
                       )
                       
     nik_map.build()
-    if has('noopen'):
-      nik_map.render()
+    if has('o'):
+      if has('noopen'):
+        nik_map.render_file()
+      else:
+        nik_map.render_file()
+        nik_map.open()
     else:
-      nik_map.render()
-      nik_map.open()
+      print nik_map.stream()
 
   if has('profile'):
    import cProfile
