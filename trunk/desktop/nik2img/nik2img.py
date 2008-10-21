@@ -170,7 +170,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
         """
         ----
 
@@ -185,12 +185,21 @@ class Map(object):
         --> See the commandline usage
         
         Usage:
+        
+        To save a map to the filesystem and open it with the default viewer:
         >>> from nik2img import Map
-        >>> m = Map('world_styles.xml','map.png')
-        >>> m.test()
-        >>> m.build()
-        >>> m.render_file()
-        >>> m.open()
+        >>> file = Map('/path/to/mapfile.xml','map.png')
+        >>> file.open()
+        
+        To stream an image to a web browser:
+        >>> from nik2img import Map
+        >>> content = Map('/path/to/mapfile.xml')
+        >>> image = content.stream()
+        >>> print "Content-Type: %s" % content.mime
+        >>> print "Content-Length: %d" % len(image)
+        >>> print '' 
+        >>> print image
+
 
         ----
         """
@@ -227,6 +236,7 @@ class Map(object):
         self.dry_run = dry_run
         self.verbose = verbose
         self.debug = debug
+        self.mime = None
         
         # Non argument class attributes
         self.TIMING_STARTED = False
@@ -236,6 +246,8 @@ class Map(object):
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
         self.START = None
         self.TESTS_RUN = False
+        self.BUILT = False
+        self.RENDERED = False
         
         # collect mapnik objects
         self.mapnik_map = None
@@ -479,7 +491,9 @@ class Map(object):
       """
       if verbose: self.verbose = True
        
-      self.format = self.format.lower().replace('image/','')      
+      self.format = self.format.lower().replace('image/','')
+      self.mime = 'image/%s' % self.format.replace('256','')
+    
       # do some validation and special handling for a few arguments
       if not self.max_resolution:
         self.max_resolution = 1.0
@@ -803,6 +817,8 @@ class Map(object):
         """
         Routine to render the output image(s) for all requested formats and resolutions.
         """
+        if not self.BUILT:
+          self.build()
         if not self.image:
           output_error("Image output name not defined.")
         else:
@@ -845,6 +861,8 @@ class Map(object):
         """
         Routine to render the an image to a string
         """
+        if not self.BUILT:
+          self.build()
         im = mapnik.Image(self.width,self.height)
         mapnik.render(self.mapnik_map,im)
         return im.tostring(self.format)
@@ -854,24 +872,26 @@ class Map(object):
     # ===============================================    
     
     def open(self, method='Desktop', app=None):
-      """
-      Routine to open the rendered image or folder of images from the filesystem.
-      """
-      if not method == 'Desktop':
-        output_error("no other method supported at this time")
-      else:
-        import platform
-        if os.name == 'nt':
-          os.system('start %s' % self.image)
-        elif platform.uname()[0] == 'Linux':
-          # TODO figure out how to open a folder on linux
-          if app:
-            os.system('%s %s' % (app, self.image))
-          else:
-            os.system('gthumb %s' % self.image) # other apps to try?
-        elif platform.uname()[0] == 'Darwin':
-          os.system('open %s' % self.image)
-        self.output_message("Completed, opening '%s' <%s'" %   (self.image, color_text(3, "%s" % make_line('=',55)),))
+        """
+        Routine to open the rendered image or folder of images from the filesystem.
+        """
+        if not self.RENDERED:
+          self.render_file()
+        if not method == 'Desktop':
+          output_error("no other method supported at this time")
+        else:
+          import platform
+          if os.name == 'nt':
+            os.system('start %s' % self.image)
+          elif platform.uname()[0] == 'Linux':
+            # TODO figure out how to open a folder on linux
+            if app:
+              os.system('%s %s' % (app, self.image))
+            else:
+              os.system('gthumb %s' % self.image) # other apps to try?
+          elif platform.uname()[0] == 'Darwin':
+            os.system('open %s' % self.image)
+          self.output_message("Completed, opening '%s' <%s'" %   (self.image, color_text(3, "%s" % make_line('=',55)),))
 
 
 # =============================================================================
@@ -1066,13 +1086,10 @@ if __name__ == "__main__":
                       no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
                       debug=has('debug'),
                       )
-                      
-    nik_map.build()
     if has('o'):
       if has('noopen'):
         nik_map.render_file()
       else:
-        nik_map.render_file()
         nik_map.open()
     else:
       print nik_map.stream()
