@@ -2,28 +2,28 @@
 <!DOCTYPE Map>
 
 <!-- Create mapnik map with this command: -->
-<!-- nik2img.py -m bench.xml -o test.png -s 400,300 -i png256 -->
+<!-- nik2img.py -m bench.xml -o test.png -s 400,300 -v-->
 
 <Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
 
   <Style name="states_styles">
   
     <Rule name="less than 2M">
-      <Filter>[PERSONS] &gt; 2000000</Filter>
+      <Filter>[pop] &lt; 2000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(77,255,77)</CssParameter>
       </PolygonSymbolizer>
     </Rule>
 
     <Rule name="between 2M and 4M">
-      <Filter>[PERSONS] &gt; 2000000 and [PERSONS] &lt; 4000000</Filter>
+      <Filter>[pop] &gt; 2000000 and [pop] &lt; 4000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(255,77,77)</CssParameter>
       </PolygonSymbolizer>
     </Rule>
 
     <Rule name="more than 4M">
-      <Filter>[PERSONS] &gt; 4000000</Filter>
+      <Filter>[pop] &gt; 4000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(77,77,255)</CssParameter>
       </PolygonSymbolizer>
@@ -42,19 +42,17 @@
 
   <Style name="states_labels">
     <Rule>
-      <TextSymbolizer name="STATE_ABBR" face_name="DejaVu Sans Book" size="11" fill="black" halo_fill= "#DFDBE3" halo_radius="1" wrap_width="20" spacing="5" allow_overlap="false" avoid_edges="false" min_distance="10"/>
+      <TextSymbolizer name="STATE_ABBR" face_name="DejaVu Sans Book" halo_radius="1" size="11" fill="black" />
     </Rule>
   </Style>
-
-  <!-- STATE_POLYGONS -->
+ 
   <Layer name="states" srs="+init=epsg:4326">
     <StyleName>states_styles</StyleName>
     <StyleName>states_outlines</StyleName>
     <StyleName>states_labels</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">../sample_data/states</Parameter>
-      <Parameter name="title">"Distribution of population in USA, polygons"</Parameter>
+      <Parameter name="file">states</Parameter>
     </Datasource>
   </Layer>
 
