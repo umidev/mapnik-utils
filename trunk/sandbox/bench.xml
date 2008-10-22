@@ -53,7 +53,7 @@
     <StyleName>states_labels</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">data/states</Parameter>
+      <Parameter name="file">../sample_data/states</Parameter>
       <Parameter name="title">"Distribution of population in USA, polygons"</Parameter>
     </Datasource>
   </Layer>

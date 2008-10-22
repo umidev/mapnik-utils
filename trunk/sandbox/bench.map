@@ -3,7 +3,7 @@ MAP
   IMAGETYPE      PNG
   EXTENT         -180 -90 180 90
   SIZE           400 300
-  SHAPEPATH      "./data"
+  SHAPEPATH      "../sample_data/"
   IMAGECOLOR     255 255 255
   FONTSET        "./fonts/fonts.list"
   
