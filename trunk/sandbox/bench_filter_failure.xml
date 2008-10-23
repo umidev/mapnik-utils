@@ -52,7 +52,7 @@
     <StyleName>states_labels</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">states_working</Parameter>
+      <Parameter name="file">states</Parameter>
     </Datasource>
   </Layer>
 
