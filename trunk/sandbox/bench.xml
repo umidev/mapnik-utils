@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE Map>
-
-<!-- Create mapnik map with this command: -->
-<!-- nik2img.py -m bench.xml -o test.png -s 400,300 -v-->
+<!DOCTYPE Map[
+    <!ENTITY host "localhost">
+    <!ENTITY port "5432">
+    <!ENTITY user "postgres">
+    <!ENTITY password "">
+    <!ENTITY dbname "foss4g2008">
+    <!ENTITY estimate_extent "false">
+]>
 
 <Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
 
@@ -45,8 +49,66 @@
       <TextSymbolizer name="STATE_ABBR" face_name="DejaVu Sans Book" halo_radius="1" size="11" fill="black" />
     </Rule>
   </Style>
- 
-  <Layer name="states" srs="+init=epsg:4326">
+
+
+  <Style name="tiger_styles">
+    <Rule>
+      <LineSymbolizer>
+        <CssParameter name="stroke">black</CssParameter>
+        <CssParameter name="stroke-width">.5</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="raster_styles">
+    <Rule>
+      <RasterSymbolizer />
+    </Rule>
+  </Style>
+
+  <!-- Tiger texas, shapefile, full roads (1M lines) --> 
+  <Layer name="tiger_shp" srs="+init=epsg:4326" status="off">
+    <StyleName>tiger_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">data/tiger_shp</Parameter>
+    </Datasource>
+  </Layer>
+  
+  <!-- Tiger texas, postgis, full roads (1M lines) -->
+  <Layer name="tiger_pg" srs="+init=epsg:4326" status="off">
+    <StyleName>tiger_styles</StyleName>
+      <Datasource>
+          <Parameter name="type">postgis</Parameter>
+          <Parameter name="host">&host;</Parameter>
+          <Parameter name="port">&port;</Parameter>
+          <Parameter name="user">&user;</Parameter>
+          <Parameter name="password">&password;</Parameter>
+          <Parameter name="dbname">&dbname;</Parameter>
+          <Parameter name="estimate_extent">false</Parameter>
+          <Parameter name="extent">-106.64395234549875 25.841083405399676 -93.51951316494875 36.50068992305937</Parameter>
+          <Parameter name="table">tiger_pg</Parameter>
+      </Datasource>
+  </Layer>
+
+  <!-- Tiger texas, postgis, full roads (1M lines) -->
+  <Layer name="states_pg" srs="+init=epsg:4326" status="off">
+    <StyleName>states_styles</StyleName>
+    <StyleName>states_outlines</StyleName>
+    <StyleName>states_labels</StyleName>
+      <Datasource>
+          <Parameter name="type">postgis</Parameter>
+          <Parameter name="host">&host;</Parameter>
+          <Parameter name="port">&port;</Parameter>
+          <Parameter name="user">&user;</Parameter>
+          <Parameter name="password">&password;</Parameter>
+          <Parameter name="dbname">&dbname;</Parameter>
+          <Parameter name="estimate_extent">true</Parameter>
+          <Parameter name="table">states_pg</Parameter>
+      </Datasource>
+  </Layer>
+
+  <Layer name="states" srs="+init=epsg:4326" status="off">
     <StyleName>states_styles</StyleName>
     <StyleName>states_outlines</StyleName>
     <StyleName>states_labels</StyleName>
@@ -56,4 +118,44 @@
     </Datasource>
   </Layer>
 
+  <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
+  <Layer name="merano" srs="+init=epsg:4326" status="on">
+    <StyleName>raster_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data/merano_jptov.tiff</Parameter>
+    </Datasource>
+  </Layer>
+
+
+  <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
+  <Layer name="merano2" srs="+init=epsg:4326" status="on">
+    <StyleName>raster_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data/merano.tiff</Parameter>
+    </Datasource>
+  </Layer>
+
+  <!-- Landsat MrSid layer  "193899.75 4984863.625 806108.25 5543948.125" -->
+  <!--
+  <Layer name="N-32-45_2000" srs="+init=epsg:4326" status="off">
+    <StyleName>raster_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data/N-32-45_2000.sid</Parameter>
+    </Datasource>
+  </Layer>
+  -->
+  
+  <!-- MrSid layer  "160576.125 -3875914.625 839403.375 -3317784.875" -->
+  <!--
+  <Layer name="S-34-30_2000" srs="+init=epsg:4326" status="off">
+    <StyleName>raster_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="file">data/S-34-30_2000.sid</Parameter>
+    </Datasource>
+  </Layer>
+  -->
 </Map>
