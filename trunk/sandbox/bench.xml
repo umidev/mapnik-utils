@@ -5,34 +5,50 @@
     <!ENTITY user "postgres">
     <!ENTITY password "">
     <!ENTITY dbname "foss4g2008">
-    <!ENTITY estimate_extent "false">
 ]>
 
 <Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
 
-  <Style name="states_styles">
-  
+  <Style name="states_shp_styles">
     <Rule name="less than 2M">
       <Filter>[PERSONS] &lt; 2000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(77,255,77)</CssParameter>
       </PolygonSymbolizer>
     </Rule>
-
     <Rule name="between 2M and 4M">
       <Filter>[PERSONS] &gt; 2000000 and [PERSONS] &lt; 4000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(255,77,77)</CssParameter>
       </PolygonSymbolizer>
     </Rule>
-
     <Rule name="more than 4M">
       <Filter>[PERSONS] &gt; 4000000</Filter>
       <PolygonSymbolizer>
         <CssParameter name="fill">rgb(77,77,255)</CssParameter>
       </PolygonSymbolizer>
     </Rule>
+  </Style>
 
+  <Style name="states_pg_styles">
+    <Rule name="less than 2M">
+      <Filter>[persons] &lt; 2000000</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">rgb(77,255,77)</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule name="between 2M and 4M">
+      <Filter>[persons] &gt; 2000000 and [persons] &lt; 4000000</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">rgb(255,77,77)</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
+    <Rule name="more than 4M">
+      <Filter>[persons] &gt; 4000000</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">rgb(77,77,255)</CssParameter>
+      </PolygonSymbolizer>
+    </Rule>
   </Style>
 
   <Style name="states_outlines">
@@ -44,12 +60,17 @@
     </Rule>
   </Style>
 
-  <Style name="states_labels">
+  <Style name="states_shp_labels">
     <Rule>
       <TextSymbolizer name="STATE_ABBR" face_name="DejaVu Sans Book" halo_radius="1" size="11" fill="black" />
     </Rule>
   </Style>
 
+  <Style name="states_pg_labels">
+    <Rule>
+      <TextSymbolizer name="state_abbr" face_name="DejaVu Sans Book" halo_radius="1" size="11" fill="black" />
+    </Rule>
+  </Style>
 
   <Style name="tiger_styles">
     <Rule>
@@ -76,6 +97,24 @@
   </Layer>
   
   <!-- Tiger texas, postgis, full roads (1M lines) -->
+  <Layer name="states_pg" srs="+init=epsg:4326" status="off">
+    <StyleName>states_pg_styles</StyleName>
+    <StyleName>states_outlines</StyleName>
+    <StyleName>states_pg_labels</StyleName>
+      <Datasource>
+          <Parameter name="type">postgis</Parameter>
+          <Parameter name="host">&host;</Parameter>
+          <Parameter name="port">&port;</Parameter>
+          <Parameter name="user">&user;</Parameter>
+          <Parameter name="password">&password;</Parameter>
+          <Parameter name="dbname">&dbname;</Parameter>
+          <Parameter name="estimate_extent">false</Parameter>
+          <Parameter name="table">states_pg</Parameter>
+      </Datasource>
+  </Layer>
+  
+    
+  <!-- Tiger texas, postgis, full roads (1M lines) -->
   <Layer name="tiger_pg" srs="+init=epsg:4326" status="off">
     <StyleName>tiger_styles</StyleName>
       <Datasource>
@@ -90,28 +129,11 @@
           <Parameter name="table">tiger_pg</Parameter>
       </Datasource>
   </Layer>
-
-  <!-- Tiger texas, postgis, full roads (1M lines) -->
-  <Layer name="states_pg" srs="+init=epsg:4326" status="off">
-    <StyleName>states_styles</StyleName>
-    <StyleName>states_outlines</StyleName>
-    <StyleName>states_labels</StyleName>
-      <Datasource>
-          <Parameter name="type">postgis</Parameter>
-          <Parameter name="host">&host;</Parameter>
-          <Parameter name="port">&port;</Parameter>
-          <Parameter name="user">&user;</Parameter>
-          <Parameter name="password">&password;</Parameter>
-          <Parameter name="dbname">&dbname;</Parameter>
-          <Parameter name="estimate_extent">true</Parameter>
-          <Parameter name="table">states_pg</Parameter>
-      </Datasource>
-  </Layer>
-
+  
   <Layer name="states" srs="+init=epsg:4326" status="off">
-    <StyleName>states_styles</StyleName>
+    <StyleName>states_shp_styles</StyleName>
     <StyleName>states_outlines</StyleName>
-    <StyleName>states_labels</StyleName>
+    <StyleName>states_shp_labels</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
       <Parameter name="file">states_working</Parameter>
@@ -119,7 +141,7 @@
   </Layer>
 
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
-  <Layer name="merano" srs="+init=epsg:4326" status="on">
+  <Layer name="merano" srs="+init=epsg:4326" status="off">
     <StyleName>raster_styles</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -129,7 +151,7 @@
 
 
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
-  <Layer name="merano2" srs="+init=epsg:4326" status="on">
+  <Layer name="merano2" srs="+init=epsg:4326" status="off">
     <StyleName>raster_styles</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -138,8 +160,7 @@
   </Layer>
 
   <!-- Landsat MrSid layer  "193899.75 4984863.625 806108.25 5543948.125" -->
-  <!--
-  <Layer name="N-32-45_2000" srs="+init=epsg:4326" status="off">
+  <!--<Layer name="N-32-45_2000" srs="+init=epsg:4326" status="off">
     <StyleName>raster_styles</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -149,13 +170,12 @@
   -->
   
   <!-- MrSid layer  "160576.125 -3875914.625 839403.375 -3317784.875" -->
-  <!--
   <Layer name="S-34-30_2000" srs="+init=epsg:4326" status="off">
     <StyleName>raster_styles</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="file">data/S-34-30_2000.sid</Parameter>
+      <Parameter name="file">S-34-30_2000/S-34-30_2000.sid</Parameter>
     </Datasource>
   </Layer>
-  -->
+  
 </Map>
