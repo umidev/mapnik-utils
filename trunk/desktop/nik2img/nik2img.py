@@ -41,14 +41,12 @@ Todo:
   * turn usage help into a dictionary to be able to reuse
   * Add docstrings and code comments.
   * accept formats as list
-  * read xml into memory and memcache
   * change zoom levels to accept high and low
   * refactor all class methods to accept **kwargs
   * read format from file extension
   * set mapnik_object like layers and proj even if not changed
   * move mapnik and cairo imports into class or otherwise only imported once needed
   * create an --all-formats flag and do away with -i == 'all'
-  * Ability to render to images and pipe to stdout
   * Better url srs support/error checking
      sr_org_responses = {'text/xml': 'gml', 'text/proj4': 'proj4', 'application/proj4': 'proj4', 'application/x-proj4': 'proj4', 'application/x-ogcwkt': 'ogcwkt', } 
   * Set all tabs to 4 spaces
@@ -373,17 +371,40 @@ class Map(object):
         """
         mapfile_layers = m.layers
         map_envelope = m.envelope()
+        transformation_warning = True
         for layer_num in range(len(m.layers)-1, -1, -1):
+            check_intersects = True
             l = mapfile_layers[layer_num]
-            layer_envelope = l.envelope()
-            if layer_envelope.intersects(map_envelope):
-                self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
-                self.output_message("Center point of layer '%s' is %s" % (l.name, layer_envelope.center()),print_time=False)
-                self.output_message("Layer's minzoom = '%s' and maxzoom = '%s'"  % (l.minzoom, l.maxzoom) )
-            else:
-                self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
-                self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_envelope, map_envelope), warning=True)
+            layer_bbox = l.envelope()
+            layer_p = mapnik.Projection("%s" % l.srs)
+            map_p = mapnik.Projection("%s" % self.mapnik_map.srs)            
+            if map_p.geographic and layer_p.geographic:
+                pass # no need to reproject layer envelope
+            elif not map_p.geographic and layer_p.geographic:
+                layer_bbox = mapnik.forward_(layer_bbox, map_p) # project/forward the layers envelope
+            elif map_p.geographic and not layer_p.geographic:
+                layer_bbox = mapnik.inverse_(layer_bbox, layer_p) # invert the layers envelope
+            elif not map_p.geographic and not layer_p.geographic:
+                if layer_p.params() == map_p.params():
+                  pass # no need to reproject layer envelope
+                else:
+                  check_intersects = False
+                  if transformation_warning:
+                    self.output_message("Mapnik's python bindings do not support transformation between projected coordinates, see http://trac.mapnik.org/ticket/117",print_time=False,warning=True)
+                    transformation_warning = False
+                  self.output_message("Unable to reliably check for intersection of layer '%s' with map envelope..." % l.name,warning=True)
+            if check_intersects:
+                if layer_bbox.intersects(map_envelope):
+                    self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
+                    self.output_message("Center point of layer '%s' is %s" % (l.name, layer_bbox.center()),print_time=False)
+                    self.output_message("Layer's minzoom = '%s' and maxzoom = '%s'"  % (l.minzoom, l.maxzoom) )
+                else:
+                    self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
+                    self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope), warning=True)
 
+
+                
+                
     def get_layer_extent_and_srs(self, m, layer_name):
         """
         Fetch the extent for a given layer by name.
@@ -624,8 +645,12 @@ class Map(object):
             else:
               found_layer = True
               self.output_message("Found layer '%s' out of %s total in mapfile" % (l.name,len(self.mapnik_map.layers)) )
+              if not l.active:
+                l.active = True
+                self.output_message("Made requested layer active") 
               self.mapnik_objects['self.mapnik_map.layers[%s]' % layer_num] = l
               self.mapnik_layers[layer_num] = self.mapnik_map.layers[layer_num]
+              # should control this in debug settings...
               for group in l.datasource.describe().split('\n\n'):
                 for item in group.split('\n'):
                   if item.find('name')> -1:
@@ -635,13 +660,15 @@ class Map(object):
               self.output_message("'%s' Datasource:\n %s\n" % (l.name, info))
         if not found_layer:
             if len(layers) == 1:
-              output_error("Layer '%s' not found" % layers[0])
+              all = ', '.join([l.name for l in mapfile_layers])
+              print all
+              output_error("Layer '%s' not found in available layers: %s" % (layers[0], all ))
             else:
               output_error("No requested layers found")    
     
       # TODO: accept <OSGEO:code>
       if self.srs:
-        self.output_message('Reprojecting map output')
+        self.output_message('Custom map projection requested')
         if self.srs == "epsg:900913" or self.srs == "epsg:3785":
           self.output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
           google_proj4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
@@ -665,6 +692,10 @@ class Map(object):
           self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
         else:
           output_error("Could not parse the supplied projection information")
+        # attempt to catch a mapnik 'proj_init_error' when espg files are not found
+        if not mapnik_proj.params():
+          output_error("Requested projection could not be initialized: confirm that mapnik was built with proj support and proj espg files are installed")
+        self.output_message("Old map projection: '%s' | New map projection: '%s'" % (self.mapnik_map.srs, mapnik_proj.params()) )
         self.mapnik_map.srs = mapnik_proj.params()
         self.mapnik_objects['mapnik_proj'] = mapnik_proj
     
@@ -697,12 +728,11 @@ class Map(object):
           p = mapnik.Projection("%s" % self.mapnik_map.srs)
           if not p.geographic:
             self.mapnik_objects['bbox'] = bbox
-            self.output_message('Map and bbox in projected coordinates (hopefully the srs matches), newly assigned BBOX left unprojected.')
+            self.output_message('Map and bbox in projected coordinates: newly assigned BBOX left untouched',print_time=False)
+            self.output_message('Note: bbox must match mapfile projection',warning=True,print_time=False)            
             self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
-          elif self.srs == 'epsg:4326':
-            pass #geographic coordinates fed to wrong parameter.
           else:
-            self.output_message('Map is in geographic coordinates and you supplied projected coordinates', warning=True)
+            self.output_message('Map is in geographic coordinates and you supplied projected coordinates (reprojecting/inversing to lon/lat...)', warning=True)
             bbox = mapnik.inverse_(bbox, p)
             self.mapnik_objects['bbox'] = bbox
         except Exception, E:
@@ -711,10 +741,11 @@ class Map(object):
         # Finally, zoom map to bbox
         self.mapnik_map.zoom_to_box(bbox)
         self.m_bbox = self.mapnik_map.envelope()
-        self.output_message('Map bbox (after zooming to your input) is now: %s' % self.m_bbox)
+        self.output_message('Map bbox (after zooming to your input) is now: %s' % self.m_bbox,print_time=False)
         self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))           
         self.mapnik_objects['self.m_bbox'] = self.m_bbox
       
+      # http://trac.mapnik.org/browser/trunk/src/map.cpp#L245
       elif self.zoom_to:
         try:
           lon,lat,level = map(float, self.zoom_to.split(","))
@@ -738,7 +769,12 @@ class Map(object):
             self.mapnik_map.zoom(level)
             self.m_bbox = self.mapnik_map.envelope()
             self.mapnik_objects['self.m_bbox'] = self.m_bbox
-            self.output_message('BBOX resulting from lon,lat,level of %s,%s,%s is: %s' % (lon,lat,level,self.m_bbox))
+            self.output_message('BBOX resulting from lon,lat,level of %s,%s,%s is: %s' % (lon,lat,level,self.m_bbox),print_time=False)
+            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))
+            #print 'scale: %s' % self.mapnik_map.scale()
+            #print 'fraction: 1/%s' % int(1/self.mapnik_map.scale())
+            #sd = self.mapnik_map.scale()/mapnik.scale_denominator(self.mapnik_map,True)
+            #print 'scale/denom: %s' % sd
           except Exception, E:
             output_error("Problem setting lon,lat,level to use for custom BBOX",E)
 
@@ -1077,15 +1113,15 @@ if __name__ == "__main__":
     Utility function called when run from the command line.
     Will initiate a map, then build, render, and open the resulting image.
     """
-    nik_map = Map( mapping['m'], image=get('o'),
-                      format=get('i'), bbox_geographic=get('e'), zoom_to=get('zoomto'), zoom_to_radius=get('zoomrad'),
-                      zoom_to_layer=get('zoomlyr'), bbox_projected=get('r'), expand=get('expand'), width=get('width'),
-                      height=get('height'), srs=get('p'), layers=get('l'), re_render_times=get('c'),
-                      post_map_pause=get('t'), post_step_pause=get('pause'), trace_steps=get('pdb'),
-                      levels=get('levels'), resolutions=get('resolutions'), find_and_replace=get('d'), 
-                      no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-                      debug=has('debug'),
-                      )
+    nik_map = Map( mapping['m'],
+        image=get('o'), format=get('i'), width=get('width'), height=get('height'),
+        bbox_geographic=get('e'), bbox_projected=get('r'), zoom_to=get('zoomto'),
+        zoom_to_radius=get('zoomrad'), zoom_to_layer=get('zoomlyr'), srs=get('p'),
+        layers=get('l'), expand=get('expand'), re_render_times=get('c'), post_map_pause=get('t'),
+        post_step_pause=get('pause'), trace_steps=get('pdb'), levels=get('levels'), resolutions=get('resolutions'), 
+        find_and_replace=get('d'), no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
+        debug=has('debug'),
+        )
     if has('o'):
       if has('noopen'):
         nik_map.render_file()
