@@ -5,6 +5,16 @@
     <!ENTITY user "postgres">
     <!ENTITY password "">
     <!ENTITY dbname "foss4g2008">
+    
+    <!ENTITY states_shp "states_working">
+    <!ENTITY tiger_shp "data/tiger_shp">
+    <!ENTITY states_pg "states_pg">
+    <!ENTITY tiger_pg "tiger_pg">
+    <!ENTITY merano "data/merano.tiff">
+    <!ENTITY merano2 "data/merano_jptov.tiff">
+    <!ENTITY n_sid "S-34-30_2000/S-34-30_2000.sid">
+    <!ENTITY s_sid "S-34-30_2000/S-34-30_2000.sid">
+    
 ]>
 
 <Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
@@ -81,22 +91,22 @@
     </Rule>
   </Style>
 
-  <Style name="raster_styles">
+  <Style name="raster_style">
     <Rule>
       <RasterSymbolizer />
     </Rule>
   </Style>
 
-  <!-- Tiger texas, shapefile, full roads (1M lines) --> 
-  <Layer name="tiger_shp" srs="+init=epsg:4326" status="off">
-    <StyleName>tiger_styles</StyleName>
+  <Layer name="states" srs="+init=epsg:4326" status="off">
+    <StyleName>states_shp_styles</StyleName>
+    <StyleName>states_outlines</StyleName>
+    <StyleName>states_shp_labels</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">data/tiger_shp</Parameter>
+      <Parameter name="file">&states_shp;</Parameter>
     </Datasource>
   </Layer>
-  
-  <!-- Tiger texas, postgis, full roads (1M lines) -->
+
   <Layer name="states_pg" srs="+init=epsg:4326" status="off">
     <StyleName>states_pg_styles</StyleName>
     <StyleName>states_outlines</StyleName>
@@ -109,11 +119,19 @@
           <Parameter name="password">&password;</Parameter>
           <Parameter name="dbname">&dbname;</Parameter>
           <Parameter name="estimate_extent">false</Parameter>
-          <Parameter name="table">states_pg</Parameter>
+          <Parameter name="table">&states_pg;</Parameter>
       </Datasource>
   </Layer>
-  
-    
+
+  <!-- Tiger texas, shapefile, full roads (1M lines) --> 
+  <Layer name="tiger_shp" srs="+init=epsg:4326" status="off">
+    <StyleName>tiger_styles</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">&tiger_shp;</Parameter>
+    </Datasource>
+  </Layer>
+      
   <!-- Tiger texas, postgis, full roads (1M lines) -->
   <Layer name="tiger_pg" srs="+init=epsg:4326" status="off">
     <StyleName>tiger_styles</StyleName>
@@ -126,55 +144,45 @@
           <Parameter name="dbname">&dbname;</Parameter>
           <Parameter name="estimate_extent">false</Parameter>
           <Parameter name="extent">-106.64395234549875 25.841083405399676 -93.51951316494875 36.50068992305937</Parameter>
-          <Parameter name="table">tiger_pg</Parameter>
+          <Parameter name="table">&tiger_pg;</Parameter>
       </Datasource>
   </Layer>
   
-  <Layer name="states" srs="+init=epsg:4326" status="off">
-    <StyleName>states_shp_styles</StyleName>
-    <StyleName>states_outlines</StyleName>
-    <StyleName>states_shp_labels</StyleName>
-    <Datasource>
-      <Parameter name="type">shape</Parameter>
-      <Parameter name="file">states_working</Parameter>
-    </Datasource>
-  </Layer>
-
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
   <Layer name="merano" srs="+init=epsg:4326" status="off">
-    <StyleName>raster_styles</StyleName>
+    <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="file">data/merano_jptov.tiff</Parameter>
+      <Parameter name="file">&merano;</Parameter>
     </Datasource>
   </Layer>
 
 
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
   <Layer name="merano2" srs="+init=epsg:4326" status="off">
-    <StyleName>raster_styles</StyleName>
+    <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="file">data/merano.tiff</Parameter>
+      <Parameter name="file">&merano2;</Parameter>
     </Datasource>
   </Layer>
 
   <!-- Landsat MrSid layer  "193899.75 4984863.625 806108.25 5543948.125" -->
   <!--<Layer name="N-32-45_2000" srs="+init=epsg:4326" status="off">
-    <StyleName>raster_styles</StyleName>
+    <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="file">data/N-32-45_2000.sid</Parameter>
+      <Parameter name="file">&n_sid;</Parameter>
     </Datasource>
   </Layer>
   -->
   
   <!-- MrSid layer  "160576.125 -3875914.625 839403.375 -3317784.875" -->
   <Layer name="S-34-30_2000" srs="+init=epsg:4326" status="off">
-    <StyleName>raster_styles</StyleName>
+    <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="file">S-34-30_2000/S-34-30_2000.sid</Parameter>
+      <Parameter name="file">&s_sid;</Parameter>
     </Datasource>
   </Layer>
   
