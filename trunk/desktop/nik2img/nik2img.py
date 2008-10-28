@@ -452,9 +452,9 @@ class Map(object):
         """
         scale = self.mapnik_map.scale()
         extent= self.mapnik_map.envelope()
-        upper_left_x_center = extent.minx+(scale/2)
-        upper_left_y_center = extent.maxy+(scale/2)
-        wld_string = '%f\n%s\n%s\n-%f\n%f\n%f\n' % (scale,y_rotation,x_rotation,scale,upper_left_x_center,upper_left_y_center)
+        upper_left_x_center = extent.minx-(scale/2.0)
+        upper_left_y_center = extent.maxy-(scale/2.0)
+        wld_string = '%s\n%s\n%s\n-%s\n%s\n%s\n' % (scale,y_rotation,x_rotation,scale,upper_left_x_center,upper_left_y_center)
         basename = path.split('.')[0]
         f_ptr = '%s.%s' % (basename, self.world_file)
         wld_file = open(f_ptr, 'w')
@@ -760,7 +760,7 @@ class Map(object):
           if not p.geographic:
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map and bbox in projected coordinates: newly assigned BBOX left untouched',print_time=False)
-            self.output_message('Note: bbox must match mapfile projection',warning=True,print_time=False)            
+            self.output_message('BBOX must match mapfile projection',warning=True,print_time=False)            
             self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
           else:
             self.output_message('Map is in geographic coordinates and you supplied projected coordinates (reprojecting/inversing to lon/lat...)', warning=True)
