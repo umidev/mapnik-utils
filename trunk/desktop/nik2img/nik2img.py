@@ -168,7 +168,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None):
         """
         ----
 
@@ -234,6 +234,7 @@ class Map(object):
         self.dry_run = dry_run
         self.verbose = verbose
         self.debug = debug
+        self.world_file = world_file
         self.mime = None
         
         # Non argument class attributes
@@ -353,7 +354,7 @@ class Map(object):
   # ================================================
   # Functions involving mapnik objects
   # ================================================
-
+        
     def mapfile_validate(self, m):
         """
         Routine to check for the existance of each datasource
@@ -396,15 +397,13 @@ class Map(object):
             if check_intersects:
                 if layer_bbox.intersects(map_envelope):
                     self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
+                    self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope),print_time=False)
                     self.output_message("Center point of layer '%s' is %s" % (l.name, layer_bbox.center()),print_time=False)
                     self.output_message("Layer's minzoom = '%s' and maxzoom = '%s'"  % (l.minzoom, l.maxzoom) )
                 else:
                     self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
                     self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope), warning=True)
 
-
-                
-                
     def get_layer_extent_and_srs(self, m, layer_name):
         """
         Fetch the extent for a given layer by name.
@@ -435,6 +434,34 @@ class Map(object):
         elif args[2] in self.AGG_FORMATS:
             self.render_agg(*args)
 
+    def write_world_file(self, path, x_rotation=0.0, y_rotation=0.0):
+        """
+        Outputs an ESRI world file that can be used to load the resulting
+        image as a georeferenced raster in a variety of gis viewers.
+        
+        A world file file is a plain ASCII text file consisting of six values separated
+        by newlines. The format is: 
+            pixel X size
+            rotation about the Y axis (usually 0.0)
+            rotation about the X axis (usually 0.0)
+            negative pixel Y size
+            X coordinate of upper left pixel center
+            Y coordinate of upper left pixel center
+         
+        Info from: http://gdal.osgeo.org/frmt_various.html#WLD
+        """
+        scale = self.mapnik_map.scale()
+        extent= self.mapnik_map.envelope()
+        upper_left_x_center = extent.minx+(scale/2)
+        upper_left_y_center = extent.maxy+(scale/2)
+        wld_string = '%f\n%s\n%s\n-%f\n%f\n%f\n' % (scale,y_rotation,x_rotation,scale,upper_left_x_center,upper_left_y_center)
+        basename = path.split('.')[0]
+        f_ptr = '%s.%s' % (basename, self.world_file)
+        wld_file = open(f_ptr, 'w')
+        wld_file.write(wld_string)
+        wld_file.close()
+        self.output_message('World file output written to %s:' % (f_ptr))
+
     def render_cairo(self,*args):
         """
         Routine to render the requested Cairo format.
@@ -463,6 +490,8 @@ class Map(object):
               surface.write_to_png(args[1])
             surface.finish()
             self.output_message("Map rendered to '%s'" % args[1])
+        if self.world_file:
+            self.write_world_file(args[1])
 
     def call_CAIRO_FORMATS(self, basename):
         """
@@ -490,6 +519,8 @@ class Map(object):
         else:
           mapnik.render_to_file(*args)
           self.output_message("Map rendered to '%s'" % args[1])
+        if self.world_file:
+          self.write_world_file(args[1])
         
     def call_AGG_FORMATS(self, basename):
         """
@@ -553,7 +584,7 @@ class Map(object):
           self.output_message('Quiet mode requested but disabled as it is not possible (nor smart) when using PDB', warning=True)
     
       if self.quiet:
-        self.output_message('Quite mode requested: no output (stdout) or errors(sterr) will be printed')
+        self.verbose = False
         errors = sys.__stderr__.fileno()
         os.close(errors) # suppress the errors, mostly mapnik debug but unfortunately also tracebacks
         printed = sys.__stdout__.fileno() # suppress all stdout (includes mapnik XML printing)
@@ -959,19 +990,17 @@ if __name__ == "__main__":
     print "-d\t\t" + "[None]\t\t" + "Find and replace of mapfile text strings; syntax: find_this:replace_this."
     print "--pause" + "\t\t[0]\t\t" + "Pause n seconds after each step%s." % color_text(4,'*')
     print "--pdb\t\t" + "[none]\t\t" + "Set a python debugger trace at step n or steps n,n,n%s." % color_text(4,'*')
-
-    # these apis are going to change so restricting for now...
-    #print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
-    #print "--zoomto\t[0]\t\tCenter the map at a given lon/lat coordinate and an optional zoom level%s." % color_text(4,'*')
-    #print "--zoomrad\t[0]\t\tZoom to an extent of the radius (in map units) around a given lon/lat coordinate%s." % color_text(4,'*')
-    #print "--zoomlyr\t[0]\t\tZoom to the extent of a given layer%s." % color_text(4,'*')
-    #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
-    #print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
-    #print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
-    #print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
-    #print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
-
-    print "--noopen\t" + "[opens]\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
+    print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
+    print "--zoomto\t[0]\t\tCenter the map at a given lon/lat coordinate and an optional zoom level%s." % color_text(4,'*')
+    print "--zoomrad\t[0]\t\tZoom to an extent of the radius (in map units) around a given lon/lat coordinate%s." % color_text(4,'*')
+    print "--zoomlyr\t[0]\t\tZoom to the extent of a given layer%s." % color_text(4,'*')
+    print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
+    print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
+    print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
+    print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
+    print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
+    print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie wld)%s." % color_text(4,'*')
+    print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
     
@@ -993,7 +1022,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile'])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1087,9 +1116,12 @@ if __name__ == "__main__":
     elif option == "--pdb":
         mapping['pdb'] = argument
 
+    elif option == "--worldfile":
+        mapping['worldfile'] = argument
+
     elif option == "--profile":
         mapping['profile'] = True
-        
+
     elif option == "-h":
         usage(sys.argv[0])
         sys.exit(1)
@@ -1120,7 +1152,7 @@ if __name__ == "__main__":
         layers=get('l'), expand=get('expand'), re_render_times=get('c'), post_map_pause=get('t'),
         post_step_pause=get('pause'), trace_steps=get('pdb'), levels=get('levels'), resolutions=get('resolutions'), 
         find_and_replace=get('d'), no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-        debug=has('debug'),
+        debug=has('debug'), world_file=get('worldfile'),
         )
     if has('o'):
       if has('noopen'):
