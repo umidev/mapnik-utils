@@ -31,7 +31,6 @@ Limitations:
   Paths to file system datasources in the XML files loaded will be relative to your dir.
 
 Wishlist:
-  * Cascadenik integration | ability to read in css.mml or css.mss.
   * Allow for setting the path to datasources (will need patch to mapnik core)
   * Support for loading in python styles module/rules
   
@@ -74,6 +73,7 @@ import getopt
 import re
 import time
 import timeit
+import tempfile
 
 try:
     import mapnik
@@ -650,11 +650,19 @@ class Map(object):
         else:
           output_error("Zoom level number must be an integer")
       
+      if self.mapfile.endswith('.py'):
+        output_error("Support for loading python styles planned but not supported currently")
+
       if self.mapfile.endswith('.mml'):
         try:
           import cascadenik
         except ImportError, E:
-          output_error("%s cannot be used since cascadenik not found:\n %s" % (self.mapfile,E))
+          output_error("%s" % E)
+        xml_mapfile = cascadenik.compile(self.mapfile)
+        tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
+        tmp.write(xml_mapfile)
+        tmp.flush()
+        self.mapfile = tmp.name
           
       if not self.find_and_replace:
         self.output_message('Attempting to load %s...' % self.M_TYPE)
@@ -671,7 +679,6 @@ class Map(object):
         #  from xml.etree import ElementTree
         #except:
         #  print 'ElementTree needed for XML find and replace approach'
-        import tempfile
         find_replace_list = self.find_and_replace.split(':')
         find_this, replace_this = find_replace_list[0], find_replace_list[1]
         mapfile_string = open(self.mapfile).read().replace(find_this,replace_this)
