@@ -35,16 +35,11 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
-  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
-    mapnik.paths.fontscollectionpath
-    usr/local/lib/mapnik/fonts
   * create an --all-formats flag and do away with -i == 'all'
   * accept formats as list
   * turn usage help into a dictionary to be able to reuse
   * add alternative output mode for non-commandline usage
   * coerce all cl args to correct python types before sending to Map()
-  * refactor all class methods to accept **kwargs
-  * change zoom levels to accept high and low
   * set mapnik_object like layers and proj even if not changed
   * Better url srs support/error checking
      sr_org_responses = {'text/xml': 'gml', 'text/proj4': 'proj4', 'application/proj4': 'proj4', 'application/x-proj4': 'proj4', 'application/x-ogcwkt': 'ogcwkt', } 
@@ -166,13 +161,13 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False):
         """
         ----
 
-        Initialize a nik2img Map object either from the commandline or as a class import.
+        Initialize a nik2img Map object either from the commandline or as a module import.
         
-        Then build() and either provide an output image path and user render_file() or pipe the output of render_stream()
+        Then build() and either provide an output image path and use render_file() or pipe the output using render_stream()
         
         Required argument:
         --> mapfile\t string\t path to the mapnik xml file
@@ -182,14 +177,14 @@ class Map(object):
         
         Usage:
         
-        To save a map to the filesystem and open it with the default viewer:
+        To save a image to the filesystem and open it with the default viewer:
         >>> from nik2img import Map
         >>> file = Map('/path/to/mapfile.xml','map.png')
         >>> file.open()
         
         To stream an image to a web browser:
         >>> from nik2img import Map
-        >>> content = Map('/path/to/mapfile.xml')
+        >>> content = Map('/path/to/mapfile.xml',width=256,height=256)
         >>> image = content.stream()
         >>> print "Content-Type: %s" % content.mime
         >>> print "Content-Length: %d" % len(image)
@@ -235,6 +230,7 @@ class Map(object):
         self.world_file = world_file
         self.mime = None
         self.fonts = fonts
+        self.save_map = save_map
          
         # Non argument class attributes
         self.TIMING_STARTED = False
@@ -503,6 +499,8 @@ class Map(object):
             self.output_message("Map rendered to '%s'" % args[1])
         if self.world_file:
             self.write_world_file(args[1])
+        if self.save_map:
+          mapnik.save_map(self.mapnik_map,self.save_map)
 
     def call_CAIRO_FORMATS(self, basename):
         """
@@ -532,6 +530,8 @@ class Map(object):
           self.output_message("Map rendered to '%s'" % args[1])
         if self.world_file:
           self.write_world_file(args[1])
+        if self.save_map:
+          mapnik.save_map(self.mapnik_map,self.save_map)
         
     def call_AGG_FORMATS(self, basename):
         """
@@ -564,7 +564,7 @@ class Map(object):
           if engine.register_font(font):
             self.output_message("'%s' registered successfully" % font)
           else:
-            self.output_message("'%s' not found or able to be registered" % font,warning=True)
+            self.output_message("'%s' not found or able to be registered, try placing font in: '%s'" % (font,mapnik.paths.fontscollectionpath),warning=True)
             
       # do some validation and special handling for a few arguments
       if not self.max_resolution:
@@ -1048,6 +1048,7 @@ if __name__ == "__main__":
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie wld)%s." % color_text(4,'*')
     print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf fonts to register (ie '/Library/Fonts/Verdana.ttf')%s." % color_text(4,'*')
+    print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile with the specified name%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
@@ -1070,7 +1071,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1170,6 +1171,9 @@ if __name__ == "__main__":
     elif option == "--fonts":
         mapping['fonts'] = argument
 
+    elif option == "--savemap":
+        mapping['savemap'] = argument
+
     elif option == "--profile":
         mapping['profile'] = True
 
@@ -1203,7 +1207,7 @@ if __name__ == "__main__":
         layers=get('l'), expand=get('expand'), re_render_times=get('c'), post_map_pause=get('t'),
         post_step_pause=get('pause'), trace_steps=get('pdb'), levels=get('levels'), resolutions=get('resolutions'), 
         find_and_replace=get('d'), no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-        debug=has('debug'), world_file=get('worldfile'), fonts=get('fonts'),
+        debug=has('debug'), world_file=get('worldfile'), fonts=get('fonts'), save_map=get('savemap'),
         )
     if has('o'):
       if has('noopen'):
