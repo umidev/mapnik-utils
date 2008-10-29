@@ -36,6 +36,8 @@ Wishlist:
   
 Todo:
   * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
+    mapnik.paths.fontscollectionpath
+    usr/local/lib/mapnik/fonts
   * create an --all-formats flag and do away with -i == 'all'
   * accept formats as list
   * turn usage help into a dictionary to be able to reuse
@@ -88,7 +90,6 @@ except Exception, E:
   HAS_CAIRO = False
 
 no_color_global = False
-
 
 # ==========================================
 # Top Level Functions
@@ -165,7 +166,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None):
         """
         ----
 
@@ -233,7 +234,8 @@ class Map(object):
         self.debug = debug
         self.world_file = world_file
         self.mime = None
-        
+        self.fonts = fonts
+         
         # Non argument class attributes
         self.TIMING_STARTED = False
         self.STEP = 0
@@ -554,7 +556,16 @@ class Map(object):
        
       self.format = self.format.lower().replace('image/','')
       self.mime = 'image/%s' % self.format.replace('256','')
-    
+
+      if self.fonts:
+        self.fonts = self.fonts.split(',')  
+        engine = mapnik.FontEngine.instance()
+        for font in self.fonts:
+          if engine.register_font(font):
+            self.output_message("'%s' registered successfully" % font)
+          else:
+            self.output_message("'%s' not found or able to be registered" % font,warning=True)
+            
       # do some validation and special handling for a few arguments
       if not self.max_resolution:
         self.max_resolution = 1.0
@@ -1036,6 +1047,7 @@ if __name__ == "__main__":
     print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie wld)%s." % color_text(4,'*')
+    print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf fonts to register (ie '/Library/Fonts/Verdana.ttf')%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
@@ -1058,7 +1070,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1155,6 +1167,9 @@ if __name__ == "__main__":
     elif option == "--worldfile":
         mapping['worldfile'] = argument
 
+    elif option == "--fonts":
+        mapping['fonts'] = argument
+
     elif option == "--profile":
         mapping['profile'] = True
 
@@ -1188,7 +1203,7 @@ if __name__ == "__main__":
         layers=get('l'), expand=get('expand'), re_render_times=get('c'), post_map_pause=get('t'),
         post_step_pause=get('pause'), trace_steps=get('pdb'), levels=get('levels'), resolutions=get('resolutions'), 
         find_and_replace=get('d'), no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-        debug=has('debug'), world_file=get('worldfile'),
+        debug=has('debug'), world_file=get('worldfile'), fonts=get('fonts'),
         )
     if has('o'):
       if has('noopen'):
