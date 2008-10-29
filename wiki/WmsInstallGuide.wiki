@@ -59,12 +59,8 @@ sudo chmod -R g+rws /path/to/wms/
   * http://localhost/cgi-bin/mapnikwms.py?LAYERS=world&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX=-180.0000000000001,-90,119.46385052802589,209.463850528026&WIDTH=256&HEIGHT=256
   * Or use the url prefix 'http://localhost/mapnik/mapnikwms.py?' if you went with the fastcgi approach.
 
-You should see a small tile of the world.
+You should see a small tile of the world. If not check your apache logs.
 
 === Step 5 ===
 
  Open the `openlayers.html` (you will likely need to edit the base path in the html) to test your wms served into !OpenLayers
- 
-=== Step 6 ===
-
- Set up !TileCache
