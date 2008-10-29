@@ -713,11 +713,13 @@ class Map(object):
         for layer_num in range(len(self.mapnik_map.layers)-1, -1, -1):
             l = self.mapnik_map.layers[layer_num]
             if l.name not in layers:
-                del self.mapnik_map.layers[layer_num]
+                for sty in l.styles:
+                  self.mapnik_map.remove_style(sty) 
                 if l.active == True:
                   self.output_message("Removed previously ACTIVE layer '%s'" % l.name)
                 else:
                   self.output_message("Removed layer '%s'" % l.name)              
+                del self.mapnik_map.layers[layer_num]
             else:
               found_layer = True
               self.output_message("Found layer '%s' out of %s total in mapfile" % (l.name,len(self.mapnik_map.layers)) )
