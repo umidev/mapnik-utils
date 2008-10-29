@@ -36,22 +36,19 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
-  * extended help output
-  * turn all command line string args to integers before sending to Map()
-  * turn usage help into a dictionary to be able to reuse
-  * Add docstrings and code comments.
-  * accept formats as list
-  * change zoom levels to accept high and low
-  * refactor all class methods to accept **kwargs
-  * read format from file extension
-  * set mapnik_object like layers and proj even if not changed
-  * move mapnik and cairo imports into class or otherwise only imported once needed
+  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
   * create an --all-formats flag and do away with -i == 'all'
+  * accept formats as list
+  * turn usage help into a dictionary to be able to reuse
+  * add alternative output mode for non-commandline usage
+  * coerce all cl args to correct python types before sending to Map()
+  * refactor all class methods to accept **kwargs
+  * change zoom levels to accept high and low
+  * set mapnik_object like layers and proj even if not changed
   * Better url srs support/error checking
      sr_org_responses = {'text/xml': 'gml', 'text/proj4': 'proj4', 'application/proj4': 'proj4', 'application/x-proj4': 'proj4', 'application/x-ogcwkt': 'ogcwkt', } 
   * Set all tabs to 4 spaces
   * Add more mapfile statistics output.
-  * Add ability to load alternative fonts (perhaps do automatically if found in mapfile?)
 
 Remaining shp2img features:
   * Refactor debug to shp2img setting of debug type: graphics, zooms, times, mapfile, layers, all, etc.
@@ -240,6 +237,8 @@ class Map(object):
         # Non argument class attributes
         self.TIMING_STARTED = False
         self.STEP = 0
+        self.MAPFILE_TYPES = {'xml':'XML mapfile','mml':'Cascadenik Cascading Stylesheet', 'py':'Python Styles'}
+        self.M_TYPE = None
         self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg'}
         self.CAIRO_FILE_FORMATS = {'svg':'svg','pdf':'pdf','ps':'ps'}
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
@@ -362,9 +361,19 @@ class Map(object):
         """
         for layer in m.layers:
             if not layer.datasource:
-              self.output_message("Datasource not found for layer '%s': hint check permissions and if using a shapefile remove the .shp ext" % layer.name, warning=True)
-            if not layer.srs:
-              self.output_message('Layer has no projection, assumed to be WGS84 (epsg:4326)', warning=True)
+              self.output_message("Datasource not found for layer '%s' -  Hint: check permissions and if using a shapefile remove the .shp ext" % layer.name, warning=True)
+            else:
+              self.output_message("Datasource successfully found for layer '%s'" % layer.name)
+
+    def get_mapfile_type(self,m):
+      if m.endswith('xml'):
+        return self.MAPFILE_TYPES['xml']
+      elif m.endswith('mml'):
+        return self.MAPFILE_TYPES['mml']
+      elif self.mapfile.endswith('py'):
+        return self.MAPFILE_TYPES['py']
+      else:
+        return None
         
     def layers_in_extent(self, m):
         """
@@ -589,12 +598,21 @@ class Map(object):
         os.close(errors) # suppress the errors, mostly mapnik debug but unfortunately also tracebacks
         printed = sys.__stdout__.fileno() # suppress all stdout (includes mapnik XML printing)
         os.close(printed)
-        
+            
+      self.M_TYPE = self.get_mapfile_type(self.mapfile)
       if not os.path.isfile(self.mapfile):
-        output_error("Cannot open XML mapfile: '%s'" % self.mapfile)
+        if self.M_TYPE:
+          output_error("Cannot open %s: '%s'" % (self.M_TYPE, self.mapfile))
+        else:
+          output_error("Cannot open mapfile of unknown type: '%s'" % self.mapfile) 
       else:
-        self.output_message("Confirmed path to XML mapfile: %s" % self.mapfile)
-  
+        if self.M_TYPE:
+          self.output_message("Confirmed path to %s: '%s'" % (self.M_TYPE, os.path.abspath(self.mapfile)))
+        else:
+          self.output_message("Found mapfile, but cannot determine type: assuming XML format", warning=True)
+          self.M_TYPE = 'XML Mapfile'
+          
+           
       self.TESTS_RUN = True
       if verbose: self.verbose = False
 
@@ -631,16 +649,24 @@ class Map(object):
           self.output_message('Using %s zoom levels: %s' % (self.levels, self.ZOOM_LEVELS))
         else:
           output_error("Zoom level number must be an integer")
+      
+      if self.mapfile.endswith('.mml'):
+        try:
+          import cascadenik
+        except ImportError, E:
+          output_error("%s cannot be used since cascadenik not found:\n %s" % (self.mapfile,E))
           
       if not self.find_and_replace:
-        self.output_message('Attempting to load XML mapfile...')
-        try:    
+        self.output_message('Attempting to load %s...' % self.M_TYPE)
+        try:
           mapnik.load_map(self.mapnik_map, self.mapfile)
-          self.output_message('XML mapfile loaded successfully...')
+          if self.verbose:
+            self.mapfile_validate(self.mapnik_map)
+          self.output_message('%s loaded successfully...' % self.M_TYPE)
         except Exception, E:
-          output_error("Problem loading XML Mapfile",E)
+          output_error("Problem loading %s" % self.M_TYPE,E)
       else:
-        # TODO: implement elementtree optionion for name:value control
+        # TODO: implement elementtree option for name:value control
         #try:
         #  from xml.etree import ElementTree
         #except:
@@ -654,8 +680,9 @@ class Map(object):
         tmp.flush()
         try:
           mapnik.load_map(self.mapnik_map, tmp.name)
-          self.mapfile_validate(self.mapnik_map)
-          self.output_message('XML mapfile loaded and parsed successfully')
+          if self.verbose:
+            self.mapfile_validate(self.mapnik_map)
+          self.output_message('%s loaded and parsed successfully')
         except Exception, E:
           output_error("Problem loading map from parsed in memory mapfile",E)
     
@@ -682,13 +709,14 @@ class Map(object):
               self.mapnik_objects['self.mapnik_map.layers[%s]' % layer_num] = l
               self.mapnik_layers[layer_num] = self.mapnik_map.layers[layer_num]
               # should control this in debug settings...
-              for group in l.datasource.describe().split('\n\n'):
-                for item in group.split('\n'):
-                  if item.find('name')> -1:
-                    info += '\n%s\t' % item
-                  else:
-                    info += '%s\t' % item 
-              self.output_message("'%s' Datasource:\n %s\n" % (l.name, info))
+              if self.verbose:
+                for group in l.datasource.describe().split('\n\n'):
+                  for item in group.split('\n'):
+                    if item.find('name')> -1:
+                      info += '\n%s\t' % item
+                    else:
+                      info += '%s\t' % item 
+                self.output_message("'%s' Datasource:\n %s\n" % (l.name, info))
         if not found_layer:
             if len(layers) == 1:
               all = ', '.join([l.name for l in mapfile_layers])
@@ -702,6 +730,7 @@ class Map(object):
         self.output_message('Custom map projection requested')
         if self.srs == "epsg:900913" or self.srs == "epsg:3785":
           self.output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
+          # TODO: investigate impact of '+over' parameter
           google_proj4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
           mapnik_proj = mapnik.Projection(google_proj4)
           self.output_message("Mapnik projection successfully initiated with custom Google Spherical Mercator proj.4 string: '%s'" % mapnik_proj.params())
