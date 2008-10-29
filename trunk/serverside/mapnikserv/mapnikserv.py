@@ -5,9 +5,10 @@ mapnikserv.py (Mapnik SimpleCGI)
 
 Summary:
   A python cgi script for testing and debugging mapnik given a mapnik XML file and basic map variables.
+  Also accepts most WMS request parameters and can be used as a 'toy' wms server.
 
 Dependencies:
-  Requires Python and Mapnik installed with the python bindings (requires boost +python +icu).
+  Requires Python and Mapnik installed with the python bindings.
   Pycairo (and cairographics) and Pygments are optional and extend the utility of the script.
 
 Usage:
@@ -22,18 +23,15 @@ Usage:
     http://mapnik-utils.googlecode.com/svn/trunk/sample_data/
   
 Limitations: 
-  This script offers no support (yet) for reprojections or the development or modification of the mapfile.
-  It is not intended for use in a production environment in order to dynamically generate images. 
-  The error handling is targeted at humanizing the learning and debugging of mapnik. It can be used
-  as a non OGC WMS server, but if that is your goal check out the Mapnik WMS server included in the 
+  This script is not intended for use in a production environment in order to dynamically generate images. 
+  The error handling is targeted purely at debugging the process of developing WMS parameters and mapfiles
+  for mapnik. It can be used with various client libraries as a non-complient OGC WMS server but assumes the
+  WMS Getmap request and supports nothing else.If you need to set up a true WMS that can be queried for 
+  Capabilities and run as a standalone server process check out the Mapnik WMS server included in the 
   mapnik source code.
 
 TODO:
-  Add a mode=map like mapserver that uses a default bbox and dimensions
-  Add a bbox=layer option or if bbox absent, zoom to layers full extent
-  Add a zoom level and lat/long center point method of extents
-  Add Openlayers bbox query that will give projected bbox
-  Turn into a class, to enable use on the command line with single string argument?
+  Add a mode=map (like mapserver) that uses a default bbox and dimensions
   Collect a notices list to store things such as unhandled wms keys and that will be
    output when another error is thrown or debug html is displayed.
   Add support for reprojection based on EPSG key, and spatialreference.org url
