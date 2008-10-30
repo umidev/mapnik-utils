@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+
+from mapnik import *
+import sys
+import os
+import re
+
+def get_attr_dict(l):
+  pattern = r'(\w+)=(.*)'
+  match = re.findall(pattern, l.describe())
+  attr, encoding, idx = {},'',0
+  for x in match:
+    if x[1] == 'shape':
+     encoding = match[idx+1][1]
+    elif x[0] == 'name':
+     attr[x[1]] = {}
+     attr[x[1]]['type'] = match[idx+1][1]
+     attr[x[1]]['size'] = match[idx+2][1]
+    idx += 1
+  return attr
+
+def get_attr_list(l):
+  pattern = r'(\w+)=(.*)'
+  match = re.findall(pattern, l.describe())
+  item, encoding, idx = [],'',0
+  for x in match:
+    if x[1] == 'shape':
+     encoding = match[idx+1][1]
+    elif x[0] == 'name':
+     attr = {}
+     attr['name'] = x[1]
+     attr['type'] = match[idx+1][1]
+     attr['size'] = match[idx+2][1]
+     item.append(attr)
+    idx += 1
+  return item
+
+layer_xml = '''
+  <Layer name="%s" status="on">
+    <StyleName>%s_style</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">%s</Parameter>
+    </Datasource>
+  </Layer>
+'''
+def main():
+  if (len(sys.argv) < 2):
+      print sys.argv[0] + " <shapefile>"
+      sys.exit(1)
+  else:
+      shp = sys.argv[1]
+      shp_dir = os.path.abspath(sys.argv[1]).split('.shp')[0]
+      shp_ptr = shp.split('.shp')[0]
+      lyr = Shapefile(file=shp_ptr)
+      e = lyr.envelope()
+      e.center()
+      e.height()
+      e.width()
+      e.maxx
+      e.maxy
+      e.minx
+      e.miny
+      attributes = get_attr_list(lyr)
+      print '-'*70
+
+      print 'Info for %s shapefile:' % shp_ptr
+      print 'Envelope:',
+      print e
+      print 'Center:',
+      print e.center()
+      print 'Height:',
+      print e.height()
+      print 'Width:',
+      print e.width()
+      print 'Attributes:'
+      for attr in attributes:
+        attr.values().sort()
+        for k,v in attr.items():
+          print '\t',k,v,
+        print '\n',
+      print 
+      print 'Sample XML layer:'
+      print layer_xml % (shp_ptr,shp_ptr,shp_dir)
+      
+      print '-'*70
+
+if __name__ == "__main__":
+  main()
