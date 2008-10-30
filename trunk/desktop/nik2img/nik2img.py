@@ -765,10 +765,10 @@ class Map(object):
           except Exception, E:
             output_error("Tried to read from www.spatialreference.org, failed to fetch usable proj4 code", E)
         elif re.match('^epsg:\d+$', self.srs.lower()):
-          mapnik_proj = mapnik.Projection("+init=%s" % self.srs.lower())
+          mapnik_proj = mapnik.Projection("+init=%s" % self.srs)
           self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
-        elif re.match('^\+proj=.+$', self.srs.lower()):
-          mapnik_proj = mapnik.Projection(self.srs.lower())
+        elif re.match('^\+proj=.+$', self.srs):
+          mapnik_proj = mapnik.Projection(self.srs)
           self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
         else:
           output_error("Could not parse the supplied projection information")
