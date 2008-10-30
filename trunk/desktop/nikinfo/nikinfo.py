@@ -54,19 +54,14 @@ def main():
       shp_ptr = shp.split('.shp')[0]
       lyr = Shapefile(file=shp_ptr)
       e = lyr.envelope()
-      e.center()
-      e.height()
-      e.width()
-      e.maxx
-      e.maxy
-      e.minx
-      e.miny
       attributes = get_attr_list(lyr)
       print '-'*70
 
       print 'Info for %s shapefile:' % shp_ptr
       print 'Envelope:',
       print e
+      print 'MaxX, MaxY, MinX, MinY:',
+      print e.minx, e.miny, e.maxx, e.maxy
       print 'Center:',
       print e.center()
       print 'Height:',
