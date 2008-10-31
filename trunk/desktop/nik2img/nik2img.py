@@ -238,9 +238,13 @@ class Map(object):
         self.STEP = 0
         self.MAPFILE_TYPES = {'xml':'XML mapfile','mml':'Cascadenik Cascading Stylesheet', 'py':'Python Styles'}
         self.M_TYPE = None
+        self.ALL_FORMATS = {}
         self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg'}
+        self.ALL_FORMATS.update(self.AGG_FORMATS)
         self.CAIRO_FILE_FORMATS = {'svg':'svg','pdf':'pdf','ps':'ps'}
+        self.ALL_FORMATS.update(self.CAIRO_FILE_FORMATS)
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
+        self.ALL_FORMATS.update(self.CAIRO_IMAGE_FORMATS)
         self.START = None
         self.TESTS_RUN = False
         self.BUILT = False
@@ -328,14 +332,13 @@ class Map(object):
         except KeyboardInterrupt:
           pass
     
-    # TODO replace with os.isdir()
     def is_file(self, name):
         """
         Routing to check if a given image name is a file or folder.
         """
-        if name.find('.') > -1 and name.count('.') == 1:
-            return True
-        elif name.rfind('.') - (len(name)+1) == -3:
+        if os.path.isdir(name):
+            return False
+        elif [name.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
             return True
         elif name.find('.') > -1 and name.count('.') <> 1:
             output_error("Unknown output type; cannot determine whether it's a file or directory")
