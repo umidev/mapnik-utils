@@ -6,14 +6,14 @@
     <!ENTITY password "">
     <!ENTITY dbname "foss4g2008">
     
-    <!ENTITY states_shp "states_working">
-    <!ENTITY tiger_shp "data/tiger_shp">
+    <!ENTITY states_shp "../data/states">
+    <!ENTITY tiger_shp "../data/tiger_shp">
     <!ENTITY states_pg "states_pg">
     <!ENTITY tiger_pg "tiger_pg">
-    <!ENTITY merano "data/merano.tiff">
-    <!ENTITY merano2 "data/merano_jptov.tiff">
-    <!ENTITY n_sid "S-34-30_2000/S-34-30_2000.sid">
-    <!ENTITY s_sid "S-34-30_2000/S-34-30_2000.sid">
+    <!ENTITY merano "../data/merano.tiff">
+    <!ENTITY merano2 "../data/merano_jptov.tiff">
+    <!ENTITY n_sid "../data/S-34-30_2000.sid">
+    <!ENTITY s_sid "../data/S-34-30_2000.sid">
     
 ]>
 
@@ -65,7 +65,7 @@
     <Rule>
       <LineSymbolizer>
         <CssParameter name="stroke">black</CssParameter>
-        <CssParameter name="stroke-width">.5</CssParameter>
+        <CssParameter name="stroke-width">.3</CssParameter>
       </LineSymbolizer>
     </Rule>
   </Style>
@@ -149,7 +149,7 @@
   </Layer>
   
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
-  <Layer name="merano" srs="+init=epsg:4326" status="off">
+  <Layer name="merano" srs="+init=epsg:32632" status="off">
     <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -159,7 +159,7 @@
 
 
   <!-- Merano TIFF layer (single file, tiled, overviews)  "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161" -->
-  <Layer name="merano2" srs="+init=epsg:4326" status="off">
+  <Layer name="merano2" srs="+init=epsg:32632" status="off">
     <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -168,7 +168,7 @@
   </Layer>
 
   <!-- Landsat MrSid layer  "193899.75 4984863.625 806108.25 5543948.125" -->
-  <!--<Layer name="N-32-45_2000" srs="+init=epsg:4326" status="off">
+  <!--<Layer name="N-32-45_2000" srs="+init=epsg:32632" status="off">
     <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
@@ -178,7 +178,7 @@
   -->
   
   <!-- MrSid layer  "160576.125 -3875914.625 839403.375 -3317784.875" -->
-  <Layer name="S-34-30_2000" srs="+init=epsg:4326" status="off">
+  <Layer name="S-34-30_2000" srs="+init=epsg:32634" status="off">
     <StyleName>raster_style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>

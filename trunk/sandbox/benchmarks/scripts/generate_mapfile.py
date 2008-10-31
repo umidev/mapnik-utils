@@ -2,6 +2,11 @@
 
 from mapnik import *
 
+import os
+
+data = '../data'
+mapfiles = '../mapfiles'
+
 postgis = {
     'host':'localhost',
     'port': 5432,
@@ -11,14 +16,14 @@ postgis = {
     }
 
 datasources = {
-    'states':'data/states',
+    'states':'%s/states' % data, 
     'states_pg':'states_pg',
-    'tiger_shp':'data/tiger_shp',
+    'tiger_shp':'%s/tiger_shp' % data,
     'tiger_pg':'tiger_pg',
-    'merano':'data/merano.tiff',
-    'merano2':'data/merano_jptov.tiff',
-    'n_sid':'S-34-30_2000/S-34-30_2000.sid',
-    's_sid':'S-34-30_2000/S-34-30_2000.sid',
+    'merano':'%s/merano.tiff' % data,
+    'merano2':'%s/merano_jptov.tiff' % data,
+    'n_sid':'%s/S-34-30_2000.sid' % data,
+    's_sid':'%s/S-34-30_2000.sid' % data,
     }
 
 shp_mapping = {
@@ -67,12 +72,15 @@ def generate_layer(name,type,srs="+init=epsg:4326",styles=[]):
     lyr = Layer(name,srs)
     if type == 'shapefile':
       lyr.datasource = Shapefile(file=datasources[name])
+      lyr.abstract = datasources[name]
+      lyr.title = datasources[name]
     elif type == 'postgis':
       params = postgis.copy()
       params['table'] = name
       lyr.datasource = PostGIS(**params)    
     elif type == 'gdal':
       lyr.datasource = Gdal(file=datasources[name])
+    lyr.active = False
     for sty in styles:
       lyr.styles.append(sty)
     return lyr
@@ -91,9 +99,10 @@ def main():
     # Styles
     m.append_style(*poly_filter('states_shp_styles',shp_mapping) )
     m.append_style(*poly_filter('states_pg_styles',pg_mapping) )
-    m.append_style(*line_style('states_outlines','black',0.5))
-    m.append_style(*text_style('states_shp_labels','STATE_ABBR'))
-    m.append_style(*line_style('tiger_styles','black',0.5))
+    m.append_style(*line_style('states_outlines','black',.3))
+    m.append_style(*text_style('states_shp_labels','STATE_ABBR',font='Times New Roman Regular'))
+    m.append_style(*text_style('states_pg_labels','state_abbr',font='Times New Roman Regular'))
+    m.append_style(*line_style('tiger_styles','black',1))
     m.append_style(*raster_style('raster_style'))
     
     # Layers
@@ -105,16 +114,30 @@ def main():
         styles=['tiger_styles']))
     m.layers.append(generate_layer('tiger_pg','postgis',
         styles=['tiger_styles']))
-    m.layers.append(generate_layer('merano','gdal',srs='+init=epsg:32632',
+    m.layers.append(generate_layer('merano','gdal',
+        srs='+init=epsg:32632',
         styles=['raster_style']))
-    m.layers.append(generate_layer('merano2','gdal',srs='+init=epsg:32632',
+    m.layers.append(generate_layer('merano2','gdal',
+        srs='+init=epsg:32632',
         styles=['raster_style']))
-    m.layers.append(generate_layer('n_sid','gdal',srs ='+init=epsg:32632',
+    m.layers.append(generate_layer('n_sid','gdal',
+        srs ='+init=epsg:32632',
         styles=['raster_style']))
-    m.layers.append(generate_layer('s_sid','gdal',srs = '+init=epsg:32634',
+    m.layers.append(generate_layer('s_sid','gdal',
+        srs = '+init=epsg:32634',
         styles=['raster_style']))
     return m
 
 if __name__ == "__main__":
   m = main()
-  save_map(m,'bench_pygen.xml')
+  mapfile = mapfiles + '/pygen_bench.xml'
+  if os.path.exists(mapfile):
+    print '-'*75
+    print 'ERROR:'
+    print "Mapnik's save_map() function cannot overwrite existing files, please delete %s to regenerate" % mapfile
+    print '-'*75
+  else:
+    save_map(m,mapfile)
+    print '-'*75
+    print 'Mapfile (with all layers INACTIVE by default) output to: %s' % mapfile 
+    print '-'*75
