@@ -35,6 +35,7 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
+  * refactor all the messy projections testing
   * create an --all-formats flag and do away with -i == 'all'
   * accept formats as list
   * turn usage help into a dictionary to be able to reuse
@@ -713,8 +714,8 @@ class Map(object):
         for layer_num in range(len(self.mapnik_map.layers)-1, -1, -1):
             l = self.mapnik_map.layers[layer_num]
             if l.name not in layers:
-                for sty in l.styles:
-                  self.mapnik_map.remove_style(sty) 
+                #for sty in l.styles:
+                  #self.mapnik_map.remove_style(sty) 
                 if l.active == True:
                   self.output_message("Removed previously ACTIVE layer '%s'" % l.name)
                 else:
@@ -1049,7 +1050,7 @@ if __name__ == "__main__":
     print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie wld)%s." % color_text(4,'*')
-    print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf fonts to register (ie '/Library/Fonts/Verdana.ttf')%s." % color_text(4,'*')
+    print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
     print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile with the specified name%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
