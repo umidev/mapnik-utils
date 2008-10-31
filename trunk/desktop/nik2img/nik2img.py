@@ -337,14 +337,14 @@ class Map(object):
         Routing to check if a given image name is a file or folder.
         """
         if os.path.isdir(name):
-            return False
-        elif [name.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
+            return False # assuming existing directory
+        elif name.count('.') == 0:
+            return False # assuming new directory
+        elif True in [name.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
             return True
-        elif name.find('.') > -1 and name.count('.') <> 1:
-            output_error("Unknown output type; cannot determine whether it's a file or directory")
         else:
-            return False
-
+            output_error("Unsupported image format requested")
+ 
     def generate_levels(self,N=10):
         """
         Accepts a number of zoom levels and returns a list of zoom resolutions.
@@ -956,7 +956,8 @@ class Map(object):
                   self.call_CAIRO_FORMATS(basename)
               else:
                   self.output_message("Beginning rendering, this may take a while...")
-                  self.local_render_wrapper(self.mapnik_map, out, self.format)
+                  self.local_render_wrapper(self.mapnik_map, out + '.' + self.format, self.format)
+                  print self.format
           else:
             for lev in self.ZOOM_LEVELS:
               self.mapnik_map.zoom(lev)
