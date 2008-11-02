@@ -692,6 +692,8 @@ class Map(object):
           if self.verbose:
             self.mapfile_validate(self.mapnik_map)
           self.output_message('%s loaded successfully...' % self.M_TYPE)
+        except UserWarning, E:
+          output_error("Problem loading %s (hint: xml_entities require libxml2)" % self.M_TYPE,E)
         except Exception, E:
           output_error("Problem loading %s" % self.M_TYPE,E)
       else:
