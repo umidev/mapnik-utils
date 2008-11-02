@@ -35,6 +35,7 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
+  * expose png rendering with Cairo if '-i' flag is used to request either ARGB32 OR RGB24
   * refactor all the messy projections testing
   * create an --all-formats flag and do away with -i == 'all'
   * accept formats as list
@@ -75,14 +76,14 @@ import tempfile
 
 try:
     import mapnik
-except Exception, E:
+except ImportError:
     print 'Could not load mapnik python bindings'
     sys.exit()
 
 try:
   import cairo
   HAS_CAIRO = True
-except Exception, E:
+except ImportError:
   HAS_CAIRO = False
 
 no_color_global = False
@@ -442,6 +443,8 @@ class Map(object):
         """
         if args[2] in self.CAIRO_FILE_FORMATS:
             self.render_cairo(*args)
+        #elif args[2] in self.CAIRO_IMAGE_FORMATS:
+            #self.render_cairo(*args)
         elif args[2] in self.AGG_FORMATS:
             self.render_agg(*args)
 
@@ -477,34 +480,37 @@ class Map(object):
         """
         Routine to render the requested Cairo format.
         """
-        context = [args[1], self.mapnik_map.width, self.mapnik_map.height]
-        if args[2] == 'svg':
-          surface = cairo.SVGSurface(*context)
-        elif args[2] == 'pdf':
-          surface = cairo.PDFSurface(*context)
-        elif args[2] == 'ps':
-          surface = cairo.PSSurface(*context)
-        elif args[2] == 'ARGB32':
-          surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, *context[1:])
-        elif args[2] == 'RGB24':
-          surface = cairo.ImageSurface(cairo.FORMAT_RGB24, *context[1:])
-        if self.re_render_times:
-            for n in range(1, int(self.re_render_times)):
-                mapnik.render(args[0],surface)
-                if args[2] in self.CAIRO_IMAGE_FORMATS:
-                  surface.write_to_png(args[1])
-            surface.finish()
-            self.output_message("Map rendered to '%s', %s times" % (args[1], n))
+        if not HAS_CAIRO:
+			output_error('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
-            mapnik.render(args[0],surface)
-            if args[2] in self.CAIRO_IMAGE_FORMATS:
-              surface.write_to_png(args[1])
-            surface.finish()
-            self.output_message("Map rendered to '%s'" % args[1])
-        if self.world_file:
-            self.write_world_file(args[1])
-        if self.save_map:
-          mapnik.save_map(self.mapnik_map,self.save_map)
+			context = [args[1], self.mapnik_map.width, self.mapnik_map.height]
+			if args[2] == 'svg':
+			  surface = cairo.SVGSurface(*context)
+			elif args[2] == 'pdf':
+			  surface = cairo.PDFSurface(*context)
+			elif args[2] == 'ps':
+			  surface = cairo.PSSurface(*context)
+			elif args[2] == 'ARGB32':
+			  surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, *context[1:])
+			elif args[2] == 'RGB24':
+			  surface = cairo.ImageSurface(cairo.FORMAT_RGB24, *context[1:])
+			if self.re_render_times:
+				for n in range(1, int(self.re_render_times)):
+					mapnik.render(args[0],surface)
+					if args[2] in self.CAIRO_IMAGE_FORMATS:
+					  surface.write_to_png(args[1])
+				surface.finish()
+				self.output_message("Map rendered to '%s', %s times" % (args[1], n))
+			else:
+				mapnik.render(args[0],surface)
+				if args[2] in self.CAIRO_IMAGE_FORMATS:
+				  surface.write_to_png(args[1])
+				surface.finish()
+				self.output_message("Map rendered to '%s'" % args[1])
+			if self.world_file:
+				self.write_world_file(args[1])
+			if self.save_map:
+			  mapnik.save_map(self.mapnik_map,self.save_map)
 
     def call_CAIRO_FORMATS(self, basename):
         """
@@ -512,7 +518,7 @@ class Map(object):
         to any image and file formats requested from Cairo.
         """
         if not HAS_CAIRO:
-          self.output_message('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png', warning=True)
+          output_error('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
           for k, v in self.CAIRO_FILE_FORMATS.iteritems():
               path = '%s_%s.%s' % (basename,k,v)
@@ -953,11 +959,14 @@ class Map(object):
                   basename = out.split('.')[0]
                   self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
                   self.call_AGG_FORMATS(basename)
-                  self.call_CAIRO_FORMATS(basename)
+                  if self.HAS_CAIRO:
+                      self.call_CAIRO_FORMATS(basename)
               else:
                   self.output_message("Beginning rendering, this may take a while...")
-                  self.local_render_wrapper(self.mapnik_map, out + '.' + self.format, self.format)
-                  print self.format
+                  if out.count('/') > 0:
+                    self.local_render_wrapper(self.mapnik_map, out + '.' + self.format, self.format)
+                  else:
+                    self.local_render_wrapper(self.mapnik_map, out, self.format)
           else:
             for lev in self.ZOOM_LEVELS:
               self.mapnik_map.zoom(lev)
@@ -969,7 +978,8 @@ class Map(object):
               if self.format == 'all':
                   self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
                   self.call_AGG_FORMATS(level_name)
-                  self.call_CAIRO_FORMATS(level_name)
+                  if self.HAS_CAIRO:
+                      self.call_CAIRO_FORMATS(level_name)
               else:
                   self.output_message("Beginning rendering, this may take a while...")              
                   self.local_render_wrapper(self.mapnik_map,'%s.%s' % (level_name,self.format),self.format)
@@ -1026,8 +1036,8 @@ if __name__ == "__main__":
   def usage (name):
     print
     color_print(3, "%s" % make_line('=',75))
-    color_print(2,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
-    color_print(4,"Option\t\tDefault\t\tDescription")
+    color_print(4,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
+    color_print(7,"Option\t\tDefault\t\tDescription")
     
     print "-m\t\t" + "<required>\t" + "Mapfile input: Set the path for the xml map file."
     print "-o\t\t" + "[stdout]\t" + "Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT."
