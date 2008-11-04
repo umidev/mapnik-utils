@@ -453,22 +453,47 @@ class Map(object):
         Outputs an ESRI world file that can be used to load the resulting
         image as a georeferenced raster in a variety of gis viewers.
         
+        '.wld' is the most common extension used, but format-specific extensions
+        are also looked for by some software, such as '.tfw' for tiff and '.pgw' for png
+        
         A world file file is a plain ASCII text file consisting of six values separated
         by newlines. The format is: 
             pixel X size
             rotation about the Y axis (usually 0.0)
             rotation about the X axis (usually 0.0)
-            negative pixel Y size
+            pixel Y size (negative when using North-Up data)
             X coordinate of upper left pixel center
             Y coordinate of upper left pixel center
          
         Info from: http://gdal.osgeo.org/frmt_various.html#WLD
         """
-        scale = self.mapnik_map.scale()
         extent= self.mapnik_map.envelope()
-        upper_left_x_center = extent.minx-(scale/2.0)
-        upper_left_y_center = extent.maxy-(scale/2.0)
-        wld_string = '%s\n%s\n%s\n-%s\n%s\n%s\n' % (scale,y_rotation,x_rotation,scale,upper_left_x_center,upper_left_y_center)
+        USE_PIXEL_SIZE = True
+        USE_FLOATS = True
+        if USE_PIXEL_SIZE:
+          pixel_x_size = (extent.maxx - extent.minx)/self.mapnik_map.width
+          pixel_y_size = (extent.maxy - extent.miny)/self.mapnik_map.height
+          upper_left_x_center = extent.minx + 0.5 * pixel_x_size + 0.5 * x_rotation
+          upper_left_y_center = extent.maxy + 0.5 * (-1*pixel_y_size) + 0.5 * y_rotation
+          #upper_left_x_center = extent.minx+(pixel_x_size/2.0)
+          #upper_left_y_center = extent.maxy-(pixel_y_size/2.0)
+          if USE_FLOATS:
+           # http://trac.osgeo.org/gdal/browser/trunk/gdal/gcore/gdal_misc.cpp#L1296
+            wld_string = '''%.10f\n%.10f\n%.10f\n-%.10f\n%.10f\n%.10f\n''' % (
+                pixel_x_size, # geotransform[1] - width of pixel
+                y_rotation, # geotransform[4] - rotational coefficient, zero for north up images.
+                x_rotation, # geotransform[2] - rotational coefficient, zero for north up images.
+                pixel_y_size, # geotransform[5] - height of pixel (but negative)
+                upper_left_x_center, # geotransform[0] - x offset to center of top left pixel
+                upper_left_y_center # geotransform[3] - y offset to center of top left pixel.
+                )
+          else:
+            wld_string = '''%s\n%s\n%s\n-%s\n%s\n%s\n''' % (pixel_x_size,y_rotation,x_rotation,pixel_y_size,upper_left_x_center,upper_left_y_center)
+        else:
+          scale = self.mapnik_map.scale()        
+          upper_left_x_center = extent.minx-(scale/2.0)
+          upper_left_y_center = extent.maxy-(scale/2.0)
+          wld_string = '''%s\n%s\n%s\n-%s\n%s\n%s\n''' % (scale,y_rotation,x_rotation,scale,upper_left_x_center,upper_left_y_center)
         basename = path.split('.')[0]
         f_ptr = '%s.%s' % (basename, self.world_file)
         wld_file = open(f_ptr, 'w')
