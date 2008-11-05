@@ -1095,11 +1095,11 @@ if __name__ == "__main__":
     #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
     print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
     print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie. 0.1,0.05,0.025)%s" % color_text(4,'*')
-    print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
-    print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie. wld)%s." % color_text(4,'*')
     print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
     print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile as xml with the specified name%s." % color_text(4,'*')
+    print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
+    print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
