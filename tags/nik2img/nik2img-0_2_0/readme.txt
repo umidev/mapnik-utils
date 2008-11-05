@@ -19,6 +19,8 @@ To Install:
 Test Installation of module:
    $ python
    >>> from nik2img import Map # should prompt no error
+   >>> m = Map('/path/to/mapfile.xml')
+   >>> m.test() # should confirm path to mapfile
 
 Test Installation of command-line script:
    $ nik2img.py # should be able to tab complete...
