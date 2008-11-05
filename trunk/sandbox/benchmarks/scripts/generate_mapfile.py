@@ -1,11 +1,26 @@
 #!/usr/bin/env python
 
 from mapnik import *
-
 import os
 
 data = '../data'
 mapfiles = '../mapfiles'
+PROJ_LITERALS =True
+
+projs = {
+    4326: ('+init=epsg:4326','+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'),
+    32632: ('+init=epsg:32632','+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs'),
+    32634: ('+init=epsg:32634','+proj=utm +zone=34 +ellps=WGS84 +datum=WGS84 +units=m +no_defs'),
+    }
+
+proj = {}
+if PROJ_LITERALS:
+ for k,v in projs.items():
+   proj[k] = v[1]
+else:
+ for k,v in projs.items():
+   proj[k] = v[0]   
+   
 
 postgis = {
     'host':'localhost',
@@ -68,7 +83,7 @@ def raster_style(name):
     s.rules.append(r)
     return name, s
 
-def generate_layer(name,type,srs="+init=epsg:4326",styles=[]):
+def generate_layer(name,type,srs,styles=[]):
     lyr = Layer(name,srs)
     if type == 'shapefile':
       lyr.datasource = Shapefile(file=datasources[name])
@@ -93,7 +108,7 @@ def pg_layer(name,srs,styles=[]):
     return lyr
 
 def main():
-    m = Map(600,350,"+init=epsg:4326")
+    m = Map(600,350,proj[4326])
     m.background = Color("white")
     
     # Styles
@@ -107,24 +122,28 @@ def main():
     
     # Layers
     m.layers.append(generate_layer('states','shapefile',
+        srs=proj[4326],
         styles=['states_shp_styles','states_outlines','states_shp_labels']))
     m.layers.append(generate_layer('states_pg','postgis',
+        srs=proj[4326],
         styles=['states_pg_styles','states_outlines','states_pg_labels']))
     m.layers.append(generate_layer('tiger_shp','shapefile',
+        srs=proj[4326],
         styles=['tiger_styles']))
     m.layers.append(generate_layer('tiger_pg','postgis',
+        srs=proj[4326],
         styles=['tiger_styles']))
     m.layers.append(generate_layer('merano','gdal',
-        srs='+init=epsg:32632',
+        srs=proj[32632],
         styles=['raster_style']))
     m.layers.append(generate_layer('merano2','gdal',
-        srs='+init=epsg:32632',
+        srs=proj[32632],
         styles=['raster_style']))
     m.layers.append(generate_layer('n_sid','gdal',
-        srs ='+init=epsg:32632',
+        srs =proj[32632],
         styles=['raster_style']))
     m.layers.append(generate_layer('s_sid','gdal',
-        srs = '+init=epsg:32634',
+        srs = proj[32634],
         styles=['raster_style']))
     return m
 
