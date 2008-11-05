@@ -1,15 +1,53 @@
 #labels Featured,Phase-Deploy
 == Nik2img.py ==
 
-A command line utility to take a mapnik xml file as input and output an image.
+A command line utility to take a cascadenik mml or mapnik xml file as input and output an image.
 
- * Mirrors the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility. Not all of the shp2img functionality is currently supported, but all is planned.
+ * Mirrors and extends the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility.
 
- * Download the first release: [http://mapnik-utils.googlecode.com/files/nik2img-0_1_0.tar 0.1.0].
+ * Download the second release: [http://mapnik-utils.googlecode.com/files/nik2img-0_2_0.tar 0.2.0].
 
- * The 0.1.0 release `nik2img.py` script and readme is included in the .tar and also [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/ available here]
+ * The 0.2.0 release includes an install readme in the .tar but which can also be found [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0/ in SVN]
 
- * View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/nik2img.py SVN Trunk]
+ * View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ SVN Trunk]
+
+
+=== Installation ===
+
+To run this program:
+ * Make sure you have Mapnik installed
+ * Then install or run locally
+
+To Install:
+{{{
+$ wget http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0.tar
+$ tar xvf nik2img-0_2_0.tar
+$ cd nik2img-0_2_0
+$ sudo python setup.py install
+}}}
+ * This will place nik2img.py in `/usr/local/bin` and as a python module in `site-packages`
+
+Test Installation of module:
+{{{
+$ python
+>>> from nik2img import Map # should prompt no error
+>>> m = Map('/path/to/mapfile.xml')
+>>> m.test() # should confirm path to mapfile
+}}}
+
+Test Installation of command-line script:
+{{{
+$ nik2img.py # should be able to tab complete...
+$ which nik2img.py # should show install location
+$ nik2img.py -h # should display usage
+}}}
+
+To run locally:
+ * Download the script from: http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0/nik2img.py
+ * Then in that directory run:
+{{{
+$ python nik2img.py -h
+}}}
 
 
 === Features ===
@@ -18,58 +56,43 @@ A command line utility to take a mapnik xml file as input and output an image.
 $ nik2img.py -h
 
 ===========================================================================
-Usage: /usr/local/bin/nik2img.py -m <mapnik.xml> -o <image.png>
+Usage: /usr/local/bin/nik2img.py -m <mapfile.xml> -o <image.png>
 Option		Default		Description
--m		<required>	Mapfile: Path to xml map file to load styles from.
--o		<required>	Image: Set the output filename (or a directory name: just use no .ext*)
--i		[png]		Format: Choose the output format: png, png256, jpeg, or all (will loop through all formats)
--e		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates*
--r		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates of mapfile
---expand	[0]		Expand bbox in all directions by n map units
--s		[600,300]	Width,Height: Set the image size in pixels
--p		[mapfile srs]	Reproject using epsg, proj4 string, or url 'ie -p http://spatialreference.org/ref/user/6/'*
--l		[all enabled]	Set layers to enable (quote and comma-separate if several)
--v		[off]		Run with verbose output
--c		[1]		Draw map n number of times
--n		off		Turn on dry run mode: no map output
--t		[0]		Pause n seconds after reading the map
---pause		[0]		Pause n seconds after each step*
---debug		[0]		Loop through all formats and zoom levels generating map graphics*
---pdb		[none]		Set a pdb trace (python debugger) at step n*
+-m		<required>	Mapfile input: Set the path for the xml mapfile or mml cascading style.
+-o		[stdout]	Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT.
+-i		[png]		Image format: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).
+-e		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in geographic coordinates (forwarded if mapfile is projected).
+-r		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates (inversed if mapfile is geographic).
+-s		[600,300]	Width,Height: Set the image size in pixels.
+-p		[mapfile srs]	Reproject using <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/user/6/'.
+-l		[all enabled]	Layers: List which to render (quote and comma-separate if several).
+-v		[off]		Run with verbose output including numbered steps and timing output.
+-c		[1]		Draw map n number of times.
+-n		[off]		Turn on dry run mode: constuct map but do not render output.
+-t		[0]		Pause n seconds after reading the map.
+-d		[None]		Find and replace, using a <find_this:replace_this> syntax, any value within the mapfile.
+--pause		[0]		Pause n seconds after each step*.
+--pdb		[none]		Set a python debugger trace at step n or steps n,n,n*.
+--zoomto	[0]		Center the map at a given lon/lat coordinate and an optional zoom level*.
+--zoomrad	[0]		Zoom to an extent of the radius (in map units) around a given lon/lat coordinate*.
+--zoomlyr	[0]		Zoom to the extent of a given layer*.
 --levels	[10]		N number of zoom levels at which to generate graphics*
---resolutions	[none]		Set specific rendering resolutions (ie 0.1,0.05,0.025)*
---nocolor	[colored]	Turn off colored terminal output*
---quiet		[off]		Turn on quiet mode to suppress the mapnik c++ debug printing and all python errors*
--d		[None]		Find and replace of any text string within a mapfile, separated with ':' like find_this:replace_this
--h		[off]		Prints this usage/help information
+--resolutions	[none]		Set specific rendering resolutions (ie. 0.1,0.05,0.025)*
+--worldfile	[none]		Generate image georeferencing by specifying a world file output extension (ie. wld)*.
+--fonts		[none]		Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')*.
+--savemap	[none]		Output the processed mapfile as xml with the specified name*.
+--quiet		[off]		Turn on quiet mode to suppress the mapnik c++ debug printing and all python errors*.
+--profile	[off]		Output a cProfile report on script completion*.
+--noopen	[opens]		Prevent the automatic opening of the image in the default viewer*.
+--nocolor	[colored]	Turn off colored terminal output*.
+-h		[off]		Prints this usage/help information.
 ---------------------------------------------------------------------------
- * Additional features in nik2img not part of shp2img
- Note: nik2img does not support sending image to STDOUT (default in shp2img)
+ * Additional features in nik2img not part of shp2img.
+---------------------------------------------------------------------------
+ More info: http://code.google.com/p/mapnik-utils/wiki/Nik2Img
 ===========================================================================
 Dane Springmeyer, dbsgeo (a-t) gmail.com
 
-}}}
-
-
-=== Installation ===
-
-To run this program:
- * Make sure you have Mapnik installed
- * Download, install, untar, make executable, and place in your path like:
-
-{{{
-$ wget http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0.tar
-$ tar xvf nik2img-0_1_0.tar
-$ cd nik2img-0_1_0
-$ sudo cp nik2img.py /usr/local/bin/
-$ sudo chmod +x /usr/local/bin/nik2img.py
-}}}
-
-Or just fetch the script from: http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_1_0/nik2img.py
-Then launch a python interpreter in the same directory and run:
-
-{{{
-$ python nik2img.py -h
 }}}
 
 
@@ -82,9 +105,9 @@ Output an 8-bit png image:
 $ nik2img.py -m mapfile.xml -o map.png -i png256
 }}}
 
-Loop through verbosely outputting all possible image formats, for a range of zoom levels, and a custom tile size:
+Loop through verbosely outputting all possible image formats and a custom tile size:
 {{{
-$ nik2img.py -m mapfile.xml -o maps -i all -s 256,256 --debug -v
+$ nik2img.py -m mapfile.xml -o maps -i all -s 256,256  -v
 }}}
 
 General all image formats within a folder in spherical mercator projection with custom bbox in projected coordinates and pause 2 seconds after reading mapfile:
