@@ -7,8 +7,6 @@ A command line utility to take a cascadenik mml or mapnik xml file as input and 
 
  * Download the second release: [http://mapnik-utils.googlecode.com/files/nik2img-0_2_0.tar 0.2.0].
 
- * The 0.2.0 release includes an install readme in the .tar but which can also be found [http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0/ in SVN]
-
  * View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ SVN Trunk]
 
 
