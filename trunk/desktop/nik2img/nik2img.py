@@ -90,6 +90,8 @@ except ImportError:
 
 no_color_global = False
 
+class Nik2imgError(Exception): pass
+
 # ==========================================
 # Top Level Functions
 # ==========================================
@@ -149,13 +151,20 @@ def output_error(msg, E=None, yield_usage=False):
     Prints an error message to stdout, including a Traceback
     error if given (E), and command line usage if requested.
     """
-    if yield_usage:
-        usage(sys.argv[0])
-    if E:
-        color_print(1, '// --> %s: \n\n %s' % (msg, E))
+    if __name__ == "__main__": 
+      if yield_usage:
+          usage(sys.argv[0])
+      if E:
+          color_print(1, '// --> %s: \n\n %s' % (msg, E))
+      else:
+          color_print(1, '\\ --> %s' % msg)
+      sys.exit(1)
     else:
-        color_print(1, '\\ --> %s' % msg)    
-    sys.exit(1)
+      if E:
+          error = color_text(1, '// --> %s: \n\n %s' % (msg, E))
+      else:
+          error = color_text(1, '\\ --> %s' % msg)
+      raise Nik2imgError(error)
 
 
 # =============================================================================
@@ -1063,7 +1072,7 @@ class Map(object):
 #
 # =============================================================================
 
-if __name__ == "__main__":  
+if __name__ == "__main__":
         
   def usage (name):
     print
