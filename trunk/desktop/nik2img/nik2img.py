@@ -74,7 +74,7 @@ import timeit
 import tempfile
 
 try:
-    import mapnik_
+    import mapnik
     HAS_MAPNIK_PYTHON = True
 except ImportError:
     HAS_MAPNIK_PYTHON = False
