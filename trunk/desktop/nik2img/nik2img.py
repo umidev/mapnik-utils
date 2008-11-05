@@ -62,9 +62,8 @@ Remaining shp2img features:
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.1.1 $Rev: 2 $"
+__version__ = "0.2.0"
 __license__ = "GPLv2"
-
 
 import os
 import sys
@@ -75,10 +74,13 @@ import timeit
 import tempfile
 
 try:
-    import mapnik
+    import mapnik_
+    HAS_MAPNIK_PYTHON = True
 except ImportError:
-    print 'Could not load mapnik python bindings'
-    sys.exit()
+    HAS_MAPNIK_PYTHON = False
+    print
+    print "WARNING: Mapnik's python bindings not found..."
+    print
 
 try:
   import cairo
@@ -169,10 +171,10 @@ class Map(object):
 
         Initialize a nik2img Map object either from the commandline or as a module import.
         
-        Then build() and either provide an output image path and use render_file() or pipe the output using render_stream()
+        Then call build() and either provide an output image path and use render_file() or pipe the output using render_stream()
         
         Required argument:
-        --> mapfile\t string\t path to the mapnik xml file
+        --> mapfile\t string\t path to a mapnik xml or cascadenik mml file
         
         Optional **kwargs:
         --> See the commandline usage
@@ -588,7 +590,10 @@ class Map(object):
       Can be run indepedently or will be automatically called during build()
       """
       if verbose: self.verbose = True
-       
+      
+      if not HAS_MAPNIK_PYTHON:
+        output_error("Error: 'import mapnik' failed - confirm that mapnik is installed and on your PYTHONPATH.")
+
       self.format = self.format.lower().replace('image/','')
       self.mime = 'image/%s' % self.format.replace('256','')
 
@@ -1063,36 +1068,38 @@ if __name__ == "__main__":
   def usage (name):
     print
     color_print(3, "%s" % make_line('=',75))
-    color_print(4,"Usage: %s -m <mapnik.xml> -o <image.png>" % name)
+    color_print(4,"Usage: %s -m <mapfile.xml> -o <image.png>" % name)
     color_print(7,"Option\t\tDefault\t\tDescription")
     
-    print "-m\t\t" + "<required>\t" + "Mapfile input: Set the path for the xml map file."
+    print "-m\t\t" + "<required>\t" + "Mapfile input: Set the path for the xml mapfile or mml cascading style."
     print "-o\t\t" + "[stdout]\t" + "Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT."
     print "-i\t\t" + "[png]\t\t" + "Image format: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats)."
     print "-e\t\t" + "[max extent]\t" + "Minx,Miny,Maxx,Maxy: Set map extent in geographic (lon/lat) coordinates."
     print "-r\t\t" + "[max extent]\t" + "Minx,Miny,Maxx,Maxy: Set map extent in the projected coordinates of mapfile."
     print "-s\t\t" + "[600,300]\t" + "Width,Height: Set the image size in pixels."
-    print "-p\t\t" + "[mapfile srs]\t" + "Reproject using epsg, proj4 string, or url like 'http://spatialreference.org/ref/user/6/'."
+    print "-p\t\t" + "[mapfile srs]\t" + "Reproject using <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/user/6/'."
     print "-l\t\t" + "[all enabled]\t" + "Layers: List which to render (quote and comma-separate if several)."  
-    print "-v\t\t" + "[off]\t\t" + "Run with verbose output (includes numbered steps and timing output)."
+    print "-v\t\t" + "[off]\t\t" + "Run with verbose output including numbered steps and timing output."
     print "-c\t\t" + "[1]\t\t" + "Draw map n number of times." 
-    print "-n\t\t" + "[off]\t\t" + "Turn on dry run mode: no map output."
+    print "-n\t\t" + "[off]\t\t" + "Turn on dry run mode: constuct map but do not render output."
     print "-t\t\t" + "[0]\t\t" + "Pause n seconds after reading the map."
-    print "-d\t\t" + "[None]\t\t" + "Find and replace of mapfile text strings; syntax: find_this:replace_this."
+    print "-d\t\t" + "[None]\t\t" + "Find and replace, using a <find_this:replace_this> syntax, any value within the mapfile."
     print "--pause" + "\t\t[0]\t\t" + "Pause n seconds after each step%s." % color_text(4,'*')
     print "--pdb\t\t" + "[none]\t\t" + "Set a python debugger trace at step n or steps n,n,n%s." % color_text(4,'*')
-    print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
+    # --expand is alpha code
+    #print "--expand\t[0]\t\tExpand bbox in all directions by a given radius (in map's srs units)%s." % color_text(4,'*')
     print "--zoomto\t[0]\t\tCenter the map at a given lon/lat coordinate and an optional zoom level%s." % color_text(4,'*')
     print "--zoomrad\t[0]\t\tZoom to an extent of the radius (in map units) around a given lon/lat coordinate%s." % color_text(4,'*')
     print "--zoomlyr\t[0]\t\tZoom to the extent of a given layer%s." % color_text(4,'*')
-    print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
+    # debug does nothing yet...
+    #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
     print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
-    print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie 0.1,0.05,0.025)%s" % color_text(4,'*')
+    print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie. 0.1,0.05,0.025)%s" % color_text(4,'*')
     print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
-    print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie wld)%s." % color_text(4,'*')
-    print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
-    print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile with the specified name%s." % color_text(4,'*')
+    print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie. wld)%s." % color_text(4,'*')
+    print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
+    print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile as xml with the specified name%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
@@ -1238,6 +1245,10 @@ if __name__ == "__main__":
       mapping['width'],mapping['height'] = mapping['s'].split(',')
   else:
       mapping['width'],mapping['height'] = 600, 400
+
+  if not HAS_MAPNIK_PYTHON:
+    print "Error: 'import mapnik' failed - confirm that mapnik is installed and on your PYTHONPATH."
+    sys.exit()
 
   def main():
     """
