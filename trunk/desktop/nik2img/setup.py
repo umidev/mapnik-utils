@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-# Dynamically calculate the version based.
+# Dynamically calculate the version.
 version = __import__('nik2img').__version__
 
 setup(name='nik2img',
