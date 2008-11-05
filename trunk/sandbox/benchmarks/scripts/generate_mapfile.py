@@ -117,7 +117,7 @@ def main():
     m.append_style(*line_style('states_outlines','black',.3))
     m.append_style(*text_style('states_shp_labels','STATE_ABBR',font='Times New Roman Regular'))
     m.append_style(*text_style('states_pg_labels','state_abbr',font='Times New Roman Regular'))
-    m.append_style(*line_style('tiger_styles','black',1))
+    m.append_style(*line_style('tiger_styles','black',.3))
     m.append_style(*raster_style('raster_style'))
     
     # Layers

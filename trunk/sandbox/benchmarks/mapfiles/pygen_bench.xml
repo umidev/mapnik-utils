@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Map srs="+init=epsg:4326" bgcolor="#ffffff">
+<Map srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" bgcolor="#ffffff">
     <Style name="raster_style">
         <Rule>
             <RasterSymbolizer/>
@@ -64,10 +64,12 @@
     </Style>
     <Style name="tiger_styles">
         <Rule>
-            <LineSymbolizer/>
+            <LineSymbolizer>
+                <CssParameter name="stroke-width">0.3</CssParameter>
+            </LineSymbolizer>
         </Rule>
     </Style>
-    <Layer name="states" srs="+init=epsg:4326" status="0" clear_label_cache="0">
+    <Layer name="states" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" status="0" clear_label_cache="0">
         <StyleName>states_shp_styles</StyleName>
         <StyleName>states_outlines</StyleName>
         <StyleName>states_shp_labels</StyleName>
@@ -76,7 +78,7 @@
             <Parameter name="type">shape</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="states_pg" srs="+init=epsg:4326" status="0" clear_label_cache="0">
+    <Layer name="states_pg" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" status="0" clear_label_cache="0">
         <StyleName>states_pg_styles</StyleName>
         <StyleName>states_outlines</StyleName>
         <StyleName>states_pg_labels</StyleName>
@@ -90,14 +92,14 @@
             <Parameter name="user">postgres</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="tiger_shp" srs="+init=epsg:4326" status="0" clear_label_cache="0">
+    <Layer name="tiger_shp" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" status="0" clear_label_cache="0">
         <StyleName>tiger_styles</StyleName>
         <Datasource>
             <Parameter name="file">../data/tiger_shp</Parameter>
             <Parameter name="type">shape</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="tiger_pg" srs="+init=epsg:4326" status="0" clear_label_cache="0">
+    <Layer name="tiger_pg" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" status="0" clear_label_cache="0">
         <StyleName>tiger_styles</StyleName>
         <Datasource>
             <Parameter name="dbname">foss4g2008</Parameter>
@@ -109,28 +111,28 @@
             <Parameter name="user">postgres</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="merano" srs="+init=epsg:32632" status="0" clear_label_cache="0">
+    <Layer name="merano" srs="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="0" clear_label_cache="0">
         <StyleName>raster_style</StyleName>
         <Datasource>
             <Parameter name="file">../data/merano.tiff</Parameter>
             <Parameter name="type">gdal</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="merano2" srs="+init=epsg:32632" status="0" clear_label_cache="0">
+    <Layer name="merano2" srs="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="0" clear_label_cache="0">
         <StyleName>raster_style</StyleName>
         <Datasource>
             <Parameter name="file">../data/merano_jptov.tiff</Parameter>
             <Parameter name="type">gdal</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="n_sid" srs="+init=epsg:32632" status="0" clear_label_cache="0">
+    <Layer name="n_sid" srs="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="0" clear_label_cache="0">
         <StyleName>raster_style</StyleName>
         <Datasource>
             <Parameter name="file">../data/S-34-30_2000.sid</Parameter>
             <Parameter name="type">gdal</Parameter>
         </Datasource>
     </Layer>
-    <Layer name="s_sid" srs="+init=epsg:32634" status="0" clear_label_cache="0">
+    <Layer name="s_sid" srs="+proj=utm +zone=34 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="0" clear_label_cache="0">
         <StyleName>raster_style</StyleName>
         <Datasource>
             <Parameter name="file">../data/S-34-30_2000.sid</Parameter>
