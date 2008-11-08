@@ -35,6 +35,8 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
+  * further test bug in extents when layers have been removed with `del`
+  * add ability to pull parameters from os.envir
   * expose png rendering with Cairo if '-i' flag is used to request either ARGB32 OR RGB24
   * refactor all the messy projections testing
   * create an --all-formats flag and do away with -i == 'all'
@@ -62,7 +64,7 @@ Remaining shp2img features:
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.2.0"
+__version__ = "0.2.1SVN"
 __license__ = "GPLv2"
 
 import os
@@ -770,7 +772,10 @@ class Map(object):
                   self.output_message("Removed previously ACTIVE layer '%s'" % l.name)
                 else:
                   self.output_message("Removed layer '%s'" % l.name)              
-                del self.mapnik_map.layers[layer_num]
+                # Deleting layers seems to cause errant bounding box shifts for rendered postgis layers
+                # Commenting this out for now and instead we'll make inactive
+                #del self.mapnik_map.layers[layer_num]
+                l.active = False
             else:
               found_layer = True
               self.output_message("Found layer '%s' out of %s total in mapfile" % (l.name,len(self.mapnik_map.layers)) )
@@ -1257,7 +1262,7 @@ if __name__ == "__main__":
 
   if not HAS_MAPNIK_PYTHON:
     print "Error: 'import mapnik' failed - confirm that mapnik is installed and on your PYTHONPATH."
-    sys.exit()
+    sys.exit(1)
 
   def main():
     """
