@@ -11,6 +11,8 @@ os.system('rm *.pyc')
 print
 os.system('svn cp ../nik2img/ %s/%s' % (tag_dir,version))
 print
+os.system('rm %s/%s/deploy.py' % (tag_dir,version))
+print
 os.system('python setup.py sdist upload')
 print
 os.system('cp dist/nik2img-%s.tar.gz %s' % (version,tag_dir))
