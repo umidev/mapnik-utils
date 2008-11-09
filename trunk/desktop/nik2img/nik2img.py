@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-__name__ = "nik2img"  
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.2.1SVN"
+__version__ = "0.2.1"
 __license__ = "GPLv2"
 
 import os
