@@ -5,30 +5,31 @@ A command line utility to take a cascadenik mml or mapnik xml file as input and 
 
  * Mirrors and extends the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility.
 
- * Download the second release: [http://mapnik-utils.googlecode.com/files/nik2img-0_2_0.tar 0.2.0].
-
- * View the working source code in [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ SVN Trunk]
-
 
 === Installation ===
 
 To run this program:
  * Make sure you have Mapnik installed
- * Then install manually, using easy_install, or run locally
+ * Then install manually or using easy_install
 
 To Install manually:
+ * Download the [http://mapnik-utils.googlecode.com/svn/tags/nik2img/ latest tagged release] or [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ from SVN trunk]
+ * Then do:
 {{{
-$ wget http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0.tar
-$ tar xvf nik2img-0_2_0.tar
-$ cd nik2img-0_2_0
 $ sudo python setup.py install
 }}}
  * This will place nik2img.py in `/usr/local/bin` and as a python module in `site-packages`
 
-To Install with [http://peak.telecommunity.com/DevCenter/EasyInstall easy_install]:
+To Install the latest release with [http://peak.telecommunity.com/DevCenter/EasyInstall easy_install] do:
 {{{
-$ sudo easy_install Nik2img
+$ sudo easy_install nik2img
 }}}
+
+Or to install the SVN version with easy_install do:
+{{{
+$ sudo easy_install http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/
+}}}
+
 
 Test Installation of module:
 {{{
@@ -43,13 +44,6 @@ Test Installation of command-line script:
 $ nik2img.py # should be able to tab complete...
 $ which nik2img.py # should show install location
 $ nik2img.py -h # should display usage
-}}}
-
-To run locally:
- * Download the script from: http://mapnik-utils.googlecode.com/svn/tags/nik2img/nik2img-0_2_0/nik2img.py
- * Then in that directory run:
-{{{
-$ python nik2img.py -h
 }}}
 
 
