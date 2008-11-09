@@ -1,8 +1,7 @@
-nik2img.py
-Copyright 2008, Dane Springmeyer (dbsgeo [ -a- ] gmail.com)
-======================================
+nik2img
+======
 
-A command line utility to take a mapnik xml or mml file as input and output an image.
+A command line utility to take a Mapnik xml or mml mapfile as input and output an image.
 
 To run this program:
     Make sure you have Mapnik installed (https://trac.mapnik.org/wiki/MapnikInstallation)
