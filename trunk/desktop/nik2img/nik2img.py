@@ -35,6 +35,9 @@ Wishlist:
   * Support for loading in python styles module/rules
   
 Todo:
+  * change all `os.system()` calls to subprocess.Popen
+  * pycallgraph support
+  * figure out how to open a folder on linux
   * further test bug in extents when layers have been removed with `del`
   * add ability to pull parameters from os.envir
   * expose png rendering with Cairo if '-i' flag is used to request either ARGB32 OR RGB24
@@ -176,7 +179,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
         """
         ----
 
@@ -246,6 +249,7 @@ class Map(object):
         self.mime = None
         self.fonts = fonts
         self.save_map = save_map
+        self.app = app
          
         # Non argument class attributes
         self.TIMING_STARTED = False
@@ -1048,27 +1052,32 @@ class Map(object):
     # Open the file or folder - this needs to get much smarter, particularly on linux
     # ===============================================    
     
-    def open(self, method='Desktop', app=None):
+    def open(self, app=None):
         """
         Routine to open the rendered image or folder of images from the filesystem.
         """
+        if not app and self.app:
+          app = self.app
         if not self.RENDERED:
-          self.render_file()
-        if not method == 'Desktop':
-          output_error("no other method supported at this time")
-        else:
-          import platform
-          if os.name == 'nt':
-            os.system('start %s' % self.image)
-          elif platform.uname()[0] == 'Linux':
-            # TODO figure out how to open a folder on linux
+            self.render_file()
+        import platform
+        if os.name == 'nt':
             if app:
-              os.system('%s %s' % (app, self.image))
+                output_message('Overriding default image viewer not yet supported on Win32')
+            os.system('start %s' % self.image)
+        elif platform.uname()[0] == 'Linux':
+            if app:
+                os.system('%s %s' % (app, self.image))
             else:
-              os.system('gthumb %s' % self.image) # other apps to try?
-          elif platform.uname()[0] == 'Darwin':
-            os.system('open %s' % self.image)
-          self.output_message("Completed, opening '%s' <%s'" %   (self.image, color_text(3, "%s" % make_line('=',55)),))
+                os.system('gthumb %s' % self.image)
+        elif platform.uname()[0] == 'Darwin':
+            if app:
+                os.system('%s %s' % (app, self.image))
+            else:
+                os.system('open %s' % self.image)
+        else:
+            output_message('Platform not supported yet for automatic opening of images',warning=True)
+        self.output_message("Completed, opening '%s' <%s'" %   (self.image, color_text(3, "%s" % make_line('=',55)),))
 
 
 # =============================================================================
@@ -1112,6 +1121,7 @@ if __name__ == "__main__":
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie. wld)%s." % color_text(4,'*')
     print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
     print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile as xml with the specified name%s." % color_text(4,'*')
+    print "--app\t\t" + "[none]\t\t" + "Specify the desired application for opening the image result%s." % color_text(4,'*')
     print "--quiet\t\t[off]\t\tTurn on quiet mode to suppress the mapnik c++ debug printing and all python errors%s." % color_text(4,'*')
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
@@ -1136,7 +1146,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap=','app='])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1151,7 +1161,8 @@ if __name__ == "__main__":
     if argument.find('--') > -1:
       output_error("argumentuments can't have a '--' characters within them, did you forget to specify a value for an optionion %s?" % option)
     if option == "-m":
-         mapping['m'] = argument
+        mapping['m'] = argument
+
     elif option == "-o":
         mapping['o'] = argument
         
@@ -1239,6 +1250,9 @@ if __name__ == "__main__":
     elif option == "--savemap":
         mapping['savemap'] = argument
 
+    elif option == "--app":
+        mapping['app'] = argument
+
     elif option == "--profile":
         mapping['profile'] = True
 
@@ -1276,7 +1290,7 @@ if __name__ == "__main__":
         layers=get('l'), expand=get('expand'), re_render_times=get('c'), post_map_pause=get('t'),
         post_step_pause=get('pause'), trace_steps=get('pdb'), levels=get('levels'), resolutions=get('resolutions'), 
         find_and_replace=get('d'), no_color=has('nocolor'), quiet=has('quiet'), dry_run=has('n'), verbose=has('v'),
-        debug=has('debug'), world_file=get('worldfile'), fonts=get('fonts'), save_map=get('savemap'),
+        debug=has('debug'), world_file=get('worldfile'), fonts=get('fonts'), save_map=get('savemap'), app=get('app'),
         )
     if has('o'):
       if has('noopen'):
