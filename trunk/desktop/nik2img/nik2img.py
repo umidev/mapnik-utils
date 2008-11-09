@@ -31,6 +31,8 @@ Limitations:
   Paths to file system datasources in the XML files loaded will be relative to your dir.
 
 Wishlist:
+  * nikinfo: legend creation, both as HTML/CSS and PNG
+  * nikinfo: OGR datasource integration
   * Allow for setting the path to datasources (will need patch to mapnik core)
   * Support for loading in python styles module/rules
   
@@ -1126,13 +1128,16 @@ if __name__ == "__main__":
     print "--profile\t[off]\t\tOutput a cProfile report on script completion%s." % color_text(4,'*')
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
+    print "--version\t" + "[off]\t\t" + "Prints the nik2img version."
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
+
     
     print "%s\n %s Additional features in nik2img not part of shp2img." % (make_line('-',75), color_text(4,'*'))
     print "%s" % make_line('-',75)
     print " More info: http://code.google.com/p/mapnik-utils/wiki/Nik2Img"
     color_print(3, "%s" % make_line('=',75))
-    color_print(7,"Dane Springmeyer, dbsgeo (a-t) gmail.com")
+    color_print(7,__author__)
+    color_print(7,"Version: %s" % __version__)
     print
 
   def get(key):
@@ -1146,7 +1151,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap=','app='])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap=','app=','version'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1258,6 +1263,10 @@ if __name__ == "__main__":
 
     elif option == "-h":
         usage(sys.argv[0])
+        sys.exit(1)
+
+    elif option == "--version":
+        print __version__
         sys.exit(1)
         
     else:
