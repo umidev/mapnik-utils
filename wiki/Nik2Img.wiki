@@ -16,6 +16,8 @@ To Install manually:
  * Download the [http://mapnik-utils.googlecode.com/svn/tags/nik2img/ latest tagged release] or [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ from SVN trunk]
  * Then do:
 {{{
+$ tar xvf nik2img-*.tar.gz # * denotes the release number
+$ cd nik2img-*
 $ sudo python setup.py install
 }}}
  * This will place nik2img.py in `/usr/local/bin` and as a python module in `site-packages`
