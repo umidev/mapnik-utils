@@ -2,7 +2,7 @@
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.2.1"
+__version__ = "0.2.1SVN"
 __license__ = "GPLv2"
 
 import os
@@ -118,9 +118,10 @@ class Map(object):
         """
         ----
 
-        Initialize a nik2img Map object either from the commandline or as a module import.
-        
-        Then call build() and either provide an output image path and use render_file() or pipe the output using render_stream()
+        The Map class instanciates a Mapnik map graphic with a path to an xml or mml mapfile.
+        But it also accept an a variety of keyword arguments to customize output.
+        After creating a Map class either call open() to open the image from the filesystem
+        or stream() to print the image to STDOUT. 
         
         Required argument:
         --> mapfile\t string\t path to a mapnik xml or cascadenik mml file
@@ -129,7 +130,7 @@ class Map(object):
         --> See the commandline usage
         
         Usage:
-        
+
         To save a image to the filesystem and open it with the default viewer:
         >>> from nik2img import Map
         >>> file = Map('/path/to/mapfile.xml','map.png')
