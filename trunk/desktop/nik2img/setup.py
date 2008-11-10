@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-# Dynamically fetch the version and licence
+# Dynamically fetch the version, licence, and readme
 version = __import__('nik2img').__version__
 license = __import__('nik2img').__license__
 readme = file('README.txt','rb').read()
@@ -11,7 +11,7 @@ setup(name='nik2img',
         version = version,
         py_modules=['nik2img'],
         #py_modules = ['cascadenik.compile', 'cascadenik.style']
-        description='A mapfile to image converter for Mapnik',
+        description='A mapfile to image converter for the Mapnik C++/Python mapping toolkit',
         long_description=readme,
         author='Dane Springmeyer',
         author_email='dbsgeo@gmail.com',
