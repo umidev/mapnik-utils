@@ -1063,6 +1063,7 @@ if __name__ == "__main__":
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "--version\t" + "[off]\t\t" + "Prints the nik2img version."
+    print "--test\t" + "[off]\t\t" + "Tests generation of hello world map using mapnik python bindings."
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
 
     
@@ -1085,7 +1086,7 @@ if __name__ == "__main__":
     else: return False
 
   try:
-    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap=','app=','version'])
+    options, arguments = getopt.getopt(sys.argv[1:], "m:o:i:e:s:r:p:t:l:z:d:c:nvh", ['quiet','debug','nocolor','noopen','pause=','pdb=', 'levels=', 'resolutions=', 'expand=','zoomto=','zoomlyr=','zoomrad=','maxres=','profile','worldfile=','fonts=','savemap=','app=','version','test'])
   except getopt.GetoptError, err:
     output_error(err,yield_usage=True)
 
@@ -1202,6 +1203,9 @@ if __name__ == "__main__":
     elif option == "--version":
         print __version__
         sys.exit(1)
+
+    elif option == "--test":
+        mapping['test'] = True
         
     else:
         usage(sys.argv[0])
@@ -1244,7 +1248,10 @@ if __name__ == "__main__":
       print nik_map.stream()
 
   if has('profile'):
-   import cProfile
-   cProfile.run('main()', sort=1)
+      import cProfile
+      cProfile.run('main()', sort=1)
+  elif has('test'):
+      from niktests import hello_world
+      hello_world()
   else:
-   main()
+      main()
