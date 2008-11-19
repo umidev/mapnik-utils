@@ -33,6 +33,7 @@
             map.setBaseLayer(tms);
  
             map.addControl(new OpenLayers.Control.Navigation()); 
+            map.addControl(new OpenLayers.Control.MousePosition()); 
             map.addControl(new OpenLayers.Control.PanZoom());
             map.addControl(new OpenLayers.Control.Permalink());
             map.addControl(new OpenLayers.Control.LayerSwitcher());
