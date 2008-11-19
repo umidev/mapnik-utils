@@ -1,1 +1,0 @@
-nik2img.py -m ../mapfiles/pygen_bench.xml -v -n
