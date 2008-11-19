@@ -29,7 +29,7 @@ m.background = Color(220, 226, 240)
 # Layers are added in stacking order (i.e. bottom layer first)
  
 state_lyr = Layer('States')
-state_lyr.datasource = Shapefile(file='../../sample_data/statesp020')
+state_lyr.datasource = Shapefile(file='../../../data/statesp020')
 state_lyr.styles.append('states')
 m.layers.append(state_lyr)
  

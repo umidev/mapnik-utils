@@ -4,7 +4,7 @@
     <!ENTITY poly_color "purple">
     <!ENTITY stroke_color "yellow">
     <!ENTITY stroke_width ".5">
-    <!ENTITY shp_datasource "../../sample_data/world_borders">
+    <!ENTITY shp_datasource "../../../data/world_borders">
 ]>
 <Map bgcolor="&water_color;" srs="+proj=latlong +datum=WGS84">
 

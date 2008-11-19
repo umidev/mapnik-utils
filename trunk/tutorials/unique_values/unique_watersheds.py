@@ -44,7 +44,7 @@ def generate_unique_values(features):
   return s
 
 # Fetch feature count from ogrinfo
-# $ ogrinfo -so -al ../../sample_data/north_pacific_ecoregions.shp | grep 'Feature Count:'
+# $ ogrinfo -so -al ../../../data/north_pacific_ecoregions.shp | grep 'Feature Count:'
 # Feature Count: 37
 features = 37 # Mapnik will need to expose datasource properties to be able to read this dynamically
 

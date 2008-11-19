@@ -14,7 +14,7 @@
     <Layer name="world" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="0">
         <StyleName>My Style</StyleName>
         <Datasource>
-            <Parameter name="file">../../sample_data/world_borders</Parameter>
+            <Parameter name="file">../../../data/world_borders</Parameter>
             <Parameter name="type">shape</Parameter>
         </Datasource>
     </Layer>

@@ -20,7 +20,7 @@ Usage:
   A sample mapfile (`mapfile.xml') is located at:
     http://mapnik-utils.googlecode.com/svn/trunk/serverside/cgi/mapfile.xml
   A sample shapefile is located inside:
-    http://mapnik-utils.googlecode.com/svn/trunk/sample_data/
+    http://mapnik-utils.googlecode.com/svn/data/
   
 Limitations: 
   This script is not intended for use in a production environment in order to dynamically generate images. 
