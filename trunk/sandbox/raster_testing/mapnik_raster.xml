@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over" bgcolor="red">
+
+  <Style name="raster_style">
+      <Rule>
+          <RasterSymbolizer/>
+      </Rule>
+  </Style>
+
+  <Style name="vector_style">
+    <Rule>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f2eff9</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(50%,50%,50%)</CssParameter>
+        <CssParameter name="stroke-width">0.1</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+  
+  <Layer name="raster" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+      <StyleName>raster_style</StyleName>
+      <Datasource>
+          <Parameter name="file">world_black_tiff_gmercator.tif</Parameter>
+          <Parameter name="type">raster</Parameter> 
+          <Parameter name="format">tiff</Parameter>
+          <Parameter name="lox">-20037508.3428</Parameter>
+          <Parameter name="loy">-16213033.188</Parameter>
+          <Parameter name="hix">20038946.4359</Parameter>
+          <Parameter name="hiy">16213801.0676</Parameter>
+      </Datasource>
+  </Layer>    
+    
+  <Layer name="world" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <StyleName>vector_style</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">world_boundaries_m</Parameter>
+    </Datasource>
+  </Layer>
+  
+</Map>

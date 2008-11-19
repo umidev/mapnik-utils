@@ -1,0 +1,53 @@
+# bug.map
+
+# used to show examples of 4326 to 900913 problem
+
+MAP
+  NAME	'bug'
+  PROJECTION
+    "init=epsg:4326"
+  END
+
+  IMAGECOLOR 255 0 0
+  EXTENT  -180 -90 180 90
+  SIZE 600 600
+
+  # layers to include in map
+  LAYER
+    NAME "imagery"
+    PROJECTION
+      "init=epsg:4326"
+    END
+
+    METADATA
+      "wms_srs"             "EPSG:4326 EPSG:900913"
+      "wms_name"            "imagery"
+      "wms_server_version"  "1.1.1"
+      "wms_format"          "image/png"
+      "wms_onlineresource"  "http://localhost/cgi-bin/mapserv?map=/Users/spring/projects/mapnik-utils/trunk/sandbox/bug.map&"
+    END
+
+    DATA "wgs84_big_black.tif"
+    TYPE RASTER
+    STATUS DEFAULT
+  END # end layer
+  #INCLUDE "countries.map"
+
+  # WEB PARAMETERS
+  WEB
+    IMAGEURL "http://localhost/tmp"
+    IMAGEPATH "/var/www/html/tmp"
+  END
+
+  # OUTPUT FORMAT SPECIFICATION
+  OUTPUTFORMAT
+    NAME 'png'
+    DRIVER GD/PNG
+    IMAGEMODE RGBA
+    EXTENSION "png"
+    FORMATOPTION "TRANSPARENT=ON"
+    FORMATOPTION "INTERLACE=OFF"
+    TRANSPARENT OFF # turn ON for no background color
+  END #end outputformat
+
+END # end map
