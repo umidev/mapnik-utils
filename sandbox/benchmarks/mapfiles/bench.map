@@ -1,0 +1,281 @@
+# Map server benchmark map file
+MAP
+  IMAGETYPE      PNG
+  EXTENT         -180 -90 180 90
+  SIZE           400 300
+  SHAPEPATH      "../sample_data/"
+  IMAGECOLOR     255 255 255
+  FONTSET        "./fonts/fonts.list"
+  
+  PROJECTION
+      "init=epsg:4326"
+  END
+  
+  OUTPUTFORMAT
+    NAME 'AGG'
+    DRIVER AGG/PNG
+    IMAGEMODE RGB
+  END
+
+  OUTPUTFORMAT
+   NAME 'AGG_Q'
+   DRIVER AGG/PNG
+   IMAGEMODE RGB
+   FORMATOPTION "QUANTIZE_FORCE=ON"
+   FORMATOPTION "QUANTIZE_DITHER=OFF"
+   FORMATOPTION "QUANTIZE_COLORS=256"
+  END
+
+  # Debug
+  CONFIG  "MS_ERRORFILE" "/tmp/mapserver.log"
+  #DEBUG   2
+
+  # WMS and WFS metadata
+  WEB
+    METADATA
+      "wms_title"           "WMS Demo Server"
+      "wms_onlineresource"  "http://192.168.1.4/cgi-bin/mapserv.fcgi?map=/var/www/share/bench.map&"
+      "wms_srs"             "EPSG:4326"
+      "wfs_title"           "WFS Demo Server"
+      "wfs_onlineresource"  "http://192.168.1.4/cgi-bin/mapserv.fcgi?map=/var/www/share/bench.map&"
+      "wfs_srs"             "EPSG:4326"
+    END
+  END
+
+  # STATE_POLYGONS
+  LAYER
+    NAME        states
+    METADATA
+      "wms_title"    "Distribution of population in USA, polygons"
+      "wfs_title"    "USA population"
+      "gml_featureid" "ID"
+      "gml_include_items" "all"
+    END
+    DATA        states
+    TYPE        POLYGON
+    LABELITEM   "STATE_ABBR"
+    DUMP        TRUE
+	
+	  # Projection
+    PROJECTION
+      "init=epsg:4326"
+    END
+    
+    CLASS
+      NAME 'less than 2M'
+      EXPRESSION ([PERSONS] < 2000000)
+      STYLE
+        COLOR     77 255 77
+        OUTLINECOLOR   0 0 0
+      END
+      
+      LABEL
+        COLOR 0 0 0
+        ANTIALIAS FALSE
+        TYPE TRUETYPE
+        FONT "TimesNewRoman"
+        SIZE 11
+        POSITION CC
+        PARTIALS FALSE
+      END
+    END
+    
+    CLASS
+      NAME 'between 2M and 4M'
+      EXPRESSION (2000000 <= [PERSONS] AND [PERSONS] < 4000000 )
+      STYLE
+        COLOR     255 77 77
+        OUTLINECOLOR   0 0 0
+      END
+      
+      LABEL
+        COLOR 0 0 0
+        ANTIALIAS FALSE
+        TYPE TRUETYPE
+        FONT "TimesNewRoman"
+        SIZE 11
+        POSITION CC
+        PARTIALS FALSE
+      END
+    END
+
+    CLASS
+      NAME 'more than 4M'
+      EXPRESSION ([PERSONS] >= 4000000 )
+      STYLE
+        COLOR     77 77 255
+        OUTLINECOLOR   0 0 0
+      END
+      
+      LABEL
+        COLOR 0 0 0
+        ANTIALIAS FALSE
+        TYPE TRUETYPE
+        FONT "TimesNewRoman"
+        SIZE 11
+        POSITION CC
+        PARTIALS FALSE
+      END
+    END
+  END
+  
+  # Tiger texas, postgis, full roads (1M lines)
+  LAYER
+    NAME        tiger_pg
+    METADATA
+      "wms_title"    "Tiger lines, Texas, PostGIS"
+      "wfs_title"    "Tiger lines, Texas, PostGIS"
+      "gml_featureid" "ID"
+      "gml_include_items" "all"
+      "wms_extent" "-106.64395234549875 25.841083405399676 -93.51951316494875 36.50068992305937"
+    END
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+    CONNECTIONTYPE postgis
+    CONNECTION "user=geoserver password=postgis dbname=foss4g2008 host=localhost"
+    DATA "the_geom from tiger_pg"
+    STATUS      OFF
+    TYPE        LINE
+    #DUMP        TRUE
+
+    # Projection (shared by all layers)
+    PROJECTION
+      "init=epsg:4326"
+    END
+    
+    CLASS
+      STYLE
+        COLOR     0 0 0
+      END
+    END
+  END
+  
+  # Tiger texas, postgis, full roads (1M lines)
+  LAYER
+    NAME        tiger_shp
+    METADATA
+      "wms_title"    "Tiger lines, Texas, Shapefile"
+      "wfs_title"    "Tiger lines, Texas, Shapefile"
+      "gml_featureid" "ID"
+      "gml_include_items" "all"
+      "wms_extent" "-106.64395234549875 25.841083405399676 -93.51951316494875 36.50068992305937"
+    END
+    DATA tiger_shp
+    STATUS      ON
+    TYPE        LINE
+    #DUMP        TRUE
+
+    # Projection (shared by all layers)
+    PROJECTION
+      "init=epsg:4326"
+    END
+    
+    CLASS
+      STYLE
+        COLOR     0 0 0
+      END
+    END
+  END
+  
+  # States shapefile imported into PostGIS
+  LAYER
+    NAME        states_pg
+    METADATA
+      "wms_title"    "States, PostGIS"
+      "wfs_title"    "States, PostGIS"
+      "gml_featureid" "ID"
+      "gml_include_items" "all"
+    END
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+    CONNECTIONTYPE postgis
+    CONNECTION "user=geoserver password=postgis dbname=foss4g2008 host=127.0.0.1"
+    DATA "the_geom from states_pg"
+    STATUS      ON
+    TYPE        POLYGON
+    DUMP        TRUE
+
+    # Projection (shared by all layers)
+    PROJECTION
+      "init=epsg:4326"
+    END
+    
+    CLASS
+      STYLE
+        COLOR     0 0 0
+      END
+    END
+  END
+ 
+  # Merano TIFF layer (single file, tiled, overviews)
+  LAYER 
+    NAME         merano
+    DATA         "merano_jptov.tiff"
+    TYPE         RASTER
+    #PROCESSING   "RESAMPLE=AVERAGE"
+    #PROCESSING   "RESAMPLE=BILINEAR"
+    
+    METADATA
+      "wms_title"    "Merano TIFF imagery"
+      "wms_extent" "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161"
+    END
+
+    # Projection
+    PROJECTION
+      "init=epsg:32632"
+    END
+  END 
+
+  # Merano TIFF layer (single file, tiled, overviews)
+  LAYER 
+    NAME         merano2
+    DATA         "merano.tiff"
+    TYPE         RASTER
+    #PROCESSING   "RESAMPLE=AVERAGE"
+    #PROCESSING   "RESAMPLE=BILINEAR"
+    
+    METADATA
+      "wms_title"    "Merano TIFF imagery"
+      "wms_extent" "663686.6867493344 5171720.999428161 664366.6867493344 5172320.999428161"
+    END
+
+    # Projection
+    PROJECTION
+      "init=epsg:32632"
+    END
+  END
+  
+  # Landsat MrSid layer 
+  LAYER 
+    NAME         N-32-45_2000
+    DATA         "N-32-45_2000.sid"
+    TYPE         RASTER
+    
+    METADATA
+      "wms_title"    "Landsat, N-32-45_2000.sid"
+      "wms_extent"   "193899.75 4984863.625 806108.25 5543948.125"
+    END
+
+    # Projection
+    PROJECTION
+      "init=epsg:32632"
+    END
+  END
+  
+  # MrSid layer 
+  LAYER 
+    NAME         S-34-30_2000
+    DATA         "S-34-30_2000.sid"
+    TYPE         RASTER
+    
+    METADATA
+      "wms_title"    "Landsat, S-34-30_2000.sid"
+      "wms_extent"   "160576.125 -3875914.625 839403.375 -3317784.875"
+    END
+
+    # Projection
+    PROJECTION
+      "init=epsg:32634"
+    END
+  END
+
+# End of map file
+END 
