@@ -10,16 +10,24 @@
 # http://www.nabble.com/Re%3A-Fractional-line-widths--p19231113.html
 
 MAP
+  STATUS              ON
+  UNITS                METERS
   IMAGETYPE        AGG
   EXTENT             -180 -93 180 86
   SIZE                   600 300
   SHAPEPATH       "../../data/"
   IMAGECOLOR     70 130 180
-  
+   
   OUTPUTFORMAT 
    NAME 'AGG' 
    DRIVER AGG/PNG 
    IMAGEMODE RGB
+   extension "png"
+   mimetype "image/png"
+  END
+
+  PROJECTION
+   "init=epsg:4326"
   END
 
   LAYER 
@@ -36,43 +44,5 @@ MAP
       END
     END # class
   END # layer
-  
-  LAYER 
-    NAME         world_opacity
-    DATA         world_borders.shp
-    STATUS      ON
-    TYPE          POLYGON
-    CLASS
-      NAME       "World"
-      STYLE
-        COLOR                 242 239 249
-        OUTLINECOLOR    -1 -1 -1
-      END
-      STYLE
-        COLOR                 -1 -1 -1
-        OUTLINECOLOR   127 127 127
-        OPACITY 50
-        WIDTH 1
-      END
-    END # class
-  END # layer
-
-  LAYER 
-    NAME         thomas
-    DATA         world_borders.shp
-    STATUS      ON
-    TYPE          POLYGON
-    CLASS
-      NAME       "World"
-      STYLE
-        COLOR                 242 239 249
-      END
-      STYLE
-        OUTLINECOLOR   127 127 127
-        OPACITY 10
-        WIDTH 1
-      END
-    END # class
-  END # layer
-  
+    
 END  # map
