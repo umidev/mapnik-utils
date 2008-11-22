@@ -3,7 +3,7 @@
 
 A command line utility to take a cascadenik mml or mapnik xml file as input and output an image.
 
- * Mirrors and extends the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility.
+ * Mirrors and extends the usefulness of the Mapserver [http://mapserver.gis.umn.edu/docs/reference/utilityreference/shp2img shp2img] utility, but for use with Mapnik.
 
 
 === Installation ===
