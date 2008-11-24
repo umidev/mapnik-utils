@@ -5,8 +5,8 @@
 # http://tilloy.net/dev/pyexiv2/
 # calculate all iso dynamically?
 # [sqrt(v[0]*v[1]) for k,v in iso.items()]
-# cleanup use of 'res_unit'
-# support margins in pixels
+# support specifing margins in pixels
+# carry through ppi for later use
 
 # dpi, ppi, and metric standards 
 # http://en.wikipedia.org/wiki/Dots_per_inch
@@ -50,6 +50,7 @@ def msg(msg):
 
 # in millimetres
 iso = {
+  # iso A series
   'A0': (841,1189),
   'A1': (594,841),
   'A2': (420,594),
@@ -61,6 +62,7 @@ iso = {
   'A8': (52,74),
   'A9': (37,52),
   'A10': (26,37),
+  # iso B series
   'B0': (1000,1414),
   'B1': (707,1000),
   'B2': (500,707),
@@ -72,6 +74,7 @@ iso = {
   'B8': (62,88),
   'B9': (44,62),
   'B10': (31,44),
+  # iso C series
   'C0': (917,1297),
   'C1': (648,917),
   'C2': (458,648),
@@ -83,8 +86,12 @@ iso = {
   'C8': (57,81),
   'C9': (40,57),
   'C10': (28,40),
+  # DIN 476
   '4A0': (1682,2378),
   '2A0': (1189,1682),
+  # SIS 014711
+  'G5': (169,239),
+  'E5': (155,220),
   }
 
 jis = {
@@ -296,7 +303,7 @@ def print_map_by_name(papername,**kwargs):
     return get_pixels(unit,w,h,**kwargs)
 
 
-parser = optparse.OptionParser(usage="""pixel2print.py [options]
+parser = optparse.OptionParser(usage="""python print2pixel.py <papersize> [options]
 
 Usage:
     $ python print2pixel.py tabloid -r 300 -u inches
@@ -305,25 +312,35 @@ Usage:
 
 """)
 
-parser.add_option('-r', '--resolution', dest='print_res', type='float',
+parser.add_option('-r', '--resolution',
+    dest='print_res', type='float',
     help='Specify the desired resolution in ppi (pixels per inch) of micron (size of pixel)')
-parser.add_option('-u', '--units', dest='res_unit',
+parser.add_option('-u', '--units',
+    dest='res_unit',
     help='Specify the units as either inches or microns')
-parser.add_option('-m', '--margin', dest='margin', type='float',
+parser.add_option('-m', '--margin',
+    dest='margin', type='float',
     help='Paper margin in the units of the paper size')
-parser.add_option('-l', '--landscape', action='store_const', const='landscape', dest='layout',
+parser.add_option('-l', '--landscape',
+    action='store_const', const='landscape', dest='layout',
     help='Force lanscape orientation')
-parser.add_option('-p', '--portrait', action='store_const', const='portrait', dest='layout',
+parser.add_option('-p', '--portrait',
+    action='store_const', const='portrait', dest='layout',
     help='Force portrait orientation')
-parser.add_option('-v', '--VERBOSE', action='store_true', dest='VERBOSE',
+parser.add_option('-v', '--VERBOSE',
+    action='store_true', dest='VERBOSE',
     help='VERBOSE debug output')
-parser.add_option('-s', '--screen', action='store_const', const=True, dest='screen_res',
+parser.add_option('-s', '--screen',
+    action='store_const', const=True, dest='screen_res',
     help='Set the --resolution to the PPI of your screen')
-parser.add_option('-w', '--screenwidth', dest='screen_width', type='float',
+parser.add_option('-w', '--screenwidth',
+    dest='screen_width', type='float',
     help='Screen width in inches')
-parser.add_option('-d', '--displaypixels', dest='display_res',
+parser.add_option('-d', '--displaypixels',
+    dest='display_res',
     help='Display pixels as w,h')
-parser.add_option('--render', action='store_const', const=True, dest='render',
+parser.add_option('--render',
+    action='store_const', const=True, dest='render',
     help='Render the result using nik2img')
 
 if __name__ == '__main__':
