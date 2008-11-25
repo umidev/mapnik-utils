@@ -23,6 +23,15 @@
 # http://en.wikipedia.org/wiki/ISO_216
 # http://en.wikipedia.org/wiki/Paper_size
 
+# internal pixel size assumptions
+# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L314
+# http://trac.gispython.org/lab/browser/PCL/trunk/PCL-Core/cartography/context/rendering.py#L112
+# http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L32
+
+# internal conversion
+# deg - > radians
+# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L169
+
 import optparse
 import sys
 import copy
