@@ -5,5 +5,5 @@ from mapnik.ogcserver.WMS import BaseWMSFactory
 class WMSFactory(BaseWMSFactory):
   def __init__(self):
     BaseWMSFactory.__init__(self)
-    self.loadXML('/Users/spring/projects/mapnik-utils/trunk/tutorials/wms/population.xml')
+    self.loadXML('/Users/spring/projects/mapnik-utils/example_code/wms/population.xml')
     self.finalize()
