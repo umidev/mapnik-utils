@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>TileCache & Mapnik generate_tiles.py Cache</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    html, body { height: 100%; }
+    body {margin: 0px;}
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+<script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
+<script src="http://openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+<script type="text/javascript">
+        var map, osm_official_tiles, generate_tiles_cache, g;
+        
+        function init() {
+            
+            // Options for World Map in Google Spherical Mercator Projection
+            var options = { 
+                maxResolution: 156543.0339,
+                units: 'm',
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34)
+                };
+            
+             function getTileURL (bounds) {
+                var res = this.map.getResolution();
+                var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+                var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+                var z = this.map.getZoom();
+                var limit = Math.pow(2, z);
+                if (y < 0 || y >= limit)
+                {
+                    return ""; // Tile not found. Use Firefox and Firebug to see url requested
+                }
+                else
+                {
+                    x = ((x % limit) + limit) % limit;       
+                    var url = this.url;
+                    var path = z + "/" + x + "/" + y + ".png";
+                    if (url instanceof Array)
+                    {
+                        url = this.selectUrl(path, url);
+                    }
+                    return url + path;
+                }
+            }
+            
+            map = new OpenLayers.Map("map", options);
+            
+            
+            // Change this url based on the location of your tiles, ie the location set by 'MAPNIK_TILE_DIR'
+            // See 'http://svn.openstreetmap.org/applications/rendering/mapnik' for more details
+            var generate_tiles_url = "http://localhost/cache/generate_tiles_cache/"
+
+            // Layer to read from local cache created by generate_tiles.py
+            // http://trac.openlayers.org/browser/trunk/openlayers/lib/OpenLayers/Layer/TileCache.js#L75            
+            generate_tiles_cache = new OpenLayers.Layer.TileCache(
+                        "OL Tilecache Layer using generate_tiles.py cache", // Name
+                        generate_tiles_url, // URL
+                         "dummy", // layername: unused but must be set
+                         { type: "png", getURL: getTileURL }); // Options
+            
+            // Uses linked OpenStreetMap.js from openstreetmap as a comparison layer
+            osm_official_tiles = new OpenLayers.Layer.OSM.Mapnik("OpenStreetMap (Mapnik)");
+                                     
+            map.addLayers([generate_tiles_cache,osm_official_tiles]);
+            map.addControl(new OpenLayers.Control.Scale());
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl(new OpenLayers.Control.Navigation()); 
+            map.addControl(new OpenLayers.Control.PanZoom());
+            var ls = new OpenLayers.Control.LayerSwitcher()
+            map.addControl(ls);
+            ls.maximizeControl();
+            map.zoomToMaxExtent();
+            }
+    </script>
+  </head>
+  <body onload="init()">
+     <h2 style="position:absolute; z-index:10000; left: 100px;">TileCache & Mapnik generate_tiles.py Cache</h2>
+    <div id="map">
+    </div>
+  </body>
+</html>

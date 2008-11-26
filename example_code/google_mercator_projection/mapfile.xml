@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=latlong +datum=WGS84" bgcolor="transparent">
+    <Style name="My Style">
+        <Rule>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">black</CssParameter>
+            </PolygonSymbolizer>
+            <LineSymbolizer>
+                <CssParameter name="stroke">#D9D953</CssParameter>
+                <CssParameter name="stroke-width">0</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>    
+    <!--
+    <Style name="My Text">    
+        <Rule>
+            <Filter>[POP2005] &gt;= 9450000</Filter>
+            <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="7" fill="steelblue" halo_fill= "#DFDBE3" halo_radius="1" wrap_width="30" spacing="3" allow_overlap="true" avoid_edges="false" min_distance="5"/>
+       </Rule>
+    </Style>
+    -->
+
+    <Layer name="world" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="1">
+        <StyleName>My Style</StyleName>
+        <Datasource>
+            <Parameter name="file">../../../data/tm_wgs84_sans_antarctica</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+
+    <!--
+    <Layer name="world" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="1">
+        <StyleName>My Text</StyleName>
+        <Datasource>
+            <Parameter name="file">../../sample_data/tm_wgs84_sans_antarctica</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+    -->
+</Map>
