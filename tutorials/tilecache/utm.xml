@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=utm +zone=12 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" bgcolor="#4682b4">
+
+	
+	<Style name="base Style">
+      <Rule>
+      <Filter>[Handle] = 'acc_ramp' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#ffffdf</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#808080</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'bldg' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#ffffff</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#808080</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'c_detail' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#e6e6e6</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'mountain' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#d1ffb9</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#808080</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'nothing' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f0f</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#808080</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'grass' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#b9d9b9</CssParameter>
+      </PolygonSymbolizer>
+     </Rule>
+      <Rule>
+      <Filter>[Handle] = 'road' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#c1c1c1</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'sidewalk' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f0f0f0</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#808080</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+	 </Rule>
+      <Rule>
+      <Filter>[Handle] = 'sidewalk_edge' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#949590</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule>
+      <Rule>
+      <Filter>[Handle] = 'tennis' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#61ad76</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule>
+      <Rule>
+      <Filter>[Handle] = 'trees' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#155f2a</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule>
+      <Rule>
+      <Filter>[Handle] = 'wall' </Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#85541b</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#b7b7b7</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule>
+     <Rule>
+      <ElseFilter/> <!-- This will catch all other values - in this case just India and China -->
+      <!-- A dark red polygon fill and black outline is used here to highlight these two countries -->
+      <PolygonSymbolizer>
+        <CssParameter name="fill">darkred</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">black</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule> 
+    </Style>
+    
+    <Style name="city"> 
+        <Rule>
+        <PolygonSymbolizer>
+        <CssParameter name="fill">darkred</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">black</CssParameter>
+        <CssParameter name="stroke-width">.7</CssParameter>
+      </LineSymbolizer>
+     </Rule> 
+    </Style>
+
+    <Layer name="city" srs="+proj=utm +zone=12 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="1" clear_label_cache="0">
+        <StyleName>city</StyleName>
+        <Datasource>
+            <Parameter name="file">shp/cities</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer> 
+        
+    <Layer name="base" srs="+proj=utm +zone=12 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" status="1" clear_label_cache="0">
+        <StyleName>base Style</StyleName>
+        <Datasource>
+            <Parameter name="file">shp/2nd_test_UTM12N</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer> 
+</Map>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=latlong +datum=WGS84" bgcolor="#000000">
+    <Style name="Polys">
+        <Rule>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#ff8c00</CssParameter>
+            </PolygonSymbolizer>
+            <LineSymbolizer>
+                <CssParameter name="stroke">#008000</CssParameter>
+                <CssParameter name="stroke-width">0.5</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="Text">
+        <Rule>
+            <TextSymbolizer name="MR" face_name="gargi Medium" size="30" fill="#000000" halo_radius="1"></TextSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="Polygon Layer" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="1">
+        <StyleName>Polys</StyleName>
+        <Datasource>
+            <Parameter name="file">mrdata</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="Text Layer" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="1">
+        <StyleName>Text</StyleName>
+        <Datasource>
+            <Parameter name="file">mrdata</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+</Map>

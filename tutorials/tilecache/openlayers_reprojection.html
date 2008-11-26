@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Mapnik TMS Layer Test</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    html, body { height: 100%; }
+    body {margin: 0px;}
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    </style>
+    <script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
+    <script type="text/javascript">
+        var map, tms, tilecache, antarctic_extent;
+        function init() { 
+            var options = {
+                projection: new OpenLayers.Projection("EPSG:3031"),
+                resolution: 10945.273631840791,
+                units: 'm',
+                maxResolution: 'auto', //433918.4389105067
+		        maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
+		        };
+            map = new OpenLayers.Map('map', options);
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/wms/mapnikwms.py?", {layers: 'world', format:'image/png'} );
+            tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer via TMS",
+                "http://localhost/tilecache/tilecache.cgi/", { serviceVersion: "1.0.0", layername: "polar",  type: "png" });
+            tilecache = new OpenLayers.Layer.TileCache(
+                "TileCache Server Static Cache (only if exists)", "http://localhost/cache",
+                "polar", { format: "image/png", });
+ 
+            map.addLayers([wms, tms, tilecache]);
+            //map.setBaseLayer(tms);
+ 
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            var control = new OpenLayers.Control();
+            OpenLayers.Util.extend(control, {
+                draw: function () {
+                    // this Handler.Box will intercept the shift-drag zoomBox
+                    this.box = new OpenLayers.Handler.Box( control,
+                        {"done": this.notice},
+                        {keyMask: OpenLayers.Handler.MOD_ALT});
+                    this.box.activate();
+                },
+                notice: function (bounds) {
+ 						var display =  new OpenLayers.Projection("EPSG:4326")
+                        var ll_merc = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+                        var ll = ll_merc.transform(map.getProjectionObject(), display);
+                        var ur_merc = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+                        var ur = ur_merc.transform(map.getProjectionObject(), display);
+                        var mapnik_envelop = ('Envelope(' + ll.lon.toFixed(4) + ", " + ll.lat.toFixed(4) + ", " + ur.lon.toFixed(4) + ", " + ur.lat.toFixed(4) + ')');
+                        document.getElementsByName("mapnik").mapnik.value = mapnik_envelop;
+                        var openlayers_bounds = ('new OpenLayers.Bounds(' + ll.lon.toFixed(4) + ", " + ll.lat.toFixed(4) + ", " + ur.lon.toFixed(4) + ", " + ur.lat.toFixed(4) + ')');
+                        document.getElementsByName("ol").ol.value = openlayers_bounds;
+                    }
+           });
+            map.addControl(control);
+            //map.fractionalZoom = true;
+
+            map.zoomToMaxExtent()
+            
+            //antarctic_extent = new OpenLayers.Bounds(-139217830.1606086, -70736708.18503937, -137261149.51105773, -69906011.25919357)
+            //map.zoomToExtent(antarctic_extent);
+            
+            //antarctic_extent = new OpenLayers.Bounds(-2600000, -2200000, 2700000, 2200000);
+            //map.zoomToExtent(antarctic_extent)
+            
+            //var center = new OpenLayers.LonLat(-138073999,-70303512)
+            //map.setCenter(center,7)
+            //map.setCenter(center,8)
+            
+        }
+  </script>
+  </head>
+  <body onload="init()">
+     <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik TMS Layer Test</h2>
+    <div id="map">
+    </div>
+        <div id="bounds" style="font-size: small; left:10px; position:absolute; bottom: 30px; z-index:10000">
+    <input type="textarea" size= "65" id='mapnik' name="mapnik" value="Hold alt and drag to fetch a Mapnik Envelope()" />
+    </div>
+        <div id="bounds" style="font-size: small; left:10px; position:absolute; bottom: 60px; z-index:10000">
+    <input type="textarea" size= "65" id='ol' name="ol" value="Hold alt and drag to fetch an OpenLayers Bounds" />
+       </div>
+  </body>
+</html>
