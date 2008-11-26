@@ -19,7 +19,6 @@ readme = file('README.txt','rb').read()
 setup(name='nik2img',
         version = version,
         py_modules=['nik2img'],
-        #py_modules = ['cascadenik.compile', 'cascadenik.style']
         description='A mapfile to image converter for the Mapnik C++/Python mapping toolkit',
         long_description=readme,
         author='Dane Springmeyer',
