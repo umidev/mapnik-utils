@@ -39,11 +39,34 @@ import math
 import platform
 
 VERBOSE = False
-POSTSCRIPT_PPI = 72.0 # dpi
-POSTSCRIPT_PIXEL = (1/POSTSCRIPT_PPI)*25.4 # mm 0.35277777777777775
-OGC_PIXEL = 0.28 # mm
-OGC_PPI = 1/(OGC_PIXEL/25.4) # 90.714285714285708 as 1 'dot'/.011 inches
+ROUND_RESULT = True
 
+# use my default screen dimensions for now...
+USE_MACBOOK_RESOLUTION = True
+
+
+def ppi2mm_px_size(ppi):
+  return (1.0/ppi)*25.4
+
+def mm_px_size2ppi(pixel_size):
+  return 1.0/(pixel_size/25.4)
+
+def ppi2microns(ppi):
+    """Convert ppi to µm
+    """
+    return 25400.0/ppi
+
+# 76dpi (postcript) translates to a resolution of 334.21 microns
+# http://www.cl.cam.ac.uk/~mgk25/metric-typo/
+def microns2ppi(microns):
+    """Convert µm to ppi
+    """
+    return 25400.0/microns
+
+POSTSCRIPT_PPI = 72.0 # dpi
+POSTSCRIPT_PIXEL = ppi2mm_px_size(POSTSCRIPT_PPI) # mm 0.35277777777777775
+OGC_PIXEL = 0.28 # mm
+OGC_PPI = mm_px_size2ppi(OGC_PIXEL) # 90.714285714285708 as 1 'dot'/.011 inches  
 #PLOTTER_MAX_WIDTH = 36 # inches
 #POWER_POINT_MAX_DIM = (36,56)
 #MS_WORD_MAX_DIM = (11,17)
@@ -59,8 +82,56 @@ def msg(msg):
  if VERBOSE:
    print msg
 
-# Paper sizes by name/shorthand
+# Factors for converting to inches by division
+# read this as 1 inch == unit value
+inch_eq = {
+  'in' : 1,
+  'ft': 0.0833333333,
+  'yd': 0.0277777778,
+  'mi': 1.57828283e-5,
+  'm': 0.0254,
+  'dm': 0.254,
+  'cm': 2.54,
+  'mm': 25.4,
+  'km': 2.54e-5,
+  'um': 25400.0,
+  'px': POSTSCRIPT_PPI,
+  }
+upper_inch_eq = dict([(k.upper(), v) for k, v in inch_eq.items()])
 
+alias = {
+  # Imperial
+  'inch' : 'in',
+  'inches' : 'in',
+  'foot' : 'ft',
+  'feet' : 'ft',
+  'yard' : 'yd',
+  'yards' : 'yd',
+  'mile' : 'mi',
+  'miles' : 'mi',
+  # Metric
+  'microns': 'um',
+  'micrometer': 'um',
+  'micrometres':'um',
+  'µm':'um',
+  'millimeter' : 'mm',
+  'millimetre' : 'mm',
+  'centimeter' : 'cm',
+  'centimeters' : 'cm',
+  'decimeter' : 'dm',
+  'decimeters' : 'dm',
+  'meter' : 'm',
+  'meters' : 'm',
+  'metre' : 'm',
+  'metres' : 'm',
+  'kilometer' : 'km',
+  'kilometers' : 'km',
+  'kilometre' : 'km',
+  'kilometres' : 'km',
+  }
+upper_alias = dict([(k.upper(), v) for k, v in alias.items()])
+
+# Paper sizes by name/shorthand
 # in millimetres
 iso = {
   # iso A series
@@ -145,7 +216,6 @@ north_america = {
   'government-letter': (8,10.5),
   'chilean-legal': (8.5,13),
   'philippine-legal': (8.5,13),
-  
   }
 
 sizes = (
@@ -155,7 +225,6 @@ sizes = (
   (ansi,'in'),
   )
 
-# Fetch a size and respective unit
 def get_size_by_name(papername):
     """Return the units, width, and height of a given paper size.
     
@@ -174,78 +243,29 @@ def get_size_by_name(papername):
       error(AttributeError,'Could not find paper size of: %s' % papername)
     msg("%s size found, using unit: '%s'; width: '%s'; height: '%s'" % (papername.upper(),u,w,h))
     if u != 'in':
-      factor = get_factor(u)
+      factor = get_to_inch_factor(u)
       w,h = w/factor,h/factor
       #if 
       msg("%s equivalent in inches is: %s, %s" % (papername.upper(),w,h))
     return u,w,h
 
-# Basic resolution conversions
-
 def print_scale_relative_to_postscript(ppi,system_assumed_dpi=POSTSCRIPT_PPI):
-    """Return the scale factor to reduce an image of a given ppi to print at the correct size.
+    """Return the scale factor to reduce an image of a given ppi to print at intended resolution.
     
-    Needed on systems where 72 ppi is assumed when image lacks an embedded dpi/ppi exif tag
+    Needed on systems where 72 ppi is assumed when an image lacks an embedded dpi/ppi exif tag.
     """
-    # perhaps need to assume 96ppi on win32?
+    # Is 96 dpi on win32 true?
+    # Likely to hard to guess...
     if os.name == 'nt':
       system_assumed_dpi = 96.0
     elif platform.uname()[0] == 'Darwin': 
       pass # 72 assumed on mac os
     elif platform.uname()[0] == 'Linux':
       pass # need to check on linux...
-    return system_assumed_dpi/ppi * 100
-    
-    
-def ppi2microns(ppi):
-    """Convert ppi to µm
-    """
-    return 25400.0/ppi
+    return system_assumed_dpi/ppi * 100.0
 
-def ppi2microns(ppi):
-    """Convert ppi to µm
-    """
-    return 25400.0/ppi
-
-# 76dpi (postcript) translates to a resolution of 334.21 microns
-# http://www.cl.cam.ac.uk/~mgk25/metric-typo/
-def microns2ppi(microns):
-    """Convert µm to ppi
-    """
-    return 25400.0/microns
-
-# Factor for converting to inches by division
-# read this as 1 inch == unit value
-inch_eq = {
-  'ft': 0.0833333333,
-  'yd': 0.0277777778,
-  'in' : 1,
-  'm': 0.0254,
-  'dm': 0.254,
-  'cm': 2.54,
-  'mm': 25.4,
-  'um': 25400.0,
-  'px': POSTSCRIPT_PPI,
-  }
-upper_inch_eq = dict([(k.upper(), v) for k, v in inch_eq.items()])
-
-alias = {
-  'centimeter' : 'cm',
-  'foot' : 'ft',
-  'inch' : 'in',
-  'kilometer' : 'km',
-  'kilometre' : 'km',
-  'meter' : 'm',
-  'metre' : 'm',
-  'millimeter' : 'mm',
-  'millimetre' : 'mm',
-  'mile' : 'mi',
-  'yard' : 'yd',
-  }
-upper_alias = dict([(k.upper(), v) for k, v in alias.items()])
-
-def get_factor(unit):
-    """Return the conversion factor to inches for a given unit.
+def get_to_inch_factor(unit):
+    """Return the conversion factor for calculating an inch equivalent for a given unit.
     """
     if inch_eq.has_key(unit):
         return inch_eq[unit]
@@ -258,25 +278,26 @@ def get_factor(unit):
     else:
         error(AttributeError,'Unknown unit type: %s' % unit)
 
-def get_px_screen_density(pixels_wide=1440,pixels_high=900,screen_width=15.4):
-    """Return the pixels per unit (density) for a given display resolution and width.
+def get_px_screen_ppi(pixels_wide=1440,pixels_high=900,screen_width=15.4):
+    """Return the actual pixels per inch for a given display resolution and width.
     """
     pixel_density = math.sqrt(pixels_wide**2 + pixels_high**2)/screen_width
-    msg("Screen pixel density: '%s'" % pixel_density)
+    msg("Screen pixel density per inch (ppi): '%s'" % pixel_density)
     return pixel_density
 
 def get_px_for_print_size(unit,print_w,print_h,print_res,res_unit):
-    """Return the pixel width and height given a target print size.
+    """Return the pixel width and height given a target print size and resolution.
     """
     # get the conversion factor to inches
-    factor = get_factor(unit)
-    if res_unit == 'microns':
+    factor = get_to_inch_factor(unit)
+    # We accept ppi or pixel size in microns for now
+    if res_unit == 'microns' or res_unit == 'micrometres' or res_unit == 'µm' or res_unit == 'um':
       # convert microns to inches since our print sizes
       # are going to be forced into inch units
       msg("Setting resolution using micrometres (µm)... to '%s' µm" % print_res)
       print_res = microns2ppi(print_res)
       msg("Micron value equivalent to '%s' ppi" % print_res)
-    elif res_unit == 'inches':
+    elif res_unit == 'inches' or res_unit == 'in' or res_unit == 'inch':
       microns = ppi2microns(print_res)
       msg("Setting resolution using inches... to '%s' ppi" % print_res)
       msg("Per inch resolution equivalent to pixel size of '%s' microns" % microns)
@@ -288,10 +309,14 @@ def get_px_for_print_size(unit,print_w,print_h,print_res,res_unit):
 
 def get_pixels(unit,w,h,print_res=300,res_unit='inches',margin=0,layout=None,**kwargs):
     """Return the pixel width and height given a target resolution, margin, and layout.
+    
+    A wrapper around get_px_for_print_size() that handles margins and aspect ratio.
     """
     if margin:
       w,h = w-margin,h-margin
       msg("Margin requested, dimensions in '%s' now: %s,%s " % (unit,w,h))
+    
+    # Pass of to the function that does the real work
     px_w, px_h = get_px_for_print_size(unit,w,h,print_res,res_unit)
     if layout:
       dim = [px_w, px_h]
@@ -313,7 +338,6 @@ def get_pixels(unit,w,h,print_res=300,res_unit='inches',margin=0,layout=None,**k
         return tuple(dim)
     else:
       return px_w,px_h
-      #return int(px_w),int(px_h)
 
 def print_map_by_dimensions(params,**kwargs):
     """Return the pixels given user defined dimensions and units.
@@ -323,14 +347,19 @@ def print_map_by_dimensions(params,**kwargs):
     except ValueError: # assume inches for now...
       unit = 'in'
       w,h = params.split(',')
-    return get_pixels(unit,float(w),float(h),**kwargs)
+    dx, dy = get_pixels(unit,float(w),float(h),**kwargs)
+    if ROUND_RESULT:
+      dx, dy = int(dx),int(dy)
+    return dx, dy
 
 def print_map_by_name(papername,**kwargs):
     """Return the pixels given a known, named paper size.
     """
     unit,w,h = get_size_by_name(papername)
-    return get_pixels(unit,w,h,**kwargs)
-
+    dx, dy = get_pixels(unit,float(w),float(h),**kwargs)
+    if ROUND_RESULT:
+      dx, dy = int(dx),int(dy)
+    return dx, dy
 
 parser = optparse.OptionParser(usage="""python print2pixel.py <papersize> [options]
 
@@ -356,9 +385,12 @@ parser.add_option('-l', '--landscape',
 parser.add_option('-p', '--portrait',
     action='store_const', const='portrait', dest='layout',
     help='Force portrait orientation')
-parser.add_option('-v', '--VERBOSE',
+parser.add_option('-v', '--VERBOSE', default=False,
     action='store_true', dest='VERBOSE',
     help='VERBOSE debug output')
+parser.add_option('-n', '--norounding',
+    action='store_false', dest='ROUND_RESULT', default=True,
+    help='Do not return rounded integer result for pixel dimensions')
 parser.add_option('-s', '--screen',
     action='store_const', const=True, dest='screen_res',
     help='Set the --resolution to the PPI of your screen')
@@ -376,7 +408,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
     if len(args) < 1:
-      sys.exit('\nPlease provide a named paper size or a pair of dimensions and unit, ie 8.5,11,in \n')
+      sys.exit('\nPlease provide a named paper size or a triplet of dimensions and their unit, ie 8.5,11,in \n')
     else:
       size = args[0]
   
@@ -387,9 +419,8 @@ if __name__ == '__main__':
       if not options.screen_res:
         sys.exit('\nPlease provide a resolution value in addition to the respective unit\n')
     
-    USE_MACBOOK = True
     if options.screen_res:
-      if USE_MACBOOK:
+      if USE_MACBOOK_RESOLUTION:
         options.print_res = get_px_screen_density()
       elif not options.res_unit or not options.screen_width or not options.display_res:
         sys.exit('\nPlease provide a screen width in inches, and the display resolution\n')        
@@ -403,6 +434,9 @@ if __name__ == '__main__':
     if options.VERBOSE:
       VERBOSE = True
       print
+
+    if not options.ROUND_RESULT:
+      ROUND_RESULT = False
 
     kwargs = {}
     for k,v in vars(options).items():
