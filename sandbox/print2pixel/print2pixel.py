@@ -36,13 +36,17 @@ import optparse
 import sys
 import copy
 import math
+import platform
 
 VERBOSE = False
-POSTSCRIPT_POINT = 72 # pixels per inch
-STANDARDIZED_PIXEL = 0.28 # mm
-PLOTTER_MAX_WIDTH = 36 # inches
-POWER_POINT_MAX = (36,56)
-MS_WORD_MAX = (11,17)
+POSTSCRIPT_PPI = 72.0 # dpi
+POSTSCRIPT_PIXEL = (1/POSTSCRIPT_PPI)*25.4 # mm 0.35277777777777775
+OGC_PIXEL = 0.28 # mm
+OGC_PPI = 1/(OGC_PIXEL/25.4) # 90.714285714285708 as 1 'dot'/.011 inches
+
+#PLOTTER_MAX_WIDTH = 36 # inches
+#POWER_POINT_MAX_DIM = (36,56)
+#MS_WORD_MAX_DIM = (11,17)
 
 def error(E,msg):
   if __name__ == '__main__':
@@ -95,14 +99,15 @@ iso = {
   'C8': (57,81),
   'C9': (40,57),
   'C10': (28,40),
-  # DIN 476
+  # DIN 476 (German)
   '4A0': (1682,2378),
   '2A0': (1189,1682),
-  # SIS 014711
+  # SIS 014711 (Swiss)
   'G5': (169,239),
   'E5': (155,220),
   }
 
+# Japanese
 jis = {
   'J0': (1030,1456),
   'J1': (728,1030),
@@ -177,11 +182,26 @@ def get_size_by_name(papername):
 
 # Basic resolution conversions
 
-def print_scale(ppi):
-    """Return the scale factor to print a given ppi at the mythical 'standard' resolution.
-    """
-    return POSTSCRIPT_POINT/ppi * 100
+def print_scale_relative_to_postscript(ppi,system_assumed_dpi=POSTSCRIPT_PPI):
+    """Return the scale factor to reduce an image of a given ppi to print at the correct size.
     
+    Needed on systems where 72 ppi is assumed when image lacks an embedded dpi/ppi exif tag
+    """
+    # perhaps need to assume 96ppi on win32?
+    if os.name == 'nt':
+      system_assumed_dpi = 96.0
+    elif platform.uname()[0] == 'Darwin': 
+      pass # 72 assumed on mac os
+    elif platform.uname()[0] == 'Linux':
+      pass # need to check on linux...
+    return system_assumed_dpi/ppi * 100
+    
+    
+def ppi2microns(ppi):
+    """Convert ppi to µm
+    """
+    return 25400.0/ppi
+
 def ppi2microns(ppi):
     """Convert ppi to µm
     """
@@ -205,7 +225,7 @@ inch_eq = {
   'cm': 2.54,
   'mm': 25.4,
   'um': 25400.0,
-  'px': POSTSCRIPT_POINT,
+  'px': POSTSCRIPT_PPI,
   }
 upper_inch_eq = dict([(k.upper(), v) for k, v in inch_eq.items()])
 
@@ -354,12 +374,12 @@ parser.add_option('--render',
 
 if __name__ == '__main__':
     (options, args) = parser.parse_args()
-
-    size = args[0]
     
     if len(args) < 1:
-      sys.exit('\nPlease provide a named paper size\n')
-
+      sys.exit('\nPlease provide a named paper size or a pair of dimensions and unit, ie 8.5,11,in \n')
+    else:
+      size = args[0]
+  
     if options.print_res and not options.res_unit:
       sys.exit('\nPlease provide a unit for the resolution value\n')
 
