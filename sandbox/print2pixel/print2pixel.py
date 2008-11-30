@@ -348,13 +348,13 @@ Usage:
 
 parser.add_option('-r', '--resolution',
     dest='print_res', type='float',
-    help='Specify the desired resolution in ppi (pixels per inch) of micron (size of pixel)')
+    help='Specify the desired resolution in ppi (pixels per inch) or microns (pixel size)')
 parser.add_option('-u', '--units',
     dest='res_unit',
-    help='Specify the units as either inches or microns')
+    help='Specify the resolution units as either inches or microns')
 parser.add_option('-m', '--margin',
     dest='margin', type='float',
-    help='Paper margin in the units of the paper size')
+    help='Specify the a paper margin in the units of the paper size')
 parser.add_option('-l', '--landscape',
     action='store_const', const='landscape', dest='layout',
     help='Force lanscape orientation')
@@ -369,7 +369,7 @@ parser.add_option('-n', '--norounding',
     help='Do not return rounded integer result for pixel dimensions')
 parser.add_option('-s', '--screen',
     action='store_const', const=True, dest='screen_res',
-    help='Set the --resolution to the PPI of your screen')
+    help='Set the --resolution to the PPI of your screen (requires -w and -d flags)')
 parser.add_option('-w', '--screenwidth',
     dest='screen_width', type='float',
     help='Screen width in inches')
@@ -378,7 +378,7 @@ parser.add_option('-d', '--displaypixels',
     help='Display pixels as w,h')
 parser.add_option('--render',
     action='store_const', const=True, dest='render',
-    help='Render the result using nik2img')
+    help='Render the result using a nik2img test mapfile')
 
 if __name__ == '__main__':
     (options, args) = parser.parse_args()
@@ -420,15 +420,15 @@ if __name__ == '__main__':
        kwargs[k] = v
 
     if len(size.split(','))> 1:
-      result = print_map_by_dimensions(size, **kwargs)
+      dx, dy = print_map_by_dimensions(size, **kwargs)
     else:
-      result = print_map_by_name(size, **kwargs)
+      dx, dy = print_map_by_name(size, **kwargs)
 
-    print '// --  Pixel Width: %s' % result[0]
-    print '// --  Pixel Height: %s' % result[1]
+    print '// --  Pixel Width: %s' % dx
+    print '// --  Pixel Height: %s' % dy
 
     if options.render:
       import nik2img
-      m = nik2img.Map('tests/mapfile.xml','w-%s_h-%s.png' % (result[0],result[1]),width=result[0],height=result[1])
+      m = nik2img.Map('tests/mapfile.xml','w-%s_h-%s.png' % (dx,dy),width=dx,height=dy)
       m.open()
 
