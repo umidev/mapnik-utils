@@ -1,0 +1,37 @@
+# TODO - embedding ppi-metadata in exif
+# http://tilloy.net/dev/pyexiv2/
+# calculate all iso dynamically?
+# [sqrt(v[0]*v[1]) for k,v in iso.items()]
+# support specifing margins in pixels
+# carry through ppi for later use
+
+# dpi, ppi, and metric standards 
+# http://en.wikipedia.org/wiki/Dots_per_inch
+# http://en.wikipedia.org/wiki/Pixels_per_inch
+# http://en.wikipedia.org/wiki/Metric_typographic_units
+
+# dpi myths
+# http://www.woram.com/temp/woram.htm
+# http://www.scantips.com/no72dpi.html
+# http://www.danrichard.com/2006/03/23/to-print-or-not-to-print-making-sense-of-the-dpi-equation/
+
+# paper sizes
+# http://www.inkjetart.com/weight.html
+# http://en.wikipedia.org/wiki/ISO_216
+# http://en.wikipedia.org/wiki/Paper_size
+# http://www.google.com/codesearch?hl=en&q=%27A4%27:+lang:python+show:dfChVTGMiEg:Yb4qr5wBLdU:pLzsw3x7IL8&sa=N&cd=4&ct=rc&cs_p=http://dl.sourceforge.net/sourceforge/sketch/skencil-0.6.17.tar.gz&cs_f=skencil-0.6.17/Plugins/Filters/sksaver.py
+
+# internal pixel size assumptions
+# http://portal.opengeospatial.org/files/?artifact_id=1188 Section '10.2 Scale Selection'
+# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L314
+# http://trac.gispython.org/lab/browser/PCL/trunk/PCL-Core/cartography/context/rendering.py#L112
+# http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L37
+
+# internal conversion
+# deg - > radians
+# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L169
+
+# Mapnik internals
+# SCALE - http://trac.mapnik.org/browser/trunk/src/map.cpp#L382
+# RESOLUTION - http://trac.mapnik.org/browser/trunk/include/mapnik/feature_style_processor.hpp#L138
+# DENOMINATOR - http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L37

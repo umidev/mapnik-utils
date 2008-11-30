@@ -19,6 +19,7 @@ readme = file('README.txt','rb').read()
 setup(name='print2pixel',
         version = version,
         scripts = ['print2pixel.py'],
+        py_modules=['print2pixel'],
         description='Printing optimization utility for pixel to print, paper size, and unit conversions',
         long_description=readme,
         author='Dane Springmeyer',

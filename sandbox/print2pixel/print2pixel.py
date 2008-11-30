@@ -1,36 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# TODO - embedding ppi-metadata in exif
-# http://tilloy.net/dev/pyexiv2/
-# calculate all iso dynamically?
-# [sqrt(v[0]*v[1]) for k,v in iso.items()]
-# support specifing margins in pixels
-# carry through ppi for later use
-
-# dpi, ppi, and metric standards 
-# http://en.wikipedia.org/wiki/Dots_per_inch
-# http://en.wikipedia.org/wiki/Pixels_per_inch
-# http://en.wikipedia.org/wiki/Metric_typographic_units
-
-# dpi myths
-# http://www.woram.com/temp/woram.htm
-# http://www.scantips.com/no72dpi.html
-# http://www.danrichard.com/2006/03/23/to-print-or-not-to-print-making-sense-of-the-dpi-equation/
-
-# paper sizes
-# http://www.inkjetart.com/weight.html
-# http://en.wikipedia.org/wiki/ISO_216
-# http://en.wikipedia.org/wiki/Paper_size
-
-# internal pixel size assumptions
-# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L314
-# http://trac.gispython.org/lab/browser/PCL/trunk/PCL-Core/cartography/context/rendering.py#L112
-# http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L32
-
-# internal conversion
-# deg - > radians
-# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L169
+__author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
+__copyright__ = "Copyright 2008, Dane Springmeyer"
+__version__ = "0.0.1SVN"
+__license__ = "GPLv2"
 
 import optparse
 import sys
@@ -41,15 +15,24 @@ import platform
 VERBOSE = False
 ROUND_RESULT = True
 
+POSTSCRIPT_PPI = 72.0 # dpi
+OGC_PIXEL = 0.28 # mm
+METERS_PER_DEGREE = 6378137 * 2 * math.pi/360
+#PLOTTER_MAX_WIDTH = 36 # inches
+#POWER_POINT_MAX_DIM = (36,56)
+#MS_WORD_MAX_DIM = (11,17)
+
 # use my default screen dimensions for now...
 USE_MACBOOK_RESOLUTION = True
-
 
 def ppi2mm_px_size(ppi):
   return (1.0/ppi)*25.4
 
 def mm_px_size2ppi(pixel_size):
   return 1.0/(pixel_size/25.4)
+
+POSTSCRIPT_PIXEL = ppi2mm_px_size(POSTSCRIPT_PPI) # mm 0.35277777777777775
+OGC_PPI = mm_px_size2ppi(OGC_PIXEL) # 90.714285714285708 as 1 'dot'/.011 inches
 
 def ppi2microns(ppi):
     """Convert ppi to µm
@@ -62,14 +45,6 @@ def microns2ppi(microns):
     """Convert µm to ppi
     """
     return 25400.0/microns
-
-POSTSCRIPT_PPI = 72.0 # dpi
-POSTSCRIPT_PIXEL = ppi2mm_px_size(POSTSCRIPT_PPI) # mm 0.35277777777777775
-OGC_PIXEL = 0.28 # mm
-OGC_PPI = mm_px_size2ppi(OGC_PIXEL) # 90.714285714285708 as 1 'dot'/.011 inches  
-#PLOTTER_MAX_WIDTH = 36 # inches
-#POWER_POINT_MAX_DIM = (36,56)
-#MS_WORD_MAX_DIM = (11,17)
 
 def error(E,msg):
   if __name__ == '__main__':
@@ -248,7 +223,7 @@ def get_size_by_name(papername):
       #if 
       msg("%s equivalent in inches is: %s, %s" % (papername.upper(),w,h))
     return u,w,h
-
+    
 def print_scale_relative_to_postscript(ppi,system_assumed_dpi=POSTSCRIPT_PPI):
     """Return the scale factor to reduce an image of a given ppi to print at intended resolution.
     
@@ -364,7 +339,8 @@ def print_map_by_name(papername,**kwargs):
 parser = optparse.OptionParser(usage="""python print2pixel.py <papersize> [options]
 
 Usage:
-    $ python print2pixel.py tabloid -r 300 -u inches
+    $ python print2pixel.py tabloid -r 300 -u inches -l
+    $ python print2pixel.py 3,7,in
     $ python print2pixel.py letter -u inches -r 76
     $ python print2pixel.py letter -u microns -r 334.21
 
@@ -453,6 +429,6 @@ if __name__ == '__main__':
 
     if options.render:
       import nik2img
-      m = nik2img.Map('mapfile.xml','test.png',width=result[0],height=result[1])
+      m = nik2img.Map('tests/mapfile.xml','w-%s_h-%s.png' % (result[0],result[1]),width=result[0],height=result[1])
       m.open()
 

@@ -1,0 +1,8 @@
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name('letter')
+(2550, 3300)
+>>> dx, dy = p2p.print_map_by_name('letter',layout='landscape')
+>>> import nik2img
+>>> m = nik2img.Map('tests/mapfile.xml','letter.png',width=dx,height=dy)
+>>> m.test()
+>>> m.open()
