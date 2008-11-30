@@ -1,7 +1,38 @@
+Basic map
+---------
+
 >>> from nik2img import Map
->>> m = Map('tests/mapfile.xml','tests/test.png')
+>>> m = Map('tests/mapfile_lambert.xml','tests_output/test.png')
 >>> m.test()
 >>> m.build()
 >>> type(m)
 <class 'nik2img.Map'>
 >>> m.open()
+
+
+A bunch of levels
+-----------------
+
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_lambert.xml','tests_output/levels/',debug=True)
+>>> m.open()
+
+
+A bunch of formats
+------------------
+
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all')
+>>> m.open()
+
+
+Google Reprojection
+-------------------
+
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/',srs='epsg:900913')
+>>> m.open()
+
+
+
+
