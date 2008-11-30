@@ -1,0 +1,7 @@
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile.xml','tests/test.png')
+>>> m.test()
+>>> m.build()
+>>> type(m)
+<class 'nik2img.Map'>
+>>> m.open()
