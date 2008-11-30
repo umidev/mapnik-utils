@@ -1,23 +1,42 @@
 #!/usr/bin/env python
 
-import os
-version = __import__('nik2img').__version__
+"""
+Release Steps
+-------------
+ * create ~./pypirc file with pypi user:pass
+ * Edit CHANGELOG.txt
+ * Temporarily remove SVN tag from __version__
+ * Run `deploy.py` to create sdist, upload, and create tag
+ * commit tag
+ * Update Google Code wiki
+"""
 
-tag_dir= '../../../tags/nik2img/'
+app = 'nik2img'
 
-os.system('sudo rm dist/ build/ -r -f')
-print
-os.system('rm *.pyc')
-print
-os.system('svn cp ../nik2img/ %s/%s' % (tag_dir,version))
-print
-os.system('rm %s/%s/deploy.py' % (tag_dir,version))
-print
-os.system('python setup.py sdist upload')
-print
-os.system('cp dist/nik2img-%s.tar.gz %s' % (version,tag_dir))
-print
-os.system('svn add %s/nik2img-%s.tar.gz' % (tag_dir,version))
-print
-os.system('sudo rm dist/ build/ -r -f')
+import sys
+import time
+from subprocess import call as subcall
+
+def call(cmd):
+  try:
+    response = subcall(cmd,shell=True)
+    print
+    time.sleep(.5)
+    if response < 0:
+      sys.exit(response)
+  except OSError, E:
+    sys.exit(E)
+
+version = __import__(app).__version__
+
+tag_dir= '../../../tags/%s/' % app
+
+call('sudo rm *.egg* dist/ build/ -r -f')
+call('rm *.pyc')
+call('svn cp ../%s/ %s/%s' % (tag_dir,version,app))
+call('rm %s/%s/deploy.py' % (tag_dir,version))
+call('python setup.py sdist upload')
+call('cp dist/%s-%s.tar.gz %s' % (app,version,tag_dir))
+call('svn add %s/%s-%s.tar.gz' % (app,tag_dir,version))
+call('sudo rm *.egg* dist/ build/ -r -f')
 
