@@ -10,6 +10,14 @@ Basic map
 >>> m.open()
 
 
+8-bit PNG format
+----------------
+
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_lambert.xml','tests_output/png256/8_bit.png',format='png256')
+>>> m.open()
+
+
 A bunch of levels
 -----------------
 
@@ -18,11 +26,11 @@ A bunch of levels
 >>> m.open()
 
 
-A bunch of formats
-------------------
+A bunch of formats at 256 by 256 pixels
+---------------------------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all')
+>>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all',width=256,height=256)
 >>> m.open()
 
 
@@ -30,9 +38,16 @@ Google Reprojection
 -------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/',srs='epsg:900913')
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/projcode.png',srs='epsg:900913')
 >>> m.open()
 
+
+Google Reprojection using spatialreference.org
+----------------------------------------------
+
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/sr.org.png',srs='http://spatialreference.org/ref/user/6/')
+>>> m.open()
 
 
 
