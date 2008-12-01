@@ -5,7 +5,7 @@ nik2img changelog
 Version 0.2.2, 30 November 2008:
 --------------------------------
 
-* Packaged from revision 393 in Subversion.
+* Packaged from revision 400 in Subversion.
 
 * Added tests that produce map graphics output
 
