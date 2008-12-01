@@ -1063,7 +1063,6 @@ if __name__ == "__main__":
     print "--noopen\t" + "[opens]\t\t" + "Prevent the automatic opening of the image in the default viewer%s." % color_text(4,'*')
     print "--nocolor\t" + "[colored]\t" + "Turn off colored terminal output%s." % color_text(4,'*')
     print "--version\t" + "[off]\t\t" + "Prints the nik2img version."
-    print "--test\t" + "[off]\t\t" + "Tests generation of hello world map using mapnik python bindings."
     print "-h\t\t" + "[off]\t\t" + "Prints this usage/help information."
 
     
