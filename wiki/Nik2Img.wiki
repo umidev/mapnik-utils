@@ -64,42 +64,44 @@ $ sudo python setup.py test
 $ nik2img.py -h
 
 ===========================================================================
-Usage: /usr/local/bin/nik2img.py -m <mapfile.xml> -o <image.png>
-Option		Default		Description
--m		<required>	Mapfile input: Set the path for the xml mapfile or mml cascading style.
--o		[stdout]	Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT.
--i		[png]		Image format: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).
--e		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in geographic coordinates (forwarded if mapfile is projected).
--r		[max extent]	Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates (inversed if mapfile is geographic).
--s		[600,300]	Width,Height: Set the image size in pixels.
--p		[mapfile srs]	Reproject using <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/user/6/'.
--l		[all enabled]	Layers: List which to render (quote and comma-separate if several).
--v		[off]		Run with verbose output including numbered steps and timing output.
--c		[1]		Draw map n number of times.
--n		[off]		Turn on dry run mode: constuct map but do not render output.
--t		[0]		Pause n seconds after reading the map.
--d		[None]		Find and replace, using a <find_this:replace_this> syntax, any value within the mapfile.
---pause		[0]		Pause n seconds after each step*.
---pdb		[none]		Set a python debugger trace at step n or steps n,n,n*.
---zoomto	[0]		Center the map at a given lon/lat coordinate and an optional zoom level*.
---zoomrad	[0]		Zoom to an extent of the radius (in map units) around a given lon/lat coordinate*.
---zoomlyr	[0]		Zoom to the extent of a given layer*.
---levels	[10]		N number of zoom levels at which to generate graphics*
---resolutions	[none]		Set specific rendering resolutions (ie. 0.1,0.05,0.025)*
---worldfile	[none]		Generate image georeferencing by specifying a world file output extension (ie. wld)*.
---fonts		[none]		Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')*.
---savemap	[none]		Output the processed mapfile as xml with the specified name*.
---quiet		[off]		Turn on quiet mode to suppress the mapnik c++ debug printing and all python errors*.
---profile	[off]		Output a cProfile report on script completion*.
---noopen	[opens]		Prevent the automatic opening of the image in the default viewer*.
---nocolor	[colored]	Turn off colored terminal output*.
--h		[off]		Prints this usage/help information.
+Usage: ./nik2img.py -m <mapfile.xml> -o <image.png>
+Option          Default         Description
+-m              <required>      Mapfile input: Set the path for the xml mapfile or mml cascading style.
+-o              [stdout]        Image filename: Set the output filename (or a directory name), otherwise printed to STDOUT.
+-i              [png]           Image format: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).
+-e              [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in geographic coordinates (forwarded if mapfile is projected).
+-r              [max extent]    Minx,Miny,Maxx,Maxy: Set map extent in projected coordinates (inversed if mapfile is geographic).
+-s              [600,300]       Width,Height: Set the image size in pixels.
+-p              [mapfile srs]   Reproject using <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/user/6/'.
+-l              [all enabled]   Layers: List which to render (quote and comma-separate if several).
+-v              [off]           Run with verbose output including numbered steps and timing output.
+-c              [1]             Draw map n number of times.
+-n              [off]           Turn on dry run mode: constuct map but do not render output.
+-t              [0]             Pause n seconds after reading the map.
+-d              [None]          Find and replace, using a <find_this:replace_this> syntax, any value within the mapfile.
+--pause         [0]             Pause n seconds after each step*.
+--pdb           [none]          Set a python debugger trace at step n or steps n,n,n*.
+--zoomto        [0]             Center the map at a given lon/lat coordinate and an optional zoom level*.
+--zoomrad       [0]             Zoom to an extent of the radius (in map units) around a given lon/lat coordinate*.
+--zoomlyr       [0]             Zoom to the extent of a given layer*.
+--levels        [10]            N number of zoom levels at which to generate graphics*
+--resolutions   [none]          Generate outputs at a specific set of zoom levels (ie. 0.1,0.05,0.025)*
+--worldfile     [none]          Generate image georeferencing by specifying a world file output extension (ie. wld)*.
+--fonts         [none]          Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')*.
+--savemap       [none]          Output the processed mapfile as xml with the specified name*.
+--app           [none]          Specify the desired application for opening the image result*.
+--quiet         [off]           Turn on quiet mode to suppress the mapnik c++ debug printing and all python errors*.
+--profile       [off]           Output a cProfile report on script completion*.
+--noopen        [opens]         Prevent the automatic opening of the image in the default viewer*.
+--nocolor       [colored]       Turn off colored terminal output*.
+--version       [off]           Prints the nik2img version.
+-h              [off]           Prints this usage/help information.
 ---------------------------------------------------------------------------
  * Additional features in nik2img not part of shp2img.
 ---------------------------------------------------------------------------
  More info: http://code.google.com/p/mapnik-utils/wiki/Nik2Img
 ===========================================================================
-Dane Springmeyer, dbsgeo (a-t) gmail.com
+Dane Springmeyer (dbsgeo [ -a- ] gmail.com)
 
 }}}
 
