@@ -2,7 +2,7 @@
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.2.1SVN"
+__version__ = "0.2.2"
 __license__ = "GPLv2"
 
 import os
@@ -1000,7 +1000,7 @@ class Map(object):
         if os.name == 'nt':
             if app:
                 output_message('Overriding default image viewer not yet supported on Win32')
-            os.system('start %s' % self.image)
+            os.system('start %s' % self.image.rstrip('/'))
         elif platform.uname()[0] == 'Linux':
             if app:
                 os.system('%s %s' % (app, self.image))
