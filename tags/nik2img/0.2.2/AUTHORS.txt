@@ -1,0 +1,10 @@
+The primary author of nik2img is Dane Springmeyer
+<dbsgeo@gmail.com>.
+
+Others who have contributed contributed to the tool:
+
+Jukka Rahkonen
+Michal Migurski
+
+Thanks to the Mapnik development team for
+the powerful mapnik library and python bindings.
