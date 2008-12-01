@@ -35,3 +35,5 @@
 # SCALE - http://trac.mapnik.org/browser/trunk/src/map.cpp#L382
 # RESOLUTION - http://trac.mapnik.org/browser/trunk/include/mapnik/feature_style_processor.hpp#L138
 # DENOMINATOR - http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L37
+
+(m.envelope().width()/m.width)/0.00028

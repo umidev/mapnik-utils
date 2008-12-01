@@ -14,14 +14,14 @@ except:
 # Dynamically fetch the version, licence, and readme
 version = __import__('print2pixel').__version__
 license = __import__('print2pixel').__license__
-readme = file('README.txt','rb').read()
+#readme = file('README.txt','rb').read()
 
 setup(name='print2pixel',
         version = version,
         scripts = ['print2pixel.py'],
         py_modules=['print2pixel'],
         description='Printing optimization utility for pixel to print, paper size, and unit conversions',
-        long_description=readme,
+        #long_description=readme,
         author='Dane Springmeyer',
         author_email='dbsgeo@gmail.com',
         platforms='OS Independent',
