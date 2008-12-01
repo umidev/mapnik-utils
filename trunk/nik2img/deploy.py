@@ -29,14 +29,13 @@ def call(cmd):
 
 version = __import__(app).__version__
 
-tag_dir= '../../../tags/%s/' % app
+tag_dir= '../../tags/%s/' % app
 
-call('sudo rm *.egg* dist/ build/ -r -f')
-call('rm *.pyc')
+call('sudo rm *.egg* *.pyc test_outputs dist/ build/ -r -f')
 call('svn cp ../%s/ %s/%s' % (tag_dir,version,app))
 call('rm %s/%s/deploy.py' % (tag_dir,version))
 call('python setup.py sdist upload')
 call('cp dist/%s-%s.tar.gz %s' % (app,version,tag_dir))
 call('svn add %s/%s-%s.tar.gz' % (app,tag_dir,version))
-call('sudo rm *.egg* dist/ build/ -r -f')
+call('sudo rm *.egg* test_outputs dist/ build/ -r -f')
 
