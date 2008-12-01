@@ -16,11 +16,11 @@ import tempfile
 try:
     import mapnik
     HAS_MAPNIK_PYTHON = True
-except ImportError:
+except ImportError, E:
     HAS_MAPNIK_PYTHON = False
     print
     print "WARNING: Mapnik's python bindings not found..."
-    print
+    print E
 
 try:
   import cairo
