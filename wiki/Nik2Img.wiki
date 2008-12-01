@@ -13,7 +13,7 @@ To run this program:
  * Then install manually or using easy_install
 
 To Install manually:
- * Download the [http://mapnik-utils.googlecode.com/svn/tags/nik2img/ latest tagged release] or [http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/ from SVN trunk]
+ * Download the [http://mapnik-utils.googlecode.com/svn/tags/nik2img/ latest tagged release] or [http://mapnik-utils.googlecode.com/svn/trunk/nik2img/ from SVN trunk]
  * Then do:
 {{{
 $ tar xvf nik2img-*.tar.gz # * denotes the release number
@@ -29,7 +29,7 @@ $ sudo easy_install nik2img
 
 Or to install the SVN version with easy_install do:
 {{{
-$ sudo easy_install http://mapnik-utils.googlecode.com/svn/trunk/desktop/nik2img/
+$ sudo easy_install http://mapnik-utils.googlecode.com/svn/trunk/nik2img/
 }}}
 
 
@@ -46,6 +46,15 @@ Test Installation of command-line script:
 $ nik2img.py # should be able to tab complete...
 $ which nik2img.py # should show install location
 $ nik2img.py -h # should display usage
+}}}
+
+To run the full test suite for nik2img:
+ * This will test the generation and automatic opening of a variety of map graphics
+
+{{{
+$ svn co http://mapnik-utils.googlecode.com/svn/trunk/nik2img/ nik2img-svn
+$ cd nik2img-svn
+$ sudo python setup.py test
 }}}
 
 
