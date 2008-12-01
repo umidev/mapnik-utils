@@ -931,7 +931,7 @@ class Map(object):
               basename_from_dir = 'nik2img_output'
             if dirname == '':
               output_error("Must write to either file or directory")
-          if not os.path.exists(dirname):
+          if not os.path.exists(dirname) and dirname != '':
             try:
               os.mkdir(dirname)
             except OSError:
