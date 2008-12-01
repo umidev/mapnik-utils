@@ -114,7 +114,7 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
+    def __init__(self, mapfile, image='', width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
         """
         ----
 
@@ -285,19 +285,6 @@ class Map(object):
           pdb.set_trace()
         except KeyboardInterrupt:
           pass
-    
-    def is_file(self, name):
-        """
-        Routing to check if a given image name is a file or folder.
-        """
-        if os.path.isdir(name):
-            return False # assuming existing directory
-        elif name.count('.') == 0:
-            return False # assuming new directory
-        elif True in [name.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
-            return True
-        else:
-            output_error("Unsupported image format requested")
  
     def generate_levels(self,N=10):
         """
@@ -922,7 +909,7 @@ class Map(object):
 
         
     # =====================================
-    # Render to the desired format to a file
+    # Render the desired format to a file
     # =====================================
 
     def render_file(self): 
@@ -934,37 +921,50 @@ class Map(object):
         if not self.image:
           output_error("Image output name not defined.")
         else:
-          out = self.image
-          if not self.is_file(out):
-            if not os.path.exists('%s' % out):
-              os.mkdir(out)
-            out = '%s/%s' % (out,out)
-            self.output_message("Directory output requested, will write to: '%s'" % out)
+          dirname, basename = os.path.dirname(self.image),os.path.basename(self.image)
+          if basename:
+            if not True in [self.image.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
+              output_error("Unrecognized format (needs .ext) or directory (needs trailing /).")
+          else:
+            basename_from_dir = dirname.split('/')[-1]
+            if not basename_from_dir: 
+              basename_from_dir = 'nik2img_output'
+            if dirname == '':
+              output_error("Must write to either file or directory")
+          if not os.path.exists(dirname):
+            try:
+              os.mkdir(dirname)
+            except OSError:
+              os.makedirs(dirname)
+            self.output_message("Directory output requested, will create: '%s'" % dirname)
+          if not dirname.endswith('/'):
+            dirname = dirname + '/'
           if not self.debug:
               if self.format == 'all':
-                  basename = out.split('.')[0]
-                  self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
-                  self.call_AGG_FORMATS(basename)
-                  if self.HAS_CAIRO:
-                      self.call_CAIRO_FORMATS(basename)
+                  if basename:
+                    output_error("Must write to a directory/ to produce all formats")
+                  else:                    
+                    self.output_message("Beginning rendering loop of all possible formats, this may take a while...")
+                    self.call_AGG_FORMATS(dirname + basename_from_dir)
+                    if HAS_CAIRO:
+                        self.call_CAIRO_FORMATS(dirname + basename_from_dir)
               else:
                   self.output_message("Beginning rendering, this may take a while...")
-                  if out.count('/') > 0:
-                    self.local_render_wrapper(self.mapnik_map, out + '.' + self.format, self.format)
+                  if not basename:
+                    self.local_render_wrapper(self.mapnik_map, dirname + basename_from_dir + '.' + self.format.rstrip('256'), self.format)
                   else:
-                    self.local_render_wrapper(self.mapnik_map, out, self.format)
+                    self.local_render_wrapper(self.mapnik_map, self.image, self.format)
           else:
             for lev in self.ZOOM_LEVELS:
               self.mapnik_map.zoom(lev)
               self.output_message('Map Scale: %s' % self.mapnik_map.scale(),print_time=False)
               p = mapnik.Projection("%s" % self.mapnik_map.srs)
               self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic),print_time=False)
-              basename = out.split('.')[0]
-              level_name = '%s_level-%s' % (basename,lev)
+              level_name = '%slevel-%s' % (dirname,lev)
               if self.format == 'all':
                   self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
                   self.call_AGG_FORMATS(level_name)
-                  if self.HAS_CAIRO:
+                  if HAS_CAIRO:
                       self.call_CAIRO_FORMATS(level_name)
               else:
                   self.output_message("Beginning rendering, this may take a while...")              
@@ -1053,7 +1053,7 @@ if __name__ == "__main__":
     # debug does nothing yet...
     #print "--debug\t\t[0]\t\tLoop through all formats and zoom levels generating map graphics%s" % color_text(4,'*')
     print "--levels\t[10]\t\tN number of zoom levels at which to generate graphics%s" % color_text(4,'*')
-    print "--resolutions\t[none]\t\tSet specific rendering resolutions (ie. 0.1,0.05,0.025)%s" % color_text(4,'*')
+    print "--resolutions\t[none]\t\tGenerate outputs at a specific set of zoom levels (ie. 0.1,0.05,0.025)%s" % color_text(4,'*')
     print "--worldfile\t" + "[none]\t\t" + "Generate image georeferencing by specifying a world file output extension (ie. wld)%s." % color_text(4,'*')
     print "--fonts\t\t" + "[none]\t\t" + "Path(s) to .ttf font to register (ie. '../fonts/Verdana.ttf,../fonts/Arial.ttf')%s." % color_text(4,'*')
     print "--savemap\t" + "[none]\t\t" + "Output the processed mapfile as xml with the specified name%s." % color_text(4,'*')
@@ -1203,9 +1203,6 @@ if __name__ == "__main__":
     elif option == "--version":
         print __version__
         sys.exit(1)
-
-    elif option == "--test":
-        mapping['test'] = True
         
     else:
         usage(sys.argv[0])
@@ -1250,8 +1247,5 @@ if __name__ == "__main__":
   if has('profile'):
       import cProfile
       cProfile.run('main()', sort=1)
-  elif has('test'):
-      from niktests import hello_world
-      hello_world()
   else:
       main()
