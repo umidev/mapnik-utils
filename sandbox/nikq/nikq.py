@@ -8,6 +8,13 @@ from mapnik import *
 from sqlparse import parse
 from random import *
 
+"""
+=== [http://mapnik-utils.googlecode.com/svn/sandbox/nikq/ Nikq] -- Visualize postgis queries from the command line ===
+ * A commandline tool (nikq.py) to run queries against postgis and render, on-the-fly, a graphical result.
+ * Currently requires Psycopg2 and pyparsing - automatically opens image in default viewer on Mac OS.
+ * *Warning*: very alpha code, lots of bugs for sure.
+"""
+
 UNIQUE = True
 
 # Database settings
