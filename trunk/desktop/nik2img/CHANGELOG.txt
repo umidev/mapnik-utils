@@ -4,6 +4,8 @@ nik2img changelog
 
 Version 0.2.2, 9 November 2008:
 --------------------------------
+* Added tests
+
 * Fixed variable scope problem when checking for Cairo support
 
 * Fixed several bugs related to writing output files within nested folders
