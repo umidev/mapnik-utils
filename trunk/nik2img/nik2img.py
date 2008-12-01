@@ -1000,7 +1000,7 @@ class Map(object):
         if os.name == 'nt':
             if app:
                 output_message('Overriding default image viewer not yet supported on Win32')
-            os.system('start %s' % self.image.rstrip('/'))
+            os.system('start %s' % self.image.replace('/','\\'))
         elif platform.uname()[0] == 'Linux':
             if app:
                 os.system('%s %s' % (app, self.image))
