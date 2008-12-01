@@ -1,17 +1,5 @@
-Basic map
----------
-
->>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/test.png')
->>> m.test()
->>> m.build()
->>> type(m)
-<class 'nik2img.Map'>
->>> m.open()
-
-
-8-bit PNG format
-----------------
+Basic map in 8-bit PNG format
+-----------------------------
 
 >>> from nik2img import Map
 >>> m = Map('tests/mapfile_lambert.xml','tests_output/png256/8_bit.png',format='png256')
@@ -38,7 +26,7 @@ Google Reprojection
 -------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/projcode.png',srs='epsg:900913')
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/google_mercator_via_projcode.png',srs='epsg:900913')
 >>> m.open()
 
 
@@ -46,8 +34,13 @@ Google Reprojection using spatialreference.org
 ----------------------------------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/google_merc/sr.org.png',srs='http://spatialreference.org/ref/user/6/')
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/epsg/102008/')
 >>> m.open()
 
 
+Zooming to a lon, lat, and level
+--------------------------------
 
+>>> from nik2img import Map
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/zoomto/washington.png',zoom_to='-120.7,47.2,9')
+>>> m.open()

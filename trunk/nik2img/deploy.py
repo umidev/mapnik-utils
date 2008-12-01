@@ -21,7 +21,7 @@ def call(cmd):
   try:
     response = subcall(cmd,shell=True)
     print
-    time.sleep(.5)
+    time.sleep(1)
     if response < 0:
       sys.exit(response)
   except OSError, E:
@@ -31,11 +31,11 @@ version = __import__(app).__version__
 
 tag_dir= '../../tags/%s/' % app
 
-call('sudo rm *.egg* *.pyc test_outputs dist/ build/ -r -f')
-call('svn cp ../%s/ %s/%s' % (tag_dir,version,app))
+call('sudo rm *.egg* *.pyc tests_output dist/ build/ -r -f')
+call('svn cp ../%s/ %s/%s' % (app,tag_dir,version))
 call('rm %s/%s/deploy.py' % (tag_dir,version))
 call('python setup.py sdist upload')
 call('cp dist/%s-%s.tar.gz %s' % (app,version,tag_dir))
 call('svn add %s/%s-%s.tar.gz' % (app,tag_dir,version))
-call('sudo rm *.egg* test_outputs dist/ build/ -r -f')
+call('sudo rm *.egg* tests_output dist/ build/ -r -f')
 
