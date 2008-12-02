@@ -1,0 +1,91 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem 1.0
+
+name                mapnik
+version             0.5.0
+categories          graphics
+platforms           darwin
+maintainers         pobox.com:paulsmith
+description         Toolkit for developing mapping applications.
+homepage            http://mapnik.org/
+
+master_sites        http://download.berlios.de/mapnik/ \
+                    http://download2.berlios.de/mapnik/
+distname            ${name}_src-${version}
+checksums           md5 3cba5f847eabb88be6f5047ee7ed0be3 \
+                    sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
+                    rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
+
+long_description \
+    Mapnik is a Free Toolkit for developing mapping \
+    applications. It's written in C++ and there are \
+    Python bindings to facilitate fast-paced agile \
+    development. It can comfortably be used for both \
+    desktop and web development. \
+    \
+    Mapnik is about making beautiful maps. It uses the \
+    AGG library and offers world class anti-aliasing \
+    rendering with subpixel accuracy for geographic \
+    data. It is written from scratch in modern C++ and \
+    doesn't suffer from design decisions made a decade \
+    ago. When it comes to handling common software tasks \
+    such as memory management, filesystem access, \
+    regular expressions, parsing and so on, Mapnik \
+    doesn't re-invent the wheel, but utilises best of \
+    breed industry standard libraries from boost.org. \
+
+depends_lib         port:boost \
+                    port:gdal \
+                    port:libpng \
+                    port:jpeg \
+                    port:tiff \
+                    port:zlib \
+                    port:freetype \
+                    port:proj \
+                    port:python25
+
+variant no_python description {Builds port without Python bindings} {
+    build.args-append  BINDINGS=none
+    build.args-delete  PYTHON=${prefix}/bin/python2.5
+    depends_lib-delete port:python25
+    depends_build-append port:python25
+}
+
+variant postgis description {Builds port with PostGIS support} {
+    depends_lib-append port:postgis
+    build.args-append  PGSQL_INCLUDES=${prefix}/include \
+                       PGSQL_LIBS=${prefix}/lib
+}
+
+patchfiles      patch-src_unicode.cpp.diff
+
+set python      "${prefix}/bin/python2.5"
+
+worksrcdir      ${name}-${version}
+use_configure   no
+
+build.args      PREFIX=${prefix} \
+                BOOST_INCLUDES=${prefix}/include \
+                BOOST_LIBS=${prefix}/lib \
+                GDAL_INCLUDES=${prefix}/include \
+                GDAL_LIBS=${prefix}/lib \
+                FREETYPE_CONFIG=${prefix}/bin/freetype-config \
+                PNG_INCLUDES=${prefix}/include \
+                PNG_LIBS=${prefix}/lib \
+                JPEG_INCLUDES=${prefix}/include \
+                JPEG_LIBS=${prefix}/lib \
+                TIFF_INCLUDES=${prefix}/include \
+                TIFF_LIBS=${prefix}/lib \
+                PROJ_INCLUDES=${prefix}/include \
+                PROJ_LIBS=${prefix}/lib \
+                PYTHON=${python}
+
+build {
+    system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args}"
+}
+
+destroot {
+    system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args} DESTDIR=${destroot} install"
+}
