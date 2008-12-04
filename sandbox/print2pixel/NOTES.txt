@@ -23,6 +23,7 @@
 
 # internal pixel size assumptions
 # http://portal.opengeospatial.org/files/?artifact_id=1188 Section '10.2 Scale Selection'
+# http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapfile.c#L4047
 # http://trac.osgeo.org/mapserver/browser/trunk/mapserver/mapserver.h#L314
 # http://trac.gispython.org/lab/browser/PCL/trunk/PCL-Core/cartography/context/rendering.py#L112
 # http://trac.mapnik.org/browser/trunk/src/scale_denominator.cpp#L37
