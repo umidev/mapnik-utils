@@ -742,7 +742,12 @@ class Map(object):
             # Refactor to use gdal based osr layer or simliar code with handling of response codes.
             # http://trac.osgeo.org/gdal/changeset/11772
             import urllib
-            web_proj4 = urllib.urlopen('%sproj4/' % self.srs ).read()
+            import socket
+            socket.setdefaulttimeout(10)
+            try:
+                web_proj4 = urllib.urlopen('%sproj4/' % self.srs ).read()
+            except IOError, E:
+                output_error('%s is not responding after 10 seconds' % self.srs,E)
             mapnik_proj = mapnik.Projection(web_proj4)
             self.output_message("Mapnik projection successfully initiated with url-fetched proj.4 string: '%s'" % mapnik_proj.params())
           except Exception, E:
