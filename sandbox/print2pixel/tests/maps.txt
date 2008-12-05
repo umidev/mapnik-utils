@@ -1,8 +1,33 @@
 >>> import print2pixel as p2p
 >>> p2p.print_map_by_name('letter')
 (2550, 3300)
->>> dx, dy = p2p.print_map_by_name('letter',layout='landscape')
->>> import nik2img
->>> m = nik2img.Map('tests/mapfile.xml','letter.png',width=dx,height=dy)
->>> m.test()
->>> m.open()
+
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name('a4')
+(2480, 3507)
+
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name("'A4'")
+(2480, 3507)
+
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name('''A4''')
+(2480, 3507)
+
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name("""A4""")
+(2480, 3507)
+
+>>> import print2pixel as p2p
+>>> afour = '"a4"'
+>>> p2p.print_map_by_name(afour)
+(2480, 3507)
+
+>>> import print2pixel as p2p
+>>> p2p.print_map_by_name('A4',layout='landscape')
+(3507, 2480)
+
+>>> import print2pixel as p2p
+>>> p2p.get_size_by_name('a4')
+('in', 8.2677165354330722, 11.692913385826772)
+
