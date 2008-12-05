@@ -206,7 +206,7 @@ def get_size_by_name(papername):
     Supports lookup of ISO, Japanese, ANSI, and North American sizes.
     """
     u = h = w = None
-    up,lo = papername.upper(),papername.lower()
+    up,lo = papername.upper().strip('\'"'),papername.lower().strip('\'"')
     for size in sizes:      
       if size[0].has_key(lo):
         w,h = size[0][lo]
@@ -224,7 +224,7 @@ def get_size_by_name(papername):
       u = 'in'
       msg("%s equivalent in inches is: %s, %s" % (papername.upper(),w,h))
     else:
-      print ("No 'to-inch' conversion needed, native paper size units are inches...")
+      msg("No 'to-inch' conversion needed, native paper size units are inches...")
     return u,w,h
     
 def print_scale_relative_to_postscript(ppi,system_assumed_dpi=POSTSCRIPT_PPI):
