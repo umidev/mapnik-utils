@@ -220,8 +220,11 @@ def get_size_by_name(papername):
     if u != 'in':
       factor = get_to_inch_factor(u)
       w,h = w/factor,h/factor
-      #if 
+      # set u = 'in' since we're now forcing work in inches
+      u = 'in'
       msg("%s equivalent in inches is: %s, %s" % (papername.upper(),w,h))
+    else:
+      print ("No 'to-inch' conversion needed, native paper size units are inches...")
     return u,w,h
     
 def print_scale_relative_to_postscript(ppi,system_assumed_dpi=POSTSCRIPT_PPI):
@@ -265,6 +268,8 @@ def get_px_for_print_size(unit,print_w,print_h,print_res,res_unit):
     """
     # get the conversion factor to inches
     factor = get_to_inch_factor(unit)
+    if not factor == 1:
+      msg("Conversion factor to inches will be '%s' will be 'in = mm/%s'" % (unit,factor))
     # We accept ppi or pixel size in microns for now
     if res_unit == 'microns' or res_unit == 'micrometres' or res_unit == 'µm' or res_unit == 'um':
       # convert microns to inches since our print sizes
