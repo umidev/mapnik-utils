@@ -114,14 +114,12 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    def __init__(self, mapfile, image='', width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
-        """
-        ----
-
-        The Map class instanciates a Mapnik map graphic with a path to an xml or mml mapfile.
-        But it also accept an a variety of keyword arguments to customize output.
+    """ The Map class instanciates a Mapnik map graphic with a path to an xml or mml mapfile.
+         
+        But it also accept a variety of keyword arguments to customize output.
+        
         After creating a Map class either call open() to open the image from the filesystem
-        or stream() to print the image to STDOUT. 
+        using the default image reader or call stream() to print the image to STDOUT. 
         
         Required argument:
         --> mapfile\t string\t path to a mapnik xml or cascadenik mml file
@@ -129,7 +127,7 @@ class Map(object):
         Optional **kwargs:
         --> See the commandline usage
         
-        Usage:
+        Basic example usage:
 
         To save a image to the filesystem and open it with the default viewer:
         >>> from nik2img import Map
@@ -138,15 +136,22 @@ class Map(object):
         
         To stream an image to a web browser:
         >>> from nik2img import Map
-        >>> content = Map('/path/to/mapfile.xml',width=256,height=256)
-        >>> image = content.stream()
-        >>> print "Content-Type: %s" % content.mime
+        >>> nikmap = Map('/path/to/mapfile.xml',width=256,height=256)
+        >>> image = nikmap.stream()
+        >>> print "Content-Type: %s" % nikmap.mime
         >>> print "Content-Length: %d" % len(image)
         >>> print '' 
         >>> print image
-
-
-        ----
+    """
+    def __init__(self, mapfile, image='', width=600, height=400, format='png', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
+        """Initialize the Map() class with the path to a mapfile.
+        
+        See the commandline usage for optional keyword arguments.
+        """
+    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
+        """Initialize the Map() class with the path to a mapfile.
+        
+        See the commandline usage for optional keyword arguments.
         """
         # Required
         self.mapfile = mapfile
@@ -222,7 +227,7 @@ class Map(object):
         Output a colored message or warning, incrementing the STEP counter
         to enable a pdb trace to be set at any point a verbose message is printed.
         """
-        if warning:
+        if warning and self.verbose:
             color_print(1, 'STEP: %s | --> WARNING: %s' % (self.STEP, msg)) 
         elif self.verbose:      
             color_print(2, 'STEP: %s // --> %s' % (self.STEP, msg))

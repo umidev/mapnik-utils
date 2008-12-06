@@ -7,6 +7,8 @@ Version 0.2.3,             2009:
 
 * Added a 10 second timeout when fetching projections from spatialreference.org
 
+* Made warnings only print to STDOUT if verbose = True
+
 
 Version 0.2.2, 30 November 2008:
 --------------------------------
