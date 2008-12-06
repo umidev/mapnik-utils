@@ -148,11 +148,6 @@ class Map(object):
         
         See the commandline usage for optional keyword arguments.
         """
-    def __init__(self, mapfile, image='', width=600, height=400, format='png256', bbox_geographic=None, bbox_projected=None, zoom_to=None, zoom_to_radius=None, zoom_to_layer=None, expand=None, srs=None, layers=None, re_render_times=None, post_map_pause=None, post_step_pause=None, trace_steps=None, levels=None, resolutions=None, max_resolution=None, find_and_replace=None, no_color=False, quiet=False, dry_run=False, verbose=False, debug=False, world_file=None, fonts=None, save_map=False,app=None):
-        """Initialize the Map() class with the path to a mapfile.
-        
-        See the commandline usage for optional keyword arguments.
-        """
         # Required
         self.mapfile = mapfile
         self.image = image
