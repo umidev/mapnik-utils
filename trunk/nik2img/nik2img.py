@@ -352,6 +352,20 @@ class Map(object):
                     self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope),print_time=False)
                     self.output_message("Center point of layer '%s' is %s" % (l.name, layer_bbox.center()),print_time=False)
                     self.output_message("Layer's minzoom = '%s' and maxzoom = '%s'"  % (l.minzoom, l.maxzoom) )
+                    if l.visible(self.mapnik_map.scale()):
+                      self.output_message("At current scale of '%s': this layer '%s' is visible" % (self.mapnik_map.scale(),l.name))
+                    else:
+                      self.output_message("At current scale of '%s': this layer '%s' NOT visible" % (self.mapnik_map.scale(),l.name),warning=True)
+                    for sty_name in l.styles:
+                      sty_obj = self.mapnik_map.find_style(sty_name)
+                      for rule in sty_obj.rules:
+                        if rule.active(self.mapnik_map.scale()):
+                          self.output_message("ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale))
+                        else:
+                          self.output_message("NOT ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale),warning=True)
+
+                    
+                    
                 else:
                     self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
                     self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope), warning=True)
