@@ -1,41 +1,34 @@
-# To register new fonts to use with the Mapnik TextSymbolizer
-# you must first register the full path to the directory that holds
-# the TrueType (or OpenType) fonts (with .ttf extension) and then use the full
-# font face name (not the font file name) in the Text Symbolizer code
+# Grab the Fontin Sans Open Type font
+http://www.josbuivenga.demon.nl/fontinsans.html
 
-# Download a sample OpenType font with indic glyphs:
+# Unzip into your default mapnik folder (/usr/local/lib/mapnik/fonts)
 
-wget http://download.savannah.gnu.org/releases/gargi/gargi.ttf
+#
+# Change mapnik/__init__.py (installed in your site-packages folder when you build mapnik) to load both .ttf and .otf fonts found in that folder by default
+#
 
-# or on linux apt-get install then update the font cache
-apt-get install ttf-devanagari-fonts
-fc-cache
-
-# Then in your python script, register your new fonts directory
-
-from mapnik import *
-
-# register path to new true type fonts...
-# or just place them in mapniks custom directory (usually /usr/local/lib/mapnik/fonts/)
+from mapnik import DatasourceCache
+DatasourceCache.instance().register_datasources('%s' % inputpluginspath)
+#register some fonts
+from mapnik import FontEngine
 from glob import glob
-NEW_FONTS_DIR = '/usr/share/fonts/truetype/ttf-devanagari-fonts/'
-fonts = glob('%s/*.ttf' % NEW_FONTS_DIR)
+fonts = glob('%s/*.ttf' % fontscollectionpath) + glob('%s/*.otf' % fontscollectionpath)
 if len( fonts ) == 0:
-    print "### WARNING: No ttf files found in '%s'." % NEW_FONTS_DIR
+    print "### WARNING: No ttf or otf files found in '%s'." % fontscollectionpath
 else:
     map(FontEngine.instance().register_font, fonts)
 
-# Then if you are writing your styles in python do:
-lyr = Layer('My Postgis Layer')
-lyr.datasource = PostGIS(host='', dbname='postgis_enable_db_name', user='postgres', password='', table='postgis_table_name')
-sty = Style()
-rul = Rule()
-rul.symbols.append(TextSymbolizer('mr','gargi Medium',10,Color('white')))
+#set dlopen flags back to the original
+setdlopenflags(flags)
 
-# Or if you are loading an XML mapfile your Style would look like
 
-   <Style name="My Style">
-     <Rule>
-      <TextSymbolizer name="FIELD_NAME" face_name="gargi Medium" size="12" fill="white" halo_fill= "#2E2F39" halo_radius="1" wrap_width="20" spacing="5" allow_overlap="false" avoid_edges="true" min_distance="10"/>
-     </Rule>
-    </Style>
+#
+# Check what fonts mapnik can read
+#
+
+from mapnik import *
+for name in FontEngine.instance().face_names():
+    print name
+
+# Now you can call Open Type Fonts by their face name in mapnik projects
+<TextSymbolizer name="NAME" face_name="Fontin Sans Small Caps" size="12" fill="white" halo_fill= "#2E2F39" halo_radius="1" wrap_width="20" spacing="5" allow_overlap="false" avoid_edges="true" min_distance="10"/>
