@@ -9,6 +9,10 @@ Version 0.2.3,             2009:
 
 * Made warnings only print to STDOUT if verbose = True
 
+* Added more debugging of rules and styles
+
+* Now looks for projection strings in the full mapnik proj_init syntax (ie '+init=epsg:<code>')
+
 
 Version 0.2.2, 30 November 2008:
 --------------------------------

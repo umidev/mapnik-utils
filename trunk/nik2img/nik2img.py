@@ -362,10 +362,7 @@ class Map(object):
                         if rule.active(self.mapnik_map.scale()):
                           self.output_message("ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale))
                         else:
-                          self.output_message("NOT ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale),warning=True)
-
-                    
-                    
+                          self.output_message("NOT ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale),warning=True)                    
                 else:
                     self.output_message("Layer '%s' does not intersect with Map envelope" % l.name, warning=True,print_time=False)
                     self.output_message("Layer envelope was: %s  |  Map envelope is %s" % (layer_bbox, map_envelope), warning=True)
@@ -766,6 +763,9 @@ class Map(object):
             self.output_message("Mapnik projection successfully initiated with url-fetched proj.4 string: '%s'" % mapnik_proj.params())
           except Exception, E:
             output_error("Tried to read from www.spatialreference.org, failed to fetch usable proj4 code", E)
+        elif re.match('^\+init=epsg:\d+$', self.srs.lower()):
+          mapnik_proj = mapnik.Projection("%s" % self.srs)
+          self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
         elif re.match('^epsg:\d+$', self.srs.lower()):
           mapnik_proj = mapnik.Projection("+init=%s" % self.srs)
           self.output_message("Mapnik projection successfully initiated with epsg code: '%s'" % mapnik_proj.params())
@@ -773,7 +773,7 @@ class Map(object):
           mapnik_proj = mapnik.Projection(self.srs)
           self.output_message("Mapnik projection successfully initiated with proj.4 string: '%s'" % mapnik_proj.params())
         else:
-          output_error("Could not parse the supplied projection information")
+          output_error("Could not parse the supplied projection information: %s" % self.srs)
         # attempt to catch a mapnik 'proj_init_error' when espg files are not found
         if not mapnik_proj.params():
           output_error("Requested projection could not be initialized: confirm that mapnik was built with proj support and proj espg files are installed")
