@@ -31,6 +31,8 @@ CREATE TABLE mrdata (
 );
 
 
+insert into geometry_columns values ('','public','mrdata','the_geom',2,-1,'MULTIPOLYGON');
+
 --ALTER TABLE public.mrdata OWNER TO swapnil;
 
 --
