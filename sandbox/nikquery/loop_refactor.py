@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 from psycopg2 import ProgrammingError
 #import psycopg2.OperationalError
-
+import optparse
 
 # pickle settings
 # prompt to unpickle or overwrite
@@ -22,15 +22,19 @@ http://www.python.org/doc/2.5.2/lib/module-code.html
 
 
 class connection(object):
-        def __init__(self, default_params=None ):
+        def __init__(self, default_params={} ):
             self.default_params = default_params
             self.settings = ['dbname','user','host']
             self.fatal_param = []
             self.values = {}
+            self.params = {}
+            self.connection = None
+            self.cursor = None
         
         def setup(self):
             if self.fatal_param:
                 for item in self.fatal_param:
+                    #print 'Invalid %s' % item
                     print 'try again: %s >>' % item,
                     line = raw_input()
                     if line.endswith('\q'): sys.exit()
@@ -44,7 +48,7 @@ class connection(object):
                         line = raw_input()
                         self.values[item] = line
                         if line.endswith('\q'): sys.exit()
-                        if line.endswith('\c'):
+                        if line.endswith('\c') or line.startswith('\c'):
                             self.fatal_param.append('dbname')
                             self.setup()
                     else:
@@ -52,7 +56,7 @@ class connection(object):
                         
         def connect(self):
             d,u,h = self.values['dbname'],self.values['user'],self.values['host']
-            params = "dbname=%s user=%s host=%s" % (d,u,h)
+            self.params = "dbname=%s user=%s host=%s" % (d,u,h)
             try:
                 connection = psycopg2.connect(params)
             except Exception, E:
@@ -71,14 +75,23 @@ class connection(object):
             if self.fatal_param:
                 self.setup()
             else:
-                sql = connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-                return sql
+                #return params
+                self.connection = psycopg2.connect(self.params)
+                print 'Connecting with: %s' % self.params
+                self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+                return self.cursor
+                
            
 class query(object):
+        #def __init__(self, params):
         def __init__(self, cursor):
+            #self.params = params
+            #self.connection = psycopg2.connect(self.params)
+            #self.cursor = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
             self.cursor = cursor
             self.cmd_lines = []
             self.stop = False
+            self.reconnect = False
 
         def go(self):
             while 1:
@@ -90,16 +103,22 @@ class query(object):
                  break
                else:
                  self.cmd_lines.append(line)
-               if line.endswith('\q'): sys.exit()
-               if line.endswith('\c'):
-                   self.fatal_param.append('dbname')
-                   self.setup()
-
+               if line.endswith('\q'):
+                   print 'stop request....'
+                   sys.exit()
+               if line.endswith('\c') or line.startswith('\c'):
+                   self.reconnect = line.strip('\c')
+                   if not self.reconnect:
+                     self.cmd_lines.remove(line)
+                     print 'Please provide database name!'
+                   else:
+                     print 'changing...to %s' % self.reconnect
+                     break
         
         def run(self):
-            query = ' '.join(self.cmd_lines)
+            sql_statement = ' '.join(self.cmd_lines)
             try:
-                self.cursor.execute("""%s;""" % query)
+                self.cursor.execute("""%s;""" % sql_statement)
             except ProgrammingError, E:
                 print E
                 self.go() # run main again?
@@ -111,24 +130,53 @@ class query(object):
                
         
 if __name__ == "__main__":
-  d = {'dbname':'cobi','user':'postgres','host':''}
-  c = connection(d)
-  c.setup()
-  print c.values
-  cursor = c.connect()
-  q = query(cursor)
-  try:
-    while 1:
-      #print 'nikq >>',
-      #start = raw_input()
-      q.go()
-      #print q.cmd_lines
-      all = q.run()
-      print all
-      if q.stop:
-        break
-      else:
-        q.cmd_lines = []
-        #q.go()
-  except KeyboardInterrupt:
-    sys.exit()
+    parser = optparse.OptionParser(usage="""python nikquery.py [shapefile]
+    
+    Usage:
+        $ python nikquery.py /path/to/shapefile.shp
+
+    """)
+    
+    #parser.add_option('-b', '--bbox', dest='bbox_projected')
+    (options, args) = parser.parse_args()
+    import sys
+    if len(args):
+      print '\nEntering shapefile query mode (leave blank for postgis connection)\n'
+      print 'but... not supported yet, so leaving'
+      sys.exit()
+    else:
+      print '\nEntering postgis query mode\n'
+    
+    kwargs = {}
+    for k,v in vars(options).items():
+      if v != None:
+       kwargs[k] = v
+       
+    print kwargs
+      
+    d = {'dbname':'cobi','user':'postgres','host':''}
+    con = connection(d)
+    con.setup()
+    #print con.values
+    # initiate connection looping
+    cursor = con.connect()
+    
+    # initiate query looping
+    q = query(cursor)
+    querying = True
+    try:
+      while querying:
+        q.go()
+        if q.stop:
+          break
+        elif q.reconnect:
+          print 'reconnect caught'
+          con.values['dbname'] = q.reconnect  
+          # reinitiate query looping
+          q.cursor = con.connect()
+        else:
+          all = q.run()
+          q.cmd_lines = []
+          #q.go()
+    except KeyboardInterrupt:
+      sys.exit()
