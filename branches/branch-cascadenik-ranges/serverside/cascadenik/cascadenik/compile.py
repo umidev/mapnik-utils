@@ -188,7 +188,7 @@ def selectors_ranges(selectors):
     
     # start by getting all the range edges from the selectors into a list of break points
     for selector in selectors:
-        for test in selector.rangeTests():
+        for test in selector.mapScaleTests():
             repeated_breaks.append(test.rangeOpEdge())
     
     # from here on out, *order will matter*

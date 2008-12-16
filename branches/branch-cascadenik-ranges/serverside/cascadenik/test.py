@@ -1,9 +1,9 @@
 import sys
 import unittest
-from style import ParseException, parse_stylesheet, unroll_rulesets
-from style import Selector, SelectorElement, SelectorAttributeTest
-from style import postprocess_property, postprocess_value, Property
-from compile import selectors_filters
+from cascadenik.style import ParseException, parse_stylesheet, unroll_rulesets
+from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
+from cascadenik.style import postprocess_property, postprocess_value, Property
+from cascadenik.compile import selectors_filters
 
 class ParseTests(unittest.TestCase):
     
@@ -139,6 +139,7 @@ class SelectorTests(unittest.TestCase):
     def testRange2(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>=', 100)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(False, selector.inRange(99))
         self.assertEqual(True, selector.inRange(100))
         self.assertEqual(True, selector.inRange(1000))
@@ -146,6 +147,7 @@ class SelectorTests(unittest.TestCase):
     def testRange3(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<', 100)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(True, selector.inRange(99))
         self.assertEqual(False, selector.inRange(100))
         self.assertEqual(False, selector.inRange(1000))
@@ -153,20 +155,23 @@ class SelectorTests(unittest.TestCase):
     def testRange4(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<=', 100)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(True, selector.inRange(99))
         self.assertEqual(True, selector.inRange(100))
         self.assertEqual(False, selector.inRange(1000))
 
     def testRange5(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('nonsense', '<=', 100)]))
-        self.assertEqual(False, selector.isRanged())
+        self.assertEqual(True, selector.isRanged())
+        self.assertEqual(False, selector.isMapScaled())
         self.assertEqual(True, selector.inRange(99))
         self.assertEqual(True, selector.inRange(100))
-        self.assertEqual(True, selector.inRange(1000))
+        self.assertEqual(False, selector.inRange(1000))
 
     def testRange6(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>=', 100), SelectorAttributeTest('scale-denominator', '<', 1000)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(False, selector.inRange(99))
         self.assertEqual(True, selector.inRange(100))
         self.assertEqual(False, selector.inRange(1000))
@@ -174,6 +179,7 @@ class SelectorTests(unittest.TestCase):
     def testRange7(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '>', 100), SelectorAttributeTest('scale-denominator', '<=', 1000)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(False, selector.inRange(99))
         self.assertEqual(False, selector.inRange(100))
         self.assertEqual(True, selector.inRange(1000))
@@ -181,6 +187,7 @@ class SelectorTests(unittest.TestCase):
     def testRange8(self):
         selector = Selector(SelectorElement(['*'], [SelectorAttributeTest('scale-denominator', '<=', 100), SelectorAttributeTest('scale-denominator', '>=', 1000)]))
         self.assertEqual(True, selector.isRanged())
+        self.assertEqual(True, selector.isMapScaled())
         self.assertEqual(False, selector.inRange(99))
         self.assertEqual(False, selector.inRange(100))
         self.assertEqual(False, selector.inRange(1000))
@@ -448,4 +455,17 @@ class FilterCombinationTests(unittest.TestCase):
         self.assertEqual(str(sorted(filters)), '[[horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse!=yes][landuse=agriculture][leisure!=park], [horse!=yes][landuse=agriculture][leisure=park], [horse!=yes][landuse=civilian][leisure!=park], [horse!=yes][landuse=civilian][leisure=park], [horse!=yes][landuse=military][leisure!=park], [horse!=yes][landuse=military][leisure=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse=yes][landuse=agriculture][leisure!=park], [horse=yes][landuse=agriculture][leisure=park], [horse=yes][landuse=civilian][leisure!=park], [horse=yes][landuse=civilian][leisure=park], [horse=yes][landuse=military][leisure!=park], [horse=yes][landuse=military][leisure=park]]')
 
 if __name__ == '__main__':
+
+    #    s = """
+    #        Layer[foo<1] { polygon-fill: #000; }
+    #        Layer[foo=1] { polygon-fill: #001; }
+    #        Layer[foo>1] { polygon-fill: #010; }
+    #    """
+    #    rulesets = parse_stylesheet(s)
+    #    selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
+    #    filters = selectors_filters(selectors)
+    #    
+    #    print selectors
+    #    print filters
+
     unittest.main()

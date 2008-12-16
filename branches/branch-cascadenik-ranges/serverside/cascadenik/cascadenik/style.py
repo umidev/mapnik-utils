@@ -354,6 +354,16 @@ class Selector:
         """
         return [test for test in self.allTests() if test.isRanged()]
     
+    def isMapScaled(self):
+        """
+        """
+        return bool(self.mapScaleTests())
+    
+    def mapScaleTests(self):
+        """
+        """
+        return [test for test in self.allTests() if test.isMapScaled()]
+    
     def allTests(self):
         """
         """
@@ -444,6 +454,11 @@ class SelectorAttributeTest:
             return SelectorAttributeTest(self.arg1, '=', self.arg2)
     
     def isRanged(self):
+        """
+        """
+        return self.op in ('<', '<=', '>=', '>')
+    
+    def isMapScaled(self):
         """
         """
         return self.arg1 == 'scale-denominator'
