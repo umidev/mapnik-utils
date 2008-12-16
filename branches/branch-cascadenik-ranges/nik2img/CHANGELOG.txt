@@ -1,0 +1,81 @@
+=================
+nik2img changelog
+=================
+
+Version 0.2.3,             2009:
+--------------------------------
+
+* Added a 10 second timeout when fetching projections from spatialreference.org
+
+* Made warnings only print to STDOUT if verbose = True
+
+* Added more debugging of rules and styles
+
+* Now looks for projection strings in the full mapnik proj_init syntax (ie '+init=epsg:<code>')
+
+
+Version 0.2.2, 30 November 2008:
+--------------------------------
+
+* Packaged from revision 400 in Subversion.
+
+* Added tests that produce map graphics output
+
+* Fixed variable scope problem when checking for Cairo support
+
+* Fixed several bugs related to writing output files within nested folders
+
+* Switched default format back to png (rather than png256)
+
+
+Version 0.2.1, 9 November 2008:
+--------------------------------
+
+* Fixed bug in rendering when specific layers are requested with the -l flag
+
+* Added ability to specify the application with which to open the output graphic using the --app flag
+
+
+
+Version 0.2.0, 5 November 2008:
+--------------------------------
+
+* Packaged from revision 283 in Subversion.
+
+* Cairo file formats support added (svg,pdf,ps)
+
+* Program mainline is now a class that can be initialized as a module import allowing non-command-line usage
+
+* Fixed up buggy zoom levels code.
+
+* Fixed countless bugs in projection handling, format output, and error handling.
+
+* Improved layer intersection checking by reprojecting extents were needed/possible
+
+* Added a variety of more detailed verbose output for layers, datasources, and projection issues.
+
+* Added zoom_to_layer, zoom_to (long,lat,level), and zoom_to_radius functionality to pinpoint center of rendered map.
+
+* Added basic function docstrings
+
+* Made piping the image to STDOUT default like shp2img.
+
+* Added ability to stream() image result programmatically.
+
+* Added beta support for worldfile output to georeference image output (1-2 pixel shift is present and a bug).
+
+* Added ability to save the processed map to xml.
+
+* Added ability to load alternative fonts.
+
+* Added ability to directly read Cascadenik mml (Mapnik Markup Language).
+
+* Added cProfile output option which will print script timing profile.
+
+
+Version 0.1.0, 25 September 2008:
+---------------------------------
+
+ * Initial version.
+ 
+ * Packaged from revision 181 in Subversion.
