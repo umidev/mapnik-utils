@@ -498,17 +498,119 @@ class SelectorAttributeTest:
         """
         for test in tests:
             if self.arg1 == test.arg1:
-                if test.op == '=' and self.op == '=' and self.arg2 != test.arg2:
-                    # equal different things
-                    return False
-
-                elif test.op == '!=' and self.op == '=' and self.arg2 == test.arg2:
-                    # contradict: equal vs. not equal
-                    return False
-
-                elif test.op == '=' and self.op == '!=' and self.arg2 == test.arg2:
-                    # contradict: equal vs. not equal
-                    return False
+                if self.op == '=':
+                    if test.op == '=' and self.arg2 != test.arg2:
+                        return False
+    
+                    if test.op == '!=' and self.arg2 == test.arg2:
+                        return False
+    
+                    if test.op == '<' and self.arg2 >= test.arg2:
+                        return False
+                
+                    if test.op == '>' and self.arg2 <= test.arg2:
+                        return False
+                
+                    if test.op == '<=' and self.arg2 > test.arg2:
+                        return False
+                
+                    if test.op == '>=' and self.arg2 < test.arg2:
+                        return False
+            
+                if self.op == '!=':
+                    if test.op == '=' and self.arg2 == test.arg2:
+                        return False
+    
+                    if test.op == '!=':
+                        pass
+    
+                    if test.op == '<':
+                        pass
+                
+                    if test.op == '>':
+                        pass
+                
+                    if test.op == '<=' and self.arg2 == test.arg2:
+                        return False
+                
+                    if test.op == '>=' and self.arg2 == test.arg2:
+                        return False
+            
+                if self.op == '<':
+                    if test.op == '=' and self.arg2 <= test.arg2:
+                        return False
+    
+                    if test.op == '!=':
+                        return False
+    
+                    if test.op == '<':
+                        pass
+                
+                    if test.op == '>' and self.arg2 < test.arg2:
+                        return False
+                
+                    if test.op == '<=':
+                        pass
+                
+                    if test.op == '>=' and self.arg2 < test.arg2:
+                        return False
+            
+                if self.op == '>':
+                    if test.op == '=' and self.arg2 >= test.arg2:
+                        return False
+    
+                    if test.op == '!=':
+                        return False
+    
+                    if test.op == '<' and self.arg2 > test.arg2:
+                        return False
+                
+                    if test.op == '>':
+                        pass
+                
+                    if test.op == '<=' and self.arg2 > test.arg2:
+                        return False
+                
+                    if test.op == '>=':
+                        pass
+            
+                if self.op == '<=':
+                    if test.op == '=' and self.arg2 < test.arg2:
+                        return False
+    
+                    if test.op == '!=' and self.arg2 == test.arg2:
+                        return False
+    
+                    if test.op == '<':
+                        pass
+                
+                    if test.op == '>' and self.arg2 < test.arg2:
+                        return False
+                
+                    if test.op == '<=':
+                        pass
+                
+                    if test.op == '>=' and self.arg2 < test.arg2:
+                        return False
+            
+                if self.op == '>=':
+                    if test.op == '=' and self.arg2 > test.arg2:
+                        return False
+    
+                    if test.op == '!=' and self.arg2 == test.arg2:
+                        return False
+    
+                    if test.op == '<' and self.arg2 > test.arg2:
+                        return False
+                
+                    if test.op == '>':
+                        pass
+                
+                    if test.op == '<=' and self.arg2 > test.arg2:
+                        return False
+                
+                    if test.op == '>=':
+                        pass
 
         return True
     

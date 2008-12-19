@@ -523,6 +523,68 @@ class SimpleRangeTests(unittest.TestCase):
         self.assertEqual(len(filters), 12)
         self.assertEqual(str(sorted(filters)), '[[bar!=blah][bar!=that][bar!=this][foo<2][foo>1], [bar!=blah][bar!=that][bar!=this][foo<=1], [bar!=blah][bar!=that][bar!=this][foo>=2], [bar=blah][foo<2][foo>1], [bar=blah][foo<=1], [bar=blah][foo>=2], [bar=that][foo<2][foo>1], [bar=that][foo<=1], [bar=that][foo>=2], [bar=this][foo<2][foo>1], [bar=this][foo<=1], [bar=this][foo>=2]]')
 
+class CompatibilityTests(unittest.TestCase):
+
+    def testCompatibility1(self):
+        a = SelectorAttributeTest('foo', '=', 1)
+        b = SelectorAttributeTest('foo', '=', 1)
+        assert a.isCompatible([b])
+
+    def testCompatibility2(self):
+        a = SelectorAttributeTest('foo', '=', 1)
+        b = SelectorAttributeTest('bar', '=', 1)
+        assert a.isCompatible([b])
+
+    def testCompatibility3(self):
+        a = SelectorAttributeTest('foo', '=', 1)
+        b = SelectorAttributeTest('foo', '!=', 1)
+        assert not a.isCompatible([b])
+
+    def testCompatibility4(self):
+        a = SelectorAttributeTest('foo', '!=', 1)
+        b = SelectorAttributeTest('foo', '=', 1)
+        assert not a.isCompatible([b])
+
+    def testCompatibility5(self):
+        a = SelectorAttributeTest('foo', '!=', 1)
+        b = SelectorAttributeTest('foo', '!=', 2)
+        assert a.isCompatible([b])
+
+    def testCompatibility6(self):
+        a = SelectorAttributeTest('foo', '!=', 1)
+        b = SelectorAttributeTest('foo', '!=', 1)
+        assert a.isCompatible([b])
+
+    def testCompatibility7(self):
+        a = SelectorAttributeTest('foo', '=', 1)
+        b = SelectorAttributeTest('foo', '<', 1)
+        assert not a.isCompatible([b])
+
+    def testCompatibility8(self):
+        a = SelectorAttributeTest('foo', '>=', 1)
+        b = SelectorAttributeTest('foo', '=', 1)
+        assert a.isCompatible([b])
+
+    def testCompatibility9(self):
+        a = SelectorAttributeTest('foo', '=', 1)
+        b = SelectorAttributeTest('foo', '<=', 1)
+        assert a.isCompatible([b])
+
+    def testCompatibility10(self):
+        a = SelectorAttributeTest('foo', '>', 1)
+        b = SelectorAttributeTest('foo', '=', 1)
+        assert not a.isCompatible([b])
+
+    def testCompatibility11(self):
+        a = SelectorAttributeTest('foo', '>', 2)
+        b = SelectorAttributeTest('foo', '<=', 1)
+        assert not a.isCompatible([b])
+
+    def testCompatibility12(self):
+        a = SelectorAttributeTest('foo', '<=', 1)
+        b = SelectorAttributeTest('foo', '>', 2)
+        assert not a.isCompatible([b])
+
 if __name__ == '__main__':
 
     #    s = """
