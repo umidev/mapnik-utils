@@ -77,6 +77,25 @@ class Range:
 
         return True
     
+    def toFilter(self, arg1):
+        """
+        """
+        if self.leftedge == self.rightedge and self.leftop is ge and self.rightop is le:
+            # equivalent to ==
+            return Filter(style.SelectorAttributeTest(arg1, '=', self.leftedge))
+    
+        try:
+            return Filter(style.SelectorAttributeTest(arg1, opstr[self.leftop], self.leftedge),
+                          style.SelectorAttributeTest(arg1, opstr[self.rightop], self.rightedge))
+        except KeyError:
+            try:
+                return Filter(style.SelectorAttributeTest(arg1, opstr[self.rightop], self.rightedge))
+            except KeyError:
+                try:
+                    return Filter(style.SelectorAttributeTest(arg1, opstr[self.leftop], self.leftedge))
+                except KeyError:
+                    return Filter()
+    
     def __repr__(self):
         """
         """
@@ -173,23 +192,42 @@ class Filter:
         """
         return cmp(repr(self), repr(other))
 
-def selectors_ranges(selectors):
-    """ Given a list of selectors and a map, return a list of Ranges that
-        fully describes all possible unique slices within those selectors.
+def selectors_scale_ranges(selectors):
+    """ Given a list of selectors, return a list of Ranges that fully describes
+        all possible unique scale-denominator slices within those selectors.
         
-        If the map looks like it uses the well-known Google/VEarth maercator
+        If the map looks like it uses the well-known Google/VEarth mercator
         projection, accept "zoom" attributes in place of "scale-denominator".
         
         This function was hard to write, it should be hard to read.
         
         TODO: make this work for <= following by >= in breaks
     """
+    tests = []
+    
+    for selector in selectors:
+        for test in selector.mapScaleTests():
+            tests.append(test)
+
+    return test_ranges(tests)
+
+def test_ranges(tests):
+    """ Given a list of tests, return a list of Ranges that fully describes
+        all possible unique ranged slices within those tests.
+        
+        This function was hard to write, it should be hard to read.
+        
+        TODO: make this work for <= following by >= in breaks
+    """
+    assert 1 == len(set(test.arg1 for test in tests))
+    assert True in [test.isRanged() for test in tests]
+    assert False not in [test.isNumeric() for test in tests]
+    
     repeated_breaks = []
     
     # start by getting all the range edges from the selectors into a list of break points
-    for selector in selectors:
-        for test in selector.mapScaleTests():
-            repeated_breaks.append(test.rangeOpEdge())
+    for test in tests:
+        repeated_breaks.append(test.rangeOpEdge())
     
     # from here on out, *order will matter*
     # it's expected that the breaks will be sorted from minimum to maximum,
@@ -314,6 +352,78 @@ def xindexes(slots):
                 slot[k] = 0
             else:
                 carry = 0
+
+def _selectors_filters(selectors):
+    """ Rewriting selector_filters to handle ranges, hopefully
+    """
+    def get_unique_arg1s(selectors):
+        """ Given a list of selectors, return a list of unique first-args for them.
+        """
+        arg1s = set()
+        
+        for selector in selectors:
+            for test in selector.allTests():
+                arg1s.add(test.arg1)
+
+        return sorted(list(arg1s))
+
+    def get_unique_tests(selectors, arg1=None):
+        """ Given a list of selectors, return a list of unique tests optionally matching a given first-arg.
+        """
+        tests = {}
+        
+        for selector in selectors:
+            for test in selector.allTests():
+                if arg1 is None or test.arg1 == arg1:
+                    tests[str(test)] = test
+
+        return tests.values()
+    
+    arg1s = get_unique_arg1s(selectors)
+    
+    arg1tests = {}
+    
+    # divide up the tests by their first argument, e.g. "landuse" vs. "tourism",
+    # into lists of all possible legal combinations of those tests.
+    for arg1 in arg1s:
+        
+        tests = get_unique_tests(selectors, arg1)
+        
+        has_ranged_tests = True in [test.isRanged() for test in tests]
+        has_nonnumeric_tests = False in [test.isNumeric() for test in tests]
+        
+        if has_ranged_tests and has_nonnumeric_tests:
+            raise Exception('Mixed ranged/non-numeric tests in %s' % str(tests))
+
+        elif has_ranged_tests:
+            arg1tests[arg1] = [range.toFilter(arg1).tests for range in test_ranges(tests)]
+
+        else:
+            arg1tests[arg1] = test_combinations(tests)
+            
+        
+    # get a list of the number of combinations for each group of tests from above.
+    arg1counts = [len(arg1tests[arg1]) for arg1 in arg1s]
+    
+    filters = []
+        
+    # now iterate over each combination - for large numbers of tests, this can get big really, really fast
+    for arg1indexes in xindexes(arg1counts):
+        # list of lists of tests
+        testslist = [arg1tests[arg1s[i]][j] for (i, j) in enumerate(arg1indexes)]
+        
+        # corresponding filter
+        filter = Filter(*reduce(operator.add, testslist))
+        
+        filters.append(filter)
+
+    if len(filters):
+        return filters
+
+    # if no filters have been defined, return a blank one that matches anything
+    return [Filter()]
+    
+    return get_unique_arg1s(selectors), get_unique_tests(selectors)
 
 def selectors_filters(selectors):
     """ Given a list of selectors and a map, return a list of Filters that
@@ -472,15 +582,16 @@ def insert_layer_style(map_el, layer_el, style_el):
     layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename)
     layer_el.set('status', 'on')
 
-def is_applicable_selector(selector, range, filter):
-    """ Given a Selector, Range, and Filter, return True if the Selector is
-        compatible with the given Range and Filter, and False if they contradict.
+def is_applicable_selector(selector, scale_range, filter):
+    """ Given a Selector, scale-denominator Range, and Filter, return True
+        if the Selector is compatible with the given Range and Filter,
+        and False if they contradict.
     """
-    if not selector.inRange(range.midpoint()) and selector.isRanged():
+    if not selector.inRange(range.midpoint()) and selector.isMapScale():
         return False
 
     for test in selector.allTests():
-        if not test.inFilter(filter.tests):
+        if not test.isCompatible(filter.tests):
             return False
     
     return True
@@ -506,16 +617,16 @@ def ranged_filtered_property_declarations(declarations, property_map):
     rules = []
     
     # a matrix of checks for filter and min/max scale limitations
-    ranges = selectors_ranges([dec.selector for dec in declarations])
+    scale_ranges = selectors_scale_ranges([dec.selector for dec in declarations])
     filters = selectors_filters([dec.selector for dec in declarations])
     
-    for range in ranges:
+    for scale_range in scale_ranges:
         for filter in filters:
-            rule = (range, filter, {})
+            rule = (scale_range, filter, {})
             
             # collect all the applicable declarations into a list of parameters and values
             for dec in declarations:
-                if is_applicable_selector(dec.selector, range, filter):
+                if is_applicable_selector(dec.selector, scale_range, filter):
                     parameter = property_map[dec.property.name]
                     rule[2][parameter] = dec.value
 

@@ -425,6 +425,7 @@ class SelectorAttributeTest:
     """ Attribute test for a Selector, i.e. the part that looks like "[foo=bar]"
     """
     def __init__(self, arg1, op, arg2):
+        assert op in ('<', '<=', '=', '!=', '>=', '>')
         self.op = op
         self.arg1 = arg1
         self.arg2 = arg2
@@ -452,6 +453,11 @@ class SelectorAttributeTest:
         
         elif self.op == '!=':
             return SelectorAttributeTest(self.arg1, '=', self.arg2)
+    
+    def isNumeric(self):
+        """
+        """
+        return type(self.arg2) in (int, float)
     
     def isRanged(self):
         """
@@ -487,7 +493,7 @@ class SelectorAttributeTest:
 
         return False
 
-    def inFilter(self, tests):
+    def isCompatible(self, tests):
         """ Given a collection of tests, return false if this test contradicts any of them.
         """
         for test in tests:
@@ -507,9 +513,8 @@ class SelectorAttributeTest:
         return True
     
     def rangeOpEdge(self):
-        if self.isRanged():
-            ops = {'<': operator.lt, '<=': operator.le, '=': operator.eq, '>=': operator.ge, '>': operator.gt}
-            return ops[self.op], self.arg2
+        ops = {'<': operator.lt, '<=': operator.le, '=': operator.eq, '>=': operator.ge, '>': operator.gt}
+        return ops[self.op], self.arg2
 
         return None
 
