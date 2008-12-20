@@ -13,7 +13,7 @@ def main(file):
     input = open(file, 'r').read()
     rulesets = cascadenik.parse_stylesheet(input)
     
-    for dec in cascadenik.unroll_rulesets(rulesets):
+    for dec in cascadenik.rulesets_declarations(rulesets):
         print dec.selector,
         print '{',
         print dec.property.name+':',

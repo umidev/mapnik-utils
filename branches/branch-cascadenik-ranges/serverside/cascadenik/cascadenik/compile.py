@@ -219,6 +219,9 @@ def test_ranges(tests):
         
         TODO: make this work for <= following by >= in breaks
     """
+    if len(tests) == 0:
+        return [Range()]
+    
     assert 1 == len(set(test.property for test in tests))
     assert True in [test.isRanged() for test in tests]
     assert False not in [test.isNumeric() for test in tests]
@@ -501,7 +504,7 @@ def extract_declarations(map_el, base):
             continue
             
         rulesets = style.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map_el))
-        declarations += style.unroll_rulesets(rulesets)
+        declarations += style.rulesets_declarations(rulesets)
 
     return declarations
 
@@ -575,7 +578,7 @@ def is_applicable_selector(selector, scale_range, filter):
         if the Selector is compatible with the given Range and Filter,
         and False if they contradict.
     """
-    if not selector.inRange(range.midpoint()) and selector.isMapScale():
+    if not selector.inRange(scale_range.midpoint()) and selector.isMapScaled():
         return False
 
     for test in selector.allTests():

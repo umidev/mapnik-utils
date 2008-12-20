@@ -747,7 +747,7 @@ def parse_stylesheet(string, base=None, is_gym=False):
 
     return rulesets
 
-def unroll_rulesets(rulesets):
+def rulesets_declarations(rulesets):
     """ Convert a list of rulesets (as returned by parse_stylesheet)
         into an ordered list of individual selectors and declarations.
     """
