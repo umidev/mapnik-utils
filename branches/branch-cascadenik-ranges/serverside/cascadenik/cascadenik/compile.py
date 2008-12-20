@@ -77,22 +77,22 @@ class Range:
 
         return True
     
-    def toFilter(self, arg1):
+    def toFilter(self, property):
         """
         """
         if self.leftedge == self.rightedge and self.leftop is ge and self.rightop is le:
             # equivalent to ==
-            return Filter(style.SelectorAttributeTest(arg1, '=', self.leftedge))
+            return Filter(style.SelectorAttributeTest(property, '=', self.leftedge))
     
         try:
-            return Filter(style.SelectorAttributeTest(arg1, opstr[self.leftop], self.leftedge),
-                          style.SelectorAttributeTest(arg1, opstr[self.rightop], self.rightedge))
+            return Filter(style.SelectorAttributeTest(property, opstr[self.leftop], self.leftedge),
+                          style.SelectorAttributeTest(property, opstr[self.rightop], self.rightedge))
         except KeyError:
             try:
-                return Filter(style.SelectorAttributeTest(arg1, opstr[self.rightop], self.rightedge))
+                return Filter(style.SelectorAttributeTest(property, opstr[self.rightop], self.rightedge))
             except KeyError:
                 try:
-                    return Filter(style.SelectorAttributeTest(arg1, opstr[self.leftop], self.leftedge))
+                    return Filter(style.SelectorAttributeTest(property, opstr[self.leftop], self.leftedge))
                 except KeyError:
                     return Filter()
     
@@ -130,25 +130,25 @@ class Filter:
         
         for test in self.tests:
             if test.op == '=':
-                if equals.has_key(test.arg1) and test.arg2 != equals[test.arg1]:
+                if equals.has_key(test.property) and test.value != equals[test.property]:
                     # we've already stated that this arg must equal something else
                     return False
                     
-                if nequals.has_key(test.arg1) and test.arg2 in nequals[test.arg1]:
+                if nequals.has_key(test.property) and test.value in nequals[test.property]:
                     # we've already stated that this arg must not equal its current value
                     return False
                     
-                equals[test.arg1] = test.arg2
+                equals[test.property] = test.value
         
             if test.op == '!=':
-                if equals.has_key(test.arg1) and test.arg2 == equals[test.arg1]:
+                if equals.has_key(test.property) and test.value == equals[test.property]:
                     # we've already stated that this arg must equal its current value
                     return False
                     
-                if not nequals.has_key(test.arg1):
-                    nequals[test.arg1] = set()
+                if not nequals.has_key(test.property):
+                    nequals[test.property] = set()
 
-                nequals[test.arg1].add(test.arg2)
+                nequals[test.property].add(test.value)
         
         return True
 
@@ -169,12 +169,12 @@ class Filter:
         
         for test in trimmed.tests:
             if test.op == '=':
-                equals[test.arg1] = test.arg2
+                equals[test.property] = test.value
 
         extras = []
 
         for (i, test) in enumerate(trimmed.tests):
-            if test.op == '!=' and equals.has_key(test.arg1) and equals[test.arg1] != test.arg2:
+            if test.op == '!=' and equals.has_key(test.property) and equals[test.property] != test.value:
                 extras.append(i)
 
         while extras:
@@ -219,7 +219,7 @@ def test_ranges(tests):
         
         TODO: make this work for <= following by >= in breaks
     """
-    assert 1 == len(set(test.arg1 for test in tests))
+    assert 1 == len(set(test.property for test in tests))
     assert True in [test.isRanged() for test in tests]
     assert False not in [test.isNumeric() for test in tests]
     
@@ -353,14 +353,14 @@ def xindexes(slots):
             else:
                 carry = 0
 
-def selectors_tests(selectors, arg1=None):
+def selectors_tests(selectors, property=None):
     """ Given a list of selectors, return a list of unique tests optionally matching a given first-arg.
     """
     tests = {}
     
     for selector in selectors:
         for test in selector.allTests():
-            if arg1 is None or test.arg1 == arg1:
+            if property is None or test.property == property:
                 tests[str(test)] = test
 
     return tests.values()
@@ -368,39 +368,39 @@ def selectors_tests(selectors, arg1=None):
 def tests_filter_combinations(tests):
     """ Return a complete list of filter combinations for given list of tests
     """
-    # unique arg1s
-    arg1s = sorted(list(set([test.arg1 for test in tests])))
+    # unique properties
+    properties = sorted(list(set([test.property for test in tests])))
 
-    arg1tests = {}
+    property_tests = {}
     
     # divide up the tests by their first argument, e.g. "landuse" vs. "tourism",
     # into lists of all possible legal combinations of those tests.
-    for arg1 in arg1s:
+    for property in properties:
         
         # limit tests to those with the current first-arg
-        arg1_tests = [test for test in tests if test.arg1 == arg1]
+        current_tests = [test for test in tests if test.property == property]
         
-        has_ranged_tests = True in [test.isRanged() for test in arg1_tests]
-        has_nonnumeric_tests = False in [test.isNumeric() for test in arg1_tests]
+        has_ranged_tests = True in [test.isRanged() for test in current_tests]
+        has_nonnumeric_tests = False in [test.isNumeric() for test in current_tests]
         
         if has_ranged_tests and has_nonnumeric_tests:
-            raise Exception('Mixed ranged/non-numeric tests in %s' % str(arg1_tests))
+            raise Exception('Mixed ranged/non-numeric tests in %s' % str(current_tests))
 
         elif has_ranged_tests:
-            arg1tests[arg1] = [range.toFilter(arg1).tests for range in test_ranges(arg1_tests)]
+            property_tests[property] = [range.toFilter(property).tests for range in test_ranges(current_tests)]
 
         else:
-            arg1tests[arg1] = test_combinations(arg1_tests)
+            property_tests[property] = test_combinations(current_tests)
             
     # get a list of the number of combinations for each group of tests from above.
-    arg1counts = [len(arg1tests[arg1]) for arg1 in arg1s]
+    property_counts = [len(property_tests[property]) for property in properties]
     
     filters = []
         
     # now iterate over each combination - for large numbers of tests, this can get big really, really fast
-    for arg1indexes in xindexes(arg1counts):
+    for property_indexes in xindexes(property_counts):
         # list of lists of tests
-        testslist = [arg1tests[arg1s[i]][j] for (i, j) in enumerate(arg1indexes)]
+        testslist = [property_tests[properties[i]][j] for (i, j) in enumerate(property_indexes)]
         
         # corresponding filter
         filter = Filter(*reduce(operator.add, testslist))
@@ -418,33 +418,33 @@ def selectors_filters(selectors):
         fully describes all possible unique equality tests within those selectors.
     """
     tests = {}
-    arg1s = set()
+    properties = set()
     
-    # get all the tests and test.arg1 values out of the selectors
+    # get all the tests and test.property values out of the selectors
     for selector in selectors:
         for test in selector.allTests():
             if test.isSimple():
                 tests[str(test)] = test
-                arg1s.add(test.arg1)
+                properties.add(test.property)
 
-    arg1s = sorted(list(arg1s))
+    properties = sorted(list(properties))
     tests = tests.values()
     filters = []
-    arg1tests = {}
+    property_tests = {}
     
     if len(tests):
         # divide up the tests by their first argument, e.g. "landuse" vs. "tourism",
         # into lists of all possible legal combinations of those tests.
-        for arg1 in arg1s:
-            arg1tests[arg1] = test_combinations([test for test in tests if test.arg1 == arg1])
+        for property in properties:
+            property_tests[property] = test_combinations([test for test in tests if test.property == property])
             
         # get a list of the number of combinations for each group of tests from above.
-        arg1counts = [len(arg1tests[arg1]) for arg1 in arg1s]
+        property_counts = [len(property_tests[property]) for property in properties]
         
         # now iterate over each combination - for large numbers of tests, this can get big really, really fast
-        for arg1indexes in xindexes(arg1counts):
+        for property_indexes in xindexes(property_counts):
             # list of lists of tests
-            testslist = [arg1tests[arg1s[i]][j] for (i, j) in enumerate(arg1indexes)]
+            testslist = [property_tests[properties[i]][j] for (i, j) in enumerate(property_indexes)]
             
             # corresponding filter
             filter = Filter(*reduce(operator.add, testslist))
@@ -512,9 +512,9 @@ def test2str(test):
     unquoter = re.compile(r'^\'(\d+)\'$')
     
     if test.op == '!=':
-        return "not [%s] = %s" % (test.arg1, unquoter.sub(r'\1', ("'%s'" % test.arg2)))
+        return "not [%s] = %s" % (test.property, unquoter.sub(r'\1', ("'%s'" % test.value)))
     elif test.op in ('<', '<=', '=', '>=', '>'):
-        return "[%s] %s %s" % (test.arg1, test.op, unquoter.sub(r'\1', ("'%s'" % test.arg2)))
+        return "[%s] %s %s" % (test.property, test.op, unquoter.sub(r'\1', ("'%s'" % test.value)))
     else:
         raise Exception('"%s" is not a valid filter operation' % test.op)
 

@@ -293,22 +293,22 @@ class Selector:
             }
         
         for test in self.elements[0].tests:
-            if test.arg1 == 'zoom':
-                test.arg1 = 'scale-denominator'
+            if test.property == 'zoom':
+                test.property = 'scale-denominator'
 
                 if test.op == '=':
                     # zoom level equality implies two tests, so we add one and modify one
-                    self.elements[0].addTest(SelectorAttributeTest('scale-denominator', '<', max(zooms[test.arg2])))
-                    test.op, test.arg2 = '>=', min(zooms[test.arg2])
+                    self.elements[0].addTest(SelectorAttributeTest('scale-denominator', '<', max(zooms[test.value])))
+                    test.op, test.value = '>=', min(zooms[test.value])
 
                 elif test.op == '<':
-                    test.op, test.arg2 = '>=', max(zooms[test.arg2])
+                    test.op, test.value = '>=', max(zooms[test.value])
                 elif test.op == '<=':
-                    test.op, test.arg2 = '>=', min(zooms[test.arg2])
+                    test.op, test.value = '>=', min(zooms[test.value])
                 elif test.op == '>=':
-                    test.op, test.arg2 = '<', max(zooms[test.arg2])
+                    test.op, test.value = '<', max(zooms[test.value])
                 elif test.op == '>':
-                    test.op, test.arg2 = '<', min(zooms[test.arg2])
+                    test.op, test.value = '<', min(zooms[test.value])
                     
 
     def specificity(self):
@@ -424,14 +424,14 @@ class SelectorElement:
 class SelectorAttributeTest:
     """ Attribute test for a Selector, i.e. the part that looks like "[foo=bar]"
     """
-    def __init__(self, arg1, op, arg2):
+    def __init__(self, property, op, value):
         assert op in ('<', '<=', '=', '!=', '>=', '>')
         self.op = op
-        self.arg1 = arg1
-        self.arg2 = arg2
+        self.property = property
+        self.value = value
 
     def __repr__(self):
-        return '[%(arg1)s%(op)s%(arg2)s]' % self.__dict__
+        return '[%(property)s%(op)s%(value)s]' % self.__dict__
 
     def __cmp__(self, other):
         """
@@ -449,15 +449,15 @@ class SelectorAttributeTest:
         assert self.isSimple()
         
         if self.op == '=':
-            return SelectorAttributeTest(self.arg1, '!=', self.arg2)
+            return SelectorAttributeTest(self.property, '!=', self.value)
         
         elif self.op == '!=':
-            return SelectorAttributeTest(self.arg1, '=', self.arg2)
+            return SelectorAttributeTest(self.property, '=', self.value)
     
     def isNumeric(self):
         """
         """
-        return type(self.arg2) in (int, float)
+        return type(self.value) in (int, float)
     
     def isRanged(self):
         """
@@ -467,7 +467,7 @@ class SelectorAttributeTest:
     def isMapScaled(self):
         """
         """
-        return self.arg1 == 'scale-denominator'
+        return self.property == 'scale-denominator'
     
     def inRange(self, scale_denominator):
         """
@@ -476,19 +476,19 @@ class SelectorAttributeTest:
             # always in range
             return True
 
-        elif self.op == '>' and scale_denominator > self.arg2:
+        elif self.op == '>' and scale_denominator > self.value:
             return True
 
-        elif self.op == '>=' and scale_denominator >= self.arg2:
+        elif self.op == '>=' and scale_denominator >= self.value:
             return True
 
-        elif self.op == '=' and scale_denominator == self.arg2:
+        elif self.op == '=' and scale_denominator == self.value:
             return True
 
-        elif self.op == '<=' and scale_denominator <= self.arg2:
+        elif self.op == '<=' and scale_denominator <= self.value:
             return True
 
-        elif self.op == '<' and scale_denominator < self.arg2:
+        elif self.op == '<' and scale_denominator < self.value:
             return True
 
         return False
@@ -497,28 +497,28 @@ class SelectorAttributeTest:
         """ Given a collection of tests, return false if this test contradicts any of them.
         """
         for test in tests:
-            if self.arg1 == test.arg1:
+            if self.property == test.property:
                 if self.op == '=':
-                    if test.op == '=' and self.arg2 != test.arg2:
+                    if test.op == '=' and self.value != test.value:
                         return False
     
-                    if test.op == '!=' and self.arg2 == test.arg2:
+                    if test.op == '!=' and self.value == test.value:
                         return False
     
-                    if test.op == '<' and self.arg2 >= test.arg2:
+                    if test.op == '<' and self.value >= test.value:
                         return False
                 
-                    if test.op == '>' and self.arg2 <= test.arg2:
+                    if test.op == '>' and self.value <= test.value:
                         return False
                 
-                    if test.op == '<=' and self.arg2 > test.arg2:
+                    if test.op == '<=' and self.value > test.value:
                         return False
                 
-                    if test.op == '>=' and self.arg2 < test.arg2:
+                    if test.op == '>=' and self.value < test.value:
                         return False
             
                 if self.op == '!=':
-                    if test.op == '=' and self.arg2 == test.arg2:
+                    if test.op == '=' and self.value == test.value:
                         return False
     
                     if test.op == '!=':
@@ -530,14 +530,14 @@ class SelectorAttributeTest:
                     if test.op == '>':
                         pass
                 
-                    if test.op == '<=' and self.arg2 == test.arg2:
+                    if test.op == '<=' and self.value == test.value:
                         return False
                 
-                    if test.op == '>=' and self.arg2 == test.arg2:
+                    if test.op == '>=' and self.value == test.value:
                         return False
             
                 if self.op == '<':
-                    if test.op == '=' and self.arg2 <= test.arg2:
+                    if test.op == '=' and self.value <= test.value:
                         return False
     
                     if test.op == '!=':
@@ -546,67 +546,67 @@ class SelectorAttributeTest:
                     if test.op == '<':
                         pass
                 
-                    if test.op == '>' and self.arg2 < test.arg2:
+                    if test.op == '>' and self.value < test.value:
                         return False
                 
                     if test.op == '<=':
                         pass
                 
-                    if test.op == '>=' and self.arg2 < test.arg2:
+                    if test.op == '>=' and self.value < test.value:
                         return False
             
                 if self.op == '>':
-                    if test.op == '=' and self.arg2 >= test.arg2:
+                    if test.op == '=' and self.value >= test.value:
                         return False
     
                     if test.op == '!=':
                         return False
     
-                    if test.op == '<' and self.arg2 > test.arg2:
+                    if test.op == '<' and self.value > test.value:
                         return False
                 
                     if test.op == '>':
                         pass
                 
-                    if test.op == '<=' and self.arg2 > test.arg2:
+                    if test.op == '<=' and self.value > test.value:
                         return False
                 
                     if test.op == '>=':
                         pass
             
                 if self.op == '<=':
-                    if test.op == '=' and self.arg2 < test.arg2:
+                    if test.op == '=' and self.value < test.value:
                         return False
     
-                    if test.op == '!=' and self.arg2 == test.arg2:
+                    if test.op == '!=' and self.value == test.value:
                         return False
     
                     if test.op == '<':
                         pass
                 
-                    if test.op == '>' and self.arg2 < test.arg2:
+                    if test.op == '>' and self.value < test.value:
                         return False
                 
                     if test.op == '<=':
                         pass
                 
-                    if test.op == '>=' and self.arg2 < test.arg2:
+                    if test.op == '>=' and self.value < test.value:
                         return False
             
                 if self.op == '>=':
-                    if test.op == '=' and self.arg2 > test.arg2:
+                    if test.op == '=' and self.value > test.value:
                         return False
     
-                    if test.op == '!=' and self.arg2 == test.arg2:
+                    if test.op == '!=' and self.value == test.value:
                         return False
     
-                    if test.op == '<' and self.arg2 > test.arg2:
+                    if test.op == '<' and self.value > test.value:
                         return False
                 
                     if test.op == '>':
                         pass
                 
-                    if test.op == '<=' and self.arg2 > test.arg2:
+                    if test.op == '<=' and self.value > test.value:
                         return False
                 
                     if test.op == '>=':
@@ -616,7 +616,7 @@ class SelectorAttributeTest:
     
     def rangeOpEdge(self):
         ops = {'<': operator.lt, '<=': operator.le, '=': operator.eq, '>=': operator.ge, '>': operator.gt}
-        return ops[self.op], self.arg2
+        return ops[self.op], self.value
 
         return None
 
