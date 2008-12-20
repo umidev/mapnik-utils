@@ -353,55 +353,45 @@ def xindexes(slots):
             else:
                 carry = 0
 
-def _selectors_filters(selectors):
-    """ Rewriting selector_filters to handle ranges, hopefully
+def selectors_tests(selectors, arg1=None):
+    """ Given a list of selectors, return a list of unique tests optionally matching a given first-arg.
     """
-    def get_unique_arg1s(selectors):
-        """ Given a list of selectors, return a list of unique first-args for them.
-        """
-        arg1s = set()
-        
-        for selector in selectors:
-            for test in selector.allTests():
-                arg1s.add(test.arg1)
-
-        return sorted(list(arg1s))
-
-    def get_unique_tests(selectors, arg1=None):
-        """ Given a list of selectors, return a list of unique tests optionally matching a given first-arg.
-        """
-        tests = {}
-        
-        for selector in selectors:
-            for test in selector.allTests():
-                if arg1 is None or test.arg1 == arg1:
-                    tests[str(test)] = test
-
-        return tests.values()
+    tests = {}
     
-    arg1s = get_unique_arg1s(selectors)
-    
+    for selector in selectors:
+        for test in selector.allTests():
+            if arg1 is None or test.arg1 == arg1:
+                tests[str(test)] = test
+
+    return tests.values()
+
+def tests_filter_combinations(tests):
+    """ Return a complete list of filter combinations for given list of tests
+    """
+    # unique arg1s
+    arg1s = sorted(list(set([test.arg1 for test in tests])))
+
     arg1tests = {}
     
     # divide up the tests by their first argument, e.g. "landuse" vs. "tourism",
     # into lists of all possible legal combinations of those tests.
     for arg1 in arg1s:
         
-        tests = get_unique_tests(selectors, arg1)
+        # limit tests to those with the current first-arg
+        arg1_tests = [test for test in tests if test.arg1 == arg1]
         
-        has_ranged_tests = True in [test.isRanged() for test in tests]
-        has_nonnumeric_tests = False in [test.isNumeric() for test in tests]
+        has_ranged_tests = True in [test.isRanged() for test in arg1_tests]
+        has_nonnumeric_tests = False in [test.isNumeric() for test in arg1_tests]
         
         if has_ranged_tests and has_nonnumeric_tests:
-            raise Exception('Mixed ranged/non-numeric tests in %s' % str(tests))
+            raise Exception('Mixed ranged/non-numeric tests in %s' % str(arg1_tests))
 
         elif has_ranged_tests:
-            arg1tests[arg1] = [range.toFilter(arg1).tests for range in test_ranges(tests)]
+            arg1tests[arg1] = [range.toFilter(arg1).tests for range in test_ranges(arg1_tests)]
 
         else:
-            arg1tests[arg1] = test_combinations(tests)
+            arg1tests[arg1] = test_combinations(arg1_tests)
             
-        
     # get a list of the number of combinations for each group of tests from above.
     arg1counts = [len(arg1tests[arg1]) for arg1 in arg1s]
     
@@ -422,8 +412,6 @@ def _selectors_filters(selectors):
 
     # if no filters have been defined, return a blank one that matches anything
     return [Filter()]
-    
-    return get_unique_arg1s(selectors), get_unique_tests(selectors)
 
 def selectors_filters(selectors):
     """ Given a list of selectors and a map, return a list of Filters that

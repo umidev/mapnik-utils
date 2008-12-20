@@ -3,7 +3,7 @@ import unittest
 from cascadenik.style import ParseException, parse_stylesheet, unroll_rulesets
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.compile import selectors_filters, _selectors_filters
+from cascadenik.compile import selectors_filters, tests_filter_combinations, selectors_tests
 
 class ParseTests(unittest.TestCase):
     
@@ -463,7 +463,7 @@ class SimpleRangeTests(unittest.TestCase):
         """
         rulesets = parse_stylesheet(s)
         selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
-        filters = _selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 3)
         self.assertEqual(str(sorted(filters)), '[[foo<1000], [foo=1000], [foo>1000]]')
@@ -475,7 +475,7 @@ class SimpleRangeTests(unittest.TestCase):
         """
         rulesets = parse_stylesheet(s)
         selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
-        filters = _selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 3)
         self.assertEqual(str(sorted(filters)), '[[foo<2][foo>1], [foo<=1], [foo>=2]]')
@@ -489,7 +489,7 @@ class SimpleRangeTests(unittest.TestCase):
         """
         rulesets = parse_stylesheet(s)
         selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
-        filters = _selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 9)
         self.assertEqual(str(sorted(filters)), '[[bar<8][bar>4][foo<2][foo>1], [bar<8][bar>4][foo<=1], [bar<8][bar>4][foo>=2], [bar<=4][foo<2][foo>1], [bar<=4][foo<=1], [bar<=4][foo>=2], [bar>=8][foo<2][foo>1], [bar>=8][foo<=1], [bar>=8][foo>=2]]')
@@ -503,7 +503,7 @@ class SimpleRangeTests(unittest.TestCase):
         """
         rulesets = parse_stylesheet(s)
         selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
-        filters = _selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 9)
         self.assertEqual(str(sorted(filters)), '[[bar!=that][bar!=this][foo<2][foo>1], [bar!=that][bar!=this][foo<=1], [bar!=that][bar!=this][foo>=2], [bar=that][foo<2][foo>1], [bar=that][foo<=1], [bar=that][foo>=2], [bar=this][foo<2][foo>1], [bar=this][foo<=1], [bar=this][foo>=2]]')
@@ -518,7 +518,7 @@ class SimpleRangeTests(unittest.TestCase):
         """
         rulesets = parse_stylesheet(s)
         selectors = [dec.selector for dec in unroll_rulesets(rulesets)]
-        filters = _selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 12)
         self.assertEqual(str(sorted(filters)), '[[bar!=blah][bar!=that][bar!=this][foo<2][foo>1], [bar!=blah][bar!=that][bar!=this][foo<=1], [bar!=blah][bar!=that][bar!=this][foo>=2], [bar=blah][foo<2][foo>1], [bar=blah][foo<=1], [bar=blah][foo>=2], [bar=that][foo<2][foo>1], [bar=that][foo<=1], [bar=that][foo>=2], [bar=this][foo<2][foo>1], [bar=this][foo<=1], [bar=this][foo>=2]]')
@@ -602,6 +602,6 @@ if __name__ == '__main__':
     #    print 'selectors:', selectors
     #    print 'filters:', filters
     #
-    #    print 'selectors-filters:', _selectors_filters(selectors)
+    #    print 'selectors-filters:', tests_filter_combinations(selectors_tests(selectors))
 
     unittest.main()
