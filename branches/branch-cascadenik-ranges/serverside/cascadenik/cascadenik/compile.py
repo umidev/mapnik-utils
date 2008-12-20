@@ -573,6 +573,16 @@ def insert_layer_style(map_el, layer_el, style_el):
     layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename)
     layer_el.set('status', 'on')
 
+def _is_applicable_selector(selector, filter):
+    """ Given a Selector and Filter, return True if the Selector is
+        compatible with the given Filter, and False if they contradict.
+    """
+    for test in selector.allTests():
+        if not test.isCompatible(filter.tests):
+            return False
+    
+    return True
+
 def is_applicable_selector(selector, scale_range, filter):
     """ Given a Selector, scale-denominator Range, and Filter, return True
         if the Selector is compatible with the given Range and Filter,
@@ -595,6 +605,30 @@ def add_map_style(map_el, declarations):
     for dec in declarations:
         if dec.property.name in property_map:
             map_el.set(property_map[dec.property.name], str(dec.value))
+
+def filtered_property_declarations(declarations, property_map):
+    """
+    """
+    # just the ones we care about here
+    declarations = [dec for dec in declarations if dec.property.name in property_map]
+    selectors = [dec.selector for dec in declarations]
+
+    # a place to put rules
+    rules = []
+    
+    for filter in tests_filter_combinations(selectors_tests(selectors)):
+        rule = (filter, {})
+        
+        # collect all the applicable declarations into a list of parameters and values
+        for dec in declarations:
+            if _is_applicable_selector(dec.selector, filter):
+                parameter = property_map[dec.property.name]
+                rule[1][parameter] = dec.value
+
+        if rule[1]:
+            rules.append(rule)
+
+    return rules
 
 def ranged_filtered_property_declarations(declarations, property_map):
     """ Given a list of declarations and a map of properties, return a list

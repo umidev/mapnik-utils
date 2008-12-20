@@ -496,6 +496,8 @@ class SelectorAttributeTest:
     def isCompatible(self, tests):
         """ Given a collection of tests, return false if this test contradicts any of them.
         """
+        # print '?', self, tests
+        
         for test in tests:
             if self.property == test.property:
                 if self.op == '=':
@@ -546,13 +548,13 @@ class SelectorAttributeTest:
                     if test.op == '<':
                         pass
                 
-                    if test.op == '>' and self.value < test.value:
+                    if test.op == '>' and self.value <= test.value:
                         return False
                 
                     if test.op == '<=':
                         pass
                 
-                    if test.op == '>=' and self.value < test.value:
+                    if test.op == '>=' and self.value <= test.value:
                         return False
             
                 if self.op == '>':
@@ -562,13 +564,13 @@ class SelectorAttributeTest:
                     if test.op == '!=':
                         return False
     
-                    if test.op == '<' and self.value > test.value:
+                    if test.op == '<' and self.value >= test.value:
                         return False
                 
                     if test.op == '>':
                         pass
                 
-                    if test.op == '<=' and self.value > test.value:
+                    if test.op == '<=' and self.value >= test.value:
                         return False
                 
                     if test.op == '>=':
@@ -584,7 +586,7 @@ class SelectorAttributeTest:
                     if test.op == '<':
                         pass
                 
-                    if test.op == '>' and self.value < test.value:
+                    if test.op == '>' and self.value <= test.value:
                         return False
                 
                     if test.op == '<=':
@@ -600,7 +602,7 @@ class SelectorAttributeTest:
                     if test.op == '!=' and self.value == test.value:
                         return False
     
-                    if test.op == '<' and self.value > test.value:
+                    if test.op == '<' and self.value >= test.value:
                         return False
                 
                     if test.op == '>':

@@ -3,7 +3,9 @@ import unittest
 from cascadenik.style import ParseException, parse_stylesheet, rulesets_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.compile import selectors_filters, tests_filter_combinations, selectors_tests
+from cascadenik.compile import selectors_filters, tests_filter_combinations, Filter
+from cascadenik.compile import selectors_tests, ranged_filtered_property_declarations
+from cascadenik.compile import filtered_property_declarations, _is_applicable_selector
 
 class ParseTests(unittest.TestCase):
     
@@ -70,31 +72,31 @@ class ParseTests(unittest.TestCase):
 class SelectorTests(unittest.TestCase):
     
     def testSpecificity1(self):
-        self.assertEquals((0, 1, 0), Selector(SelectorElement(['Layer'])).specificity())
+        self.assertEqual((0, 1, 0), Selector(SelectorElement(['Layer'])).specificity())
     
     def testSpecificity2(self):
-        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer']), SelectorElement(['name'])).specificity())
+        self.assertEqual((0, 2, 0), Selector(SelectorElement(['Layer']), SelectorElement(['name'])).specificity())
     
     def testSpecificity3(self):
-        self.assertEquals((0, 2, 0), Selector(SelectorElement(['Layer', '.class'])).specificity())
+        self.assertEqual((0, 2, 0), Selector(SelectorElement(['Layer', '.class'])).specificity())
     
     def testSpecificity4(self):
-        self.assertEquals((0, 3, 0), Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
+        self.assertEqual((0, 3, 0), Selector(SelectorElement(['Layer', '.class']), SelectorElement(['name'])).specificity())
     
     def testSpecificity5(self):
-        self.assertEquals((1, 2, 0), Selector(SelectorElement(['Layer', '#id']), SelectorElement(['name'])).specificity())
+        self.assertEqual((1, 2, 0), Selector(SelectorElement(['Layer', '#id']), SelectorElement(['name'])).specificity())
     
     def testSpecificity6(self):
-        self.assertEquals((1, 0, 0), Selector(SelectorElement(['#id'])).specificity())
+        self.assertEqual((1, 0, 0), Selector(SelectorElement(['#id'])).specificity())
     
     def testSpecificity7(self):
-        self.assertEquals((1, 0, 1), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b')])).specificity())
+        self.assertEqual((1, 0, 1), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b')])).specificity())
     
     def testSpecificity8(self):
-        self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
+        self.assertEqual((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 'b'), SelectorAttributeTest('a', '<', 'b')])).specificity())
 
     def testSpecificity9(self):
-        self.assertEquals((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 100), SelectorAttributeTest('a', '<', 'b')])).specificity())
+        self.assertEqual((1, 0, 2), Selector(SelectorElement(['#id'], [SelectorAttributeTest('a', '>', 100), SelectorAttributeTest('a', '<', 'b')])).specificity())
 
     def testMatch1(self):
         self.assertEqual(True, Selector(SelectorElement(['Layer'])).matches('Layer', 'foo', []))
@@ -204,10 +206,10 @@ class PropertyTests(unittest.TestCase):
         self.assertRaises(ParseException, postprocess_property, [('IDENT', 'illegal-property')])
 
     def testProperty4(self):
-        self.assertEquals('shield', postprocess_property([('IDENT', 'shield-fill')]).group())
+        self.assertEqual('shield', postprocess_property([('IDENT', 'shield-fill')]).group())
 
     def testProperty5(self):
-        self.assertEquals('shield', postprocess_property([('S', ' '), ('IDENT', 'shield-fill'), ('COMMENT', 'ignored comment')]).group())
+        self.assertEqual('shield', postprocess_property([('S', ' '), ('IDENT', 'shield-fill'), ('COMMENT', 'ignored comment')]).group())
 
 class ValueTests(unittest.TestCase):
 
@@ -585,23 +587,47 @@ class CompatibilityTests(unittest.TestCase):
         b = SelectorAttributeTest('foo', '>', 2)
         assert not a.isCompatible([b])
 
+    def testCompatibility13(self):
+        # Layer[scale-denominator>1000][bar>1]
+        s = Selector(SelectorElement(['Layer'], [SelectorAttributeTest('scale-denominator', '>', 1000), SelectorAttributeTest('bar', '<', 3)]))
+        
+        # [bar>=3][baz=quux][foo>1][scale-denominator>1000]
+        f = Filter(SelectorAttributeTest('scale-denominator', '>', 1000), SelectorAttributeTest('bar', '>=', 3), SelectorAttributeTest('foo', '>', 1), SelectorAttributeTest('baz', '=', 'quux'))
+        
+        assert not _is_applicable_selector(s, f)
+
+    def testCompatibility14(self):
+        # Layer[scale-denominator<1000][foo=1]
+        s = Selector(SelectorElement(['Layer'], [SelectorAttributeTest('scale-denominator', '<', 1000), SelectorAttributeTest('foo', '=', 1)]))
+        
+        # [baz!=quux][foo=1][scale-denominator>1000]
+        f = Filter(SelectorAttributeTest('baz', '!=', 'quux'), SelectorAttributeTest('foo', '=', 1), SelectorAttributeTest('scale-denominator', '>', 1000))
+        
+        assert not _is_applicable_selector(s, f)
+
 if __name__ == '__main__':
 
     #    s = """
-    #        Layer[foo<1] { polygon-fill: #000; }
-    #        Layer[foo=1] { polygon-fill: #001; }
-    #        Layer[foo>1] { polygon-fill: #010; }
-    #        Layer[bar<3] { polygon-fill: #011; }
-    #        Layer[bar>1] { polygon-fill: #100; }
-    #        Layer[baz=quux] { polygon-fill: #100; }
+    #        Layer[scale-denominator<1000][foo<1] { polygon-fill: #000; }
+    #        Layer[scale-denominator<1000][foo=1] { polygon-fill: #001; }
+    #        Layer[scale-denominator>1000][foo>1] { polygon-fill: #010; }
+    #        /*
+    #        Layer[scale-denominator<1000][bar<3] { polygon-fill: #011; }
+    #        Layer[scale-denominator>1000][bar>1] { polygon-fill: #100; }
+    #        */
+    #        Layer[baz=quux] { polygon-fill: #101; }
     #    """
     #    rulesets = parse_stylesheet(s)
-    #    selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
+    #    declarations = rulesets_declarations(rulesets)
+    #    selectors = [dec.selector for dec in declarations]
     #    filters = selectors_filters(selectors)
     #    
+    #    print 'declarations:', declarations
     #    print 'selectors:', selectors
     #    print 'filters:', filters
     #
     #    print 'selectors-filters:', tests_filter_combinations(selectors_tests(selectors))
-
+    #    
+    #    print 'ranged, filtered property declarations:', filtered_property_declarations(declarations, {'polygon-fill': 'poof'})
+    
     unittest.main()
