@@ -371,6 +371,9 @@ def selectors_tests(selectors, property=None):
 def tests_filter_combinations(tests):
     """ Return a complete list of filter combinations for given list of tests
     """
+    if len(tests) == 0:
+        return [Filter()]
+    
     # unique properties
     properties = sorted(list(set([test.property for test in tests])))
 
