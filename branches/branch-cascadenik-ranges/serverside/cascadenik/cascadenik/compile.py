@@ -503,7 +503,7 @@ def extract_declarations(map_el, base):
         else:
             continue
             
-        rulesets = style.parse_stylesheet(styles, base=local_base, is_gym=is_gym_projection(map_el))
+        rulesets = style.stylesheet_rulesets(styles, base=local_base, is_gym=is_gym_projection(map_el))
         declarations += style.rulesets_declarations(rulesets)
 
     return declarations
@@ -520,6 +520,50 @@ def test2str(test):
         return "[%s] %s %s" % (test.property, test.op, unquoter.sub(r'\1', ("'%s'" % test.value)))
     else:
         raise Exception('"%s" is not a valid filter operation' % test.op)
+
+def _make_rule_element(filter, *symbolizer_els):
+    """ Given a Filter, return a Rule element prepopulated with
+        applicable min/max scale denominator and filter elements.
+    """
+    rule_el = Element('Rule')
+    
+    scale_tests = [test for test in filter.tests if test.isMapScaled()]
+    other_tests = [test for test in filter.tests if not test.isMapScaled()]
+    
+    for scale_test in scale_tests:
+
+        if scale_test.op in ('>', '>='):
+            minscale = Element('MinScaleDenominator')
+            rule_el.append(minscale)
+        
+            if scale_test.op == '>=':
+                minscale.text = str(scale_test.value)
+            elif scale_test.op == '>':
+                minscale.text = str(scale_test.value + 1)
+
+        if scale_test.op in ('<', '<='):
+            maxscale = Element('MaxScaleDenominator')
+            rule_el.append(maxscale)
+        
+            if scale_test.op == '<=':
+                maxscale.text = str(scale_test.value)
+            elif scale_test.op == '<':
+                maxscale.text = str(scale_test.value - 1)
+    
+    filter_text = ' and '.join(test2str(test) for test in other_tests)
+    
+    if filter_text:
+        filter_el = Element('Filter')
+        filter_el.text = filter_text
+        rule_el.append(filter_el)
+    
+    rule_el.tail = '\n        '
+    
+    for symbolizer_el in symbolizer_els:
+        if symbolizer_el != False:
+            rule_el.append(symbolizer_el)
+    
+    return rule_el
 
 def make_rule_element(range, filter, *symbolizer_els):
     """ Given a Range, return a Rule element prepopulated
@@ -670,7 +714,7 @@ def add_polygon_style(map_el, layer_el, declarations):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('PolygonSymbolizer')
         
         for (parameter, value) in parameter_values.items():
@@ -678,7 +722,7 @@ def add_polygon_style(map_el, layer_el, declarations):
             parameter.text = str(value)
             symbolizer_el.append(parameter)
 
-        rule_el = make_rule_element(range, filter, symbolizer_el)
+        rule_el = _make_rule_element(filter, symbolizer_el)
         rule_els.append(rule_el)
     
     if rule_els:

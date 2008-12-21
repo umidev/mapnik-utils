@@ -655,7 +655,12 @@ class Value:
     def __str__(self):
         return str(self.value)
 
-def parse_stylesheet(string, base=None, is_gym=False):
+def stylesheet_declarations(string, base=None, is_gym=False):
+    """
+    """
+    return rulesets_declarations(stylesheet_rulesets(string, base, is_gym))
+
+def stylesheet_rulesets(string, base=None, is_gym=False):
     """ Parse a string representing a stylesheet into a list of rulesets.
     
         Optionally, accept a base string so we know where linked files come from,
@@ -750,7 +755,7 @@ def parse_stylesheet(string, base=None, is_gym=False):
     return rulesets
 
 def rulesets_declarations(rulesets):
-    """ Convert a list of rulesets (as returned by parse_stylesheet)
+    """ Convert a list of rulesets (as returned by stylesheet_rulesets)
         into an ordered list of individual selectors and declarations.
     """
     declarations = []

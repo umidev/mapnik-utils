@@ -1,73 +1,75 @@
 import sys
 import unittest
-from cascadenik.style import ParseException, parse_stylesheet, rulesets_declarations
+import xml.etree.ElementTree
+from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
 from cascadenik.compile import selectors_filters, tests_filter_combinations, Filter
 from cascadenik.compile import selectors_tests, ranged_filtered_property_declarations
 from cascadenik.compile import filtered_property_declarations, _is_applicable_selector
+from cascadenik.compile import add_polygon_style
 
 class ParseTests(unittest.TestCase):
     
     def testBadSelector1(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Too Many Things { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Too Many Things { }')
 
     def testBadSelector2(self):
-        self.assertRaises(ParseException, parse_stylesheet, '{ }')
+        self.assertRaises(ParseException, stylesheet_rulesets, '{ }')
 
     def testBadSelector3(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Illegal { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Illegal { }')
 
     def testBadSelector4(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer foo[this=that] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer foo[this=that] { }')
 
     def testBadSelector5(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[this>that] foo { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[this>that] foo { }')
 
     def testBadSelector6(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer foo#bar { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer foo#bar { }')
 
     def testBadSelector7(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer foo.bar { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer foo.bar { }')
 
     def testBadSelectorTest1(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo>] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[foo>] { }')
 
     def testBadSelectorTest2(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo><bar] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[foo><bar] { }')
 
     def testBadSelectorTest3(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[foo<<bar] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[foo<<bar] { }')
 
     def testBadSelectorTest4(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[<bar] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[<bar] { }')
 
     def testBadSelectorTest5(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer[<<bar] { }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer[<<bar] { }')
 
     def testBadProperty1(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer { unknown-property: none; }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer { unknown-property: none; }')
 
     def testBadProperty2(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer { extra thing: none; }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer { extra thing: none; }')
 
     def testBadProperty3(self):
-        self.assertRaises(ParseException, parse_stylesheet, 'Layer { "not an ident": none; }')
+        self.assertRaises(ParseException, stylesheet_rulesets, 'Layer { "not an ident": none; }')
 
     def testRulesets1(self):
-        self.assertEqual(0, len(parse_stylesheet('/* empty stylesheet */')))
+        self.assertEqual(0, len(stylesheet_rulesets('/* empty stylesheet */')))
 
     def testRulesets2(self):
-        self.assertEqual(1, len(parse_stylesheet('Layer { }')))
+        self.assertEqual(1, len(stylesheet_rulesets('Layer { }')))
 
     def testRulesets3(self):
-        self.assertEqual(2, len(parse_stylesheet('Layer { } Layer { }')))
+        self.assertEqual(2, len(stylesheet_rulesets('Layer { } Layer { }')))
 
     def testRulesets4(self):
-        self.assertEqual(3, len(parse_stylesheet('Layer { } /* something */ Layer { } /* extra */ Layer { }')))
+        self.assertEqual(3, len(stylesheet_rulesets('Layer { } /* something */ Layer { } /* extra */ Layer { }')))
 
     def testRulesets5(self):
-        self.assertEqual(1, len(parse_stylesheet('Map { }')))
+        self.assertEqual(1, len(stylesheet_rulesets('Map { }')))
 
 class SelectorTests(unittest.TestCase):
     
@@ -292,7 +294,7 @@ class CascadeTests(unittest.TestCase):
                 text-dy: -10;
             }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         
         self.assertEqual(1, len(rulesets))
         self.assertEqual(1, len(rulesets[0]['selectors']))
@@ -324,7 +326,7 @@ class CascadeTests(unittest.TestCase):
                 text-dx: -10;
             }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         
         self.assertEqual(2, len(rulesets))
         self.assertEqual(1, len(rulesets[0]['selectors']))
@@ -405,7 +407,7 @@ class FilterCombinationTests(unittest.TestCase):
             Layer[landuse=civilian]     { polygon-fill: #001; }
             Layer[landuse=agriculture]  { polygon-fill: #010; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = selectors_filters(selectors)
         
@@ -419,7 +421,7 @@ class FilterCombinationTests(unittest.TestCase):
             Layer[landuse=agriculture]  { polygon-fill: #010; }
             Layer[horse=yes]    { polygon-fill: #011; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = selectors_filters(selectors)
         
@@ -434,7 +436,7 @@ class FilterCombinationTests(unittest.TestCase):
             Layer[horse=yes]    { polygon-fill: #011; }
             Layer[horse=no]     { polygon-fill: #100; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = selectors_filters(selectors)
         
@@ -449,7 +451,7 @@ class FilterCombinationTests(unittest.TestCase):
             Layer[horse=yes]    { polygon-fill: #011; }
             Layer[leisure=park] { polygon-fill: #100; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = selectors_filters(selectors)
         
@@ -463,7 +465,7 @@ class SimpleRangeTests(unittest.TestCase):
             Layer[foo<1000] { polygon-fill: #000; }
             Layer[foo>1000] { polygon-fill: #001; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = tests_filter_combinations(selectors_tests(selectors))
         
@@ -475,7 +477,7 @@ class SimpleRangeTests(unittest.TestCase):
             Layer[foo>1] { polygon-fill: #000; }
             Layer[foo<2] { polygon-fill: #001; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = tests_filter_combinations(selectors_tests(selectors))
         
@@ -489,7 +491,7 @@ class SimpleRangeTests(unittest.TestCase):
             Layer[bar>4] { polygon-fill: #010; }
             Layer[bar<8] { polygon-fill: #011; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = tests_filter_combinations(selectors_tests(selectors))
         
@@ -503,7 +505,7 @@ class SimpleRangeTests(unittest.TestCase):
             Layer[bar=this] { polygon-fill: #010; }
             Layer[bar=that] { polygon-fill: #011; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = tests_filter_combinations(selectors_tests(selectors))
         
@@ -518,7 +520,7 @@ class SimpleRangeTests(unittest.TestCase):
             Layer[bar=that] { polygon-fill: #011; }
             Layer[bar=blah] { polygon-fill: #100; }
         """
-        rulesets = parse_stylesheet(s)
+        rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
         filters = tests_filter_combinations(selectors_tests(selectors))
         
@@ -531,63 +533,87 @@ class CompatibilityTests(unittest.TestCase):
         a = SelectorAttributeTest('foo', '=', 1)
         b = SelectorAttributeTest('foo', '=', 1)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility2(self):
         a = SelectorAttributeTest('foo', '=', 1)
         b = SelectorAttributeTest('bar', '=', 1)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility3(self):
         a = SelectorAttributeTest('foo', '=', 1)
         b = SelectorAttributeTest('foo', '!=', 1)
         assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
 
     def testCompatibility4(self):
         a = SelectorAttributeTest('foo', '!=', 1)
-        b = SelectorAttributeTest('foo', '=', 1)
-        assert not a.isCompatible([b])
+        b = SelectorAttributeTest('bar', '=', 1)
+        assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility5(self):
         a = SelectorAttributeTest('foo', '!=', 1)
         b = SelectorAttributeTest('foo', '!=', 2)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility6(self):
         a = SelectorAttributeTest('foo', '!=', 1)
         b = SelectorAttributeTest('foo', '!=', 1)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility7(self):
         a = SelectorAttributeTest('foo', '=', 1)
         b = SelectorAttributeTest('foo', '<', 1)
         assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
 
     def testCompatibility8(self):
         a = SelectorAttributeTest('foo', '>=', 1)
         b = SelectorAttributeTest('foo', '=', 1)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility9(self):
         a = SelectorAttributeTest('foo', '=', 1)
         b = SelectorAttributeTest('foo', '<=', 1)
         assert a.isCompatible([b])
+        assert b.isCompatible([a])
 
     def testCompatibility10(self):
         a = SelectorAttributeTest('foo', '>', 1)
         b = SelectorAttributeTest('foo', '=', 1)
         assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
 
     def testCompatibility11(self):
         a = SelectorAttributeTest('foo', '>', 2)
         b = SelectorAttributeTest('foo', '<=', 1)
         assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
 
     def testCompatibility12(self):
         a = SelectorAttributeTest('foo', '<=', 1)
         b = SelectorAttributeTest('foo', '>', 2)
         assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
 
     def testCompatibility13(self):
+        a = SelectorAttributeTest('foo', '<', 1)
+        b = SelectorAttributeTest('foo', '>', 1)
+        assert not a.isCompatible([b])
+        assert not b.isCompatible([a])
+
+    def testCompatibility14(self):
+        a = SelectorAttributeTest('foo', '<', 2)
+        b = SelectorAttributeTest('foo', '>', 1)
+        assert a.isCompatible([b])
+        assert b.isCompatible([a])
+
+    def testCompatibility15(self):
         # Layer[scale-denominator>1000][bar>1]
         s = Selector(SelectorElement(['Layer'], [SelectorAttributeTest('scale-denominator', '>', 1000), SelectorAttributeTest('bar', '<', 3)]))
         
@@ -596,7 +622,7 @@ class CompatibilityTests(unittest.TestCase):
         
         assert not _is_applicable_selector(s, f)
 
-    def testCompatibility14(self):
+    def testCompatibility16(self):
         # Layer[scale-denominator<1000][foo=1]
         s = Selector(SelectorElement(['Layer'], [SelectorAttributeTest('scale-denominator', '<', 1000), SelectorAttributeTest('foo', '=', 1)]))
         
@@ -605,29 +631,105 @@ class CompatibilityTests(unittest.TestCase):
         
         assert not _is_applicable_selector(s, f)
 
-if __name__ == '__main__':
+class StyleRuleTests(unittest.TestCase):
 
-    #    s = """
-    #        Layer[scale-denominator<1000][foo<1] { polygon-fill: #000; }
-    #        Layer[scale-denominator<1000][foo=1] { polygon-fill: #001; }
-    #        Layer[scale-denominator>1000][foo>1] { polygon-fill: #010; }
-    #        /*
-    #        Layer[scale-denominator<1000][bar<3] { polygon-fill: #011; }
-    #        Layer[scale-denominator>1000][bar>1] { polygon-fill: #100; }
-    #        */
-    #        Layer[baz=quux] { polygon-fill: #101; }
-    #    """
-    #    rulesets = parse_stylesheet(s)
-    #    declarations = rulesets_declarations(rulesets)
-    #    selectors = [dec.selector for dec in declarations]
-    #    filters = selectors_filters(selectors)
-    #    
-    #    print 'declarations:', declarations
-    #    print 'selectors:', selectors
-    #    print 'filters:', filters
-    #
-    #    print 'selectors-filters:', tests_filter_combinations(selectors_tests(selectors))
-    #    
-    #    print 'ranged, filtered property declarations:', filtered_property_declarations(declarations, {'polygon-fill': 'poof'})
+    def testPolygonStyleRules1(self):
+        s = """
+            Layer[zoom<=10][use=park] { polygon-fill: #0f0; }
+            Layer[zoom<=10][use=cemetery] { polygon-fill: #999; }
+            Layer[zoom>10][use=park] { polygon-fill: #6f6; }
+            Layer[zoom>10][use=cemetery] { polygon-fill: #ccc; }
+        """
+
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
     
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_polygon_style(map, layer, declarations)
+        
+        assert map.find('Layer/StyleName') is not None
+        
+        stylename = map.find('Layer/StyleName').text
+        
+        style_el = map.find('Style')
+        
+        assert style_el is not None
+        assert style_el.get('name') == stylename
+        
+        rule_els = style_el.findall('Rule')
+        
+        assert rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert rule_els[0].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[0].find('PolygonSymbolizer/CssParameter').text == '#cccccc'
+        assert rule_els[0].find('Filter').text == "[use] = 'cemetery'"
+        
+        assert rule_els[1].find('MaxScaleDenominator').text == '399999'
+        assert rule_els[1].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[1].find('PolygonSymbolizer/CssParameter').text == '#66ff66'
+        assert rule_els[1].find('Filter').text == "[use] = 'park'"
+    
+        assert rule_els[2].find('MinScaleDenominator').text == '400000'
+        assert rule_els[2].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[2].find('PolygonSymbolizer/CssParameter').text == '#999999'
+        assert rule_els[2].find('Filter').text == "[use] = 'cemetery'"
+        
+        assert rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert rule_els[3].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[3].find('PolygonSymbolizer/CssParameter').text == '#00ff00'
+        assert rule_els[3].find('Filter').text == "[use] = 'park'"
+
+    def testPolygonStyleRules2(self):
+        s = """
+            Layer[zoom<=10][foo<1] { polygon-fill: #000; }
+            Layer[zoom<=10][foo>1] { polygon-fill: #00f; }
+            Layer[zoom>10][foo<1] { polygon-fill: #0f0; }
+            Layer[zoom>10][foo>1] { polygon-fill: #f00; }
+        """
+    
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
+    
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_polygon_style(map, layer, declarations)
+        
+        assert map.find('Layer/StyleName') is not None
+        
+        stylename = map.find('Layer/StyleName').text
+        
+        style_el = map.find('Style')
+        
+        assert style_el is not None
+        assert style_el.get('name') == stylename
+        
+        rule_els = style_el.findall('Rule')
+        
+        assert rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert rule_els[0].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[0].find('PolygonSymbolizer/CssParameter').text == '#00ff00'
+        assert rule_els[0].find('Filter').text == '[foo] < 1'
+        
+        assert rule_els[1].find('MinScaleDenominator').text == '400000'
+        assert rule_els[1].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[1].find('PolygonSymbolizer/CssParameter').text == '#000000'
+        assert rule_els[1].find('Filter').text == '[foo] < 1'
+        
+        assert rule_els[2].find('MaxScaleDenominator').text == '399999'
+        assert rule_els[2].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[2].find('PolygonSymbolizer/CssParameter').text == '#ff0000'
+        assert rule_els[2].find('Filter').text == '[foo] > 1'
+    
+        assert rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert rule_els[3].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert rule_els[3].find('PolygonSymbolizer/CssParameter').text == '#0000ff'
+        assert rule_els[3].find('Filter').text == '[foo] > 1'
+
+if __name__ == '__main__':
     unittest.main()
