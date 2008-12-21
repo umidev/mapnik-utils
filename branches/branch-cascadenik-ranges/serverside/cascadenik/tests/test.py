@@ -4,10 +4,10 @@ import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.compile import selectors_filters, tests_filter_combinations, Filter
-from cascadenik.compile import selectors_tests, ranged_filtered_property_declarations
-from cascadenik.compile import filtered_property_declarations, _is_applicable_selector
-from cascadenik.compile import add_polygon_style
+from cascadenik.compile import OLD_selectors_filters, tests_filter_combinations, Filter
+from cascadenik.compile import selectors_tests, OLD_ranged_filtered_property_declarations
+from cascadenik.compile import filtered_property_declarations, is_applicable_selector
+from cascadenik.compile import add_polygon_style, add_line_style
 
 class ParseTests(unittest.TestCase):
     
@@ -409,7 +409,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = selectors_filters(selectors)
+        filters = OLD_selectors_filters(selectors)
         
         self.assertEqual(len(filters), 4)
         self.assertEqual(str(sorted(filters)), '[[landuse!=agriculture][landuse!=civilian][landuse!=military], [landuse=agriculture], [landuse=civilian], [landuse=military]]')
@@ -423,7 +423,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = selectors_filters(selectors)
+        filters = OLD_selectors_filters(selectors)
         
         self.assertEqual(len(filters), 8)
         self.assertEqual(str(sorted(filters)), '[[horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse!=yes][landuse=agriculture], [horse!=yes][landuse=civilian], [horse!=yes][landuse=military], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=yes][landuse=agriculture], [horse=yes][landuse=civilian], [horse=yes][landuse=military]]')
@@ -438,7 +438,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = selectors_filters(selectors)
+        filters = OLD_selectors_filters(selectors)
         
         self.assertEqual(len(filters), 12)
         self.assertEqual(str(sorted(filters)), '[[horse!=no][horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse!=no][horse!=yes][landuse=agriculture], [horse!=no][horse!=yes][landuse=civilian], [horse!=no][horse!=yes][landuse=military], [horse=no][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=no][landuse=agriculture], [horse=no][landuse=civilian], [horse=no][landuse=military], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=yes][landuse=agriculture], [horse=yes][landuse=civilian], [horse=yes][landuse=military]]')
@@ -453,7 +453,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = selectors_filters(selectors)
+        filters = OLD_selectors_filters(selectors)
         
         self.assertEqual(len(filters), 16)
         self.assertEqual(str(sorted(filters)), '[[horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse!=yes][landuse=agriculture][leisure!=park], [horse!=yes][landuse=agriculture][leisure=park], [horse!=yes][landuse=civilian][leisure!=park], [horse!=yes][landuse=civilian][leisure=park], [horse!=yes][landuse=military][leisure!=park], [horse!=yes][landuse=military][leisure=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse=yes][landuse=agriculture][leisure!=park], [horse=yes][landuse=agriculture][leisure=park], [horse=yes][landuse=civilian][leisure!=park], [horse=yes][landuse=civilian][leisure=park], [horse=yes][landuse=military][leisure!=park], [horse=yes][landuse=military][leisure=park]]')
@@ -620,7 +620,7 @@ class CompatibilityTests(unittest.TestCase):
         # [bar>=3][baz=quux][foo>1][scale-denominator>1000]
         f = Filter(SelectorAttributeTest('scale-denominator', '>', 1000), SelectorAttributeTest('bar', '>=', 3), SelectorAttributeTest('foo', '>', 1), SelectorAttributeTest('baz', '=', 'quux'))
         
-        assert not _is_applicable_selector(s, f)
+        assert not is_applicable_selector(s, f)
 
     def testCompatibility16(self):
         # Layer[scale-denominator<1000][foo=1]
@@ -629,11 +629,11 @@ class CompatibilityTests(unittest.TestCase):
         # [baz!=quux][foo=1][scale-denominator>1000]
         f = Filter(SelectorAttributeTest('baz', '!=', 'quux'), SelectorAttributeTest('foo', '=', 1), SelectorAttributeTest('scale-denominator', '>', 1000))
         
-        assert not _is_applicable_selector(s, f)
+        assert not is_applicable_selector(s, f)
 
 class StyleRuleTests(unittest.TestCase):
 
-    def testPolygonStyleRules1(self):
+    def testStyleRules1(self):
         s = """
             Layer[zoom<=10][use=park] { polygon-fill: #0f0; }
             Layer[zoom<=10][use=cemetery] { polygon-fill: #999; }
@@ -682,7 +682,7 @@ class StyleRuleTests(unittest.TestCase):
         assert rule_els[3].find('PolygonSymbolizer/CssParameter').text == '#00ff00'
         assert rule_els[3].find('Filter').text == "[use] = 'park'"
 
-    def testPolygonStyleRules2(self):
+    def testStyleRules2(self):
         s = """
             Layer[zoom<=10][foo<1] { polygon-fill: #000; }
             Layer[zoom<=10][foo>1] { polygon-fill: #00f; }
@@ -730,6 +730,107 @@ class StyleRuleTests(unittest.TestCase):
         assert rule_els[3].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
         assert rule_els[3].find('PolygonSymbolizer/CssParameter').text == '#0000ff'
         assert rule_els[3].find('Filter').text == '[foo] > 1'
+
+    def testStyleRules3(self):
+        s = """
+            Layer[zoom<=10][foo<1] { polygon-fill: #000; }
+            Layer[zoom<=10][foo>1] { polygon-fill: #00f; }
+            Layer[zoom>10][foo<1] { polygon-fill: #0f0; }
+            Layer[zoom>10][foo>1] { polygon-fill: #f00; }
+    
+            Layer[zoom<=10] { line-width: 1; }
+            Layer[zoom>10] { line-width: 2; }
+            Layer[foo<1] { line-color: #0ff; }
+            Layer[foo=1] { line-color: #f0f; }
+            Layer[foo>1] { line-color: #ff0; }
+        """
+    
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
+    
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_polygon_style(map, layer, declarations)
+        add_line_style(map, layer, declarations)
+
+        assert len(map.findall('Layer/StyleName')) == 2
+        
+        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
+        
+        style_els = map.findall('Style')
+        
+        assert len(style_els) == 2
+    
+        assert style_els[0].get('name') in (stylenames)
+        poly_rule_els = style_els[0].findall('Rule')
+        
+        assert poly_rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert poly_rule_els[0].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert poly_rule_els[0].find('PolygonSymbolizer/CssParameter').text == '#00ff00'
+        assert poly_rule_els[0].find('Filter').text == '[foo] < 1'
+        
+        assert poly_rule_els[1].find('MinScaleDenominator').text == '400000'
+        assert poly_rule_els[1].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert poly_rule_els[1].find('PolygonSymbolizer/CssParameter').text == '#000000'
+        assert poly_rule_els[1].find('Filter').text == '[foo] < 1'
+        
+        assert poly_rule_els[2].find('MaxScaleDenominator').text == '399999'
+        assert poly_rule_els[2].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert poly_rule_els[2].find('PolygonSymbolizer/CssParameter').text == '#ff0000'
+        assert poly_rule_els[2].find('Filter').text == '[foo] > 1'
+    
+        assert poly_rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert poly_rule_els[3].find('PolygonSymbolizer/CssParameter').get('name') == 'fill'
+        assert poly_rule_els[3].find('PolygonSymbolizer/CssParameter').text == '#0000ff'
+        assert poly_rule_els[3].find('Filter').text == '[foo] > 1'
+    
+        assert style_els[1].get('name') in (stylenames)
+        line_rule_els = style_els[1].findall('Rule')
+        
+        assert line_rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].text == '#00ffff'
+        assert line_rule_els[0].find('Filter').text == '[foo] < 1'
+        
+        assert line_rule_els[1].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].text == '#00ffff'
+        assert line_rule_els[1].find('Filter').text == '[foo] < 1'
+        
+        assert line_rule_els[2].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].text == '#ff00ff'
+        assert line_rule_els[2].find('Filter').text == '[foo] = 1'
+    
+        assert line_rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].text == '#ff00ff'
+        assert line_rule_els[3].find('Filter').text == '[foo] = 1'
+        
+        assert line_rule_els[4].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].text == '#ffff00'
+        assert line_rule_els[4].find('Filter').text == '[foo] > 1'
+    
+        assert line_rule_els[5].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].text == '#ffff00'
+        assert line_rule_els[5].find('Filter').text == '[foo] > 1'
 
 if __name__ == '__main__':
     unittest.main()

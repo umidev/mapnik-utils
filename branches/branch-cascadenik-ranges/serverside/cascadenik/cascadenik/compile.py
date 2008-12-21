@@ -192,7 +192,7 @@ class Filter:
         """
         return cmp(repr(self), repr(other))
 
-def selectors_scale_ranges(selectors):
+def OLD_selectors_scale_ranges(selectors):
     """ Given a list of selectors, return a list of Ranges that fully describes
         all possible unique scale-denominator slices within those selectors.
         
@@ -419,7 +419,7 @@ def tests_filter_combinations(tests):
     # if no filters have been defined, return a blank one that matches anything
     return [Filter()]
 
-def selectors_filters(selectors):
+def OLD_selectors_filters(selectors):
     """ Given a list of selectors and a map, return a list of Filters that
         fully describes all possible unique equality tests within those selectors.
     """
@@ -524,7 +524,7 @@ def test2str(test):
     else:
         raise Exception('"%s" is not a valid filter operation' % test.op)
 
-def _make_rule_element(filter, *symbolizer_els):
+def make_rule_element(filter, *symbolizer_els):
     """ Given a Filter, return a Rule element prepopulated with
         applicable min/max scale denominator and filter elements.
     """
@@ -568,7 +568,7 @@ def _make_rule_element(filter, *symbolizer_els):
     
     return rule_el
 
-def make_rule_element(range, filter, *symbolizer_els):
+def OLD_make_rule_element(range, filter, *symbolizer_els):
     """ Given a Range, return a Rule element prepopulated
         with applicable min/max scale denominator elements.
     """
@@ -620,7 +620,7 @@ def insert_layer_style(map_el, layer_el, style_el):
     layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename)
     layer_el.set('status', 'on')
 
-def _is_applicable_selector(selector, filter):
+def is_applicable_selector(selector, filter):
     """ Given a Selector and Filter, return True if the Selector is
         compatible with the given Filter, and False if they contradict.
     """
@@ -630,7 +630,7 @@ def _is_applicable_selector(selector, filter):
     
     return True
 
-def is_applicable_selector(selector, scale_range, filter):
+def OLD_is_applicable_selector(selector, scale_range, filter):
     """ Given a Selector, scale-denominator Range, and Filter, return True
         if the Selector is compatible with the given Range and Filter,
         and False if they contradict.
@@ -668,7 +668,7 @@ def filtered_property_declarations(declarations, property_map):
         
         # collect all the applicable declarations into a list of parameters and values
         for dec in declarations:
-            if _is_applicable_selector(dec.selector, filter):
+            if is_applicable_selector(dec.selector, filter):
                 parameter = property_map[dec.property.name]
                 rule[1][parameter] = dec.value
 
@@ -677,7 +677,7 @@ def filtered_property_declarations(declarations, property_map):
 
     return rules
 
-def ranged_filtered_property_declarations(declarations, property_map):
+def OLD_ranged_filtered_property_declarations(declarations, property_map):
     """ Given a list of declarations and a map of properties, return a list
         of rule tuples: (range, filter, parameter_values), where parameter_values
         is a list of (parameter, value) tuples.
@@ -689,8 +689,8 @@ def ranged_filtered_property_declarations(declarations, property_map):
     rules = []
     
     # a matrix of checks for filter and min/max scale limitations
-    scale_ranges = selectors_scale_ranges([dec.selector for dec in declarations])
-    filters = selectors_filters([dec.selector for dec in declarations])
+    scale_ranges = OLD_selectors_scale_ranges([dec.selector for dec in declarations])
+    filters = OLD_selectors_filters([dec.selector for dec in declarations])
     
     for scale_range in scale_ranges:
         for filter in filters:
@@ -698,7 +698,7 @@ def ranged_filtered_property_declarations(declarations, property_map):
             
             # collect all the applicable declarations into a list of parameters and values
             for dec in declarations:
-                if is_applicable_selector(dec.selector, scale_range, filter):
+                if OLD_is_applicable_selector(dec.selector, scale_range, filter):
                     parameter = property_map[dec.property.name]
                     rule[2][parameter] = dec.value
 
@@ -725,7 +725,7 @@ def add_polygon_style(map_el, layer_el, declarations):
             parameter.text = str(value)
             symbolizer_el.append(parameter)
 
-        rule_el = _make_rule_element(filter, symbolizer_el)
+        rule_el = make_rule_element(filter, symbolizer_el)
         rule_els.append(rule_el)
     
     if rule_els:
@@ -757,7 +757,7 @@ def add_line_style(map_el, layer_el, declarations):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
         if 'in:stroke' in parameter_values and 'in:stroke-width' in parameter_values:
             insymbolizer_el = Element('LineSymbolizer')
         else:
@@ -788,7 +788,7 @@ def add_line_style(map_el, layer_el, declarations):
                 parameter.text = str(value)
                 outsymbolizer_el.append(parameter)
 
-        rule_el = make_rule_element(range, filter, outsymbolizer_el, insymbolizer_el)
+        rule_el = make_rule_element(filter, outsymbolizer_el, insymbolizer_el)
         rule_els.append(rule_el)
     
     if rule_els:
@@ -834,7 +834,7 @@ def add_text_styles(map_el, layer_el, declarations):
         # a place to put rule elements
         rule_els = []
         
-        for (range, filter, parameter_values) in ranged_filtered_property_declarations(name_declarations, property_map):
+        for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(name_declarations, property_map):
             if 'face_name' in parameter_values and 'size' in parameter_values:
                 symbolizer_el = Element('TextSymbolizer')
             else:
@@ -846,7 +846,7 @@ def add_text_styles(map_el, layer_el, declarations):
             for (parameter, value) in parameter_values.items():
                 symbolizer_el.set(parameter, str(value))
     
-            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
             rule_els.append(rule_el)
         
         if rule_els:
@@ -913,7 +913,7 @@ def add_shield_styles(map_el, layer_el, declarations, out=None):
         # a place to put rule elements
         rule_els = []
         
-        for (range, filter, parameter_values) in ranged_filtered_property_declarations(name_declarations, property_map):
+        for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(name_declarations, property_map):
             if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
                 symbolizer_el = Element('ShieldSymbolizer')
             else:
@@ -928,7 +928,7 @@ def add_shield_styles(map_el, layer_el, declarations, out=None):
             if symbolizer_el.get('file', False):
                 postprocess_symbolizer_image_file(symbolizer_el, out, 'shield')
     
-                rule_el = make_rule_element(range, filter, symbolizer_el)
+                rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
                 rule_els.append(rule_el)
         
         if rule_els:
@@ -954,7 +954,7 @@ def add_point_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('PointSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -964,7 +964,7 @@ def add_point_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'point')
             
-            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:
@@ -989,7 +989,7 @@ def add_polygon_pattern_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('PolygonPatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -999,7 +999,7 @@ def add_polygon_pattern_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'polygon-pattern')
             
-            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:
@@ -1024,7 +1024,7 @@ def add_line_pattern_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in ranged_filtered_property_declarations(declarations, property_map):
+    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('LinePatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -1034,7 +1034,7 @@ def add_line_pattern_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'line-pattern')
             
-            rule_el = make_rule_element(range, filter, symbolizer_el)
+            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:
