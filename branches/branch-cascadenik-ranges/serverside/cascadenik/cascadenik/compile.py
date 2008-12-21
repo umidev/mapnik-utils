@@ -834,7 +834,7 @@ def add_text_styles(map_el, layer_el, declarations):
         # a place to put rule elements
         rule_els = []
         
-        for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(name_declarations, property_map):
+        for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
             if 'face_name' in parameter_values and 'size' in parameter_values:
                 symbolizer_el = Element('TextSymbolizer')
             else:
@@ -846,7 +846,7 @@ def add_text_styles(map_el, layer_el, declarations):
             for (parameter, value) in parameter_values.items():
                 symbolizer_el.set(parameter, str(value))
     
-            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
+            rule_el = make_rule_element(filter, symbolizer_el)
             rule_els.append(rule_el)
         
         if rule_els:

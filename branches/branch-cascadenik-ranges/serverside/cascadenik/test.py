@@ -7,7 +7,7 @@ from cascadenik.style import postprocess_property, postprocess_value, Property
 from cascadenik.compile import OLD_selectors_filters, tests_filter_combinations, Filter
 from cascadenik.compile import selectors_tests, OLD_ranged_filtered_property_declarations
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
-from cascadenik.compile import add_polygon_style, add_line_style
+from cascadenik.compile import add_polygon_style, add_line_style, add_text_styles
 
 class ParseTests(unittest.TestCase):
     
@@ -831,6 +831,110 @@ class StyleRuleTests(unittest.TestCase):
         assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
         assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].text == '#ffff00'
         assert line_rule_els[5].find('Filter').text == '[foo] > 1'
+
+    def testStyleRules4(self):
+        s = """
+            Layer[zoom<=10] { line-width: 1; }
+            Layer[zoom>10] { line-width: 2; }
+            Layer[foo<1] { line-color: #0ff; }
+            Layer[foo=1] { line-color: #f0f; }
+            Layer[foo>1] { line-color: #ff0; }
+            
+            Layer label { text-face-name: 'Helvetica'; text-size: 12; }
+            Layer[foo<1] label { text-face-name: 'Arial'; }
+            Layer[zoom<=10] label { text-size: 10; }
+        """
+    
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
+    
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_line_style(map, layer, declarations)
+        add_text_styles(map, layer, declarations)
+        
+        assert len(map.findall('Layer/StyleName')) == 2
+        
+        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
+        
+        style_els = map.findall('Style')
+        
+        assert len(style_els) == 2
+    
+        assert style_els[0].get('name') in (stylenames)
+        line_rule_els = style_els[0].findall('Rule')
+        
+        assert line_rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].text == '#00ffff'
+        assert line_rule_els[0].find('Filter').text == '[foo] < 1'
+        
+        assert line_rule_els[1].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].text == '#00ffff'
+        assert line_rule_els[1].find('Filter').text == '[foo] < 1'
+        
+        assert line_rule_els[2].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].text == '#ff00ff'
+        assert line_rule_els[2].find('Filter').text == '[foo] = 1'
+    
+        assert line_rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].text == '#ff00ff'
+        assert line_rule_els[3].find('Filter').text == '[foo] = 1'
+        
+        assert line_rule_els[4].find('MaxScaleDenominator').text == '399999'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].text == '2.0'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].text == '#ffff00'
+        assert line_rule_els[4].find('Filter').text == '[foo] > 1'
+    
+        assert line_rule_els[5].find('MinScaleDenominator').text == '400000'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].get('name') == 'stroke-width'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].text == '1.0'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].get('name') == 'stroke'
+        assert line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].text == '#ffff00'
+        assert line_rule_els[5].find('Filter').text == '[foo] > 1'
+        
+        assert style_els[1].get('name') in (stylenames)
+        text_rule_els = style_els[1].findall('Rule')
+        
+        assert text_rule_els[0].find('MaxScaleDenominator').text == '399999'
+        assert text_rule_els[0].find('TextSymbolizer').get('name') == 'label'
+        assert text_rule_els[0].find('TextSymbolizer').get('face_name') == 'Arial'
+        assert text_rule_els[0].find('TextSymbolizer').get('size') == '12'
+        assert text_rule_els[0].find('Filter').text == '[foo] < 1'
+        
+        assert text_rule_els[1].find('MinScaleDenominator').text == '400000'
+        assert text_rule_els[1].find('TextSymbolizer').get('name') == 'label'
+        assert text_rule_els[1].find('TextSymbolizer').get('face_name') == 'Arial'
+        assert text_rule_els[1].find('TextSymbolizer').get('size') == '10'
+        assert text_rule_els[1].find('Filter').text == '[foo] < 1'
+        
+        assert text_rule_els[2].find('MaxScaleDenominator').text == '399999'
+        assert text_rule_els[2].find('TextSymbolizer').get('name') == 'label'
+        assert text_rule_els[2].find('TextSymbolizer').get('face_name') == 'Helvetica'
+        assert text_rule_els[2].find('TextSymbolizer').get('size') == '12'
+        assert text_rule_els[2].find('Filter').text == '[foo] >= 1'
+    
+        assert text_rule_els[3].find('MinScaleDenominator').text == '400000'
+        assert text_rule_els[3].find('TextSymbolizer').get('name') == 'label'
+        assert text_rule_els[3].find('TextSymbolizer').get('face_name') == 'Helvetica'
+        assert text_rule_els[3].find('TextSymbolizer').get('size') == '10'
+        assert text_rule_els[3].find('Filter').text == '[foo] >= 1'
 
 if __name__ == '__main__':
     unittest.main()
