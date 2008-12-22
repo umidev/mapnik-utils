@@ -15,19 +15,16 @@ import PIL.Image
 import os.path
 import zipfile
 
-def main(file, dir):
-    """ Given an input layers file and a directory, print the compiled
-        XML file to stdout and save any encountered external image files
-        to the named directory.
-    """
-    print compile(file, dir)
-    return 0
-
-counter = 0
-
 opsort = {lt: 1, le: 2, eq: 3, ge: 4, gt: 5}
 opstr = {lt: '<', le: '<=', eq: '==', ge: '>=', gt: '>'}
     
+counter = 0
+
+def next_counter():
+    global counter
+    counter += 1
+    return counter
+
 class Range:
     """ Represents a range for use in min/max scale denominator.
     
@@ -400,11 +397,6 @@ def tests_filter_combinations(tests):
 
     # if no filters have been defined, return a blank one that matches anything
     return [Filter()]
-
-def next_counter():
-    global counter
-    counter += 1
-    return counter
 
 def is_gym_projection(map_el):
     """ Return true if the map projection matches that used by VEarth, Google, OSM, etc.
