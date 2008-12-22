@@ -1,5 +1,8 @@
+import os
 import sys
+import shutil
 import unittest
+import tempfile
 import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
@@ -633,6 +636,14 @@ class CompatibilityTests(unittest.TestCase):
 
 class StyleRuleTests(unittest.TestCase):
 
+    def setUp(self):
+        # a directory for all the temp files to be created below
+        self.tmpdir = tempfile.mkdtemp(prefix='cascadenik-tests-')
+
+    def tearDown(self):
+        # destroy the above-created directory
+        shutil.rmtree(self.tmpdir)
+
     def testStyleRules1(self):
         s = """
             Layer[zoom<=10][use=park] { polygon-fill: #0f0; }
@@ -957,7 +968,7 @@ class StyleRuleTests(unittest.TestCase):
         map.append(layer)
         
         add_text_styles(map, layer, declarations)
-        add_shield_styles(map, layer, declarations)
+        add_shield_styles(map, layer, declarations, self.tmpdir)
         
         self.assertEqual(2, len(map.findall('Layer/StyleName')))
         
@@ -1069,8 +1080,8 @@ class StyleRuleTests(unittest.TestCase):
         map = xml.etree.ElementTree.Element('Map')
         map.append(layer)
         
-        add_shield_styles(map, layer, declarations)
-        add_point_style(map, layer, declarations)
+        add_shield_styles(map, layer, declarations, self.tmpdir)
+        add_point_style(map, layer, declarations, self.tmpdir)
         
         self.assertEqual(2, len(map.findall('Layer/StyleName')))
         
@@ -1162,9 +1173,9 @@ class StyleRuleTests(unittest.TestCase):
         map = xml.etree.ElementTree.Element('Map')
         map.append(layer)
         
-        add_point_style(map, layer, declarations)
-        add_polygon_pattern_style(map, layer, declarations)
-        add_line_pattern_style(map, layer, declarations)
+        add_point_style(map, layer, declarations, self.tmpdir)
+        add_polygon_pattern_style(map, layer, declarations, self.tmpdir)
+        add_line_pattern_style(map, layer, declarations, self.tmpdir)
         
         self.assertEqual(3, len(map.findall('Layer/StyleName')))
         
