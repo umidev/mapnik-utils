@@ -7,7 +7,7 @@ from cascadenik.style import postprocess_property, postprocess_value, Property
 from cascadenik.compile import OLD_selectors_filters, tests_filter_combinations, Filter
 from cascadenik.compile import selectors_tests, OLD_ranged_filtered_property_declarations
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
-from cascadenik.compile import add_polygon_style, add_line_style, add_text_styles, add_shield_styles
+from cascadenik.compile import add_polygon_style, add_line_style, add_text_styles, add_shield_styles, add_point_style
 
 class ParseTests(unittest.TestCase):
     
@@ -1050,6 +1050,105 @@ class StyleRuleTests(unittest.TestCase):
         assert shield_rule_els[5].find('ShieldSymbolizer').get('height') == '8'
         assert shield_rule_els[5].find('ShieldSymbolizer').get('width') == '8'
         assert shield_rule_els[5].find('Filter').text == "[bar] = 'quux' and [foo] > 1"
+
+    def testStyleRules5(self):
+        s = """
+            Layer label { shield-face-name: 'Helvetica'; shield-size: 12; shield-file: url('purple-point.png'); }
+            Layer[foo>1] label { shield-size: 10; }
+            Layer[bar=baz] label { shield-size: 14; }
+            Layer[bar=quux] label { shield-size: 16; }
+    
+            Layer { point-file: url('purple-point.png'); }
+        """
+    
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
+    
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_shield_styles(map, layer, declarations)
+        add_point_style(map, layer, declarations)
+        
+        doc = xml.etree.ElementTree.ElementTree(map)
+        doc.write(sys.stdout)
+        
+        assert len(map.findall('Layer/StyleName')) == 2
+        
+        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
+        
+        style_els = map.findall('Style')
+        
+        assert len(style_els) == 2
+    
+        assert style_els[0].get('name') in (stylenames)
+        shield_rule_els = style_els[0].findall('Rule')
+        
+        assert shield_rule_els[0].find('MinScaleDenominator') is None
+        assert shield_rule_els[0].find('MaxScaleDenominator') is None
+        assert shield_rule_els[0].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[0].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[0].find('ShieldSymbolizer').get('size') == '12'
+        assert shield_rule_els[0].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[0].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[0].find('Filter').text == "not [bar] = 'baz' and not [bar] = 'quux' and [foo] <= 1"
+        
+        assert shield_rule_els[1].find('MinScaleDenominator') is None
+        assert shield_rule_els[1].find('MaxScaleDenominator') is None
+        assert shield_rule_els[1].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[1].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[1].find('ShieldSymbolizer').get('size') == '10'
+        assert shield_rule_els[1].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[1].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[1].find('Filter').text == "not [bar] = 'baz' and not [bar] = 'quux' and [foo] > 1"
+        
+        assert shield_rule_els[2].find('MinScaleDenominator') is None
+        assert shield_rule_els[2].find('MaxScaleDenominator') is None
+        assert shield_rule_els[2].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[2].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[2].find('ShieldSymbolizer').get('size') == '14'
+        assert shield_rule_els[2].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[2].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[2].find('Filter').text == "[bar] = 'baz' and [foo] <= 1"
+        
+        assert shield_rule_els[3].find('MinScaleDenominator') is None
+        assert shield_rule_els[3].find('MaxScaleDenominator') is None
+        assert shield_rule_els[3].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[3].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[3].find('ShieldSymbolizer').get('size') == '14'
+        assert shield_rule_els[3].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[3].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[3].find('Filter').text == "[bar] = 'baz' and [foo] > 1"
+        
+        assert shield_rule_els[4].find('MinScaleDenominator') is None
+        assert shield_rule_els[4].find('MaxScaleDenominator') is None
+        assert shield_rule_els[4].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[4].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[4].find('ShieldSymbolizer').get('size') == '16'
+        assert shield_rule_els[4].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[4].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[4].find('Filter').text == "[bar] = 'quux' and [foo] <= 1"
+        
+        assert shield_rule_els[5].find('MinScaleDenominator') is None
+        assert shield_rule_els[5].find('MaxScaleDenominator') is None
+        assert shield_rule_els[5].find('ShieldSymbolizer').get('name') == 'label'
+        assert shield_rule_els[5].find('ShieldSymbolizer').get('face_name') == 'Helvetica'
+        assert shield_rule_els[5].find('ShieldSymbolizer').get('size') == '16'
+        assert shield_rule_els[5].find('ShieldSymbolizer').get('height') == '8'
+        assert shield_rule_els[5].find('ShieldSymbolizer').get('width') == '8'
+        assert shield_rule_els[5].find('Filter').text == "[bar] = 'quux' and [foo] > 1"
+    
+        assert style_els[1].get('name') in (stylenames)
+        point_rule_els = style_els[1].findall('Rule')
+        
+        assert point_rule_els[0].find('Filter') is None
+        assert point_rule_els[0].find('MinScaleDenominator') is None
+        assert point_rule_els[0].find('MaxScaleDenominator') is None
+        assert point_rule_els[0].find('PointSymbolizer').get('type') == 'png'
+        assert point_rule_els[0].find('PointSymbolizer').get('height') == '8'
+        assert point_rule_els[0].find('PointSymbolizer').get('width') == '8'
 
 if __name__ == '__main__':
     unittest.main()

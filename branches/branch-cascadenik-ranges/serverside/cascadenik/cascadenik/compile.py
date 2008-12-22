@@ -954,7 +954,7 @@ def add_point_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
+    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('PointSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -964,7 +964,7 @@ def add_point_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'point')
             
-            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
+            rule_el = make_rule_element(filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:
