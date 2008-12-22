@@ -78,7 +78,7 @@ class Range:
         return True
     
     def toFilter(self, property):
-        """
+        """ Convert this range to a Filter with a tests having a given property.
         """
         if self.leftedge == self.rightedge and self.leftop is ge and self.rightop is le:
             # equivalent to ==
@@ -286,20 +286,19 @@ def test_ranges(tests):
         return [Range()]
 
 def test_combinations(tests):
-    """ Given a list of tests, return a list of possible combinations.
+    """ Given a list of simple =/!= tests, return a list of possible combinations.
     """
+    assert len(set([test.property for test in tests])) in (0, 1)
+    assert False not in ([test.isSimple() for test in tests])
+    assert len(tests) <= 15 # prevent memory overload
+    
     filters = []
     
-    # quick hack to prevent memory overload
-    if len(tests) > 15:
-      max_test = 15
-    else:
-      max_test = len(tests)
-    
-    for i in range(int(math.pow(2, max_test))):
+    for i in xrange(int(math.pow(2, len(tests)))):
         filter = Filter()
     
         for (j, test) in enumerate(tests):
+            # we are treating i like a bitfield here
             if bool(i & (0x01 << j)):
                 filter.tests.append(test)
             else:
@@ -338,7 +337,9 @@ def xindexes(slots):
                 carry = 0
 
 def selectors_tests(selectors, property=None):
-    """ Given a list of selectors, return a list of unique tests optionally matching a given first-arg.
+    """ Given a list of selectors, return a list of unique tests.
+    
+        Optionally limit to those with a given property.
     """
     tests = {}
     
@@ -364,7 +365,7 @@ def tests_filter_combinations(tests):
     # into lists of all possible legal combinations of those tests.
     for property in properties:
         
-        # limit tests to those with the current first-arg
+        # limit tests to those with the current property
         current_tests = [test for test in tests if test.property == property]
         
         has_ranged_tests = True in [test.isRanged() for test in current_tests]
