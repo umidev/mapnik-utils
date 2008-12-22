@@ -203,9 +203,9 @@ def test_ranges(tests):
     if len(tests) == 0:
         return [Range()]
     
-    assert 1 == len(set(test.property for test in tests))
-    assert True in [test.isRanged() for test in tests]
-    assert False not in [test.isNumeric() for test in tests]
+    assert 1 == len(set(test.property for test in tests)), 'All tests must share the same property'
+    assert True in [test.isRanged() for test in tests], 'At least one test must be ranged'
+    assert False not in [test.isNumeric() for test in tests], 'All tests must be numeric'
     
     repeated_breaks = []
     
@@ -288,9 +288,9 @@ def test_ranges(tests):
 def test_combinations(tests):
     """ Given a list of simple =/!= tests, return a list of possible combinations.
     """
-    assert len(set([test.property for test in tests])) in (0, 1)
-    assert False not in ([test.isSimple() for test in tests])
-    assert len(tests) <= 15 # prevent memory overload
+    assert len(set([test.property for test in tests])) in (0, 1), 'All tests must share the same property'
+    assert False not in ([test.isSimple() for test in tests]), 'All tests must be simple, i.e. = or !='
+    assert len(tests) <= 15, 'Number of tests must be 15 or less, a crude way to prevent memory overload'
     
     filters = []
     

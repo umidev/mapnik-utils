@@ -445,8 +445,10 @@ class SelectorAttributeTest:
     
     def inverse(self):
         """
+        
+            TODO: define this for non-simple tests.
         """
-        assert self.isSimple()
+        assert self.isSimple(), 'inverse() is only defined for simple tests'
         
         if self.op == '=':
             return SelectorAttributeTest(self.property, '!=', self.value)
