@@ -1072,9 +1072,6 @@ class StyleRuleTests(unittest.TestCase):
         add_shield_styles(map, layer, declarations)
         add_point_style(map, layer, declarations)
         
-        doc = xml.etree.ElementTree.ElementTree(map)
-        doc.write(sys.stdout)
-        
         assert len(map.findall('Layer/StyleName')) == 2
         
         stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
