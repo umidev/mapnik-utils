@@ -913,7 +913,7 @@ def add_shield_styles(map_el, layer_el, declarations, out=None):
         # a place to put rule elements
         rule_els = []
         
-        for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(name_declarations, property_map):
+        for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
             if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
                 symbolizer_el = Element('ShieldSymbolizer')
             else:
@@ -928,7 +928,7 @@ def add_shield_styles(map_el, layer_el, declarations, out=None):
             if symbolizer_el.get('file', False):
                 postprocess_symbolizer_image_file(symbolizer_el, out, 'shield')
     
-                rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
+                rule_el = make_rule_element(filter, symbolizer_el)
                 rule_els.append(rule_el)
         
         if rule_els:
