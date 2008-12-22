@@ -192,25 +192,6 @@ class Filter:
         """
         return cmp(repr(self), repr(other))
 
-def OLD_selectors_scale_ranges(selectors):
-    """ Given a list of selectors, return a list of Ranges that fully describes
-        all possible unique scale-denominator slices within those selectors.
-        
-        If the map looks like it uses the well-known Google/VEarth mercator
-        projection, accept "zoom" attributes in place of "scale-denominator".
-        
-        This function was hard to write, it should be hard to read.
-        
-        TODO: make this work for <= following by >= in breaks
-    """
-    tests = []
-    
-    for selector in selectors:
-        for test in selector.mapScaleTests():
-            tests.append(test)
-
-    return test_ranges(tests)
-
 def test_ranges(tests):
     """ Given a list of tests, return a list of Ranges that fully describes
         all possible unique ranged slices within those tests.
@@ -419,50 +400,6 @@ def tests_filter_combinations(tests):
     # if no filters have been defined, return a blank one that matches anything
     return [Filter()]
 
-def OLD_selectors_filters(selectors):
-    """ Given a list of selectors and a map, return a list of Filters that
-        fully describes all possible unique equality tests within those selectors.
-    """
-    tests = {}
-    properties = set()
-    
-    # get all the tests and test.property values out of the selectors
-    for selector in selectors:
-        for test in selector.allTests():
-            if test.isSimple():
-                tests[str(test)] = test
-                properties.add(test.property)
-
-    properties = sorted(list(properties))
-    tests = tests.values()
-    filters = []
-    property_tests = {}
-    
-    if len(tests):
-        # divide up the tests by their first argument, e.g. "landuse" vs. "tourism",
-        # into lists of all possible legal combinations of those tests.
-        for property in properties:
-            property_tests[property] = test_combinations([test for test in tests if test.property == property])
-            
-        # get a list of the number of combinations for each group of tests from above.
-        property_counts = [len(property_tests[property]) for property in properties]
-        
-        # now iterate over each combination - for large numbers of tests, this can get big really, really fast
-        for property_indexes in xindexes(property_counts):
-            # list of lists of tests
-            testslist = [property_tests[properties[i]][j] for (i, j) in enumerate(property_indexes)]
-            
-            # corresponding filter
-            filter = Filter(*reduce(operator.add, testslist))
-            
-            filters.append(filter)
-    
-        if len(filters):
-            return filters
-
-    # if no filters have been defined, return a blank one that matches anything
-    return [Filter()]
-
 def next_counter():
     global counter
     counter += 1
@@ -568,45 +505,6 @@ def make_rule_element(filter, *symbolizer_els):
     
     return rule_el
 
-def OLD_make_rule_element(range, filter, *symbolizer_els):
-    """ Given a Range, return a Rule element prepopulated
-        with applicable min/max scale denominator elements.
-    """
-    rule_el = Element('Rule')
-
-    if range.leftedge:
-        minscale = Element('MinScaleDenominator')
-        rule_el.append(minscale)
-    
-        if range.leftop is ge:
-            minscale.text = str(range.leftedge)
-        elif range.leftop is gt:
-            minscale.text = str(range.leftedge + 1)
-    
-    if range.rightedge:
-        maxscale = Element('MaxScaleDenominator')
-        rule_el.append(maxscale)
-    
-        if range.rightop is le:
-            maxscale.text = str(range.rightedge)
-        elif range.rightop is lt:
-            maxscale.text = str(range.rightedge - 1)
-    
-    filter_text = ' and '.join(test2str(test) for test in filter.tests)
-    
-    if filter_text:
-        filter_el = Element('Filter')
-        filter_el.text = filter_text
-        rule_el.append(filter_el)
-    
-    rule_el.tail = '\n        '
-    
-    for symbolizer_el in symbolizer_els:
-        if symbolizer_el != False:
-            rule_el.append(symbolizer_el)
-    
-    return rule_el
-
 def insert_layer_style(map_el, layer_el, style_el):
     """ Given a Map element, a Layer element, and a Style element, insert the
         Style element into the flow and point to it from the Layer element.
@@ -624,20 +522,6 @@ def is_applicable_selector(selector, filter):
     """ Given a Selector and Filter, return True if the Selector is
         compatible with the given Filter, and False if they contradict.
     """
-    for test in selector.allTests():
-        if not test.isCompatible(filter.tests):
-            return False
-    
-    return True
-
-def OLD_is_applicable_selector(selector, scale_range, filter):
-    """ Given a Selector, scale-denominator Range, and Filter, return True
-        if the Selector is compatible with the given Range and Filter,
-        and False if they contradict.
-    """
-    if not selector.inRange(scale_range.midpoint()) and selector.isMapScaled():
-        return False
-
     for test in selector.allTests():
         if not test.isCompatible(filter.tests):
             return False
@@ -674,36 +558,6 @@ def filtered_property_declarations(declarations, property_map):
 
         if rule[1]:
             rules.append(rule)
-
-    return rules
-
-def OLD_ranged_filtered_property_declarations(declarations, property_map):
-    """ Given a list of declarations and a map of properties, return a list
-        of rule tuples: (range, filter, parameter_values), where parameter_values
-        is a list of (parameter, value) tuples.
-    """
-    # just the ones we care about here
-    declarations = [dec for dec in declarations if dec.property.name in property_map]
-
-    # a place to put rules
-    rules = []
-    
-    # a matrix of checks for filter and min/max scale limitations
-    scale_ranges = OLD_selectors_scale_ranges([dec.selector for dec in declarations])
-    filters = OLD_selectors_filters([dec.selector for dec in declarations])
-    
-    for scale_range in scale_ranges:
-        for filter in filters:
-            rule = (scale_range, filter, {})
-            
-            # collect all the applicable declarations into a list of parameters and values
-            for dec in declarations:
-                if OLD_is_applicable_selector(dec.selector, scale_range, filter):
-                    parameter = property_map[dec.property.name]
-                    rule[2][parameter] = dec.value
-
-            if rule[2]:
-                rules.append(rule)
 
     return rules
 
@@ -989,7 +843,7 @@ def add_polygon_pattern_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
+    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('PolygonPatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -999,7 +853,7 @@ def add_polygon_pattern_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'polygon-pattern')
             
-            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
+            rule_el = make_rule_element(filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:
@@ -1024,7 +878,7 @@ def add_line_pattern_style(map_el, layer_el, declarations, out=None):
     # a place to put rule elements
     rule_els = []
     
-    for (range, filter, parameter_values) in OLD_ranged_filtered_property_declarations(declarations, property_map):
+    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
         symbolizer_el = Element('LinePatternSymbolizer')
         
         # collect all the applicable declarations into a symbolizer element
@@ -1034,7 +888,7 @@ def add_line_pattern_style(map_el, layer_el, declarations, out=None):
         if symbolizer_el.get('file', False):
             postprocess_symbolizer_image_file(symbolizer_el, out, 'line-pattern')
             
-            rule_el = OLD_make_rule_element(range, filter, symbolizer_el)
+            rule_el = make_rule_element(filter, symbolizer_el)
             rule_els.append(rule_el)
     
     if rule_els:

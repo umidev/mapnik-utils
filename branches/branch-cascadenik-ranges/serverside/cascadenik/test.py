@@ -4,10 +4,10 @@ import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.compile import OLD_selectors_filters, tests_filter_combinations, Filter
-from cascadenik.compile import selectors_tests, OLD_ranged_filtered_property_declarations
+from cascadenik.compile import tests_filter_combinations, Filter, selectors_tests
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
-from cascadenik.compile import add_polygon_style, add_line_style, add_text_styles, add_shield_styles, add_point_style
+from cascadenik.compile import add_polygon_style, add_line_style, add_text_styles, add_shield_styles
+from cascadenik.compile import add_point_style, add_polygon_pattern_style, add_line_pattern_style
 
 class ParseTests(unittest.TestCase):
     
@@ -409,7 +409,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = OLD_selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 4)
         self.assertEqual(str(sorted(filters)), '[[landuse!=agriculture][landuse!=civilian][landuse!=military], [landuse=agriculture], [landuse=civilian], [landuse=military]]')
@@ -423,7 +423,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = OLD_selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 8)
         self.assertEqual(str(sorted(filters)), '[[horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse!=yes][landuse=agriculture], [horse!=yes][landuse=civilian], [horse!=yes][landuse=military], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=yes][landuse=agriculture], [horse=yes][landuse=civilian], [horse=yes][landuse=military]]')
@@ -438,7 +438,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = OLD_selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 12)
         self.assertEqual(str(sorted(filters)), '[[horse!=no][horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse!=no][horse!=yes][landuse=agriculture], [horse!=no][horse!=yes][landuse=civilian], [horse!=no][horse!=yes][landuse=military], [horse=no][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=no][landuse=agriculture], [horse=no][landuse=civilian], [horse=no][landuse=military], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military], [horse=yes][landuse=agriculture], [horse=yes][landuse=civilian], [horse=yes][landuse=military]]')
@@ -453,7 +453,7 @@ class FilterCombinationTests(unittest.TestCase):
         """
         rulesets = stylesheet_rulesets(s)
         selectors = [dec.selector for dec in rulesets_declarations(rulesets)]
-        filters = OLD_selectors_filters(selectors)
+        filters = tests_filter_combinations(selectors_tests(selectors))
         
         self.assertEqual(len(filters), 16)
         self.assertEqual(str(sorted(filters)), '[[horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse!=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse!=yes][landuse=agriculture][leisure!=park], [horse!=yes][landuse=agriculture][leisure=park], [horse!=yes][landuse=civilian][leisure!=park], [horse!=yes][landuse=civilian][leisure=park], [horse!=yes][landuse=military][leisure!=park], [horse!=yes][landuse=military][leisure=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure!=park], [horse=yes][landuse!=agriculture][landuse!=civilian][landuse!=military][leisure=park], [horse=yes][landuse=agriculture][leisure!=park], [horse=yes][landuse=agriculture][leisure=park], [horse=yes][landuse=civilian][leisure!=park], [horse=yes][landuse=civilian][leisure=park], [horse=yes][landuse=military][leisure!=park], [horse=yes][landuse=military][leisure=park]]')
@@ -1051,7 +1051,7 @@ class StyleRuleTests(unittest.TestCase):
         assert shield_rule_els[5].find('ShieldSymbolizer').get('width') == '8'
         assert shield_rule_els[5].find('Filter').text == "[bar] = 'quux' and [foo] > 1"
 
-    def testStyleRules5(self):
+    def testStyleRules6(self):
         s = """
             Layer label { shield-face-name: 'Helvetica'; shield-size: 12; shield-file: url('purple-point.png'); }
             Layer[foo>1] label { shield-size: 10; }
@@ -1146,6 +1146,63 @@ class StyleRuleTests(unittest.TestCase):
         assert point_rule_els[0].find('PointSymbolizer').get('type') == 'png'
         assert point_rule_els[0].find('PointSymbolizer').get('height') == '8'
         assert point_rule_els[0].find('PointSymbolizer').get('width') == '8'
+
+    def testStyleRules7(self):
+        s = """
+            Layer { point-file: url('purple-point.png'); }
+            Layer { polygon-pattern-file: url('purple-point.png'); }
+            Layer { line-pattern-file: url('purple-point.png'); }
+        """
+    
+        declarations = stylesheet_declarations(s, is_gym=True)
+        
+        layer = xml.etree.ElementTree.Element('Layer')
+        layer.append(xml.etree.ElementTree.Element('Datasource'))
+    
+        map = xml.etree.ElementTree.Element('Map')
+        map.append(layer)
+        
+        add_point_style(map, layer, declarations)
+        add_polygon_pattern_style(map, layer, declarations)
+        add_line_pattern_style(map, layer, declarations)
+        
+        assert len(map.findall('Layer/StyleName')) == 3
+        
+        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
+        
+        style_els = map.findall('Style')
+        
+        assert len(style_els) == 3
+    
+        assert style_els[0].get('name') in (stylenames)
+        point_rule_els = style_els[0].findall('Rule')
+        
+        assert point_rule_els[0].find('Filter') is None
+        assert point_rule_els[0].find('MinScaleDenominator') is None
+        assert point_rule_els[0].find('MaxScaleDenominator') is None
+        assert point_rule_els[0].find('PointSymbolizer').get('type') == 'png'
+        assert point_rule_els[0].find('PointSymbolizer').get('height') == '8'
+        assert point_rule_els[0].find('PointSymbolizer').get('width') == '8'
+    
+        assert style_els[1].get('name') in (stylenames)
+        point_rule_els = style_els[1].findall('Rule')
+        
+        assert point_rule_els[0].find('Filter') is None
+        assert point_rule_els[0].find('MinScaleDenominator') is None
+        assert point_rule_els[0].find('MaxScaleDenominator') is None
+        assert point_rule_els[0].find('PolygonPatternSymbolizer').get('type') == 'png'
+        assert point_rule_els[0].find('PolygonPatternSymbolizer').get('height') == '8'
+        assert point_rule_els[0].find('PolygonPatternSymbolizer').get('width') == '8'
+    
+        assert style_els[2].get('name') in (stylenames)
+        point_rule_els = style_els[2].findall('Rule')
+        
+        assert point_rule_els[0].find('Filter') is None
+        assert point_rule_els[0].find('MinScaleDenominator') is None
+        assert point_rule_els[0].find('MaxScaleDenominator') is None
+        assert point_rule_els[0].find('LinePatternSymbolizer').get('type') == 'png'
+        assert point_rule_els[0].find('LinePatternSymbolizer').get('height') == '8'
+        assert point_rule_els[0].find('LinePatternSymbolizer').get('width') == '8'
 
 if __name__ == '__main__':
     unittest.main()
