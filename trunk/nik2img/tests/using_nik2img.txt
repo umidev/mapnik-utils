@@ -34,7 +34,7 @@ Google Reprojection using spatialreference.org
 ----------------------------------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/epsg/102008/')
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
 >>> m.open()
 
 
