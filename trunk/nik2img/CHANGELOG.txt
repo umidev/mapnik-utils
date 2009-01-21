@@ -13,6 +13,8 @@ Version 0.2.3,             2009:
 
 * Now looks for projection strings in the full mapnik proj_init syntax (ie '+init=epsg:<code>')
 
+* Default image opening now off for linux (unless --app is used), still attempted by default on osx and win32.
+
 
 Version 0.2.2, 30 November 2008:
 --------------------------------

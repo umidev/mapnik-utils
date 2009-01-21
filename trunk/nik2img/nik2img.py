@@ -1016,24 +1016,20 @@ class Map(object):
         if not self.RENDERED:
             self.render_file()
         import platform
-        if os.name == 'nt':
-            if app:
-                output_message('Overriding default image viewer not yet supported on Win32')
-            os.system('start %s' % self.image.replace('/','\\'))
-        elif platform.uname()[0] == 'Linux':
-            if app:
-                os.system('%s %s' % (app, self.image))
-            else:
-                os.system('gthumb %s' % self.image)
-        elif platform.uname()[0] == 'Darwin':
-            if app:
-                os.system('%s %s' % (app, self.image))
-            else:
-                os.system('open %s' % self.image)
-        else:
-            output_message('Platform not supported yet for automatic opening of images',warning=True)
-        self.output_message("Completed, opening '%s' <%s'" %   (self.image, color_text(3, "%s" % make_line('=',55)),))
-
+        try:
+            if os.name == 'nt':
+                if app:
+                    output_message('Overriding default image viewer not yet supported on Win32')
+                os.system('start %s' % self.image.replace('/','\\'))
+            elif platform.uname()[0] == 'Linux':
+                if app:
+                    os.system('%s %s' % (app, self.image))
+            elif platform.uname()[0] == 'Darwin':
+                if app:
+                    os.system('open %s -a %s' % (self.image, app))
+                else:
+                    os.system('open %s' % self.image)
+        except: pass # this is fluf, so fail quietly if there is any problem
 
 # =============================================================================
 #
