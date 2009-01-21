@@ -1055,7 +1055,7 @@ if __name__ == "__main__":
     print "-l\t\t" + "[all enabled]\t" + "Layers: List which to render (quote and comma-separate if several)."  
     print "-v\t\t" + "[off]\t\t" + "Run with verbose output including numbered steps and timing output."
     print "-c\t\t" + "[1]\t\t" + "Draw map n number of times." 
-    print "-n\t\t" + "[off]\t\t" + "Turn on dry run mode: constuct map but do not render output."
+    print "-n\t\t" + "[off]\t\t" + "Turn on dry run mode: construct map but do not render output."
     print "-t\t\t" + "[0]\t\t" + "Pause n seconds after reading the map."
     print "-d\t\t" + "[None]\t\t" + "Find and replace, using a <find_this:replace_this> syntax, any value within the mapfile."
     print "--pause" + "\t\t[0]\t\t" + "Pause n seconds after each step%s." % color_text(4,'*')
