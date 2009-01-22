@@ -114,9 +114,9 @@ def output_error(msg, E=None, yield_usage=False):
 # =============================================================================
 
 class Map(object):
-    """ The Map class instanciates a Mapnik map graphic with a path to an xml or mml mapfile.
+    """ The Map class instantiates a Mapnik map graphic with a path to an xml or mml mapfile.
          
-        But it also accept a variety of keyword arguments to customize output.
+        But it also accepts a variety of keyword arguments to customize output.
         
         After creating a Map class either call open() to open the image from the filesystem
         using the default image reader or call stream() to print the image to STDOUT. 
@@ -457,7 +457,7 @@ class Map(object):
         Routine to render the requested Cairo format.
         """
         if not HAS_CAIRO:
-			output_error('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png')
+			output_error('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
 			context = [args[1], self.mapnik_map.width, self.mapnik_map.height]
 			if args[2] == 'svg':
@@ -494,7 +494,7 @@ class Map(object):
         to any image and file formats requested from Cairo.
         """
         if not HAS_CAIRO:
-          output_error('PyCairo is not installed or available, therefore your cannot write to svg, pdf, ps, or cairo-rendered png')
+          output_error('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
           for k, v in self.CAIRO_FILE_FORMATS.iteritems():
               path = '%s_%s.%s' % (basename,k,v)
@@ -541,7 +541,7 @@ class Map(object):
       if verbose: self.verbose = True
       
       if not HAS_MAPNIK_PYTHON:
-        output_error("Error: 'import mapnik' failed - confirm that mapnik is installed and on your PYTHONPATH.")
+        output_error("Error: 'import mapnik' failed - confirm that mapnik is installed and in your PYTHONPATH.")
 
       self.format = self.format.lower().replace('image/','')
       self.mime = 'image/%s' % self.format.replace('256','')
@@ -907,7 +907,7 @@ class Map(object):
           self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))
           self.mapnik_objects['self.m_bbox'] = self.m_bbox
         except Exception, E:
-          output_error("Problem Zooming to all layers",E)
+          output_error("Problem zooming to all layers",E)
       
       if self.expand:
         if is_int(self.expand):
