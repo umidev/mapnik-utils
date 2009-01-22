@@ -1,0 +1,727 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Mapnik Map File Overview</title>
+<style type="text/css">
+body {
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+table.overview {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.overview th {
+    text-align: right;
+    background-color: #e0e0e0;
+    padding: 2px;
+}
+
+table.overview td {
+    background-color: #f0f0f0;
+    padding: 2px;
+}
+
+table.layer {
+    width: 100%;
+    border-collapse: collapse;
+    border-left: 10px solid #e0e0e0;
+}
+
+table.layer td {
+    vertical-align: top;
+    padding: 2px;
+}
+
+table.layer tr.layer td {
+    border-top: 20px solid #ffffff;
+    background-color: #e0e0e0;
+}
+
+table.layer tr.layer td.name {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+table.layer tr.datasource td {
+    background-color: #f0f0f0;
+}
+
+table.layer tr.style td {
+    background-color: #f8f8f8;
+}
+
+div.style {
+    margin-left: 30px;
+}
+
+div.rules {
+    margin-left: 60px;
+}
+
+table.rules {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.rules td {
+    vertical-align: top;
+    padding: 2px;
+}
+
+table.rules td.num {
+    vertical-align: top;
+    text-align: right;
+}
+
+table.rules td.max {
+    width: 8em;
+}
+
+table.rules td.min {
+    width: 6em;
+}
+
+table.rules td.sym {
+    width: 1em;
+    text-align: center;
+}
+
+div.popup table.popup {
+   display: none;
+}
+
+div.popup:hover span.anchor {
+    color: #e00000;
+}
+
+div.popup:hover table.popup {
+    display: block;
+    position: absolute;
+    margin-left: 10px;
+    z-index: 100;
+    color: #000000;
+    background-color: #f0f000;
+    border: 1px solid #ffffff;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+div.popup table.popup th {
+    text-align: right;
+    background-color: #e8e800;
+    color: #000000;
+    font-weight: normal;
+    padding: 2px;
+    width: 20%;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+div.popup table.popup th.title {
+    text-align: left;
+    font-weight: bold;
+}
+
+div.popup table.popup td {
+    padding: 2px;
+    background-color: #f0f000;
+}
+
+                </style>
+</head>
+<body>
+<h1>Mapnik Map File</h1>
+<table class="overview">
+<tr>
+<th>SRS:</th>
+<td>+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</td>
+</tr>
+<tr>
+<th>Background:</th>
+<td><span style="background-color: #ffffff">#ffffff</span></td>
+</tr>
+</table>
+<h2>Layer:</h2>
+<p>Only styles referenced in layers will be shown.</p>
+<table class="layer">
+<tr class="layer">
+<td class="name">states</td>
+<td>SRS +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>SHAPE ../data/states</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_shp_styles</div>
+<div class="rules"><table class="rules">
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #ff4d4d"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#ff4d4d</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>(([PERSONS]&gt;2000000) and ([PERSONS]&lt;4000000))</td>
+</tr>
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #4d4dff"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#4d4dff</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>([PERSONS]&gt;4000000)</td>
+</tr>
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #4dff4d"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#4dff4d</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>([PERSONS]&lt;2000000)</td>
+</tr>
+</table></div>
+</td></tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_outlines</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="color: ;">☡</span><table class="popup">
+<tr><th colspan="2" class="title">☡ LineSymbolizer</th></tr>
+<tr>
+<th>stroke:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-dasharray:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linecap:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linejoin:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-width:</th>
+<td>0.3</td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_shp_labels</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor">T</span><table class="popup">
+<tr><th colspan="2" class="title">T TextSymbolizer</th></tr>
+<tr>
+<th>allow_overlap:</th>
+<td></td>
+</tr>
+<tr>
+<th>avoid_edges:</th>
+<td></td>
+</tr>
+<tr>
+<th>dx:</th>
+<td></td>
+</tr>
+<tr>
+<th>dy:</th>
+<td></td>
+</tr>
+<tr>
+<th>face_name:</th>
+<td>Times New Roman Regular</td>
+</tr>
+<tr>
+<th>fill:</th>
+<td>#000000</td>
+</tr>
+<tr>
+<th>halo_fill:</th>
+<td></td>
+</tr>
+<tr>
+<th>halo_radius:</th>
+<td></td>
+</tr>
+<tr>
+<th>label_position_tolerance:</th>
+<td></td>
+</tr>
+<tr>
+<th>max_char_angle_delta:</th>
+<td></td>
+</tr>
+<tr>
+<th>min_distance:</th>
+<td></td>
+</tr>
+<tr>
+<th>name:</th>
+<td>STATE_ABBR</td>
+</tr>
+<tr>
+<th>placement:</th>
+<td></td>
+</tr>
+<tr>
+<th>size:</th>
+<td>11</td>
+</tr>
+<tr>
+<th>spacing:</th>
+<td></td>
+</tr>
+<tr>
+<th>text_ratio:</th>
+<td></td>
+</tr>
+<tr>
+<th>wrap_width:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">states_pg</td>
+<td>SRS +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>POSTGIS states_pg</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_pg_styles</div>
+<div class="rules"><table class="rules">
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #ff4d4d"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#ff4d4d</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>(([persons]&gt;2000000) and ([persons]&lt;4000000))</td>
+</tr>
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #4d4dff"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#4d4dff</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>([persons]&gt;4000000)</td>
+</tr>
+<tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="background-color: #4dff4d"> </span><table class="popup">
+<tr><th colspan="2" class="title">  PolygonSymbolizer</th></tr>
+<tr>
+<th>fill:</th>
+<td>#4dff4d</td>
+</tr>
+<tr>
+<th>fill-opacity:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td>([persons]&lt;2000000)</td>
+</tr>
+</table></div>
+</td></tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_outlines</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="color: ;">☡</span><table class="popup">
+<tr><th colspan="2" class="title">☡ LineSymbolizer</th></tr>
+<tr>
+<th>stroke:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-dasharray:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linecap:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linejoin:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-width:</th>
+<td>0.3</td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="style"><td colspan="2">
+<div class="style">states_pg_labels</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor">T</span><table class="popup">
+<tr><th colspan="2" class="title">T TextSymbolizer</th></tr>
+<tr>
+<th>allow_overlap:</th>
+<td></td>
+</tr>
+<tr>
+<th>avoid_edges:</th>
+<td></td>
+</tr>
+<tr>
+<th>dx:</th>
+<td></td>
+</tr>
+<tr>
+<th>dy:</th>
+<td></td>
+</tr>
+<tr>
+<th>face_name:</th>
+<td>Times New Roman Regular</td>
+</tr>
+<tr>
+<th>fill:</th>
+<td>#000000</td>
+</tr>
+<tr>
+<th>halo_fill:</th>
+<td></td>
+</tr>
+<tr>
+<th>halo_radius:</th>
+<td></td>
+</tr>
+<tr>
+<th>label_position_tolerance:</th>
+<td></td>
+</tr>
+<tr>
+<th>max_char_angle_delta:</th>
+<td></td>
+</tr>
+<tr>
+<th>min_distance:</th>
+<td></td>
+</tr>
+<tr>
+<th>name:</th>
+<td>state_abbr</td>
+</tr>
+<tr>
+<th>placement:</th>
+<td></td>
+</tr>
+<tr>
+<th>size:</th>
+<td>11</td>
+</tr>
+<tr>
+<th>spacing:</th>
+<td></td>
+</tr>
+<tr>
+<th>text_ratio:</th>
+<td></td>
+</tr>
+<tr>
+<th>wrap_width:</th>
+<td></td>
+</tr>
+</table>
+</div></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">tiger_shp</td>
+<td>SRS +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>SHAPE ../data/tiger_shp</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">tiger_styles</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="color: ;">☡</span><table class="popup">
+<tr><th colspan="2" class="title">☡ LineSymbolizer</th></tr>
+<tr>
+<th>stroke:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-dasharray:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linecap:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linejoin:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-width:</th>
+<td>0.3</td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">tiger_pg</td>
+<td>SRS +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>POSTGIS tiger_pg</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">tiger_styles</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"><div class="popup">
+<span class="anchor" style="color: ;">☡</span><table class="popup">
+<tr><th colspan="2" class="title">☡ LineSymbolizer</th></tr>
+<tr>
+<th>stroke:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-dasharray:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linecap:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-linejoin:</th>
+<td></td>
+</tr>
+<tr>
+<th>stroke-width:</th>
+<td>0.3</td>
+</tr>
+</table>
+</div></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">merano</td>
+<td>SRS +proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>gdal</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">raster_style</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">merano2</td>
+<td>SRS +proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>gdal</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">raster_style</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">n_sid</td>
+<td>SRS +proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>gdal</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">raster_style</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+<tr class="layer">
+<td class="name">s_sid</td>
+<td>SRS +proj=utm +zone=34 +ellps=WGS84 +datum=WGS84 +units=m +no_defs</td>
+</tr>
+<tr class="datasource">
+<td></td>
+<td>gdal</td>
+</tr>
+<tr class="style"><td colspan="2">
+<div class="style">raster_style</div>
+<div class="rules"><table class="rules"><tr>
+<td class="num max">NaN</td>
+<td class="num min">0</td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td class="sym"></td>
+<td></td>
+</tr></table></div>
+</td></tr>
+</table>
+</body>
+</html>
