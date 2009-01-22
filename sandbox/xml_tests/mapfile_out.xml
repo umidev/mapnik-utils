@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs" bgcolor="#8cb6d3">
+    <Style name="states_outlines">
+        <Rule>
+            <MaxScaleDenominator>1.797693134862316e+307</MaxScaleDenominator>
+            <LineSymbolizer>
+                <CssParameter name="stroke-width">0.3</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="states_shp_labels">
+        <Rule>
+            <TextSymbolizer name="STATE_ABBR" face_name="Aerial Mono Regular" size="12" fill="#000000"></TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="states_shp_styles">
+        <Rule>
+            <Filter>([PERSONS]&lt;2000000)</Filter>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#6cae4c</CssParameter>
+            </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>(([PERSONS]&gt;2000000) and ([PERSONS]&lt;4000000))</Filter>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#3b7ab3</CssParameter>
+            </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+            <Filter>([PERSONS]&gt;4000000)</Filter>
+            <PolygonSymbolizer>
+                <CssParameter name="fill">#88000f</CssParameter>
+            </PolygonSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="states" abstract="abby" title="titlebabe" srs="+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs" status="1" clear_label_cache="0" maxzoom="1.797693134862316e+307" queryable="1">
+        <StyleName>states_shp_styles</StyleName>
+        <StyleName>states_outlines</StyleName>
+        <StyleName>states_shp_labels</StyleName>
+        <Datasource>
+            <Parameter name="file">/Users/spring/projects/utils/sandbox/xml_editor/us_states</Parameter>
+            <Parameter name="type">shape</Parameter>
+        </Datasource>
+    </Layer>
+</Map>
