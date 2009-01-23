@@ -2,13 +2,13 @@
 
 # /home/dane/src/mapnik-utils/serverside/cascadenik/openstreetmap/style.xml
 
+import os
 import sys
-import werkzeug as z
 import mapnik
 import optparse
-import os
 import random
 from subprocess import call
+from werkzeug import Response, DebuggedApplication, Request, run_simple
 
 sys.stdout = sys.stderr
 
@@ -229,12 +229,12 @@ class MapResponse(object):
         mapnik.render(self.mapnik_map,draw)
         image = draw.tostring('png256')
         
-        response = z.Response(image, status=200, mimetype=self.mime)
+        response = Response(image, status=200, mimetype=self.mime)
         response.content_length = len(image)
         return response
 
 def not_found(req):
-    return z.Response(u'<h1>Page Not Found</h1>', status=404, mimetype='text/html')
+    return Response(u'<h1>Page Not Found</h1>', status=404, mimetype='text/html')
 
 def openlayers(req,path='ol_merc.html'):
     global html
@@ -244,12 +244,12 @@ def openlayers(req,path='ol_merc.html'):
             html = f.read()
             f.close()
         except IOError:
-            return z.Response('Openlayers HTML/JS file not found: %s' % path,status=404, mimetype='text/html')
+            return Response('Openlayers HTML/JS file not found: %s' % path,status=404, mimetype='text/html')
     
-    return z.Response(html, status=200, mimetype='text/html')
+    return Response(html, status=200, mimetype='text/html')
 
 def about(req):
-    return z.Response(u'''<h1>Nikserv</h1>
+    return Response(u'''<h1>Nikserv</h1>
         <p>Docs will go here.</p>
     ''', mimetype='text/html')
 
@@ -264,7 +264,7 @@ def application(environ, start_response):
     global mapfile
     #global kwargs
     global MAP_CACHE
-    req = z.Request(environ)
+    req = Request(environ)
 
     
     if req.method == 'POST' and not req.data == 'Paste mapfile here':
@@ -320,7 +320,7 @@ if __name__ == '__main__':
        
     #print kwargs
       
-    application = z.DebuggedApplication(application, evalex=True)
+    application = DebuggedApplication(application, evalex=True)
       
     #call('open http://localhost:8000/ -a safari',shell=True)
-    z.run_simple('localhost', 8000, application)
+    run_simple('localhost', 8000, application)
