@@ -69,23 +69,28 @@ html = """
         
         function postMapfile(id, content){
            var xml_string = content
-           new OpenLayers.Request.POST({url:'.', data:xml_string })
-           var current_extent = map.getExtent();
+           new OpenLayers.Request.POST({url:'.', data:xml_string,callback: refreshMap })
+           //var current_extent = map.getExtent();
+           //map.zoomIn(5)
+           //map.zoomOut(5)
+		}
+		
+		function refreshMap(request) {
+		   console.log('called')
+		   var c = map.getCenter();
+           var z = map.getZoom()
+           mapnik.redraw(true);
+           //map.removeLayer('mapnik');
+           //map.addLayer('mapnik');
+           map.setCenter(c,z)
            map.zoomIn(5)
            map.zoomOut(5)
 		}
 		
         function postMapfile2() {
            var xml_string = $('mapfile').value
-           new OpenLayers.Request.POST({url:'.', data:xml_string })
-           var current_extent = map.getExtent();
-           //mapnik.redraw(true);
-           map.zoomIn(10)
-           map.zoomOut(5)
-           map.zoomOut(5)
-           //map.zoomToExtent(current_extent);
-           //map.removeLayer('mapnik');
-           //map.addLayer('mapnik');
+           new OpenLayers.Request.POST({url:'.', data:xml_string, callback: refreshMap })
+                      
         }
         
         function init() {
