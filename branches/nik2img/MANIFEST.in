@@ -1,0 +1,3 @@
+include *.txt
+include nik2img.py
+include setup.py
