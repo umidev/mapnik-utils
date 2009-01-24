@@ -10,7 +10,8 @@ from pygments.lexers import IrcLogsLexer
 from pygments.formatters import HtmlFormatter
 from werkzeug import Response, Request, DebuggedApplication,  run_simple
 
-ROOT_PATH = path.abspath(path.dirname(__file__))
+#ROOT_PATH = path.abspath(path.dirname(__file__))
+ROOT_PATH = '/home/mapniklog/logs/mapnik/'
 
 def not_found(req):
     return Response(u'<h1>Page Not Found</h1>', status=404, mimetype='text/html')
@@ -21,10 +22,11 @@ def about(req):
     ''', mimetype='text/html')
 
 def home(req):
-    log_days = glob.glob('*.txt')
+    log_days = glob.glob(ROOT_PATH + '*.txt')
     log_html = '<ul>'
     for log in log_days:
-      name = log.strip('.txt')
+      logfile = path.basename(log)
+      name = logfile.strip('.txt')
       log_html += '<li><a href="/days/%s">%s</a></li>' % (name,name)
     log_html += '</ul>'
     return Response(log_html, mimetype='text/html')
