@@ -323,4 +323,4 @@ if __name__ == '__main__':
     application = DebuggedApplication(application, evalex=True)
       
     #call('open http://localhost:8000/ -a safari',shell=True)
-    run_simple('localhost', 8000, application)
+    run_simple('localhost', 8085, application)
