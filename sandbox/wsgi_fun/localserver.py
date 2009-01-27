@@ -8,7 +8,7 @@ import mapnik
 import optparse
 import random
 from subprocess import call
-from werkzeug import Response, DebuggedApplication, Request, run_simple
+from werkzeug import Response, Request, DebuggedApplication,  run_simple
 
 sys.stdout = sys.stderr
 
