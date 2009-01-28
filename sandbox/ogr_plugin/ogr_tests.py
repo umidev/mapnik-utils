@@ -40,7 +40,11 @@ def ogr_layer(filename,layername=None):
     named_style = filename + '_sty'
     m.append_style(*guess_style(named_style,filename))
     lyr = Layer(filename)
-    lyr.datasource = Ogr(file=filename,layer=layername)
+    try:
+        lyr.datasource = Ogr(file=filename,layer=layername)
+    except:
+        print 'Failed on file: %s with layername: %s' % (filename, layername)
+        
     lyr.styles.append(named_style)
     return lyr
     
@@ -56,16 +60,20 @@ def render_ds(ds):
         if shape.endswith('.gpx'):
             #layername = ['route_points','track_points','routes']
             layername = 'routes'
-        if type(layername) == list:
-            for layer in layername:
-                m.layers.append(ogr_layer(shape,layer))
-        else:
-            m.layers.append(ogr_layer(shape,layername))
-        m.zoom_all()
-        output = '%s_type-%s.png' % (shape.split('.')[0].replace('data','maps'),ds)
-        render_to_file(m,output)
-        print 'rendered... %s' % output
+        try:
+            if type(layername) == list:
+                for layer in layername:
+                    m.layers.append(ogr_layer(shape,layer))
+            else:
+                m.layers.append(ogr_layer(shape,layername))
+            m.zoom_all()
+            output = '%s_type-%s.png' % (shape.split('.')[0].replace('data','maps'),ds)
+            render_to_file(m,output)
+            print 'rendered... %s' % output
+        except:
+            pass
         m.remove_all()
+        
 
 m = Map(600,350)
 
@@ -83,7 +91,7 @@ render_ds('db')
 #import pdb;pdb.set_trace()
 render_ds('kml')
 #render_ds('csv')
-render_ds(gml)
+render_ds('gml')
 
 # gpx data seems to crash mapnik...
 #render_ds(gpx)
