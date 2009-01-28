@@ -69,18 +69,21 @@ def render_ds(ds):
 
 m = Map(600,350)
 
-try:
-  os.system('rm maps/*.png')
-except: pass
+#try:
+#  os.system('rm maps/*.png')
+#except: pass
 
 render_ds('shp')
 render_ds('geojson')
 render_ds('db')
-os.system('open maps/*.png')
+#try:
+#  os.system('open maps/*.png')
+#except: pass
+
 #import pdb;pdb.set_trace()
-#render_ds('kml')
+render_ds('kml')
 #render_ds('csv')
-#render_ds(gml)
+render_ds(gml)
 
 # gpx data seems to crash mapnik...
 #render_ds(gpx)
