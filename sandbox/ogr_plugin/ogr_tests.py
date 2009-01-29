@@ -77,9 +77,19 @@ def render_ds(ds):
 
 m = Map(600,350)
 
+print 'rendering map from xml styles...'
+
+mapfile = "population.xml"
+m = Map(1400, 600)
+load_map(m, mapfile)
+m.zoom_to_box(m.layers[0].envelope()) 
+render_to_file(m, 'maps/world_population_ogr.png')
+
 #try:
 #  os.system('rm maps/*.png')
 #except: pass
+
+print 'rendering maps from all files in data directory...'
 
 render_ds('shp')
 render_ds('geojson')
