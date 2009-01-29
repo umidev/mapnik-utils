@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE Map[
+    <!ENTITY map_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY coastlines "/opt/applications/tilesathome/world_boundaries/processed_p">
+    <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
+    <!ENTITY user "postgres">
+    <!ENTITY dbname "gis">
+    <!ENTITY estimate_extent "false">
+]>
+<Map srs="&map_srs;">
+    <Stylesheet>
+        Map { map-bgcolor: #eeeeee; }
+    </Stylesheet>
+    <Stylesheet src="ground.mss"/>
+<!--     <Stylesheet src="contours.mss"/> -->
+    <Stylesheet src="roads.mss"/>
+    <Stylesheet src="paths.mss"/>
+    <Stylesheet src="rail.mss"/>
+    <Stylesheet src="peaks.mss"/>
+    <Stylesheet src="poi.mss"/>
+    <Stylesheet src="places.mss"/>
+
+            <!-- coastline shapefiles can be found at http://hypercube.telascience.org/~kleptog/ -->
+<!--
+    <Layer class="coast edge outer" srs="&coastlines_srs;">
+        <Datasource>
+            <Parameter name="type">shape</Parameter>
+            <Parameter name="file">&coastlines;</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="coast edge inner" srs="&coastlines_srs;">
+        <Datasource>
+            <Parameter name="type">shape</Parameter>
+            <Parameter name="file">&coastlines;</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="coast fill" srs="&coastlines_srs;">
+        <Datasource>
+            <Parameter name="type">shape</Parameter>
+            <Parameter name="file">&coastlines;</Parameter>
+        </Datasource>
+    </Layer>
+
+-->
+
+
+    <!-- For some reason, this layer gets set to status="off"
+         in the generated XML file, need to fix there: -->
+    <!--
+    <Layer class="dem">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    -->
+    <Layer class="dem1">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N50E013_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem2">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N50E014_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem3">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N51E013_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem4">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N51E014_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem5">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N49E008_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem6">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N54W003_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="dem7">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/N54W004_hillshade.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Style name="raster">
+	<Rule>
+		<RasterSymbolizer>
+		</RasterSymbolizer>
+	</Rule>
+    </Style>
+
+    <Layer class="citylike nonparking area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                 FROM planet_osm_polygon
+                 WHERE building IS NULL
+                   AND (amenity IN ('school', 'college', 'university', 'library', 'hospital', 'police', 'fire_station')
+                        OR landuse IN ('residential', 'industrial', 'commercial')
+                        OR aeroway IN ('apron'))
+                 ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="parklike area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                    (CASE
+                         WHEN round(way_area * 1000000) >= 20 THEN 'large'
+                         WHEN round(way_area * 1000000) >= 1 THEN 'medium'
+                         ELSE 'small' END) AS size
+                     FROM planet_osm_polygon
+                     WHERE building IS NULL
+                       AND (amenity IN ('park')
+                        OR landuse IN ('recreation_ground', 'greenfield', 'cemetery', 'forest', 'allotments', 'farm', 'quarry')
+                        OR "natural" IN ('wood', 'grass')
+                        OR leisure IN ('park', 'pitch', 'track', 'golf_course', 'common', 'playground', 'garden', 'plaza'))
+                     ORDER BY z_order ASC, way_area DESC) AS parklike]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="citylike parking area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                 FROM planet_osm_polygon
+                 WHERE building IS NULL
+                   AND amenity = 'parking'
+                 ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="parklike line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_polygon
+                 WHERE "natural" IN ('cliff')
+                    OR man_made IN ('embankment', 'cutting'))
+                 ORDER BY z_order ASC) AS parklike]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="water line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+                     WHERE waterway IN ('river', 'stream', 'canal', 'drain')
+                     ORDER BY z_order ASC) AS rivers]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="water area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_polygon
+                     WHERE landuse IN ('reservoir', 'water')
+                        OR "natural" IN ('lake', 'water', 'land')
+                        OR waterway IN ('canal', 'riverbank', 'river')
+                     ORDER BY z_order ASC) AS water]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="water ferry" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                     WHERE route IN ('ferry') ORDER BY z_order ASC) AS ferry]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="srtm ten" srs="&contours_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT way,height FROM contours WHERE
+                 height::integer % 10 = 0 AND
+                 height::integer % 50 != 0 AND
+                 height::integer % 100 != 0) AS srtm]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="srtm fifty" srs="&contours_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT way,height FROM contours WHERE
+                 height::integer % 50 = 0 AND
+                 height::integer % 100 != 0) AS srtm]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="srtm hundred" srs="&contours_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT way,height FROM contours WHERE
+                 height::integer % 100 = 0) AS srtm]]></Parameter>
+        </Datasource>
+    </Layer>
+
+
+    <Layer class="road texture" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                    (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                          WHEN highway IN ('trunk', 'primary') THEN 1
+                          WHEN highway = 'secondary' THEN 2
+                          WHEN highway = 'tertiary' THEN 3
+                          ELSE 4 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                              ELSE 'minor' END) AS prominence
+                 FROM planet_osm_line
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC, priority DESC)
+
+                 AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="path outline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="road outline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                    (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                          WHEN highway IN ('trunk', 'primary') THEN 1
+                          WHEN highway = 'secondary' THEN 2
+                          WHEN highway = 'tertiary' THEN 3
+                          ELSE 4 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                              ELSE 'minor' END) AS prominence
+                 FROM planet_osm_line
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC, priority DESC)
+                 AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="path inline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="road inline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                              WHEN highway IN ('trunk', 'primary') THEN 1
+                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway = 'tertiary' THEN 3
+                              ELSE 4 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                              ELSE 'minor' END) AS prominence
+                 FROM planet_osm_line
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC, priority DESC)
+
+                 AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <!-- motorways here are repeated, so that they may be overlaid cleanly at low zoom levels and provide a centerline at high zoom levels. -->
+    <Layer class="motorway outline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+	             WHERE highway IN ('motorway', 'trunk'))
+                     AS motorways]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="motorway inline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE highway IN ('motorway', 'trunk'))
+	             AS motorways]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="rail outline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail', 'narrow_gauge')
+                     ORDER BY z_order ASC) AS railways]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="rail centerline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail', 'narrow_gauge')
+                     ORDER BY z_order ASC) AS railways]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="rail line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail', 'narrow_gauge')
+                     ORDER BY z_order ASC) AS railways]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="power line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE power IN ('line')
+                     ORDER BY z_order ASC) AS power]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="boundary line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE boundary IN ('administrative')
+                     ORDER BY z_order ASC) AS boundary]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="building area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_polygon
+                     WHERE building IS NOT NULL
+                     ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <!-- FIXME! -->
+    <Layer class="place label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT *,
+	             COALESCE(z_order, 0) AS correct_z_order,
+	            (CASE WHEN place = 'city' THEN 0
+                          WHEN place = 'town' THEN 1
+                          WHEN place = 'village' THEN 2
+                          ELSE 3 END) AS priority FROM planet_osm_point
+                     WHERE place IN ('city', 'town', 'hamlet', 'village')
+                     ORDER BY priority ASC, correct_z_order DESC) AS places]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="peak point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE "natural" IN ('peak', 'tree'))
+                        AS peak]]></Parameter>
+        </Datasource>
+    </Layer>
+    <!-- POIs -->
+    <Layer class="poi_tourism point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE tourism IN ('viewpoint', 'information', 'picnic_area', 'summit_cross', 'camp_site', 'alpine_hut')
+                     OR man_made IN ('tower'))
+                        AS poi_tourism]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="poi_historic point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE historic IN ('ruins', 'castle', 'wayside_cross'))
+                        AS poi_historic]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="poi_natural point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE "natural" IN ('cave_entrance'))
+                        AS poi_natural]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="poi_boundary point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE boundary IN ('marker'))
+                        AS poi_boundary]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="poi point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost')
+                        OR amenity IN ('restaurant', 'fast_food', 'pub', 'drinking_water'))
+                        AS poi]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="power point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE power IN ('tower'))
+                        AS power]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <!-- all labels go below -->
+    <Layer class="transit point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *, y(astext(way)) AS latitude FROM planet_osm_point
+                     WHERE (railway IN ('station', 'subway_entrance')
+                        OR aeroway IN ('aerodrome', 'airport'))
+                       AND name IS NOT NULL
+                     ORDER BY z_order ASC, latitude DESC) AS transit_points]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="road point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_point
+                     WHERE (railway IN ('station', 'subway_entrance', 'halt', 'tram_stop')
+                        OR aeroway IN ('aerodrome', 'airport')
+                        OR highway IN ('gate', 'bus_stop')
+                        OR barrier IN ('gate', 'bollard'))
+                     ORDER BY z_order ASC) AS road_points]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="road label major" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *, length(way) AS length, CHAR_LENGTH(ref) AS ref_length,
+                    (CASE WHEN CHAR_LENGTH(ref) BETWEEN 2 AND 9 THEN ref
+                     ELSE NULL END) AS ref_content,
+                        (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                              WHEN highway IN ('trunk', 'primary') THEN 1
+                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway = 'tertiary' THEN 3
+                              ELSE 4 END) AS priority
+                     FROM planet_osm_line
+                     WHERE highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                     ORDER BY priority ASC, z_order ASC, length DESC) AS major_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="parklike label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN round(way_area * 1000000) >= 20 THEN 'large'
+                              WHEN round(way_area * 1000000) >= 1 THEN 'medium'
+                              ELSE 'small' END) AS size,
+                        REGEXP_REPLACE(UPPER(name), '(.)', E'\\1\xC2\xA0\xC2\xA0', 'g') AS name_stretched
+                 FROM planet_osm_polygon
+                 WHERE building IS NULL
+                   AND (amenity IN ('park')
+                     OR landuse IN ('recreation_ground', 'greenfield', 'cemetery', 'forest', 'allotments', 'farm', 'quarry')
+                     OR "natural" IN ('wood', 'grass')
+                     OR leisure IN ('park', 'pitch', 'track', 'golf_course', 'common', 'playground', 'garden', 'plaza'))
+                 ORDER BY z_order ASC, way_area DESC) AS parklike]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="citylike label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN round(way_area * 1000000) >= 20 THEN 'large'
+                              WHEN round(way_area * 1000000) >= 1 THEN 'medium'
+                              ELSE 'small' END) AS size,
+                        REGEXP_REPLACE(UPPER(name), '(.)', E'\\1\xC2\xA0\xC2\xA0', 'g') AS name_stretched
+                 FROM planet_osm_polygon
+                 WHERE building IS NULL
+                   AND (amenity IN ('parking', 'school', 'college', 'university', 'library', 'hospital', 'police', 'fire_station')
+                     OR landuse IN ('residential', 'industrial', 'commercial')
+                     OR aeroway IN ('apron'))
+                 ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="srtm label" srs="&contours_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT way,height FROM contours WHERE
+                 height::integer % 10 = 0 OR
+                 height::integer % 50 = 0 OR
+                 height::integer % 100 = 0) AS srtm]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="road label minor" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table">(SELECT *, length(way) AS length, (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0 WHEN highway IN ('trunk', 'primary') THEN 1 WHEN highway = 'secondary' THEN 2 WHEN highway = 'tertiary' THEN 3 ELSE 4 END) AS priority FROM planet_osm_line WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary') ORDER BY priority ASC, z_order ASC, length DESC) AS minor_roads</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="path label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="water label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN round(way_area * 1000000) >= 20 THEN 'large'
+                              WHEN round(way_area * 1000000) >= 1 THEN 'medium'
+                              ELSE 'small' END) AS size,
+                        REGEXP_REPLACE(UPPER(name), '(.)', E'\\1\xC2\xA0\xC2\xA0', 'g') AS name_stretched
+                 FROM planet_osm_polygon
+                 WHERE landuse IN ('reservoir', 'water')
+                    OR "natural" IN ('lake', 'water', 'land')
+                 ORDER BY z_order ASC) AS water]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="ferry label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE route IN ('ferry') ORDER BY priority ASC, z_order ASC, length DESC) AS ferry_label</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="building label" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN round(way_area * 1000000) >= 20 THEN 'large'
+                              WHEN round(way_area * 1000000) >= 1 THEN 'medium'
+                              ELSE 'small' END) AS size,
+                        REGEXP_REPLACE(UPPER(name), '(.)', E'\\1\xC2\xA0\xC2\xA0', 'g') AS name_stretched
+                 FROM planet_osm_polygon
+                 WHERE building IS NOT NULL
+                 ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>
