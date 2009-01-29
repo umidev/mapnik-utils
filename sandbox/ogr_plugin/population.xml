@@ -111,7 +111,7 @@
      <Rule>
       <!--  Those with over 25 Million get larger labels -->
       <!--  Note: allow_overlap is true here to allow India to sneak through -->
-      <Filter>[pop2005] &gt;= 1134000000</Filter>
+      <Filter>[POP2005] &gt;= 1134000000</Filter>
       <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="15" fill="white" halo_fill= "black" halo_radius="1" wrap_width="20" spacing="5" allow_overlap="true" avoid_edges="true" min_distance="10"/>
      </Rule>
   </Style>
