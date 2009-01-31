@@ -51,3 +51,11 @@ Steps to test
 More info: http://guide.macports.org/#development.local-repositories
 
 
+
+To uninstall mapnik run::
+
+sudo rm -rf /opt/local/bin/shapeindex
+sudo rm -rf /opt/local/include/mapnik
+sudo rm -rf /opt/local/lib/mapnik
+sudo rm  /opt/local/lib/libmapnik.dylib
+sudo rm -rf /opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages/mapnik
