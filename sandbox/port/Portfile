@@ -11,12 +11,15 @@ maintainers         pobox.com:paulsmith
 description         Toolkit for developing mapping applications.
 homepage            http://mapnik.org/
 
-master_sites        http://download.berlios.de/mapnik/ \
-                    http://download2.berlios.de/mapnik/
+
 distname            ${name}_src-${version}
 checksums           md5 3cba5f847eabb88be6f5047ee7ed0be3 \
                     sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
                     rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
+
+fetch.type    svn
+fetch.type          svn
+svn.url             svn://svv.mapnik.org/trunk
 
 long_description \
     Mapnik is a Free Toolkit for developing mapping \
@@ -58,8 +61,6 @@ variant postgis description {Builds port with PostGIS support} {
     build.args-append  PGSQL_INCLUDES=${prefix}/include \
                        PGSQL_LIBS=${prefix}/lib
 }
-
-patchfiles      patch-src_unicode.cpp.diff
 
 set python      "${prefix}/bin/python2.5"
 
