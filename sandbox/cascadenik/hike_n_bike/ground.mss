@@ -158,6 +158,16 @@
     polygon-opacity: 0.45;
 }
 
+.parklike.area[landuse=recreation_ground],
+.parklike.area[landuse=greenfield],
+.parklike.area[landuse=meadow],
+.parklike.area[landuse=grass],
+.parklike.area[landuse=village_green]
+{
+    polygon-fill: #ace38b;
+    polygon-opacity: 0.45;
+}
+
 .parklike.area[landuse=quarry]
 {
     polygon-fill: #bbb;
@@ -178,8 +188,8 @@
 
 .building.area[zoom>=13]
 {
-    polygon-fill: #dc5541;
-    polygon-opacity: 0.45;
+    polygon-fill: #dc7c6e;
+    polygon-opacity: 0.8;
 }
 
 /* .building.area[zoom>=15] */
