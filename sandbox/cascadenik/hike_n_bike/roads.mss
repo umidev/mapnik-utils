@@ -84,6 +84,7 @@
 .road.outline[zoom=14][prominence=major][lanes=3],
 .road.outline[zoom=14][prominence=major][lanes=4] 
 { line-width: 9; }
+/*
 .road.centerline[zoom=14][lanes=2],
 .road.centerline[zoom=14][lanes=3],
 .road.centerline[zoom=14][lanes=4]
@@ -92,7 +93,7 @@
     line-color: #888;
     line-dasharray: 1, 5;
 }
-
+*/
 
 .road.inline[zoom=14][prominence=major][highway=motorway_link] { line-width: 2; }
 .road.outline[zoom=14][prominence=major][highway=motorway_link] { line-width: 4; }
