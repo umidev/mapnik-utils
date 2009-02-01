@@ -76,7 +76,7 @@
 
 .poi_historic.point[historic=ruins][zoom>=13] name
 {
-    point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.8.png');
+    point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.10.png');
     text-fill: #734a08;
     text-dy: 9;
     text-face-name: "DejaVu Sans Book";
@@ -90,7 +90,7 @@
 
 .poi_historic.point[historic=ruins][zoom>=15] name
 {
-    point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.12.png');
+    point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.14.png');
     text-fill: #734a08;
     text-dy: 13;
     text-face-name: "DejaVu Sans Book";
