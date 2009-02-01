@@ -64,15 +64,36 @@
 
 .road.texture[zoom>=11][zoom<=12] { line-width: 1; }
 
+
 .road.inline[zoom=13][prominence=major] { line-width: 5; }
 .road.outline[zoom=13][prominence=major] { line-width: 7; }
+
 .road.inline[zoom=13][prominence=major][highway=motorway_link] { line-width: 2; }
 .road.outline[zoom=13][prominence=major][highway=motorway_link] { line-width: 4; }
 
 .road.texture[zoom=13] { line-width: 1; }
 
-.road.inline[zoom=14][prominence=major] { line-width: 7; }
-.road.outline[zoom=14][prominence=major] { line-width: 9; }
+
+.road.inline[zoom=14][prominence=major] { line-width: 5; }
+.road.outline[zoom=14][prominence=major] { line-width: 7; }
+.road.inline[zoom=14][prominence=major][lanes=2],
+.road.inline[zoom=14][prominence=major][lanes=3],
+.road.inline[zoom=14][prominence=major][lanes=4] 
+{ line-width: 7; }
+.road.outline[zoom=14][prominence=major][lanes=2],
+.road.outline[zoom=14][prominence=major][lanes=3],
+.road.outline[zoom=14][prominence=major][lanes=4] 
+{ line-width: 9; }
+.road.centerline[zoom=14][lanes=2],
+.road.centerline[zoom=14][lanes=3],
+.road.centerline[zoom=14][lanes=4]
+{
+    line-width: 1;
+    line-color: #888;
+    line-dasharray: 1, 5;
+}
+
+
 .road.inline[zoom=14][prominence=major][highway=motorway_link] { line-width: 2; }
 .road.outline[zoom=14][prominence=major][highway=motorway_link] { line-width: 4; }
 
@@ -80,8 +101,27 @@
 .road.outline[zoom=14][prominence=minor][highway=tertiary] { line-width: 4; }
 .road.texture[zoom=14] { line-width: 2; }
 
-.road.inline[zoom=15][prominence=major] { line-width: 11; }
-.road.outline[zoom=15][prominence=major] { line-width: 13; }
+
+.road.inline[zoom=15][prominence=major] { line-width: 8; }
+.road.outline[zoom=15][prominence=major] { line-width: 10; }
+.road.inline[zoom=15][prominence=major][lanes=2],
+.road.inline[zoom=15][prominence=major][lanes=3],
+.road.inline[zoom=15][prominence=major][lanes=4]
+{ line-width: 11; }
+.road.outline[zoom=15][prominence=major][lanes=2],
+.road.outline[zoom=15][prominence=major][lanes=3],
+.road.outline[zoom=15][prominence=major][lanes=4]
+{ line-width: 13; }
+.road.centerline[zoom=15][lanes=2],
+.road.centerline[zoom=15][lanes=3],
+.road.centerline[zoom=15][lanes=4]
+{
+    line-width: 1;
+    line-color: #888;
+    line-dasharray: 1, 5;
+}
+
+
 .road.inline[zoom=15][prominence=major][highway=motorway_link] { line-width: 4; }
 .road.outline[zoom=15][prominence=major][highway=motorway_link] { line-width: 6; }
 
@@ -92,8 +132,26 @@
 .road.inline[zoom=15][prominence=minor][highway=service] { line-width: 2; }
 .road.outline[zoom=15][prominence=minor][highway=service] { line-width: 4; }
 
-.road.inline[zoom=16][prominence=major] { line-width: 13; }
-.road.outline[zoom=16][prominence=major] { line-width: 15; }
+
+.road.inline[zoom=16][prominence=major] { line-width: 11; }
+.road.outline[zoom=16][prominence=major] { line-width: 13; }
+.road.inline[zoom=16][prominence=major][lanes=2],
+.road.inline[zoom=16][prominence=major][lanes=3],
+.road.inline[zoom=16][prominence=major][lanes=4]
+{ line-width: 13; }
+.road.outline[zoom=16][prominence=major][lanes=2],
+.road.outline[zoom=16][prominence=major][lanes=3],
+.road.outline[zoom=16][prominence=major][lanes=4]
+{ line-width: 15; }
+.road.centerline[zoom=16][lanes=2],
+.road.centerline[zoom=16][lanes=3],
+.road.centerline[zoom=16][lanes=4]
+{
+    line-width: 1;
+    line-color: #888;
+    line-dasharray: 1, 5;
+}
+
 .road.outline[zoom=16][prominence=major][highway=motorway] { line-width: 17; }
 .road.inline[zoom=16][prominence=major][highway=motorway_link] { line-width: 8; }
 .road.outline[zoom=16][prominence=major][highway=motorway_link] { line-width: 10; }
@@ -103,8 +161,27 @@
 .road.inline[zoom=16][prominence=minor][highway=service] { line-width: 6; }
 .road.outline[zoom=16][prominence=minor][highway=service] { line-width: 8; }
 
-.road.inline[zoom>=17] { line-width: 15; }
-.road.outline[zoom>=17] { line-width: 17; }
+
+.road.inline[zoom>=17] { line-width: 13; }
+.road.outline[zoom>=17] { line-width: 15; }
+.road.inline[zoom>=17][lanes=2],
+.road.inline[zoom>=17][lanes=3],
+.road.inline[zoom>=17][lanes=4]
+{ line-width: 15; }
+.road.outline[zoom>=17][lanes=2],
+.road.outline[zoom>=17][lanes=3],
+.road.outline[zoom>=17][lanes=4]
+{ line-width: 17; }
+.road.centerline[zoom>=17][lanes=2],
+.road.centerline[zoom>=17][lanes=3],
+.road.centerline[zoom>=17][lanes=4]
+{
+    line-width: 17;
+    line-color: #888;
+    line-dasharray: 2, 10;
+}
+
+
 .road.outline[zoom>=17][highway=motorway] { line-width: 19; }
 .road.inline[zoom>=17][highway=service],
 .road.inline[zoom>=17][highway=motorway_link] { line-width: 10; }
@@ -120,6 +197,8 @@
     line-pattern-file: url('img/oneway-arrow.png');
 }
 
+/* draw a centerline on motorways */
+/*
 .road.inline[highway=motorway][zoom>=15]
 {
     inline-width: 1;
@@ -136,7 +215,7 @@
 {
     inline-color: #f9c38d;
 }
-
+*/
 
 
 /** Road Labels **/
