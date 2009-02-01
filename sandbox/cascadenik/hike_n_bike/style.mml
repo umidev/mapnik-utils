@@ -155,7 +155,7 @@
                      FROM planet_osm_polygon
                      WHERE building IS NULL
                        AND (amenity IN ('park')
-                        OR landuse IN ('recreation_ground', 'greenfield', 'cemetery', 'forest', 'allotments', 'farm', 'quarry')
+                        OR landuse IN ('recreation_ground', 'greenfield', 'meadow', 'grass', 'village_green', 'cemetery', 'forest', 'allotments', 'farm', 'quarry')
                         OR "natural" IN ('wood', 'grass')
                         OR leisure IN ('park', 'pitch', 'track', 'golf_course', 'common', 'playground', 'garden', 'plaza'))
                      ORDER BY z_order ASC, way_area DESC) AS parklike]]></Parameter>
@@ -332,6 +332,28 @@
         </Datasource>
     </Layer>
     <Layer class="road inline" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                        (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                              WHEN highway IN ('trunk', 'primary') THEN 1
+                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway = 'tertiary' THEN 3
+                              ELSE 4 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                              ELSE 'minor' END) AS prominence
+                 FROM planet_osm_line
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC, priority DESC)
+
+                 AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="road centerline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
             <Parameter name="user">&user;</Parameter>
