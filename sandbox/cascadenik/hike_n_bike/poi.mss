@@ -1,4 +1,4 @@
-/* -*- css -*- */
+/* -*- mode: css -*- */
 
 
 /* catch-all - FIXME: remove this at some point */

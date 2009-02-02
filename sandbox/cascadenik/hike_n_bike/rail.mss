@@ -1,4 +1,4 @@
-/* -*- css -*- */
+/* -*- mode: css -*- */
 
 /*
 .rail.line[zoom>=17][tunnel!=yes][tunnel!=true] 

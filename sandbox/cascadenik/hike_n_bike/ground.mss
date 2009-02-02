@@ -1,4 +1,4 @@
-/* -*- css -*- */
+/* -*- mode: css -*- */
 
 .coast.edge.outer
 {

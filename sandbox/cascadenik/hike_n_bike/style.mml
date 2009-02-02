@@ -22,6 +22,7 @@
     <Stylesheet src="peaks.mss"/>
     <Stylesheet src="poi.mss"/>
     <Stylesheet src="places.mss"/>
+    <Stylesheet src="routes.mss"/>
 
             <!-- coastline shapefiles can be found at http://hypercube.telascience.org/~kleptog/ -->
 <!--
@@ -590,6 +591,20 @@
                      FROM planet_osm_point
                      WHERE power IN ('tower'))
                         AS power]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="route hiking" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_line
+                     WHERE route IN ('hiking'))
+                        AS route]]></Parameter>
         </Datasource>
     </Layer>
 
