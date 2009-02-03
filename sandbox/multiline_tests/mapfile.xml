@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="transparent" srs="+proj=latlong +datum=WGS84">
+
+    <Style name="red">
+      <Rule>
+        <PolygonSymbolizer>
+          <CssParameter name="fill">red</CssParameter>
+          <CssParameter name="fill-opacity">0.5</CssParameter>
+        </PolygonSymbolizer>
+      </Rule>
+    </Style>
+
+
+    <Style name="blue">
+      <Rule>
+        <PolygonSymbolizer>
+          <CssParameter name="fill">blue</CssParameter>
+          <CssParameter name="fill-opacity">0.5</CssParameter>
+        </PolygonSymbolizer>
+      </Rule>
+    </Style>    
+  <Layer name="world">
+
+    <StyleName>red</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="dbname">test</Parameter>
+      <Parameter name="user">postgres</Parameter>
+      <Parameter name="password"/>
+      <Parameter name="table">(select                                * from world where 
+      cntry_name
+      = 'Germany')                                                      as 
+      
+      
+      world
+      
+      
+      
+</Parameter>
+    </Datasource>
+  </Layer>
+
+  <Layer name="world2">
+
+    <StyleName>blue</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="dbname">test</Parameter>
+      <Parameter name="user">postgres</Parameter>
+      <Parameter name="password"/>
+      <Parameter name="table">(select * from world             
+
+
+where
+cntry_name
+= 'United States')
+
+
+as
+world
+      
+      </Parameter>
+    </Datasource>
+  </Layer>
+  
+</Map>
