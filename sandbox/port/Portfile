@@ -3,23 +3,26 @@
 
 PortSystem 1.0
 
-name                mapnik
-version             0.5.0
-categories          graphics
-platforms           darwin
-maintainers         pobox.com:paulsmith
-description         Toolkit for developing mapping applications.
-homepage            http://mapnik.org/
+name                    mapnik
+version                 trunk
+categories            graphics gis
+platforms             darwin
+maintainers          gmail.com:dbsgeo
+description           Open Source toolkit for developing mapping applications.
+homepage             http://mapnik.org/
+platforms              darwin
 
 
-distname            ${name}_src-${version}
+distname            ${name}-${version}
 checksums           md5 3cba5f847eabb88be6f5047ee7ed0be3 \
-                    sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
-                    rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
+                            sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
+                            rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
 
-fetch.type    svn
+worksrcdir      ${version}
+use_configure   no
+
 fetch.type          svn
-svn.url             svn://svv.mapnik.org/trunk
+svn.url             http://svn.mapnik.org/trunk
 
 long_description \
     Mapnik is a Free Toolkit for developing mapping \
@@ -39,15 +42,30 @@ long_description \
     doesn't re-invent the wheel, but utilises best of \
     breed industry standard libraries from boost.org. \
 
+depends_build       bin:svn:subversion
+
 depends_lib         port:boost \
-                    port:gdal \
-                    port:libpng \
-                    port:jpeg \
-                    port:tiff \
-                    port:zlib \
-                    port:freetype \
-                    port:proj \
-                    port:python25
+                            port:libpng \
+                            port:jpeg \
+                            port:tiff \
+                            port:icu \
+                            port:zlib \
+                            port:freetype \
+                            port:proj \
+                            port:libxml2 \
+                            port:python25 \
+                            port:py25-hashlib
+
+set python  "${prefix}/bin/python2.5"
+
+variant python26 description {Builds port Python 2.6 bindings} {
+    build.args-append  BINDINGS=none
+    build.args-delete  PYTHON=${prefix}/bin/python2.6
+    depends_lib-delete port:python25
+    depends_lib-append port:python26
+    depends_build-append port:python26
+    set python  "${prefix}/bin/python2.6"
+}
 
 variant no_python description {Builds port without Python bindings} {
     build.args-append  BINDINGS=none
@@ -56,32 +74,43 @@ variant no_python description {Builds port without Python bindings} {
     depends_build-append port:python25
 }
 
-variant postgis description {Builds port with PostGIS support} {
+variant postgis description {Builds port with PostGIS plugin} {
     depends_lib-append port:postgis
     build.args-append  PGSQL_INCLUDES=${prefix}/include \
                        PGSQL_LIBS=${prefix}/lib
 }
 
-set python      "${prefix}/bin/python2.5"
+variant gdal description {Builds port with GDAL/OGR plugin} {
+    depends_lib-append port:gdal
+    build.args-append  GDAL_INCLUDES=${prefix}/include \
+                       GDAL_LIBS=${prefix}/lib
+}
 
-worksrcdir      ${name}-${version}
-use_configure   no
 
 build.args      PREFIX=${prefix} \
-                BOOST_INCLUDES=${prefix}/include \
-                BOOST_LIBS=${prefix}/lib \
-                GDAL_INCLUDES=${prefix}/include \
-                GDAL_LIBS=${prefix}/lib \
-                FREETYPE_CONFIG=${prefix}/bin/freetype-config \
-                PNG_INCLUDES=${prefix}/include \
-                PNG_LIBS=${prefix}/lib \
-                JPEG_INCLUDES=${prefix}/include \
-                JPEG_LIBS=${prefix}/lib \
-                TIFF_INCLUDES=${prefix}/include \
-                TIFF_LIBS=${prefix}/lib \
-                PROJ_INCLUDES=${prefix}/include \
-                PROJ_LIBS=${prefix}/lib \
-                PYTHON=${python}
+                     PLUGINS=all \
+                     PYTHON_PREFIX=${prefix} \
+                     USE_CONFIG=False \
+                     USE_USER_ENV=False \
+                     BOOST_INCLUDES=${prefix}/include \
+                     BOOST_LIBS=${prefix}/lib \
+                     GDAL_INCLUDES=${prefix}/include \
+                     GDAL_LIBS=${prefix}/lib \
+                     OGR_INCLUDES=${prefix}/include \
+                     OGR_LIBS=${prefix}/lib \
+                     FREETYPE_CONFIG=${prefix}/bin/freetype-config \
+                     XML2_CONFIG=${prefix}/bin/xml2-config \
+                     ICU_INCLUDES=${prefix}/include \
+                     ICU_LIBS=${prefix}/lib \
+                     PNG_INCLUDES=${prefix}/include \
+                     PNG_LIBS=${prefix}/lib \
+                     JPEG_INCLUDES=${prefix}/include \
+                     JPEG_LIBS=${prefix}/lib \
+                     TIFF_INCLUDES=${prefix}/include \
+                     TIFF_LIBS=${prefix}/lib \
+                     PROJ_INCLUDES=${prefix}/include \
+                     PROJ_LIBS=${prefix}/lib \
+                     PYTHON=${python}
 
 build {
     system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args}"

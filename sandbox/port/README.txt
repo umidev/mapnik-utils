@@ -9,6 +9,12 @@ Portfile adapted from http://trac.macports.org/ticket/12784
 
 Also see: http://trac.macports.org/ticket/18071
 
+And Macports bugss affecting build:
+http://trac.macports.org/ticket/17998
+http://trac.macports.org/ticket/15099#comment:11
+http://trac.macports.org/ticket/16111
+https://lists.berlios.de/pipermail/mapnik-users/2008-April/000865.html
+
 Available here for testing against SVN Trunk
 
 
@@ -42,9 +48,10 @@ Steps to test
 
 7. Then to install run (do 'port -d' for debug output)::
 
- $ sudo port install jam
+ $ sudo port install jam python25 python_select
  $ sudo port install boost +icu +python25
- $ sudo port install boost mapnik
+ $ sudo python_select python25
+ $ sudo port install mapnik
 
 8. Post your problems or successes to http://code.google.com/p/mapnik-utils/issues/list
 
