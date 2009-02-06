@@ -54,7 +54,7 @@ for i in range(0, 37):
         x = -179.9
     if i == 36:
         x = 179.9
-    for j in range(10, 170):
+    for j in range(1, 180):
         line = ogr.Geometry(type=ogr.wkbLineString)
         y1 = float(j - 90)
         y2 = y1 + 1.0
