@@ -1,0 +1,188 @@
+Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
+
+= Types =
+
+*color*
+  * Similar to CSS color, hex values represented as #RRGGBB or #RGB.
+
+*integer*
+  * Integer value, e.g. "0", "1", etc.
+
+*float*
+  * Floating point value, e.g. "0.0", "0.1", "1", etc.
+
+*string*
+  * String with mandatory single or double quotes.
+
+*boolean*
+  * Simple true or false, without quotes.
+
+*url*
+  * Link to an external resource, e.g. "url('http://example.com/image.png')". _file://_ and filesystem paths accepted. As in CSS, relative paths are always relative to the file containing the property.
+
+*numbers*
+  * List of numbers used for dasharray properties, e.g. "2, 4, 2, 4".
+
+= Properties =
+
+== Map ==
+
+*map-bgcolor* color
+  * Also accepts "transparent"
+
+== [http://trac.mapnik.org/wiki/PolygonSymbolizer Polygon Symbolizer] ==
+
+*polygon-fill* color
+
+*polygon-opacity* float
+
+== [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
+
+*line-color* color
+  * default "#000000"
+
+*line-width* float
+  * 0.0 - n (default 1.0)
+
+*line-opacity* float
+  * 0.0 - 1.0 (default 1.0)
+
+*line-join* _miter, round, bevel_
+  * default miter
+
+*line-cap* _butt, round, square_
+  * default butt
+
+*line-dasharray* numbers
+  * d0,d1, ... (default none)
+
+== Outline [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
+
+*outline-color* color
+  * default "#000000"
+
+*outline-width* float
+  * 0.0 - n (default 1.0)
+
+*outline-opacity* float
+  * 0.0 - 1.0 (default 1.0)
+
+*outline-join* _miter, round, bevel_
+  * default miter
+
+*outline-cap* _butt, round, square_
+  * default butt
+
+*outline-dasharray* numbers
+  * d0,d1, ... (default none)
+
+== Inline [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
+
+*inline-color* color
+  * default "#000000"
+
+*inline-width* float
+  * 0.0 - n (default 1.0)
+
+*inline-opacity* float
+  * 0.0 - 1.0 (default 1.0)
+
+*inline-join* _miter, round, bevel_
+  * default miter
+
+*inline-cap* _butt, round, square_
+  * default butt
+
+*inline-dasharray* numbers
+  * d0,d1, ... (default none)
+
+== [http://trac.mapnik.org/wiki/TextSymbolizer Text Symbolizer] ==
+
+*text-face-name* string
+  * Font name
+
+*text-size* integer
+  * Font size
+
+*text-ratio* (?)
+  * ?
+
+*text-wrap-width* integer
+  * length before wrapping long names
+
+*text-spacing* integer
+  * space between repeated labels
+
+*text-label-position-tolerance* ?
+  * allow labels to be moved from their point
+
+*text-max-char-angle-delta* integer
+  * Maximum angle (in degrees) between two consecutive characters in a label allowed (to stop placing labels around sharp corners)
+
+*text-fill* color
+  * Color of the fill ie #FFFFFF
+
+*text-halo-fill* color
+  * Color of the halo
+
+*text-halo-radius* integer
+  * Radius of the halo in whole pixels, fractional pixels are not accepted
+
+*text-dx*, *text-dy* integer
+  * displace label by fixed amount on either axis.
+
+*text-avoid-edges* boolean
+  * Boolean to avoid labeling near intersection edges.
+
+*text-min-distance* integer
+  * Minimum distance between repeated labels such as street names or shield symbols
+
+*text-allow-overlap* boolean
+  * Allow labels to overlap other labels
+
+*text-placement* _point, line_
+  * "line" to label along lines instead of by point
+
+== [http://trac.mapnik.org/wiki/PointSymbolizer Point Symbolizer] ==
+
+*point-file* url
+  * path to image file
+
+*point-width*, *point-height* integer
+  * px (default 4), generally omit this and let PIL handle it
+
+*point-allow-overlap* boolean
+  * true/false
+
+== [http://trac.mapnik.org/wiki/PolygonPatternSymbolizer Polygon Pattern Symbolizer] ==
+
+*polygon-pattern-file* url
+  * path to image file (default none)
+
+*polygon-pattern-width*, *polygon-pattern-height* integer
+  * px (default 4), generally omit this and let PIL handle it
+
+== [http://trac.mapnik.org/wiki/LinePatternSymbolizer Line Pattern Symbolizer] ==
+
+*line-pattern-file* url
+  * path to image file (default none)
+
+*line-pattern-width*, *line-pattern-height* integer
+  * px (default 4), generally omit this and let PIL handle it
+
+== [http://trac.mapnik.org/wiki/ShieldSymbolizer Shield Symbolizer] ==
+
+*shield-face-name* string
+
+*shield-size* integer
+
+*shield-fill* color
+
+*shield-min-distance* integer
+  * Minimum distance between repeated labels such as street names or shield symbols
+
+*shield-file* url
+  * path to image file (default none)
+
+*shield-width*, *shield-height* integer
+  * px (default 4), generally omit this and let PIL handle it
