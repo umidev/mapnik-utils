@@ -1,4 +1,4 @@
-# Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
+Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
 
 = Types =
 
