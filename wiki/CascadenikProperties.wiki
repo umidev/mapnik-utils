@@ -30,11 +30,31 @@
 *map-bgcolor* color
   * Also accepts "transparent"
 
+Example:
+
+{{{
+Map
+{
+    map-bgcolor: #6699FF;
+}
+}}}
+
 == [http://trac.mapnik.org/wiki/PolygonSymbolizer Polygon Symbolizer] ==
 
 *polygon-fill* color
 
 *polygon-opacity* float
+  * default 1.0
+
+Example:
+
+{{{
+Layer
+{
+    polygon-fill: #6F9;
+    polygon-opacity: 0.3;
+}
+}}}
 
 == [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
 
@@ -56,13 +76,29 @@
 *line-dasharray* numbers
   * d0,d1, ... (default none)
 
+Example:
+
+{{{
+Layer
+{
+    line-color: #696;
+    line-width: 1;
+    line-cap: butt;
+    line-join: miter;
+    line-dasharray: 4,4;
+}
+}}}
+
 == Outline [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
+
+Outlines are _only applied_ when associated line properties are defined.
 
 *outline-color* color
   * default "#000000"
 
 *outline-width* float
   * 0.0 - n (default 1.0)
+  * This width represents the _extra_ casing added to an existing line, not the total width.
 
 *outline-opacity* float
   * 0.0 - 1.0 (default 1.0)
@@ -76,7 +112,24 @@
 *outline-dasharray* numbers
   * d0,d1, ... (default none)
 
+Example:
+
+{{{
+Layer
+{
+    /* 4 pixel base line */
+    line-color: #696;
+    line-width: 4;
+
+    /* additional 1 pixel line casing */
+    outline-color: #000;
+    outline-width: 1;
+}
+}}}
+
 == Inline [http://trac.mapnik.org/wiki/LineSymbolizer Line Symbolizer] ==
+
+Inlines are an additional line symbolizer overlaid on regular lines.
 
 *inline-color* color
   * default "#000000"
@@ -95,6 +148,22 @@
 
 *inline-dasharray* numbers
   * d0,d1, ... (default none)
+
+Example:
+
+{{{
+Layer
+{
+    /* 4 pixel base line */
+    line-color: #696;
+    line-width: 4;
+
+    /* 1 pixel dashed center line */
+    inline-color: #fff;
+    inline-width: 1;
+    inline-dasharray: 3,6;
+}
+}}}
 
 == [http://trac.mapnik.org/wiki/TextSymbolizer Text Symbolizer] ==
 
@@ -142,6 +211,23 @@
 
 *text-placement* _point, line_
   * "line" to label along lines instead of by point
+
+Example:
+
+{{{
+/* text style to apply to NAME column in geo data */
+Layer NAME
+{
+    text-face-name: "DejaVu Sans Book";
+    text-size: 10;
+    text-fill: #000;
+    text-halo-fill: #9ff;
+    text-halo-radius: 2;
+    text-placement: point;
+    text-wrap-width: 50;
+    text-avoid-edges: true;
+}
+}}}
 
 == [http://trac.mapnik.org/wiki/PointSymbolizer Point Symbolizer] ==
 
