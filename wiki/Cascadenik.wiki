@@ -2,4 +2,4 @@ Cascadenik implements cascading stylesheets for Mapnik.
 
 It's an abstraction layer and preprocessor that converts special, CSS-like syntax into Mapnik-compatible style definitions. It's easier to write complex style rules using the alternative syntax, because it allows for separation of symbolizers and provides a mechanism for inheritance.
 
-Check out a [http://mapnik-utils.googlecode.com/svn/trunk/serverside/cascadenik/doc/index.html series of examples] demonstrating simple use.
+Check out a [http://mapnik-utils.googlecode.com/svn/trunk/serverside/cascadenik/doc/index.html series of examples] demonstrating simple use. Have a look at [http://mapnik-utils.googlecode.com/svn/trunk/serverside/cascadenik/ source code]. Get the source [http://code.google.com/p/mapnik-utils/source/checkout from the subversion repository].
