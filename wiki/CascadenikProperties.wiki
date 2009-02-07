@@ -1,4 +1,4 @@
-Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
+# Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
 
 = Types =
 
@@ -18,7 +18,7 @@ Dictionary of properties and values accepted by [http://code.google.com/p/mapnik
   * Simple true or false, without quotes.
 
 *url*
-  * Link to an external resource, e.g. "url('http://example.com/image.png')". _file://_ and filesystem paths accepted. As in CSS, relative paths are always relative to the file containing the property.
+  * Link to an external resource, e.g. "url('`http://example.com/image.png`')". _file://_ and filesystem paths accepted. As in CSS, relative paths are always relative to the file containing the property.
 
 *numbers*
   * List of numbers used for dasharray properties, e.g. "2, 4, 2, 4".
