@@ -7,3 +7,7 @@ Links:
   * [http://code.google.com/p/mapnik-utils/wiki/CascadenikProperties Dictionary of properties and values].
   * [http://mapnik-utils.googlecode.com/svn/trunk/serverside/cascadenik/ Source code].
   * [http://code.google.com/p/mapnik-utils/source/checkout Download from subversion repository].
+  * Early development notes and examples:
+   * http://mike.teczno.com/notes/cascadenik.html
+   * http://teczno.com/cascadenik-openstreetmap/
+   * http://teczno.com/cascadenik-openstreetmap-II/
