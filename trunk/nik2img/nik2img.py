@@ -296,6 +296,19 @@ class Map(object):
   # ================================================
   # Functions involving mapnik objects
   # ================================================
+    def load_pymap(self,path):
+        """
+        Instanciate a Mapnik Map object from an external python script.
+        """
+        py_path = os.path.dirname(path)
+         
+        sys.path.append(py_path)
+        py_module = os.path.basename(path).split('.')[0]
+        module = __import__(py_module)
+        py_map = getattr(module,'m')
+        if not py_map:
+            output_error("Could not find variable named 'm' in python module for loading map object.")
+        return py_map
         
     def mapfile_validate(self, m):
         """
@@ -631,12 +644,6 @@ class Map(object):
       self.START = timeit.time.time()
       self.TIMING_STARTED = True
       
-      try:
-        self.mapnik_map = mapnik.Map(self.width,self.height)
-        self.output_message('Map object created successfully')
-        self.mapnik_objects['self.mapnik_map'] = self.mapnik_map
-      except Exception, E:
-        output_error("Problem initiating map",E)
     
       if self.resolutions and self.levels:
         output_error("Only accepts one of either --resolutions or --levels options")
@@ -651,49 +658,62 @@ class Map(object):
           output_error("Zoom level number must be an integer")
       
       if self.mapfile.endswith('.py'):
-        output_error("Support for loading python styles planned but not supported currently")
-
-      if self.mapfile.endswith('.mml'):
-        try:
-          import cascadenik
-        except ImportError, E:
-          output_error("%s" % E)
-        xml_mapfile = cascadenik.compile(self.mapfile)
-        tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
-        tmp.write(xml_mapfile)
-        tmp.flush()
-        self.mapfile = tmp.name
-          
-      if not self.find_and_replace:
-        self.output_message('Attempting to load %s...' % self.M_TYPE)
-        try:
-          mapnik.load_map(self.mapnik_map, self.mapfile)
-          if self.verbose:
-            self.mapfile_validate(self.mapnik_map)
+          if self.find_and_replace:
+              output_error("Find and replace not supported when loading map from python module")
+          self.mapnik_map = self.load_pymap(self.mapfile)
+          self.mapnik_map.width = self.width
+          self.mapnik_map.height = self.height
+          self.mapnik_objects['self.mapnik_map'] = self.mapnik_map
           self.output_message('%s loaded successfully...' % self.M_TYPE)
-        except UserWarning, E:
-          output_error("Problem loading %s (hint: xml_entities require libxml2)" % self.M_TYPE,E)
-        except Exception, E:
-          output_error("Problem loading %s" % self.M_TYPE,E)
-      else:
-        # TODO: implement elementtree option for name:value control
-        #try:
-        #  from xml.etree import ElementTree
-        #except:
-        #  print 'ElementTree needed for XML find and replace approach'
-        find_replace_list = self.find_and_replace.split(':')
-        find_this, replace_this = find_replace_list[0], find_replace_list[1]
-        mapfile_string = open(self.mapfile).read().replace(find_this,replace_this)
-        tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
-        tmp.write(mapfile_string)
-        tmp.flush()
-        try:
-          mapnik.load_map(self.mapnik_map, tmp.name)
           if self.verbose:
-            self.mapfile_validate(self.mapnik_map)
-          self.output_message('%s loaded and parsed successfully')
-        except Exception, E:
-          output_error("Problem loading map from parsed in memory mapfile",E)
+              self.mapfile_validate(self.mapnik_map)
+      else:
+          try:
+            self.mapnik_map = mapnik.Map(self.width,self.height)
+            self.output_message('Map object created successfully')
+            self.mapnik_objects['self.mapnik_map'] = self.mapnik_map
+          except Exception, E:
+            output_error("Problem initiating map",E)
+
+          if self.mapfile.endswith('.mml'):
+            try:
+              import cascadenik
+            except ImportError, E:
+              output_error("%s" % E)
+            xml_mapfile = cascadenik.compile(self.mapfile)
+            tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
+            tmp.write(xml_mapfile)
+            tmp.flush()
+            self.mapfile = tmp.name
+              
+          if not self.find_and_replace:
+            self.output_message('Attempting to load %s...' % self.M_TYPE)
+            try:
+              mapnik.load_map(self.mapnik_map, self.mapfile)
+              if self.verbose:
+                self.mapfile_validate(self.mapnik_map)
+              self.output_message('%s loaded successfully...' % self.M_TYPE)
+            except UserWarning, E:
+              output_error("Problem loading %s" % self.M_TYPE,E)
+          else:
+            # TODO: implement elementtree option for name:value control
+            #try:
+            #  from xml.etree import ElementTree
+            #except:
+            #  print 'ElementTree needed for XML find and replace approach'
+            find_replace_list = self.find_and_replace.split(':')
+            find_this, replace_this = find_replace_list[0], find_replace_list[1]
+            mapfile_string = open(self.mapfile).read().replace(find_this,replace_this)
+            tmp = tempfile.NamedTemporaryFile(suffix='.xml', mode = 'w')
+            tmp.write(mapfile_string)
+            tmp.flush()
+            try:
+              mapnik.load_map(self.mapnik_map, tmp.name)
+              if self.verbose:
+                self.mapfile_validate(self.mapnik_map)
+              self.output_message('%s loaded and parsed successfully')
+            except Exception, E:
+              output_error("Problem loading map from parsed in memory mapfile",E)
     
       if self.layers:
         info = ''

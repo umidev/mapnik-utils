@@ -5,6 +5,8 @@ nik2img changelog
 Version 0.2.3,             2009:
 --------------------------------
 
+* Added alpha support for loading map definitions from a python script given a mapnik.Map variable called 'm'
+
 * Added a 10 second timeout when fetching projections from spatialreference.org
 
 * Made warnings only print to STDOUT if verbose = True
