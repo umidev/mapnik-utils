@@ -99,8 +99,22 @@ def output_file(file):
     shutil.copyfileobj(file, sys.stdout)
   else:
     output_error('file empty')
-  
-# Gt the size of a file
+
+# Win32 workaround graciously provided by crschmidt
+# from http://svn.tilecache.org/trunk/tilecache/TileCache/Service.py
+def binaryPrint(binary_data):
+    """This function is designed to work around the fact that Python
+       in Windows does not handle binary output correctly. This function
+       will set the output to binary, and then write to stdout directly
+       rather than using print."""
+    try:
+        import msvcrt
+        msvcrt.setmode(sys.__stdout__.fileno(), os.O_BINARY)
+    except:
+        pass
+    sys.stdout.write(binary_data)
+ 
+# Get the size of a file
 def file_size(file):
   return os.fstat(file.fileno()).st_size
 
@@ -399,7 +413,10 @@ def generate_image(format):
     output_headers("image/png", "map.png", len(image_string))  
   else:
     output_headers("image/%s" % (format), "map.%s" % (format), len(image_string))
-  print image_string
+  if sys.platform == 'win32':
+      binaryPrint(image_string)
+  else:
+      print image_string
 
 def generate_script(format, mapfile):
   """
