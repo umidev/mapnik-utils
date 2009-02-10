@@ -385,7 +385,10 @@ class Map(object):
                     else:
                       self.output_message("At current scale of '%s': this layer '%s' NOT visible" % (self.mapnik_map.scale(),l.name),warning=True)
                     for sty_name in l.styles:
-                      sty_obj = self.mapnik_map.find_style(sty_name)
+                      try:
+                          sty_obj = self.mapnik_map.find_style(sty_name)
+                      except KeyError, E:
+                          output_error("Could not find style '%s':\n%s" % (sty_name, E))
                       for rule in sty_obj.rules:
                         if rule.active(self.mapnik_map.scale()):
                           self.output_message("ACTIVE: %s:%s... --> Max scale: '%s' | Min scale: '%s'" % (sty_name,str(rule.filter)[:10],rule.max_scale, rule.min_scale))
@@ -955,7 +958,8 @@ class Map(object):
           output_error("Expanded units must be an integer")
 
       # Check for which layers intersect with map envelope
-      self.layers_in_extent(self.mapnik_map)
+      if self.verbose:
+        self.layers_in_extent(self.mapnik_map)
 
       if self.dry_run:
         output_error("Dry run complete")
