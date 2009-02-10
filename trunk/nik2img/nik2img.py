@@ -12,6 +12,7 @@ import re
 import time
 import timeit
 import tempfile
+import platform
 
 try:
     import mapnik
@@ -85,6 +86,20 @@ def color_text(color, text):
         return "\033[9%sm%s\033[0m" % (color,text)
     else:
         return text
+
+# Win32 workaround graciously provided by crschmidt
+# from http://svn.tilecache.org/trunk/tilecache/TileCache/Service.py
+def binaryPrint(binary_data):
+    """This function is designed to work around the fact that Python
+       in Windows does not handle binary output correctly. This function
+       will set the output to binary, and then write to stdout directly
+       rather than using print."""
+    try:
+        import msvcrt
+        msvcrt.setmode(sys.__stdout__.fileno(), os.O_BINARY)
+    except:
+        pass
+    sys.stdout.write(binary_data)
 
 def output_error(msg, E=None, yield_usage=False):
     """
@@ -1035,7 +1050,6 @@ class Map(object):
           app = self.app
         if not self.RENDERED:
             self.render_file()
-        import platform
         try:
             if os.name == 'nt':
                 if app:
@@ -1276,7 +1290,10 @@ if __name__ == "__main__":
       else:
         nik_map.open()
     else:
-      print nik_map.stream()
+      if sys.platform == 'win32':
+        binaryPrint(nik_map.stream())
+      else:
+        print nik_map.stream()
 
   if has('profile'):
       import cProfile
