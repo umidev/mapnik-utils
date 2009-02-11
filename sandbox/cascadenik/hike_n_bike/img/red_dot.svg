@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16px"
+   height="16px"
+   id="svg2383"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="red_dot.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/img/red_dot.8.png"
+   inkscape:export-xdpi="45"
+   inkscape:export-ydpi="45">
+  <defs
+     id="defs2385">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 8 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="16 : 8 : 1"
+       inkscape:persp3d-origin="8 : 5.3333333 : 1"
+       id="perspective2391" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.197802"
+     inkscape:cx="15.186857"
+     inkscape:cy="7.7528174"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="905"
+     inkscape:window-height="726"
+     inkscape:window-x="410"
+     inkscape:window-y="82"
+     inkscape:snap-guide="true"
+     inkscape:snap-intersection-line-segments="true"
+     inkscape:snap-center="true"
+     inkscape:snap-bbox="true"
+     inkscape:object-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     objecttolerance="8"
+     gridtolerance="8"
+     guidetolerance="8"
+     borderlayer="false">
+    <sodipodi:guide
+       orientation="0,1"
+       position="17.569307,10.992079"
+       id="guide3167" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="19.371287,5.0004951"
+       id="guide3169" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid3191"
+       visible="true"
+       enabled="true"
+       dotted="false" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="7.4782179,15.406931"
+       id="guide2384" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="5.3158416,8.018812"
+       id="guide2386" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2388">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.02499998;stroke-miterlimit:4;stroke-dasharray:8.19999981, 4.0999999;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2393"
+       width="16.037624"
+       height="15.992575"
+       x="0"
+       y="0.052475106" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ab2524;fill-opacity:1;stroke:none;stroke-width:1.02499998000000003;stroke-miterlimit:4;stroke-dasharray:8.19999980999999956, 4.09999990000000025;stroke-dashoffset:0;stroke-opacity:1"
+       id="path2388"
+       sodipodi:cx="7.4782181"
+       sodipodi:cy="7.9811878"
+       sodipodi:rx="5.0188122"
+       sodipodi:ry="5.0188122"
+       d="M 12.49703,7.9811878 A 5.0188122,5.0188122 0 1 1 2.4594059,7.9811878 A 5.0188122,5.0188122 0 1 1 12.49703,7.9811878 z" />
+  </g>
+</svg>
