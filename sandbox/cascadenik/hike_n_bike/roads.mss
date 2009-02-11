@@ -386,30 +386,43 @@
 .motorway.inline[highway=motorway],
 .road.inline[highway=motorway]
 {
-    line-color: #ff5559;
+    line-color: #ffbd6f;
 }
 
 .motorway.outline[highway=motorway],
 .road.outline[highway=motorway]
 {
-    line-color: #03317d;
+    line-color: #777777;
 }
 
 /* lighten the motorways up a bit at higher zoom levels */
-.road.inline[zoom=16][highway=motorway] { line-color: #ff7775; }
-.road.inline[zoom>=17][highway=motorway] { line-color: #ff9d98; }
-.road.outline[zoom>=16][highway=motorway] { line-color: #6c7dd5; }
-.road.inline[zoom=16][highway=motorway_link] { line-color: #ffad78; }
+/*
+.road.inline[zoom=16][highway=motorway]       { line-color: #ff7775; }
+.road.inline[zoom>=17][highway=motorway]      { line-color: #ff9d98; }
+.road.outline[zoom>=16][highway=motorway]     { line-color: #6c7dd5; }
+.road.inline[zoom=16][highway=motorway_link]  { line-color: #ffad78; }
 .road.inline[zoom>=17][highway=motorway_link] { line-color: #f9c38d; }
+*/
 
 /* all repeated from above but applicable to bridges specifically */
 .road.inline { outline-color: #d2d2d2; }
+
 .road.inline[highway=tertiary] { outline-color: #c3c3c3; }
+
 .road.inline[highway=secondary] { outline-color: #b5b880; }
-.motorway.inline[highway=trunk], .road.inline[highway=trunk], .road.inline[highway=primary] { outline-color: #b1a67b; }
+
+.motorway.inline[highway=trunk], 
+.road.inline[highway=trunk], 
+.road.inline[highway=primary] 
+{ outline-color: #b1a67b; }
+
 .road.inline[highway=motorway_link] { outline-color: #6d8aa7; }
-.motorway.inline[highway=motorway], .road.inline[highway=motorway] { outline-color: #03317d; }
+
+.motorway.inline[highway=motorway], 
 .road.inline[highway=motorway] { outline-color: #03317d; }
+
+.road.inline[highway=motorway] { outline-color: #03317d; }
+
 .road.inline[zoom>=16][highway=motorway] { outline-color: #6c7dd5; }
 
 
