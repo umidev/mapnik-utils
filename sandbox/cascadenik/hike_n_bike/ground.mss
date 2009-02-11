@@ -345,22 +345,24 @@
 .building.label[zoom>=17][amenity=school],
 .citylike.label[zoom>=17][amenity=school]
 {
-    point-file: url('map-icons/svg-twotone-png/education_school.p.20.png');
-    text-dy: 20;
+    point-file: url('map-icons/svg-twotone-png/education_school.p.16.png');
+    text-dy: 18;
 }
 
 .building.label[zoom>=15][zoom<=16][amenity=school],
 .citylike.label[zoom>=15][zoom<=16][amenity=school]
 {
-    point-file: url('map-icons/svg-twotone-png/education_school.p.16.png');
-    text-dy: 18;
+    point-file: url('map-icons/svg-twotone-png/education_school.p.14.png');
+    text-dy: 16;
 }
 
+/*
 .building.label[zoom=14][amenity=school],
 .citylike.label[zoom=14][amenity=school]
 {
     point-file: url('map-icons/svg-twotone-png/education_school.p.12.png');
 }
+*/
 
 .building.label[zoom>=17][amenity=police],
 .citylike.label[zoom>=17][amenity=police]
