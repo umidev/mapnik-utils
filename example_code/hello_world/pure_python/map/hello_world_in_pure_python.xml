@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Map srs="+proj=latlong +datum=WGS84" bgcolor="#4682b4">
+<Map srs="+proj=latlong +datum=WGS84" bgcolor="rgb(70,130,180)">
     <Style name="My Style">
         <Rule>
             <PolygonSymbolizer>
-                <CssParameter name="fill">#f2eff9</CssParameter>
+                <CssParameter name="fill">rgb(242,239,249)</CssParameter>
             </PolygonSymbolizer>
             <LineSymbolizer>
-                <CssParameter name="stroke">#808080</CssParameter>
+                <CssParameter name="stroke">rgb(128,128,128)</CssParameter>
                 <CssParameter name="stroke-width">0.1</CssParameter>
             </LineSymbolizer>
         </Rule>
