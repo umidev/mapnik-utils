@@ -49,10 +49,9 @@ def test_equivalence(pickles):
                 if not isinstance(one_pickle,Map) and not one_pickle.__getinitargs__() ==  other.__getinitargs__():
                   print '%s and %s objects do not appear equivalent...' % (one_pickle,other)
                   failed = True
-
         pickles.remove(one_pickle)
         if not failed:
-            print 'Object is functionally equivalent to others'
+            print '%s is functionally equivalent to other %s %s  objects' % (repr(one_pickle),len(pickles),repr(pickles))
 
 #
 ## mapnik::Map
@@ -60,11 +59,12 @@ def test_equivalence(pickles):
 
 maps = []
 m = Map(45,45)
-m.background = Color(0,0,0)
+#m.background = Color(0,0,0)
 m.buffer_size = 10
 
 maps.extend(pack_em(m))
 
+import pdb;pdb.set_trace()
 #
 ## mapnik::color
 #
@@ -77,6 +77,9 @@ colors.append(pickle.loads(pickle.dumps(obj,protocol=PROTOCOL)))
 obj = Color(70,130,180,0)
 colors.append(pickle.loads(pickle.dumps(obj,protocol=PROTOCOL)))
 
+#layers = []
+#lyr = Layer('test')
+#layers.extend(pack_em(lyr))
 
 coords = []
 coord = Coord(-122,48)
@@ -86,6 +89,7 @@ def main():
     global tests
     test_equivalence(maps)
     test_equivalence(colors)
+    #test_equivalence(layer)
 
 if __name__ == '__main__':
     main()
