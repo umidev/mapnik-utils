@@ -17,7 +17,7 @@
         var map, world, wms;
         function init(){
             map = new OpenLayers.Map('map');
-            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikwms.py?", {layers: 'world', format:'image/png'} );
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000?", {layers: 'world', format:'image/png'} );
             map.addLayers([wms]);
             map.fractionalZoom = true;
             map.zoomToMaxExtent();     

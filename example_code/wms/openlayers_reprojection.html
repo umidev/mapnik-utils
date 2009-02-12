@@ -22,7 +22,7 @@
 		            maxExtent: new OpenLayers.Bounds(-196813697.178490, -100120989.481879, 160561884.749931,191038283.027071),
 		            };
             map = new OpenLayers.Map('map', options);
-            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost/cgi-bin/mapnikwms.py?", {layers: 'world', format:'image/png'} );
+            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000?", {layers: 'world', format:'image/png'} );
             map.addLayers([wms]);
             map.fractionalZoom = true;
             map.addControl(new OpenLayers.Control.MousePosition());

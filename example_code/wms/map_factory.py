@@ -1,7 +1,7 @@
 from mapnik.ogcserver.WMS import BaseWMSFactory
 from mapnik import * #Shapefile, Layer, Style, Rule, Color, PolygonSymbolizer, LineSymbolizer
 
-SHAPEFILE = '/Users/spring/projects/mapnik-utils/trunk/sample_data/world_borders'
+SHAPEFILE = '/Users/spring/projects/utils/data/world_borders'
 PROJ4_STRING = '+init=epsg:4326'
 
 # Switch to these settings to use data in mercator projection from: http://tile.openstreetmap.org/world_boundaries-spherical.tgz 
