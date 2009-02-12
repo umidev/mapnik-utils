@@ -1,6 +1,6 @@
 /* -*- mode: css -*- */
 
-.route.hiking[name="Roter Strich"][zoom>=13] name
+.route.hiking[name="Roter Strich"][zoom>=12] name
 {
     shield-file: url('img/red_stripe.8.png');
     shield-min-distance: 100;
@@ -26,7 +26,7 @@
 }
 
 
-.route.hiking[name="Gruener Strich"][zoom>=13] name
+.route.hiking[name="Gruener Strich"][zoom>=12] name
 {
     shield-file: url('img/green_stripe.8.png');
     shield-min-distance: 100;
@@ -52,7 +52,7 @@
 }
 
 
-.route.hiking[name="Blauer Strich"][zoom>=13] name
+.route.hiking[name="Blauer Strich"][zoom>=12] name
 {
     shield-file: url('img/blue_stripe.8.png');
     shield-min-distance: 100;
@@ -78,7 +78,7 @@
 }
 
 
-.route.hiking[name="Gelber Strich"][zoom>=13] name
+.route.hiking[name="Gelber Strich"][zoom>=12] name
 {
     shield-file: url('img/yellow_stripe.8.png');
     shield-min-distance: 100;
@@ -105,7 +105,7 @@
 
 
 
-.route.hiking[name="Roter Punkt"][zoom>=13] name
+.route.hiking[name="Roter Punkt"][zoom>=12] name
 {
     shield-file: url('img/red_dot.8.png');
     shield-min-distance: 100;
@@ -131,7 +131,7 @@
 }
 
 
-.route.hiking[name="Gruener Punkt"][zoom>=13] name
+.route.hiking[name="Gruener Punkt"][zoom>=12] name
 {
     shield-file: url('img/green_dot.8.png');
     shield-min-distance: 100;
@@ -157,7 +157,7 @@
 }
 
 
-.route.hiking[name="Blauer Punkt"][zoom>=13] name
+.route.hiking[name="Blauer Punkt"][zoom>=12] name
 {
     shield-file: url('img/blue_dot.8.png');
     shield-min-distance: 100;
@@ -183,7 +183,7 @@
 }
 
 
-.route.hiking[name="Gelber Punkt"][zoom>=13] name
+.route.hiking[name="Gelber Punkt"][zoom>=12] name
 {
     shield-file: url('img/yellow_dot.8.png');
     shield-min-distance: 100;
@@ -209,7 +209,7 @@
 }
 
 
-.path[name="Kletterzustieg"][zoom>=13] name
+.path[name="Kletterzustieg"][zoom>=12] name
 {
     shield-file: url('img/green_triangle_right.8.png');
     shield-min-distance: 100;
