@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- http://spatialreference.org/ref/epsg/2163/ -->
-<Map bgcolor="#8cb6d3">
+<Map bgcolor="#8cb6d3" srs="+proj=latlong +datum=WGS84">
     <Style name="states_outlines">
         <Rule>
             <LineSymbolizer>
@@ -33,7 +33,7 @@
             </PolygonSymbolizer>
         </Rule>
     </Style>
-    <Layer name="states" status="1">
+    <Layer name="states" status="1" srs="+proj=latlong +datum=WGS84">
         <StyleName>states_shp_styles</StyleName>
         <StyleName>states_outlines</StyleName>
         <StyleName>states_shp_labels</StyleName>
