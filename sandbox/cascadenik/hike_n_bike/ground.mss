@@ -201,7 +201,7 @@
 
 .power.line[zoom>=14]
 {
-    line-color: #777;
+    line-color: #666;
     line-join: round;
     line-width: 1;
 }
@@ -209,6 +209,14 @@
 .power.point[zoom>=14]
 {
     point-file: url('icons-mapnik/power_tower.png');
+}
+
+
+.barrier[zoom>=15]
+{
+    line-color: #999;
+    line-join: round;
+    line-width: 1;
 }
 
 
@@ -314,7 +322,6 @@
 */
 
 
-.water.label name,
 .parklike.label name,
 .citylike.label[amenity!=parking] name,
 .building.label name
@@ -338,6 +345,10 @@
 .citylike.label[zoom=16][size=small][amenity!=parking] name,
 .building.label[zoom=16][size=small] name
 {
+    text-face-name: "DejaVu Sans Book";
+    text-fill: #000;
+    text-placement: point;
+    text-halo-radius: 1;
     text-size: 9;
     text-wrap-width: 50;
 }
@@ -439,6 +450,10 @@
 .citylike.label[zoom>=17][amenity!=parking] name,
 .building.label[zoom>=17] name
 {
+    text-face-name: "DejaVu Sans Book";
+    text-fill: #000;
+    text-placement: point;
+    text-halo-radius: 1;
     text-wrap-width: 100;
     text-size: 12;
 }
