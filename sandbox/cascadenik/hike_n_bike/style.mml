@@ -207,7 +207,7 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="table"><![CDATA[
                 (SELECT * FROM planet_osm_polygon
-                 WHERE "natural" IN ('cliff')
+                 WHERE "natural" = 'cliff'
                     OR man_made IN ('embankment', 'cutting'))
                  ORDER BY z_order ASC) AS parklike]]></Parameter>
         </Datasource>
@@ -473,6 +473,19 @@ zoom level  - scale denominator
 	        (SELECT * FROM planet_osm_line
 	             WHERE power IN ('line')
                      ORDER BY z_order ASC) AS power]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="barrier" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE barrier IS NOT NULL
+                     ORDER BY z_order ASC) AS barrier]]></Parameter>
         </Datasource>
     </Layer>
 
