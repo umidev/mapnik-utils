@@ -34,14 +34,14 @@
 
 /* http://www.w3.org/TR/CSS2/selector.html#attribute-selectors */
 /* .road.point[barrier] */
-.road.point[highway=gate],
-.road.point[barrier=gate],
-.road.point[barrier=bollard]
+.road.point[highway=gate][zoom>=15],
+.road.point[barrier=gate][zoom>=15],
+.road.point[barrier=bollard][zoom>=15]
 {
     point-file: url('icons-mapnik/gate2.png');
 }
 
-.road.point[highway=bus_stop]
+.road.point[highway=bus_stop][zoom>=15]
 {
     point-file: url('map-icons/svg-twotone-png/transport_bus_stop.p.8.png');
 }

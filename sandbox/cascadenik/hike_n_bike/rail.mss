@@ -1,31 +1,31 @@
 /* -*- mode: css -*- */
 
 /*
-.rail.line[zoom>=17][tunnel!=yes][tunnel!=true] 
+.rail.line[zoom>=17][tunnel!=yes][tunnel!=true]
 {
-    line-pattern-file: url('img/rail-wide.png'); 
+    line-pattern-file: url('img/rail-wide.png');
 }
 */
 /*
-.rail.line[zoom=16][tunnel!=yes][tunnel!=true]  
+.rail.line[zoom=16][tunnel!=yes][tunnel!=true]
 {
-    line-pattern-file: url('img/rail-normal.png'); 
+    line-pattern-file: url('img/rail-normal.png');
 }
 */
 
-.rail.outline[zoom=17][tunnel!=yes][tunnel!=true]  
+.rail.outline[zoom=17][tunnel!=yes][tunnel!=true]
 {
 /* the two tracks */
     line-color: #808080;
     line-width: 8;
 }
-.rail.centerline[zoom=17][tunnel!=yes][tunnel!=true]  
+.rail.centerline[zoom=17][tunnel!=yes][tunnel!=true]
 {
 /* the white centerline dividing the tracks */
     line-color: #ddd;
     line-width: 6;
 }
-.rail.line[zoom=17][tunnel!=yes][tunnel!=true]  
+.rail.line[zoom=17][tunnel!=yes][tunnel!=true]
 {
 /* the wooden... things */
     line-color: #808080;
@@ -34,19 +34,19 @@
 }
 
 
-.rail.outline[zoom=16][tunnel!=yes][tunnel!=true]  
+.rail.outline[zoom=16][tunnel!=yes][tunnel!=true]
 {
 /* the two tracks */
     line-color: #808080;
     line-width: 6;
 }
-.rail.centerline[zoom=16][tunnel!=yes][tunnel!=true]  
+.rail.centerline[zoom=16][tunnel!=yes][tunnel!=true]
 {
 /* the white centerline dividing the tracks */
     line-color: #ddd;
     line-width: 4;
 }
-.rail.line[zoom=16][tunnel!=yes][tunnel!=true]  
+.rail.line[zoom=16][tunnel!=yes][tunnel!=true]
 {
 /* the wooden... things */
     line-color: #808080;
@@ -57,29 +57,25 @@
 
 
 .rail.centerline[zoom>=14][zoom<=15][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{ 
-/*     line-pattern-file: url('img/rail-medium.png');  */
+{
     line-color: #808080;
     line-width: 1;
 }
 .rail.line[zoom>=14][zoom<=15][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{ 
-/*     line-pattern-file: url('img/rail-medium.png');  */
+{
     line-color: #808080;
     line-width: 6;
     line-dasharray: 1, 6;
 }
 
 
-.rail.centerline[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail] 
-{ 
-/*     line-pattern-file: url('img/rail-narrow.png');  */
+.rail.centerline[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
     line-color: #808080;
     line-width: 1;
 }
-.rail.line[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail] 
-{ 
-/*     line-pattern-file: url('img/rail-narrow.png');  */
+.rail.line[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
     line-color: #808080;
     line-width: 4;
     line-dasharray: 1, 4;
@@ -90,18 +86,30 @@
 .rail.line[zoom>=14][tunnel!=yes][tunnel!=true][bridge=true]
 {
     line-color: #e4f7f2;
+    line-dasharray: 1, 4;
     outline-color: #808080;
     outline-width: 1;
 }
 
-.rail.line[zoom>=17][bridge=yes],
-.rail.line[zoom>=17][bridge=true] { line-width: 16; }
-
-.rail.line[zoom=16][bridge=yes],
-.rail.line[zoom=16][bridge=true] { line-width: 13; }
-
 .rail.line[zoom>=14][zoom<=15][bridge=yes],
-.rail.line[zoom>=14][zoom<=15][bridge=true] { line-width: 8; }
+.rail.line[zoom>=14][zoom<=15][bridge=true]
+{
+    line-width: 8;
+    line-dasharray: 1, 4;
+}
+.rail.line[zoom=16][bridge=yes],
+.rail.line[zoom=16][bridge=true]
+{
+    line-width: 13;
+    line-dasharray: 1, 5;
+}
+.rail.line[zoom>=17][bridge=yes],
+.rail.line[zoom>=17][bridge=true]
+{
+    line-width: 16;
+    line-dasharray: 1, 7;
+}
+
 
 .rail.centerline[zoom>=15][railway=tram],
 .rail.centerline[zoom>=15][railway=narrow_gauge],

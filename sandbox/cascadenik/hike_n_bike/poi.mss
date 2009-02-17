@@ -29,7 +29,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=viewpoint][zoom>=15] name
@@ -57,7 +56,7 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
+
 }
 
 .poi_tourism.point[man_made=tower][zoom>=15] name
@@ -85,7 +84,7 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
+
 }
 
 .poi_historic.point[historic=ruins][zoom>=15] name
@@ -113,7 +112,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_historic.point[historic=castle][zoom>=15] name
@@ -141,7 +139,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=information][zoom>=15] name
@@ -169,7 +166,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=attraction][zoom>=15] name
@@ -211,7 +207,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=toilets][zoom>=15] name
@@ -239,7 +234,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=shelter][zoom>=13] name
@@ -281,7 +275,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=picnic_area][zoom>=15] name
@@ -309,7 +302,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=telephone][zoom>=15] name
@@ -337,7 +329,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=restaurant][zoom>=15] name
@@ -365,7 +356,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=fast_food][zoom>=15] name
@@ -393,7 +383,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=pub][zoom>=15] name
@@ -421,7 +410,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=drinking_water][zoom>=15] name
@@ -449,7 +437,6 @@
     text-wrap-width: 50;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=parking][zoom>=15] name
@@ -477,7 +464,6 @@
     text-wrap-width: 50;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi.point[amenity=place_of_worship][zoom>=15] name
@@ -568,7 +554,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=summit_cross][zoom>=15] name,
@@ -597,7 +582,6 @@
     text-wrap-width: 500; /* basically never */
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
-/*     point-allow-overlap: true; */
 }
 
 .poi_tourism.point[tourism=camp_site][zoom>=15] name

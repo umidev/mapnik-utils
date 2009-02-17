@@ -1,5 +1,11 @@
 /* -*- css -*- */
 
+/*
+update planet_osm_polygon set importance=0 where importance is null;
+update planet_osm_line set importance=0 where importance is null;
+update planet_osm_point set importance=0 where importance is null;
+*/
+
 
 /* catch-all - FIXME: remove this at some point */
 /*
