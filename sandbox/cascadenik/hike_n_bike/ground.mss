@@ -323,7 +323,42 @@
 
 
 .parklike.label name,
-.citylike.label[amenity!=parking] name,
+.citylike.label[amenity!=parking] name
+{
+    text-face-name: "DejaVu Serif Italic";
+    text-fill: #000;
+    text-placement: point;
+    text-halo-radius: 1;
+}
+.parklike.label[zoom>=13][zoom<=15][size=large] name,
+.citylike.label[zoom>=13][zoom<=15][size=large][amenity!=parking] name,
+.parklike.label[zoom>=15][zoom<=16][size=medium] name,
+.citylike.label[zoom>=15][zoom<=16][size=medium][amenity!=parking] name,
+.parklike.label[zoom=16][size=small] name,
+.citylike.label[zoom=16][size=small][amenity!=parking] name
+{
+    text-face-name: "DejaVu Serif Italic";
+    text-fill: #000;
+    text-placement: point;
+    text-halo-radius: 1;
+    text-size: 9;
+    text-wrap-width: 50;
+}
+.parklike.label[zoom>=16][size=large] name,
+.citylike.label[zoom>=16][size=large][amenity!=parking] name,
+.parklike.label[zoom>=17] name,
+.citylike.label[zoom>=17][amenity!=parking] name
+{
+    text-face-name: "DejaVu Serif Italic";
+    text-fill: #000;
+    text-placement: point;
+    text-halo-radius: 1;
+    text-wrap-width: 100;
+    text-size: 12;
+}
+
+
+
 .building.label name
 {
     text-face-name: "DejaVu Sans Book";
@@ -331,18 +366,8 @@
     text-placement: point;
     text-halo-radius: 1;
 }
-
-.water.label[zoom>=13][zoom<=15][size=large] name,
-.parklike.label[zoom>=13][zoom<=15][size=large] name,
-.citylike.label[zoom>=13][zoom<=15][size=large][amenity!=parking] name,
 .building.label[zoom>=13][zoom<=15][size=large] name,
-.water.label[zoom>=15][zoom<=16][size=medium] name,
-.parklike.label[zoom>=15][zoom<=16][size=medium] name,
-.citylike.label[zoom>=15][zoom<=16][size=medium][amenity!=parking] name,
 .building.label[zoom>=15][zoom<=16][size=medium] name,
-.water.label[zoom=16][size=small] name,
-.parklike.label[zoom=16][size=small] name,
-.citylike.label[zoom=16][size=small][amenity!=parking] name,
 .building.label[zoom=16][size=small] name
 {
     text-face-name: "DejaVu Sans Book";
@@ -352,6 +377,7 @@
     text-size: 9;
     text-wrap-width: 50;
 }
+
 
 .building.label[zoom>=17][amenity=school],
 .citylike.label[zoom>=17][amenity=school]
@@ -441,13 +467,7 @@
     point-file: url('img/icons/16x16/panel/transport/amenity=parking.png');
 }
 
-.water.label[zoom>=16][size=large] name,
-.parklike.label[zoom>=16][size=large] name,
-.citylike.label[zoom>=16][size=large][amenity!=parking] name,
 .building.label[zoom>=16][size=large] name,
-.water.label[zoom>=17] name,
-.parklike.label[zoom>=17] name,
-.citylike.label[zoom>=17][amenity!=parking] name,
 .building.label[zoom>=17] name
 {
     text-face-name: "DejaVu Sans Book";
@@ -460,9 +480,27 @@
 
 .water.label name
 {
+    text-face-name: "DejaVu Serif Italic";
     text-fill: #7396bb;
     text-halo-fill: #e7f6fd;
+    text-halo-radius: 1;
+    text-wrap-width: 100;
 }
+
+.water.label[zoom>=13][zoom<=15][size=large] name,
+.water.label[zoom>=15][zoom<=16][size=medium] name,
+.water.label[zoom=16][size=small] name
+{
+    text-size: 9;
+    text-wrap-width: 50;
+}
+
+.water.label[zoom>=16][size=large] name,
+.water.label[zoom>=17] name
+{
+    text-size: 11;
+}
+
 
 .ferry.label[zoom>=13] name
 {

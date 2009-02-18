@@ -235,7 +235,7 @@ zoom level  - scale denominator
                 (SELECT * FROM planet_osm_polygon
                      WHERE landuse IN ('reservoir', 'water')
                         OR "natural" IN ('lake', 'water', 'land')
-                        OR waterway IN ('canal', 'riverbank', 'river')
+                        OR waterway IN ('canal', 'river')
                      ORDER BY z_order ASC) AS water]]></Parameter>
         </Datasource>
     </Layer>
