@@ -46,6 +46,7 @@ zoom level  - scale denominator
     <Stylesheet src="poi.mss"/>
     <Stylesheet src="places.mss"/>
     <Stylesheet src="routes.mss"/>
+    <Stylesheet src="routes_dresdner_heide.mss"/>
 
             <!-- coastline shapefiles can be found at http://hypercube.telascience.org/~kleptog/ -->
 <!--
@@ -235,7 +236,7 @@ zoom level  - scale denominator
                 (SELECT * FROM planet_osm_polygon
                      WHERE landuse IN ('reservoir', 'water')
                         OR "natural" IN ('lake', 'water', 'land')
-                        OR waterway IN ('canal', 'river')
+                        OR waterway IN ('canal', 'riverbank', 'river')
                      ORDER BY z_order ASC) AS water]]></Parameter>
         </Datasource>
     </Layer>

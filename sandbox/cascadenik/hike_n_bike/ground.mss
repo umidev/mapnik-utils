@@ -491,7 +491,7 @@
 .water.label[zoom>=15][zoom<=16][size=medium] name,
 .water.label[zoom=16][size=small] name
 {
-    text-size: 9;
+    text-size: 10;
     text-wrap-width: 50;
 }
 

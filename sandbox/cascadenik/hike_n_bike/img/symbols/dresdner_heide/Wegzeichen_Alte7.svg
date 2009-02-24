@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="128"
+   height="128"
+   version="1.0"
+   sodipodi:docname="Wegzeichen_Alte7.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:title>Dresdner Heide, Wegzeichen Alte 7</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Colin Marquardt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Dresdner Heide Wegzeichen</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs5">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="886"
+     inkscape:window-width="1159"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="3.0507488"
+     inkscape:cx="46.504225"
+     inkscape:cy="53.920973"
+     inkscape:window-x="52"
+     inkscape:window-y="82"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-nodes="false"
+     inkscape:snap-center="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="19.469636,119.13563"
+       id="guide2509" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="2.7813766,9.2712552"
+       id="guide2511" />
+  </sodipodi:namedview>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Hintergrund">
+    <rect
+       style="fill:#ffffff"
+       id="rect2414"
+       width="128"
+       height="128"
+       x="0"
+       y="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Wegzeichen"
+     transform="translate(-14.388239,-20.759691)">
+    <g
+       id="g2490"
+       transform="translate(1.8542511,3.2449394)" />
+    <path
+       style="fill:#aa0000;fill-opacity:1;stroke:none"
+       d="M 78.469343,139.1798 C 77.106433,138.34866 75.890542,136.78855 68.016877,125.76821 C 61.691667,116.91515 58.088565,110.5244 57.452704,107.03076 C 57.01105,104.60418 57.623146,102.55253 60.321058,97.416461 C 66.735007,85.206095 72.669982,76.060936 82.364876,63.449385 C 87.59205,56.649619 89.792755,53.572412 89.792755,53.063056 C 89.792755,52.895655 89.495241,52.692628 89.131605,52.611888 C 86.938825,52.125015 78.942274,51.441197 71.868152,51.135609 C 55.675734,50.436137 46.734548,49.479428 44.215505,48.17678 C 42.398114,47.236967 42.086633,44.927184 43.0883,39.817685 C 43.446378,37.991077 43.69612,35.53438 43.700575,33.794424 C 43.709226,30.420606 43.819472,29.827504 44.437924,29.827504 C 44.682959,29.827504 46.327533,30.699933 48.092518,31.766235 C 53.253929,34.884461 54.161405,35.142828 62.612008,35.900049 C 70.9925,36.65099 87.22126,36.64935 92.584288,35.897022 C 98.036487,35.132185 103.75105,33.878849 108.09889,32.494318 C 110.16731,31.835645 112.3114,31.296734 112.86355,31.296734 C 114.25838,31.296734 114.59224,32.006778 113.90691,33.515612 C 113.20257,35.066243 102.45399,49.252796 97.098807,55.699845 C 94.743187,58.535755 91.646676,62.436563 90.21769,64.3683 C 88.788704,66.300038 86.14249,69.733889 84.33721,71.999077 C 82.531929,74.264259 80.059018,77.636144 78.841853,79.492149 C 76.076591,83.708747 71.674178,91.588458 71.210445,93.151308 C 71.018613,93.797769 70.859951,95.38454 70.857853,96.677463 C 70.854545,98.708433 70.980478,99.297231 71.783608,101.00567 C 72.29488,102.09327 73.145961,103.61393 73.674894,104.3849 C 75.242364,106.66966 79.687188,111.0732 82.863177,113.48787 C 89.870468,118.81544 90.301167,119.42909 89.241294,122.57527 C 88.909294,123.5608 87.96466,125.49322 87.142095,126.86955 C 86.31953,128.24586 85.137758,130.84158 84.515917,132.63779 C 83.25082,136.2921 82.233447,138.21324 81.084879,139.1167 C 80.131845,139.86636 79.615607,139.87882 78.469343,139.1798 L 78.469343,139.1798 z"
+       id="path2561" />
+  </g>
+</svg>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="128"
+   height="128"
+   version="1.0"
+   sodipodi:docname="Wegzeichen_Alte5.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:title>Dresdner Heide, Wegzeichen Alte 5</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Colin Marquardt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Dresdner Heide Wegzeichen</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs5">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="886"
+     inkscape:window-width="1159"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="3.0507488"
+     inkscape:cx="14.403023"
+     inkscape:cy="70.237736"
+     inkscape:window-x="343"
+     inkscape:window-y="97"
+     inkscape:current-layer="layer2"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="19.469636,119.13563"
+       id="guide2509" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="2.7813766,9.2712552"
+       id="guide2511" />
+  </sodipodi:namedview>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Hintergrund">
+    <rect
+       style="fill:#ffffff"
+       id="rect2414"
+       width="128"
+       height="128"
+       x="0"
+       y="0" />
+    <g
+       id="g2416"
+       transform="translate(264.29109,0.1846773)">
+      <path
+         style="fill:#9e3b3b"
+         d="M -228.40043,118.72846 C -233.77891,117.99203 -237.39733,116.67282 -237.39733,115.44836 C -237.39733,114.75962 -237.10815,114.1687 -236.7547,114.13521 C -236.40124,114.10171 -232.83462,113.78346 -228.82885,113.42797 C -222.95161,112.90639 -220.13751,112.1202 -214.2512,109.35532 C -206.39714,105.66617 -203.67095,103.10305 -200.15439,96.101758 C -196.0856,88.000967 -197.56366,82.069511 -205.52021,74.56884 C -208.14585,72.09363 -212.44012,68.039506 -215.06303,65.559686 C -217.68593,63.079869 -223.39857,58.287041 -227.75779,54.90896 C -232.117,51.530879 -235.68363,48.270606 -235.68363,47.663908 C -235.68363,47.057211 -230.18909,40.964912 -223.47355,34.125468 C -208.822,19.203605 -202.96431,12.775494 -201.90353,10.455006 C -200.80915,8.0610078 -197.46001,8.5480094 -197.80352,11.051192 C -198.11555,13.325003 -195.49212,17.949929 -189.96574,24.868627 C -183.46548,33.006575 -179.28388,35.366117 -171.36198,35.366117 C -160.82915,34.245673 -160.53716,35.304548 -170.10721,41.811566 C -173.99514,44.489284 -175.35263,44.952027 -179.23187,44.921979 C -185.36216,44.874493 -196.12946,39.56165 -203.0151,33.186769 C -205.79261,30.615279 -208.44647,28.511334 -208.91254,28.511334 C -210.24231,28.511334 -216.83298,36.029374 -216.83298,37.546262 C -209.19613,48.509137 -196.75599,55.860207 -187.79085,66.520512 C -182.25469,74.086632 -179.98852,80.285712 -179.98852,87.86367 C -179.797,93.706731 -182.06967,99.313268 -185.2748,104.12815 C -194.88233,116.62575 -213.75266,118.89051 -228.40043,118.72846 z"
+         id="path2424"
+         sodipodi:nodetypes="csssssssssssssccsssccccc" />
+    </g>
+    <path
+       style="fill:#aa0000;fill-opacity:1;stroke:none"
+       d="M 32.942276,118.2888 C 29.717816,117.58113 27.008096,116.20728 27.155196,115.35469 C 27.217416,114.99412 27.311466,114.65422 27.364226,114.59935 C 27.416966,114.54447 29.726146,114.28942 32.495726,114.03254 C 41.520446,113.19551 43.926866,112.565 50.642846,109.27776 C 57.750876,105.79862 60.272846,103.53872 63.346346,97.894304 C 67.801036,89.713352 67.309616,84.290975 61.497636,77.495129 C 58.184646,73.621313 46.693606,63.174812 37.695206,55.856356 C 31.651146,50.940678 28.843496,48.404573 28.847836,47.864679 C 28.852996,47.222817 31.951816,43.828152 44.588356,30.621391 C 56.351756,18.327161 60.665786,13.590822 61.867206,11.651026 C 62.867176,10.036488 63.700426,9.315147 64.565436,9.315147 C 65.718766,9.315147 66.212796,9.8784283 66.212796,11.193417 C 66.212796,15.840538 77.244896,30.38422 83.120596,33.483066 C 86.511076,35.271201 88.287676,35.577879 94.631726,35.470099 C 101.2613,35.357474 101.73609,35.524073 99.972156,37.34399 C 98.521436,38.840744 92.273636,43.223966 90.429116,44.039015 C 83.951596,46.901276 71.977436,42.460308 61.295976,33.234127 C 57.459706,29.920534 55.764436,28.654661 55.163086,28.654661 C 54.132446,28.654661 48.072866,35.379797 47.429246,37.23795 C 47.186596,37.938487 50.024066,41.577082 53.781336,45.383485 C 55.300276,46.922284 59.877826,51.150964 63.953666,54.780555 C 74.623896,64.282527 77.807746,67.960594 80.975546,74.444668 C 83.618346,79.854156 84.709886,86.907627 83.750076,92.373702 C 82.955096,96.901075 80.359666,102.56389 77.724266,105.52104 C 70.372906,113.76991 58.108716,118.13398 40.885276,118.62977 C 36.531996,118.75507 34.710666,118.67689 32.942276,118.28879 L 32.942276,118.2888 z"
+       id="path2436" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Wegzeichen"
+     transform="translate(-14.388239,-20.759691)" />
+</svg>

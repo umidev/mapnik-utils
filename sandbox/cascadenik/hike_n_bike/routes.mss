@@ -7,21 +7,37 @@
     shield-fill: #070;
 }
 
-
+/*
 .route.hiking[zoom>=12]
 {
-    shield-min-distance: 45;
-    shield-spacing: 45;
+    shield-min-distance: 55;
+    shield-spacing: 55;
 }
 .route.hiking[zoom>=14]
 {
-    shield-min-distance: 100;
-    shield-spacing: 100;
+    shield-min-distance: 120;
+    shield-spacing: 120;
 }
 .route.hiking[zoom>=15]
 {
-    shield-min-distance: 140;
-    shield-spacing: 140;
+    shield-min-distance: 160;
+    shield-spacing: 160;
+}
+*/
+.route.hiking[zoom>=12]
+{
+    shield-min-distance: 2;
+    shield-spacing: 22;
+}
+.route.hiking[zoom>=14]
+{
+    shield-min-distance: 5;
+    shield-spacing: 55;
+}
+.route.hiking[zoom>=15]
+{
+    shield-min-distance: 8;
+    shield-spacing: 88;
 }
 
 
