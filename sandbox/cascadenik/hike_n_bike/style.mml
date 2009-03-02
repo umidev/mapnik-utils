@@ -47,6 +47,7 @@ zoom level  - scale denominator
     <Stylesheet src="places.mss"/>
     <Stylesheet src="routes.mss"/>
     <Stylesheet src="routes_dresdner_heide.mss"/>
+    <Stylesheet src="routes_dresdner_heide2.mss"/>
 
             <!-- coastline shapefiles can be found at http://hypercube.telascience.org/~kleptog/ -->
 <!--
@@ -545,6 +546,67 @@ zoom level  - scale denominator
                      FROM planet_osm_line
                      WHERE route='hiking')
                         AS route]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="route hiking_heide" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_line
+                     WHERE route='hiking')
+                        AS route]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="path hiking_heide_a_h" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="path hiking_heide_k_n" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="path hiking_heide_o_s" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="path hiking_heide_t_z" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
         </Datasource>
     </Layer>
     <Layer class="peak point" srs="&osm_srs;">

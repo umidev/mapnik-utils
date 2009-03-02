@@ -1,0 +1,67 @@
+java -Xmx1048m -jar utils/osmosis/osmosis.jar \
+  --read-xml europe.osm.bz2 \
+  --bounding-box left=12.8 right=15.3 bottom=50.65 top=51.5 \
+  --write-xml elbsandsteingebirge.osm.gz
+
+
+http://wiki.openstreetmap.org/index.php/Osmosis
+
+
+java -Xmx1048m -jar utils/osmosis/osmosis.jar \
+     --read-xml file="planet-latest.osm" \
+     --bounding-polygon file="country2pts.txt" \
+     --write-xml file="germany.osm"
+
+
+
+convert -modulate 100,150,100 -thumbnail 18x18 anker1.jpg                              anker1.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 anker2.jpg				anker2.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 bischofsweg.jpg				bischofsweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 brille2.jpg				brille2.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 brille.jpg				brille.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 diebsteig.jpg				diebsteig.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 doppel-e.jpg				doppel-e.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 fluegelweg.jpg				fluegelweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 gabel.jpg				gabel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 gabel_spitz.jpg				gabel_spitz.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 gaensefuss.jpg				gaensefuss.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 haemmerchen.jpg				haemmerchen.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 hakenweg.jpg				hakenweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 hg-weg.jpg				hg-weg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 hirschstaengel.jpg			hirschstaengel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 huetchen.jpg				huetchen.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kannenhenkel.jpg			kannenhenkel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kreuz_5.jpg				kreuz_5.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kreuz_6.jpg				kreuz_6.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kreuz_7.jpg				kreuz_7.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kreuz_r.jpg				kreuz_r.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 krumme_9.jpg				krumme_9.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 kuhschwanz.jpg				kuhschwanz.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 mehlflussweg.jpg			mehlflussweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 mittelweg.jpg				mittelweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 muehlweg.jpg				muehlweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 nachtfluegel.jpg			nachtfluegel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 neuer_fluegel.jpg			neuer_fluegel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 neuer_weg.jpg				neuer_weg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 ochsensteig.jpg				ochsensteig.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 pillnitz-moritzburger_weg.jpg		pillnitz-moritzburger_weg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 reichsapfel.jpg				reichsapfel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 rennsteig.jpg				rennsteig.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 runde_4.jpg				runde_4.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 sandbrueckenweg.jpg			sandbrueckenweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 saugartenweg.jpg			saugartenweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 schere.jpg				schere.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 schwerterweg.jpg			schwerterweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 schwesternsteig.jpg			schwesternsteig.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 semmelweg.jpg				semmelweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 stuhlweg.jpg				stuhlweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 todweg.jpg				todweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 topfweg.jpg				topfweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 verkehrte_gabel.jpg			verkehrte_gabel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 verkehrter_anker.jpg			verkehrter_anker.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 vogelzipfel.jpg				vogelzipfel.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 weissiger_gaensefuss.jpg		weissiger_gaensefuss.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 weissiger_weg.jpg			weissiger_weg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 wiesenweg.jpg				wiesenweg.18.png
+convert -modulate 100,150,100 -thumbnail 18x18 zirkel.jpg				zirkel.18.png
+

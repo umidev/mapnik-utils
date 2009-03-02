@@ -1,4 +1,5 @@
-/* -*- mode: css -*- */
+@charset "UTF-8";
+/* -*- mode: css; coding: utf-8 -*- */
 
 .route.hiking name
 {
@@ -42,18 +43,21 @@
 
 
 .route.hiking[name="Roter Strich"][zoom>=12],
+.route.hiking[name="Roter Balken"][zoom>=12],
 .route.hiking[symbol="Roter Strich"][zoom>=12],
 .route.hiking[osmc_symbol="red:white:red_bar"][zoom>=12]
 {
     shield-file: url('img/red_stripe.8.png');
 }
 .route.hiking[name="Roter Strich"][zoom>=14],
+.route.hiking[name="Roter Balken"][zoom>=14],
 .route.hiking[symbol="Roter Strich"][zoom>=14],
 .route.hiking[osmc_symbol="red:white:red_bar"][zoom>=14]
 {
     shield-file: url('img/red_stripe.10.png');
 }
 .route.hiking[name="Roter Strich"][zoom>=15],
+.route.hiking[name="Roter Balken"][zoom>=15],
 .route.hiking[symbol="Roter Strich"][zoom>=15],
 .route.hiking[osmc_symbol="red:white:red_bar"][zoom>=15]
 {
@@ -61,20 +65,23 @@
 }
 
 
-.route.hiking[name="Gruener Strich"][zoom>=12],
-.route.hiking[symbol="Gruener Strich"][zoom>=12],
+.route.hiking[name="Grxxxuener Strich"][zoom>=12],
+.route.hiking[name="Grxxxuener Balken"][zoom>=12],
+.route.hiking[symbol="Grxxxuener Strich"][zoom>=12],
 .route.hiking[osmc_symbol="green:white:green_bar"][zoom>=12]
 {
     shield-file: url('img/green_stripe.8.png');
 }
-.route.hiking[name="Gruener Strich"][zoom>=14],
-.route.hiking[symbol="Gruener Strich"][zoom>=14],
+.route.hiking[name="Grxxxuener Strich"][zoom>=14],
+.route.hiking[name="Grxxxuener Balken"][zoom>=14],
+.route.hiking[symbol="Grxxxuener Strich"][zoom>=14],
 .route.hiking[osmc_symbol="green:white:green_bar"][zoom>=14]
 {
     shield-file: url('img/green_stripe.10.png');
 }
-.route.hiking[name="Gruener Strich"][zoom>=15],
-.route.hiking[symbol="Gruener Strich"][zoom>=15],
+.route.hiking[name="Grxxxuener Strich"][zoom>=15],
+.route.hiking[name="Grxxxuener Balken"][zoom>=15],
+.route.hiking[symbol="Grxxxuener Strich"][zoom>=15],
 .route.hiking[osmc_symbol="green:white:green_bar"][zoom>=15]
 {
     shield-file: url('img/green_stripe.12.png');
@@ -82,18 +89,21 @@
 
 
 .route.hiking[name="Blauer Strich"][zoom>=12],
+.route.hiking[name="Blauer Balken"][zoom>=12],
 .route.hiking[symbol="Blauer Strich"][zoom>=12],
 .route.hiking[osmc_symbol="blue:white:blue_bar"][zoom>=12]
 {
     shield-file: url('img/blue_stripe.8.png');
 }
 .route.hiking[name="Blauer Strich"][zoom>=14],
+.route.hiking[name="Blauer Balken"][zoom>=14],
 .route.hiking[symbol="Blauer Strich"][zoom>=14],
 .route.hiking[osmc_symbol="blue:white:blue_bar"][zoom>=14]
 {
     shield-file: url('img/blue_stripe.10.png');
 }
 .route.hiking[name="Blauer Strich"][zoom>=15],
+.route.hiking[name="Blauer Balken"][zoom>=15],
 .route.hiking[symbol="Blauer Strich"][zoom>=15],
 .route.hiking[osmc_symbol="blue:white:blue_bar"][zoom>=15]
 {
@@ -102,18 +112,21 @@
 
 
 .route.hiking[name="Gelber Strich"][zoom>=12],
+.route.hiking[name="Gelber Balken"][zoom>=12],
 .route.hiking[symbol="Gelber Strich"][zoom>=12],
 .route.hiking[osmc_symbol="yellow:white:yellow_bar"][zoom>=12]
 {
     shield-file: url('img/yellow_stripe.8.png');
 }
 .route.hiking[name="Gelber Strich"][zoom>=14],
+.route.hiking[name="Gelber Balken"][zoom>=14],
 .route.hiking[symbol="Gelber Strich"][zoom>=14],
 .route.hiking[osmc_symbol="yellow:white:yellow_bar"][zoom>=14]
 {
     shield-file: url('img/yellow_stripe.10.png');
 }
 .route.hiking[name="Gelber Strich"][zoom>=15],
+.route.hiking[name="Gelber Balken"][zoom>=15],
 .route.hiking[symbol="Gelber Strich"][zoom>=15],
 .route.hiking[osmc_symbol="yellow:white:yellow_bar"][zoom>=15]
 {
@@ -142,20 +155,20 @@
 }
 
 
-.route.hiking[name="Gruener Punkt"][zoom>=12],
-.route.hiking[symbol="Gruener Punkt"][zoom>=12],
+.route.hiking[name="Grxxxuener Punkt"][zoom>=12],
+.route.hiking[symbol="Grxxxuener Punkt"][zoom>=12],
 .route.hiking[osmc_symbol="green:white:green_dot"][zoom>=12]
 {
     shield-file: url('img/green_dot.8.png');
 }
-.route.hiking[name="Gruener Punkt"][zoom>=14],
-.route.hiking[symbol="Gruener Punkt"][zoom>=14],
+.route.hiking[name="Grxxxuener Punkt"][zoom>=14],
+.route.hiking[symbol="Grxxxuener Punkt"][zoom>=14],
 .route.hiking[osmc_symbol="green:white:green_dot"][zoom>=14]
 {
     shield-file: url('img/green_dot.10.png');
 }
-.route.hiking[name="Gruener Punkt"][zoom>=15],
-.route.hiking[symbol="Gruener Punkt"][zoom>=15],
+.route.hiking[name="Grxxxuener Punkt"][zoom>=15],
+.route.hiking[symbol="Grxxxuener Punkt"][zoom>=15],
 .route.hiking[osmc_symbol="green:white:green_dot"][zoom>=15]
 {
     shield-file: url('img/green_dot.12.png');
