@@ -3,7 +3,7 @@
 
 PortSystem 1.0
 
-name                    mapnik
+name                    py25-mapnik
 version                 trunk
 categories            graphics gis
 platforms             darwin
@@ -25,7 +25,7 @@ fetch.type          svn
 svn.url             http://svn.mapnik.org/trunk
 
 long_description \
-    Mapnik is a Free Toolkit for developing mapping \
+    Mapnik is a Open Source for developing mapping \
     applications. It's written in C++ and there are \
     Python bindings to facilitate fast-paced agile \
     development. It can comfortably be used for both \
@@ -58,48 +58,41 @@ depends_lib         port:boost \
 
 set python  "${prefix}/bin/python2.5"
 
-variant python26 description {Builds port Python 2.6 bindings} {
-    build.args-append  BINDINGS=none
-    build.args-delete  PYTHON=${prefix}/bin/python2.6
-    depends_lib-delete port:python25
-    depends_lib-append port:python26
-    depends_build-append port:python26
-    set python  "${prefix}/bin/python2.6"
-}
-
-variant no_python description {Builds port without Python bindings} {
-    build.args-append  BINDINGS=none
-    build.args-delete  PYTHON=${prefix}/bin/python2.5
-    depends_lib-delete port:python25
-    depends_build-append port:python25
+variant cairo description {Builds port with Cairo Support} {
+    depends_lib-append port:cairo
+    depends_lib-append port:cairomm
+    depends_lib-append port:py25-cairo
+    build.args-delete CAIRO=False
+    build.args-append  CAIRO=True
 }
 
 variant postgis description {Builds port with PostGIS plugin} {
     depends_lib-append port:postgis
-    build.args-append  PGSQL_INCLUDES=${prefix}/include \
-                       PGSQL_LIBS=${prefix}/lib
+    build.args-append  PG_CONFIG=${prefix}/bin/pg_config
 }
 
 variant gdal description {Builds port with GDAL/OGR plugin} {
     depends_lib-append port:gdal
-    build.args-append  GDAL_INCLUDES=${prefix}/include \
-                       GDAL_LIBS=${prefix}/lib
+    build.args-append  GDAL_CONFIG=${prefix}/bin/gdal-config
 }
 
+variant sqlite description {Builds port with SQLite3 plugin} {
+    depends_lib-append port:sqlite3
+    build.args-append  SQLITE_INCLUDES=${prefix}/include \
+                       SQLITE_LIBS=${prefix}/lib
+}
 
 build.args      PREFIX=${prefix} \
-                     PLUGINS=all \
+                     CAIRO=False \
+                     INPUT_PLUGINS=all \
                      PYTHON_PREFIX=${prefix} \
                      USE_CONFIG=False \
-                     USE_USER_ENV=False \
-                     BOOST_INCLUDES=${prefix}/include \
-                     BOOST_LIBS=${prefix}/lib \
-                     GDAL_INCLUDES=${prefix}/include \
-                     GDAL_LIBS=${prefix}/lib \
-                     OGR_INCLUDES=${prefix}/include \
-                     OGR_LIBS=${prefix}/lib \
                      FREETYPE_CONFIG=${prefix}/bin/freetype-config \
                      XML2_CONFIG=${prefix}/bin/xml2-config \
+                     BOOST_INCLUDES=${prefix}/include \
+                     BOOST_LIBS=${prefix}/lib \
+                     SQLITE_INCLUDES=${prefix}/include \
+                     SQLITE_LIBS=${prefix}/lib \
                      ICU_INCLUDES=${prefix}/include \
                      ICU_LIBS=${prefix}/lib \
                      PNG_INCLUDES=${prefix}/include \
@@ -110,12 +103,15 @@ build.args      PREFIX=${prefix} \
                      TIFF_LIBS=${prefix}/lib \
                      PROJ_INCLUDES=${prefix}/include \
                      PROJ_LIBS=${prefix}/lib \
-                     PYTHON=${python}
+                     PYTHON=${python} \
+                     LIB_DIR_NAME=/mapnik/0.6 \
+                     FRAMEWORK_PYTHON=False \
+                     DESTDIR=${destroot}
 
 build {
     system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args}"
 }
 
 destroot {
-    system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args} DESTDIR=${destroot} install"
+    system "cd ${worksrcpath} && ${python} scons/scons.py install"
 }
