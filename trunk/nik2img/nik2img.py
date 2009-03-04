@@ -31,6 +31,8 @@ except ImportError:
 
 no_color_global = False
 
+MERC_PROJ4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
+
 class Nik2imgError(Exception): pass
 
 # ==========================================
@@ -306,12 +308,24 @@ class Map(object):
         """
         Accepts a number of zoom levels and returns a list of zoom resolutions.
         """
-        levels = [self.max_resolution / 2 ** i for i in range(int(N))]        
-        return levels
+        max_res = 360.0/int(self.width)
 
+        if not self.max_resolution:
+            if self.mapnik_map:
+                max_res = self.mapnik_map.envelope().width()/int(self.width)
+
+        levels = [max_res / 2 ** i for i in range(int(N))]        
+        return levels
   # ================================================
   # Functions involving mapnik objects
   # ================================================
+
+    def zoom_max(self):
+        e = mapnik.Envelope(-179.99999694572804,-85.0511285163245,179.99999694572804,85.0511287798066)
+        p = mapnik.Projection('%s' % self.mapnik_map.srs)
+        e = e.forward(p)
+        self.mapnik_map.zoom_to_box(e)
+
     def load_pymap(self,path):
         """
         Instanciate a Mapnik Map object from an external python script.
@@ -585,12 +599,7 @@ class Map(object):
             self.output_message("'%s' registered successfully" % font)
           else:
             self.output_message("'%s' not found or able to be registered, try placing font in: '%s'" % (font,mapnik.paths.fontscollectionpath),warning=True)
-            
-      # do some validation and special handling for a few arguments
-      if not self.max_resolution:
-        self.max_resolution = 1.0
-      else:
-        self.max_resolution = float(self.max_resolution)
+
       self.ZOOM_LEVELS = self.generate_levels(10)
       
       if is_int(self.width):
@@ -782,9 +791,7 @@ class Map(object):
         self.output_message('Custom map projection requested')
         if self.srs == "epsg:900913" or self.srs == "epsg:3785":
           self.output_message('Google spherical mercator was selected and proj4 string will be used to initiate projection')
-          # TODO: investigate impact of '+over' parameter
-          google_proj4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
-          mapnik_proj = mapnik.Projection(google_proj4)
+          mapnik_proj = mapnik.Projection(MERC_PROJ4)
           self.output_message("Mapnik projection successfully initiated with custom Google Spherical Mercator proj.4 string: '%s'" % mapnik_proj.params())
         elif self.srs.startswith('http://'):
           try:
@@ -871,27 +878,26 @@ class Map(object):
           lon,lat,level = map(float, self.zoom_to.split(","))
         except ValueError:
           lon,lat = map(float, self.zoom_to.split(","))
-          level = 1
-        if not level >=1:
-            output_error("Zoom level must be an integer between 1 and the maximum desired zoom")
-        else:
-          try:          
-            zoom = float(self.generate_levels(int(level))[int(level)-1])
-            minx, miny, maxx, maxy = lon+(lon*zoom), lat-(lat*zoom), lon-(lon*zoom), lat+(lat*zoom)
-            zoom_to_bbox = mapnik.Envelope(minx, miny, maxx, maxy)
-            p = mapnik.Projection("%s" % self.mapnik_map.srs)
-            if not p.geographic:
-                projected_bbox = mapnik.forward_(zoom_to_bbox, p)
-                m_bbox = projected_bbox
-            else:
-                m_bbox = zoom_to_bbox
-            self.mapnik_map.zoom_to_box(m_bbox)
-            self.mapnik_map.zoom(level)
-            self.m_bbox = self.mapnik_map.envelope()
-            self.mapnik_objects['self.m_bbox'] = self.m_bbox
-            self.output_message('BBOX resulting from lon,lat,level of %s,%s,%s is: %s' % (lon,lat,level,self.m_bbox),print_time=False)
-            self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
-          except Exception, E:
+          level = 0
+        try:
+          self.zoom_max()
+          res = float(self.generate_levels(int(level)+1)[int(level)])
+          pt = mapnik.Coord(lon,lat)
+          p = mapnik.Projection("%s" % self.mapnik_map.srs)
+          if not p.geographic:
+            pt = pt.forward(p)
+          width = self.mapnik_map.width
+          height = self.mapnik_map.height
+          box = mapnik.Envelope(pt.x - 0.5 * width * res,
+              pt.y - 0.5 * height * res, 
+              pt.x + 0.5 * width * res, 
+              pt.y + 0.5 * height * res)
+          self.mapnik_map.zoom_to_box(box)
+          self.m_bbox = self.mapnik_map.envelope()
+          self.mapnik_objects['self.m_bbox'] = self.m_bbox
+          self.output_message('BBOX resulting from lon,lat,level of %s,%s,%s is: %s' % (lon,lat,level,self.m_bbox),print_time=False)
+          self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
+        except Exception, E:
             output_error("Problem setting lon,lat,level to use for custom BBOX",E)
 
       elif self.zoom_to_radius:
