@@ -5,6 +5,11 @@ nik2img changelog
 Version 0.2.3,             2009:
 --------------------------------
 
+
+* Added support for the Mapnik ProjTransform class (http://trac.mapnik.org/ticket/117)
+
+ ^^^^^^^^ requires mapnik 0.6.0 and above ^^^^^^^^
+
 * Added workaround for binary printing on win32 (thanks crschmidt for the solution and aled for reporting)
 
 * Added alpha support for loading map definitions from a python script given a mapnik.Map variable called 'm'

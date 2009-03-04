@@ -221,6 +221,7 @@ class Map(object):
         
         # collect mapnik objects
         self.mapnik_map = None
+        self.transform = None
         self.mapnik_objects = {}
         self.m_bbox = None
         self.mapnik_layers = {}
@@ -352,7 +353,6 @@ class Map(object):
         """
         mapfile_layers = m.layers
         map_envelope = m.envelope()
-        transformation_warning = True
         for layer_num in range(len(m.layers)-1, -1, -1):
             check_intersects = True
             l = mapfile_layers[layer_num]
@@ -367,13 +367,13 @@ class Map(object):
                 layer_bbox = mapnik.inverse_(layer_bbox, layer_p) # invert the layers envelope
             elif not map_p.geographic and not layer_p.geographic:
                 if layer_p.params() == map_p.params():
-                  pass # no need to reproject layer envelope
+                    pass # no need to reproject layer envelope
                 else:
-                  check_intersects = False
-                  if transformation_warning:
-                    self.output_message("Mapnik's python bindings do not support transformation between projected coordinates, see http://trac.mapnik.org/ticket/117",print_time=False,warning=True)
-                    transformation_warning = False
-                  self.output_message("Unable to reliably check for intersection of layer '%s' with map envelope..." % l.name,warning=True)
+                    # set up a proj4 transform as (from,to)
+                    # we need to project the layer bbox to a new layer bbox that matches the map bbox
+                    # so we go from -> to (forward)
+                    transform = mapnik.ProjTransform(layer_p,map_p)
+                    layer_bbox = transform.forward(layer_bbox)
             if check_intersects:
                 if layer_bbox.intersects(map_envelope):
                     self.output_message("Layer '%s' intersects Map envelope" % l.name,print_time=False)
@@ -833,11 +833,11 @@ class Map(object):
             bbox = mapnik.forward_(bbox, p)
             self.mapnik_objects['bbox'] = bbox
             self.output_message('BBOX has been reprojected to: %s' % bbox)
-            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
+            self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
           else:
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map is in unprojected, geographic coordinates, BBOX left unchanged')
-            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,True) )
+            self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
         except Exception, E:
            output_error("Problem setting geographic bounding box", E)
         self.mapnik_map.zoom_to_box(bbox)
@@ -850,7 +850,7 @@ class Map(object):
             self.mapnik_objects['bbox'] = bbox
             self.output_message('Map and bbox in projected coordinates: newly assigned BBOX left untouched',print_time=False)
             self.output_message('BBOX must match mapfile projection',warning=True,print_time=False)            
-            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,False) )
+            self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
           else:
             self.output_message('Map is in geographic coordinates and you supplied projected coordinates (reprojecting/inversing to lon/lat...)', warning=True)
             bbox = mapnik.inverse_(bbox, p)
@@ -862,7 +862,7 @@ class Map(object):
         self.mapnik_map.zoom_to_box(bbox)
         self.m_bbox = self.mapnik_map.envelope()
         self.output_message('Map bbox (after zooming to your input) is now: %s' % self.m_bbox,print_time=False)
-        self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))           
+        self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )           
         self.mapnik_objects['self.m_bbox'] = self.m_bbox
       
       # http://trac.mapnik.org/browser/trunk/src/map.cpp#L245
@@ -890,11 +890,7 @@ class Map(object):
             self.m_bbox = self.mapnik_map.envelope()
             self.mapnik_objects['self.m_bbox'] = self.m_bbox
             self.output_message('BBOX resulting from lon,lat,level of %s,%s,%s is: %s' % (lon,lat,level,self.m_bbox),print_time=False)
-            self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))
-            #print 'scale: %s' % self.mapnik_map.scale()
-            #print 'fraction: 1/%s' % int(1/self.mapnik_map.scale())
-            #sd = self.mapnik_map.scale()/mapnik.scale_denominator(self.mapnik_map,True)
-            #print 'scale/denom: %s' % sd
+            self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
           except Exception, E:
             output_error("Problem setting lon,lat,level to use for custom BBOX",E)
 
@@ -930,7 +926,11 @@ class Map(object):
               if layer_p.params() == map_p.params():
                 self.m_bbox = layer_bbox
               else:
-                output_error("Mapnik's python bindings do not support transformation between projected coordinates, see http://trac.mapnik.org/ticket/117")
+                # set up a proj4 transform as (from,to)
+                # we need to project the layer bbox to the map bbox
+                # so we go from -> to (forward)
+                transform = mapnik.ProjTransform(layer_p,map_p)
+                self.m_bbox = transform.forward(layer_bbox)
           self.mapnik_map.zoom_to_box(self.m_bbox)
           self.mapnik_objects['self.m_bbox'] = self.m_bbox
           self.output_message('BBOX resulting from zooming to extent of "%s" layer is now: %s' % (self.zoom_to_layer,self.m_bbox))    
@@ -942,7 +942,7 @@ class Map(object):
           self.m_bbox = self.mapnik_map.envelope()
           self.output_message('Map bbox (max extent of all layers) is now: %s' % self.m_bbox)
           p = mapnik.Projection("%s" % self.mapnik_map.srs)
-          self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic))
+          self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
           self.mapnik_objects['self.m_bbox'] = self.m_bbox
         except Exception, E:
           output_error("Problem zooming to all layers",E)
@@ -1017,7 +1017,7 @@ class Map(object):
               self.mapnik_map.zoom(lev)
               self.output_message('Map Scale: %s' % self.mapnik_map.scale(),print_time=False)
               p = mapnik.Projection("%s" % self.mapnik_map.srs)
-              self.output_message('Scale denominator is: %s' % mapnik.scale_denominator(self.mapnik_map,p.geographic),print_time=False)
+              self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator,print_time=False)
               level_name = '%slevel-%s' % (dirname,lev)
               if self.format == 'all':
                   self.output_message("Beginning rendering loop of all possible formats and requested zoom levels, this may take a while...")
