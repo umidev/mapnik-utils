@@ -42,5 +42,5 @@ Zooming to a lon, lat, and level
 --------------------------------
 
 >>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/zoomto/washington.png',zoom_to='-120.7,47.2,9')
+>>> m = Map('tests/mapfile_wgs84.xml','tests_output/zoomto/washington.png',zoom_to='-120.7,47.2,4')
 >>> m.open()
