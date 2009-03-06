@@ -78,7 +78,7 @@ http://commons.wikimedia.org/wiki/Category:Footpath_signs_in_Dresdner_Heide
 missing:
 
 Alter Kannenhenkel
-Blümpenweg
+Bluempenweg
 Fensterchen
 Kreuz 4
 
@@ -115,7 +115,6 @@ Kreuz 4
 .path.hiking_heide_k_n[name="Neuer Flxxxuegel"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/neuer_fluegel.16.png'); }
 .path.hiking_heide_k_n[name="Neuer Weg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/neuer_weg.16.png'); }
 .path.hiking_heide_o_s[name="Ochsensteig"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/ochsensteig.16.png'); }
-.path.hiking_heide_o_s[name="PG-Weg"][zoom>=14]                    { shield-file: url('img/symbols/dresdner_heide/wiesenweg.16.png'); }
 .path.hiking_heide_o_s[name="Pillnitz-Moritzburger-Weg"][zoom>=14] { shield-file: url('img/symbols/dresdner_heide/pillnitz-moritzburger_weg.16.png'); }
 .path.hiking_heide_o_s[name="Reichsapfel"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/reichsapfel.16.png'); }
 .path.hiking_heide_o_s[name="Rennsteig"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/rennsteig.16.png'); }

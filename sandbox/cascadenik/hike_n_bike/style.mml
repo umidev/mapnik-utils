@@ -548,6 +548,19 @@ zoom level  - scale denominator
                         AS route]]></Parameter>
         </Datasource>
     </Layer>
+    <Layer class="route hiking_small" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_line
+                     WHERE route='hiking')
+                        AS route]]></Parameter>
+        </Datasource>
+    </Layer>
     <Layer class="route hiking_heide" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>

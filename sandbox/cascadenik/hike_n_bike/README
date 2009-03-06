@@ -1,16 +1,73 @@
-java -Xmx1048m -jar utils/osmosis/osmosis.jar \
+
+http://wiki.openstreetmap.org/index.php/Osmosis
+http://gweb.bretth.com/osmosis-latest.tar.gz
+
+java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
   --read-xml europe.osm.bz2 \
   --bounding-box left=12.8 right=15.3 bottom=50.65 top=51.5 \
   --write-xml elbsandsteingebirge.osm.gz
 
+http://planet.openstreetmap.org/daily/
 
-http://wiki.openstreetmap.org/index.php/Osmosis
+java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
+     --read-xml-change file="20090226-20090227.osc.gz" \
+     --read-xml file="elbsandsteingebirge.osm.gz" \
+     --apply-change \
+     --write-xml file="elbsandsteingebirge2.osm.gz"
+
+update planet_osm_point set importance=0 where importance is null;
+update planet_osm_line set importance=0 where importance is null;
+update planet_osm_polygon set importance=0 where importance is null;
 
 
-java -Xmx1048m -jar utils/osmosis/osmosis.jar \
-     --read-xml file="planet-latest.osm" \
-     --bounding-polygon file="country2pts.txt" \
-     --write-xml file="germany.osm"
+
+python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/style.mml  > /home/colin/mapnik/osm_teczno_customized.xml 
+
+
+sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/replacements.sed /home/colin/mapnik/osm_teczno_customized.xml | sponge /home/colin/mapnik/osm_teczno_customized.xml
+
+
+http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
+
+
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=red_stripe.4.png red_stripe.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=green_stripe.4.png green_stripe.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=yellow_stripe.4.png yellow_stripe.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=blue_stripe.4.png blue_stripe.svg
+
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=red_dot.4.png red_dot.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=green_dot.4.png green_dot.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=yellow_dot.4.png yellow_dot.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=blue_dot.4.png blue_dot.svg
+
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=red_stripe.6.png red_stripe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_stripe.6.png green_stripe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=yellow_stripe.6.png yellow_stripe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=blue_stripe.6.png blue_stripe.svg
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=red_dot.6.png red_dot.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_dot.6.png green_dot.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=yellow_dot.6.png yellow_dot.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=blue_dot.6.png blue_dot.svg
+
+
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=red_stripe.8.png red_stripe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_stripe.8.png green_stripe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=yellow_stripe.8.png yellow_stripe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=blue_stripe.8.png blue_stripe.svg
+
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=red_dot.8.png red_dot.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_dot.8.png green_dot.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=yellow_dot.8.png yellow_dot.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=blue_dot.8.png blue_dot.svg
+
+
+
+
+
+
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=Wegzeichen_Alte8.8.png  Wegzeichen_Alte8.svg
 
 
 
