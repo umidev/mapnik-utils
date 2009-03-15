@@ -427,9 +427,9 @@ class Map(object):
             if map_p.geographic and layer_p.geographic:
                 pass # no need to reproject layer envelope
             elif not map_p.geographic and layer_p.geographic:
-                layer_bbox = mapnik.forward_(layer_bbox, map_p) # project/forward the layers envelope
+                layer_bbox = layer_bbox.forward(map_p) # project/forward the layers envelope
             elif map_p.geographic and not layer_p.geographic:
-                layer_bbox = mapnik.inverse_(layer_bbox, layer_p) # invert the layers envelope
+                layer_bbox = layer_bbox.inverse(layer_p) # invert the layers envelope
             elif not map_p.geographic and not layer_p.geographic:
                 if layer_p.params() == map_p.params():
                     pass # no need to reproject layer envelope
@@ -889,7 +889,7 @@ class Map(object):
           p = mapnik.Projection("%s" % self.mapnik_map.srs)
           if not p.geographic:
             self.output_message('Initialized projection: %s' % p.params())
-            bbox = mapnik.forward_(bbox, p)
+            bbox = bbox.forward(p)
             self.mapnik_objects['bbox'] = bbox
             self.output_message('BBOX has been reprojected to: %s' % bbox)
             self.output_message('Scale denominator is: %s' % self.mapnik_map.scale_denominator )
@@ -958,7 +958,7 @@ class Map(object):
           zoom_to_bbox = mapnik.Envelope(lon - delta, lat - delta, lon + delta, lat + delta)
           p = mapnik.Projection("%s" % self.mapnik_map.srs)
           if not p.geographic:
-              projected_bbox = mapnik.forward_(zoom_to_bbox, p)
+              projected_bbox = zoom_to_bbox.forward(p)
               self.m_bbox = projected_bbox
           else:
               self.m_bbox = zoom_to_bbox
@@ -975,10 +975,10 @@ class Map(object):
           if map_p.geographic and layer_p.geographic:
               self.m_bbox = layer_bbox
           elif not map_p.geographic and layer_p.geographic:
-              projected_bbox = mapnik.forward_(layer_bbox, map_p)
+              projected_bbox = layer_bbox.forward(map_p)
               self.m_bbox = projected_bbox
           elif map_p.geographic and not layer_p.geographic:
-              geographic_bbox = mapnik.inverse_(layer_bbox, layer_p)
+              geographic_bbox = layer_bbox.inverse(layer_p)
               self.m_bbox = geographic_bbox
           elif not map_p.geographic and not layer_p.geographic:
               if layer_p.params() == map_p.params():
