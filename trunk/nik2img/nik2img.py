@@ -9,14 +9,18 @@ import os
 import sys
 import getopt
 import re
-import time
-import timeit
 import tempfile
 import platform
+from timeit import time
 
 try:
     import mapnik
     HAS_MAPNIK_PYTHON = True
+    if not hasattr(mapnik,'mapnik_version'):
+        PRE_6_SERIES = True
+    else:
+        PRE_6_SERIES = False
+        from mapnik import ProjTransform
 except ImportError, E:
     HAS_MAPNIK_PYTHON = False
     print
@@ -34,6 +38,53 @@ no_color_global = False
 MERC_PROJ4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over'
 
 class Nik2imgError(Exception): pass
+
+if PRE_6_SERIES:
+
+    BoostPythonMetaclass = mapnik.Coord.__class__
+    
+    class _injector(object):
+        class __metaclass__(BoostPythonMetaclass):
+            def __init__(self, name, bases, dict):
+                for b in bases:
+                    if type(b) not in (self, type):
+                        for k,v in dict.items():
+                            setattr(b,k,v)
+                return type.__init__(self, name, bases, dict)
+
+    class ProjTransform(object):
+        def __init__(*args):
+            try:
+                output_error("Only Mapnik version 0.6.0 or > supports transformations: see http://trac.mapnik.org/ticket/117")
+            except: pass
+        
+        def forward(self,bbox):
+            return bbox
+            
+        def backward(self,bbox):
+            return bbox
+    
+    class _Map(mapnik.Map,_injector):
+    
+        @property
+        def scale_denominator(self):
+            srs = mapnik.Projection(self.srs)
+            return mapnik.scale_denominator(self,srs.geographic)
+
+    class _Coord(mapnik.Coord,_injector):
+        def forward(self,obj):
+            return mapnik.forward_(self,obj)
+        def inverse(self,obj):
+            return mapnik.inverse_(self,obj)
+    
+    class _Envelope(mapnik.Envelope,_injector):
+        def forward(self,obj):
+            return mapnik.forward_(self,obj)
+        def inverse(self,obj):
+            return mapnik.inverse_(self,obj)
+        def to_string(self):
+            return '%s,%s,%s,%s' % \
+              (self.minx,self.miny,self.maxx,self.maxy)
 
 # ==========================================
 # Top Level Functions
@@ -53,7 +104,7 @@ def is_int(str):
     
 def pause_for(sec):
     """
-    Pauses script execution for n seconds using the time.sleep module.
+    Pauses script execution for n seconds using the timeit.time.sleep module.
     """
     if is_int(sec):
         for second in range(1, (int(sec)+1)):
@@ -280,7 +331,7 @@ class Map(object):
         Timing output wrapper to control the start point and verbosity of timing output.
         """
         if self.TIMING_STARTED and print_time:
-          color_print(4,self.elapsed(timeit.time.time()))
+          color_print(4,self.elapsed(time.time()))
 
     # =================
     # Random functions
@@ -386,7 +437,7 @@ class Map(object):
                     # set up a proj4 transform as (from,to)
                     # we need to project the layer bbox to a new layer bbox that matches the map bbox
                     # so we go from -> to (forward)
-                    transform = mapnik.ProjTransform(layer_p,map_p)
+                    transform = ProjTransform(layer_p,map_p)
                     layer_bbox = transform.forward(layer_bbox)
             if check_intersects:
                 if layer_bbox.intersects(map_envelope):
@@ -599,6 +650,7 @@ class Map(object):
             self.output_message("'%s' registered successfully" % font)
           else:
             self.output_message("'%s' not found or able to be registered, try placing font in: '%s'" % (font,mapnik.paths.fontscollectionpath),warning=True)
+            self.output_message("Available fonts are: [%s]" % ', '.join([f for f in mapnik.FontEngine.face_names()]),warning=True)
 
       self.ZOOM_LEVELS = self.generate_levels(10)
       
@@ -668,7 +720,7 @@ class Map(object):
       if not self.TESTS_RUN:
         self.test()
       
-      self.START = timeit.time.time()
+      self.START = time.time()
       self.TIMING_STARTED = True
       
     
@@ -935,7 +987,7 @@ class Map(object):
                 # set up a proj4 transform as (from,to)
                 # we need to project the layer bbox to the map bbox
                 # so we go from -> to (forward)
-                transform = mapnik.ProjTransform(layer_p,map_p)
+                transform = ProjTransform(layer_p,map_p)
                 self.m_bbox = transform.forward(layer_bbox)
           self.mapnik_map.zoom_to_box(self.m_bbox)
           self.mapnik_objects['self.m_bbox'] = self.m_bbox

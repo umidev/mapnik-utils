@@ -5,11 +5,13 @@ nik2img changelog
 Version 0.2.3,             2009:
 --------------------------------
 
+* Restored backwards compatibility with mapnik 0.5.x series by using Boost Python Metaclasses
+
 * Fixed bug in zoom levels code (thanks aub)
 
-* Added support for the Mapnik ProjTransform class (http://trac.mapnik.org/ticket/117)
+* Now accessing the scale_denominator as a property off the mapnik.Map object (http://trac.mapnik.org/changeset/794/)
 
- ^^^^^^^^ requires mapnik 0.6.0 and above ^^^^^^^^
+* Added support for the Mapnik ProjTransform class (http://trac.mapnik.org/ticket/117)
 
 * Added workaround for binary printing on win32 (thanks crschmidt for the solution and aled for reporting)
 
