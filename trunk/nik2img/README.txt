@@ -1,10 +1,10 @@
-=========
- nik2img
-=========
+=======
+nik2img
+=======
 
---------------------------------------------------
+----------------------------------------------
 Generate Mapnik graphics from the command line
---------------------------------------------------
+----------------------------------------------
 
 Description
 ===========
@@ -16,7 +16,7 @@ used by the OpenStreetMap project to render Mapnik graphics.
 
 
 Installing nik2img
-====================
+==================
 
 To run this program::
  * Make sure you have Mapnik installed (https://trac.mapnik.org/wiki/MapnikInstallation)
