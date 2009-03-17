@@ -28,21 +28,29 @@ def get_attr_list(l):
 
 map_xml = '''<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
-<Map bgcolor="white">
+<Map bgcolor="transparent">
     <Style name="%(name)s_style">
         <Rule>
+            <!--
             <PolygonSymbolizer>
                 <CssParameter name="fill">#f2eff9</CssParameter>
             </PolygonSymbolizer>
+            -->
             <LineSymbolizer>
                 <CssParameter name="stroke">black</CssParameter>
-                <CssParameter name="stroke-width">.1</CssParameter>
+                <CssParameter name="stroke-width">1</CssParameter>
             </LineSymbolizer>
             <TextSymbolizer name="%(labelfield)s" face_name="DejaVu Sans Book" size="12"/>
         </Rule>    
     </Style> 
+    <Style name="%(name)s_label_style">
+        <Rule>
+            <TextSymbolizer name="%(labelfield)s" allow_overlap="yes" face_name="DejaVu Sans Book" size="10"/>
+        </Rule>    
+    </Style>
     <Layer name="%(name)s" status="on">
         <StyleName>%(name)s_style</StyleName>
+        <StyleName>%(name)s_label_style</StyleName>
         <Datasource>
             <Parameter name="type">shape</Parameter>
             <Parameter name="file">%(file)s</Parameter>
