@@ -1,46 +1,52 @@
 Basic map in 8-bit PNG format
 -----------------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/png256/8_bit.png',format='png256')
->>> m.open()
+>>> from mapnik_utils import Compose
+>>> c = Compose('tests/mapfile_lambert.xml',image='tests_output/png256/8_bit.png',format='png256')
+>>> c.open()
 
 
-A bunch of levels
------------------
+Zoom to a set zoom levels 
+-------------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/levels/',debug=True)
->>> m.open()
-
-
-A bunch of formats at 256 by 256 pixels
----------------------------------------
-
->>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all',width=256,height=256)
->>> m.open()
+>>> from mapnik_utils import Compose
+>>> c = Compose('tests/mapfile_lambert.xml')
+>>> c.map.zoom_max()
+>>> c.zoom = 0
+>>> c.image = 'tests_output/zoom0.png'
+>>> c.build()
+>>> c.open()
+>>> c.map.zoom_max()
+>>> c.zoom = 2
+>>> c.image = 'tests_output/zoom2.png'
+>>> c.build()
+>>> c.open()
+>>> c.map.zoom_max()
+>>> c.zoom = 5
+>>> c.image = 'tests_output/zoom5.png'
+>>> c.build()
+>>> c.open()
 
 
 Google Reprojection
 -------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/google_mercator_via_projcode.png',srs='epsg:900913')
->>> m.open()
+>>> from mapnik_utils import Compose
+>>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/projected/google_mercator_via_projcode.png',srs=900913)
+>>> c.open()
 
 
 Google Reprojection using spatialreference.org
 ----------------------------------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
->>> m.open()
+>>> from mapnik_utils import Compose
+>>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
+>>> c.open()
 
 
 Zooming to a lon, lat, and level
 --------------------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_wgs84.xml','tests_output/zoomto/washington.png',zoom_to='-120.7,47.2,9')
->>> m.open()
+>>> from mapnik_utils import Compose
+>>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/zoomto/washington.png',center=(-120.7,47.2),zoom=5)
+>>> c.open()
