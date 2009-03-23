@@ -148,7 +148,7 @@ class ComposeDebug(Compose):
 parser = OptionParser(usage="""%prog <mapfile> [options]
 
 Example usage:
-    $ %proj --help (for possible options)
+    $ %prog --help (for possible options)
     $ %prog mapfile.xml image.png
     $ %prog mapfile.xml > image.png
 
