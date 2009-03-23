@@ -7,15 +7,15 @@ from mapnik import render, render_to_file, save_map, Image
 try:
     import cairo
     HAS_CAIRO = True
-except ImportError:
-    HAS_CAIRO = False
-
-
-cairo_mapping = {'svg':cairo.SVGSurface,
+    cairo_mapping = {'svg':cairo.SVGSurface,
                 'pdf':cairo.PDFSurface,
                 'ps':cairo.PSSurface,
                 'ARGB32':cairo.FORMAT_ARGB32,
                 'RGB24':cairo.FORMAT_RGB24}
+
+except ImportError:
+    HAS_CAIRO = False
+
 
 # Win32 workaround graciously provided by crschmidt
 # from http://svn.tilecache.org/trunk/tilecache/TileCache/Service.py
