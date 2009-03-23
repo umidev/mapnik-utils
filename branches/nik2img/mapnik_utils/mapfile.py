@@ -1,5 +1,5 @@
 from mapnik import Map, load_map
-from os.path import exists
+from os.path import exists, dirname, basename
 from sys import path
 
 class Load(object):
@@ -38,9 +38,9 @@ class Load(object):
         """
         Instanciate a Mapnik Map object from an external python script.
         """
-        py_path = os.path.dirname(self.mapfile)
+        py_path = dirname(self.mapfile)
         path.append(py_path)
-        py_module = os.path.basename(path).split('.')[0]
+        py_module = basename(path).split('.')[0]
         module = __import__(py_module)
         py_map = getattr(module,map_variable,None)
         py_map.width = self.m.width
