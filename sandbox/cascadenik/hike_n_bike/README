@@ -1,4 +1,48 @@
 
+
+st_setsrid(st_makebox2d(st_makepoint(12.8,50.65),st_makepoint(15.3,51.5)),4326);
+
+select st_setsrid(st_makebox2d(st_makepoint(-180,-90),st_makepoint(180,90)),4326) as "world";
+select st_setsrid(st_makebox2d(st_makepoint(12.7,50.55),st_makepoint(15.4,51.6)),4326) as "bbox";
+
+SELECT ST_Difference(
+st_setsrid(st_makebox2d(st_makepoint(-180,-90),st_makepoint(180,90)),4326),
+st_setsrid(st_makebox2d(st_makepoint(12.7,50.55),st_makepoint(15.4,51.6)),4326)
+) as "the_difference";
+
+
+
+
+create table planet_osm_polygon_diff as SELECT ST_Difference(
+st_setsrid(st_makebox2d(st_makepoint(-180,-90),st_makepoint(180,90)),4326),
+st_setsrid(st_makebox2d(st_makepoint(12.7,50.55),st_makepoint(15.4,51.6)),4326)
+) from planet_osm_polygon;
+
+
+create table planet_osm_line_diff as SELECT ST_Difference(
+st_setsrid(st_makebox2d(st_makepoint(-180,-90),st_makepoint(180,90)),4326),
+st_setsrid(st_makebox2d(st_makepoint(12.7,50.55),st_makepoint(15.4,51.6)),4326)
+) from planet_osm_line;
+
+
+create table planet_osm_point_diff as SELECT ST_Difference(
+st_setsrid(st_makebox2d(st_makepoint(-180,-90),st_makepoint(180,90)),4326),
+st_setsrid(st_makebox2d(st_makepoint(12.7,50.55),st_makepoint(15.4,51.6)),4326)
+) from planet_osm_point;
+
+
+
+
+drop table planet_osm_polygon;
+drop table planet_osm_line;
+drop table planet_osm_point;
+
+
+ALTER TABLE planet_osm_polygon_diff RENAME TO planet_osm_polygon;
+ALTER TABLE planet_osm_line_diff RENAME TO planet_osm_line;
+ALTER TABLE planet_osm_point_diff RENAME TO planet_osm_point;
+
+
 http://wiki.openstreetmap.org/index.php/Osmosis
 http://gweb.bretth.com/osmosis-latest.tar.gz
 
@@ -15,6 +59,11 @@ java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osm
      --apply-change \
      --write-xml file="elbsandsteingebirge2.osm.gz"
 
+
+java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
+     --read-change-interval workingDirectory=/opt/applications/tilesathome/utils/export/osm2pgsql \
+     --write-xml-change /dev/stdout | /opt/applications/tilesathome/utils/export/osm2pgsql/osm2pgsql --slim -a /dev/stdin 
+
 update planet_osm_point set importance=0 where importance is null;
 update planet_osm_line set importance=0 where importance is null;
 update planet_osm_polygon set importance=0 where importance is null;
@@ -30,6 +79,17 @@ sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_
 http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
 
 
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=red_stripe.3.png red_stripe.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=green_stripe.3.png green_stripe.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=yellow_stripe.3.png yellow_stripe.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=blue_stripe.3.png blue_stripe.svg
+
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=red_dot.3.png red_dot.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=green_dot.3.png green_dot.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=yellow_dot.3.png yellow_dot.svg
+inkscape -z -w 3 -h 3 --export-area-canvas --export-png=blue_dot.3.png blue_dot.svg
+
+
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=red_stripe.4.png red_stripe.svg
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=green_stripe.4.png green_stripe.svg
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=yellow_stripe.4.png yellow_stripe.svg
@@ -39,6 +99,17 @@ inkscape -z -w 4 -h 4 --export-area-canvas --export-png=red_dot.4.png red_dot.sv
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=green_dot.4.png green_dot.svg
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=yellow_dot.4.png yellow_dot.svg
 inkscape -z -w 4 -h 4 --export-area-canvas --export-png=blue_dot.4.png blue_dot.svg
+
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=red_stripe.5.png red_stripe.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_stripe.5.png green_stripe.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=yellow_stripe.5.png yellow_stripe.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=blue_stripe.5.png blue_stripe.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=red_dot.5.png red_dot.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_dot.5.png green_dot.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=yellow_dot.5.png yellow_dot.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=blue_dot.5.png blue_dot.svg
 
 
 inkscape -z -w 6 -h 6 --export-area-canvas --export-png=red_stripe.6.png red_stripe.svg

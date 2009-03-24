@@ -1,5 +1,4 @@
-@charset "UTF-8";
-/* -*- mode: css -*- */
+@charset "UTF-8"; /* -*- mode: css -*- */
 
 .coast.edge.outer
 {
@@ -175,8 +174,8 @@
     polygon-opacity: 0.45;
 }
 
-.parklike.line[natural=cliff],
-.parklike.line[man_made=embankment]
+.cliff.line[natural=cliff][zoom>=14],
+.cliff.area[natural=cliff][zoom>=14]
 {
     line-pattern-file: url('icons-mapnik/cliff2.png');
 }
@@ -311,16 +310,33 @@
 /* } */
 
 
-/* zoom=10 --> ScaleDenominator=400000 */
-/*.boundary.line[scale-denominator<400000][admin_level<=8] 
+.boundary.line[admin_level="2"],
+.boundary.area[admin_level="2"]
 {
-    line-color: #A020F0;
+    line-color: #a020f0;
     line-join: round;
     line-width: 1;
     line-dasharray: 2, 3;
     line-opacity: 0.2;
 }
-*/
+.boundary.line[admin_level="2"][zoom>=12],
+.boundary.area[admin_level="2"][zoom>=12]
+{
+    line-color: #a020f0;
+    line-join: round;
+    line-width: 2;
+    line-dasharray: 4, 6;
+    line-opacity: 0.4;
+}
+.boundary.line[admin_level="2"][zoom>=14],
+.boundary.area[admin_level="2"][zoom>=14]
+{
+    line-color: #a020f0;
+    line-join: round;
+    line-width: 3;
+    line-dasharray: 6, 9;
+    line-opacity: 0.6;
+}
 
 
 .parklike.label name,
