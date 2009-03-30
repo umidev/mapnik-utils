@@ -128,6 +128,22 @@
     point-allow-overlap: true;
 }
 
+/* .poi.point[tourism=information][information=guidepost][zoom>=15] name, */
+.poi.point[amenity=guidepost][zoom>=15] name,
+.poi.point[amenity=signpost][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/tourist_guidepost.p.16.png');
+    text-fill: #734a08;
+    text-dy: 17;
+    text-face-name: "DejaVu Sans Book";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 500; /* basically never */
+    text-halo-fill: #fefefe;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
 /* .poi_tourism.point[tourism=information][information!=guidepost][zoom>=13] name */
 .poi_tourism.point[tourism=information][zoom>=13] name
 {
@@ -526,22 +542,6 @@
 
 .poi_natural.point[natural=cave_entrance][zoom>=16]
 {
-    point-allow-overlap: true;
-}
-
-/* .poi.point[tourism=information][information=guidepost][zoom>=15] name, */
-.poi.point[amenity=guidepost][zoom>=15] name,
-.poi.point[amenity=signpost][zoom>=15] name
-{
-    point-file: url('map-icons/svg-twotone-png/tourist_guidepost.p.16.png');
-    text-fill: #734a08;
-    text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
-    text-size: 10;
-    text-placement: point;
-    text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
-    text-halo-radius: 1;
     point-allow-overlap: true;
 }
 
