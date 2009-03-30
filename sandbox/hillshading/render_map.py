@@ -4,16 +4,11 @@ from mapnik import *
 
 m = Map(400,400)
 load_map(m,"hillshading_test.xml")
-bbox = Envelope(-175694.6612042082,6542691.745898315,-168424.6950525119,6549216.387789081)
+bbox = Envelope(-298300.666958,6446250.25958,-35624.9164577,6621367.42658)
 m.zoom_to_box(bbox)
 im = Image(m.width,m.height)
 render(m,im)
-im.save("hillshading-1.png","png256")
-bbox = Envelope(-173480.9291230377,6544678.523934189,-170638.4271336824,6547229.609753206)
-m.zoom_to_box(bbox)
-im = Image(m.width,m.height)
-render(m,im)
-im.save("hillshading-2.png","png256")
+im.save("hillshading.png","png256")
 
 ### getting the lat/lon from the Envelope:
 #from mapnik import *
