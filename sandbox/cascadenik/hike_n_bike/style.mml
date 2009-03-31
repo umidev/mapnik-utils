@@ -75,82 +75,6 @@ zoom level  - scale denominator
 
 -->
 
-
-    <!-- For some reason, this layer gets set to status="off"
-         in the generated XML file, need to fix there: -->
-    <!--
-    <Layer class="dem">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    -->
-    <Layer class="dem1">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N50E013_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem2">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N50E014_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem3">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N51E013_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem4">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N51E014_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem5">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N49E008_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem6">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N54W003_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Layer class="dem7">
-      	<StyleName>raster</StyleName>
-        <Datasource>
-	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/N54W004_hillshade.tif</Parameter>
-	    <Parameter name="format">tiff</Parameter>
-        </Datasource>
-    </Layer>
-    <Style name="raster">
-	<Rule>
-		<RasterSymbolizer>
-		</RasterSymbolizer>
-	</Rule>
-    </Style>
-
     <Layer class="citylike nonparking area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -251,6 +175,17 @@ zoom level  - scale denominator
     </Layer>
 -->
 
+    <!-- For some reason, this layer gets set to status="off"
+         in the generated XML file, need to fix there: -->
+    <Layer class="dem">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/hill_8_z3.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
     <Layer class="water line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -291,6 +226,7 @@ zoom level  - scale denominator
                      WHERE route IN ('ferry') ORDER BY z_order ASC) AS ferry]]></Parameter>
         </Datasource>
     </Layer>
+
 
     <Layer class="srtm ten" srs="&contours_srs;">
         <Datasource>
@@ -998,5 +934,15 @@ zoom level  - scale denominator
                  ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
         </Datasource>
     </Layer>
+
+    <Style name="raster">
+      <Rule>
+	<RasterSymbolizer>
+          <CssParameter name="opacity">1.0</CssParameter>
+          <CssParameter name="scaling">bilinear</CssParameter>
+          <CssParameter name="mode">grain_merge</CssParameter>
+	</RasterSymbolizer>
+      </Rule>
+    </Style>
 
 </Map>

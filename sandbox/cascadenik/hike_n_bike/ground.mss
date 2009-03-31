@@ -87,20 +87,20 @@
 .citylike.area
 {
     polygon-fill: #dddddd;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .citylike.area[landuse=residential]
 {
 /*     polygon-fill: #eeeeee; */
      polygon-fill: #f3dfa4;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .citylike.area[landuse=industrial]
 {
      polygon-fill: #f3dfa4;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 /*
@@ -109,14 +109,14 @@
 .citylike.area[amenity=university]
 {
     polygon-fill: #d2caba;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 */
 
 .parklike.area
 {
     polygon-fill: #91b156;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 /* .parklike.area[zoom>=16][leisure!=pitch][leisure!=track][landuse!=cemetery] /\*, */
@@ -135,7 +135,7 @@
 {
     line-color: #799a67;
     polygon-fill: #94b580;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .parklike.area[natural=wood],
@@ -143,19 +143,19 @@
 {
 /*     line-color: #799a67; */
     polygon-fill: #e0f0bc;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .parklike.area[landuse=allotments]
 {
     polygon-fill: #c8b084;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .parklike.area[landuse=farm]
 {
     polygon-fill: #ead8bd;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .parklike.area[landuse=recreation_ground],
@@ -165,13 +165,13 @@
 .parklike.area[landuse=village_green]
 {
     polygon-fill: #ace38b;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .parklike.area[landuse=quarry]
 {
     polygon-fill: #bbb;
-    polygon-opacity: 0.45;
+    polygon-opacity: 0.93;
 }
 
 .cliff.line[natural=cliff][zoom>=14],
