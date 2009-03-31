@@ -45,16 +45,16 @@ long_description \
 depends_build       bin:svn:subversion
 
 depends_lib         port:boost \
-                            port:libpng \
-                            port:jpeg \
-                            port:tiff \
-                            port:icu \
-                            port:zlib \
-                            port:freetype \
-                            port:proj \
-                            port:libxml2 \
-                            port:python25 \
-                            port:py25-hashlib
+                    port:libpng \
+                    port:jpeg \
+                    port:tiff \
+                    port:icu \
+                    port:zlib \
+                    port:freetype \
+                    port:proj \
+                    port:libxml2 \
+                    port:python25 \
+                    port:py25-hashlib
 
 set python  "${prefix}/bin/python2.5"
 
