@@ -108,13 +108,16 @@ class _Map(Map,_injector):
             max_extent = max_extent.forward(self.proj_obj)
         self.zoom_to_box(max_extent)
 
-    def select_layers(self,names):
+    def activate_layers(self,names):
+        self.select_layers(names,remove=False)
+
+    def select_layers(self,names,remove=True):
         disactivated = []
         selected = []
         if not isinstance(names,list):
             names = [names]
         for lyr in self.layers:
-            if not lyr.name in names:
+            if not lyr.name in names and remove:
                 lyr.active = False
                 disactivated.append(lyr.name)
             else:
