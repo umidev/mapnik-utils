@@ -84,8 +84,11 @@ class ComposeDebug(Compose):
         elif self.font_handler.failed:
             self.debug_msg("Available fonts are: '%s'" % self.font_handler.available,warn=True)
       
-    def output_error(msg, E=None):
-        sys.stderr.write(color_text(1, '// --> %s: \n\t %s' % (msg, E),self.no_color))
+    def output_error(self,msg, E=None):
+        if E:
+            sys.stderr.write(color_text(1, '// --> %s: \n\t %s\n' % (msg, E),self.no_color))
+        else:
+            sys.stderr.write(color_text(1, '// --> %s: \n' % msg,self.no_color))
         sys.exit(1)
 
     def msg(self, msg, warn=False, print_time=True):

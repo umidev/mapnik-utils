@@ -113,11 +113,11 @@ class Compose(object):
         elif not self.zoom is None:
             self.map.zoom_to_level(self.zoom)
         elif self.zoom_to_layers:
-            self.map.select_layers(self.zoom_to_layers)
+            #self.map.select_layers(self.zoom_to_layers)
             if len(self.zoom_to_layers) > 1:
                 self.map.zoom_to_layers(self.zoom_to_layers)
             else:
-                self.map.zoom_to_layer(self.zoom_to_layers)
+                self.map.zoom_to_layer(self.zoom_to_layers[0])
         else:
             if self.max_extent:
                 self.map.zoom_to_box(mapnik.Envelope(*self.max_extent))

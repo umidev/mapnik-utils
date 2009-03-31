@@ -30,7 +30,7 @@ class _Map(Map,_injector):
     def find_layer(self,name):
         lyr = [l for l in self.layers if l.name.lower() == name.lower()]
         if not lyr:
-            raise ValueError('Layer not found, available layers are: "%s"' % ', '.join(self.layer_names()))
+            raise ValueError('Layer "%s" not found, available layers are: ["%s"]' % (name,', '.join(self.layer_names())))
         return lyr[0]
     
     def layer_names(self):
@@ -58,7 +58,7 @@ class _Map(Map,_injector):
         first = self.find_layer(layers[0])
         new_box = first.envelope().transform(first.proj_obj,self.proj_obj)
         for lyr in layers:
-            layer = self.find_layer(layer)
+            layer = self.find_layer(lyr)
             layer_box = layer.envelope()
             box = layer_box.transform(layer.proj_obj,self.proj_obj)
             new_box.expand_to_include(box)

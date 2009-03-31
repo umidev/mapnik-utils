@@ -38,7 +38,8 @@
         <StyleName>states_outlines</StyleName>
         <StyleName>states_shp_labels</StyleName>
         <Datasource>
-            <Parameter name="file">tests/us_states_wgs84</Parameter>
+            <Parameter name="base">tests</Parameter>
+            <Parameter name="file">us_states_wgs84</Parameter>
             <Parameter name="type">shape</Parameter>
         </Datasource>
     </Layer>
