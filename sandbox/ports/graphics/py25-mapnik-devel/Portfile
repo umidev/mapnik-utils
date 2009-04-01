@@ -22,7 +22,7 @@ worksrcdir      ${version}
 use_configure   no
 
 fetch.type          svn
-svn.url             http://svn.mapnik.org/tags/release-0.6.0/
+svn.url             http://svn.mapnik.org/trunk
 
 long_description \
     Mapnik is a Open Source for developing mapping \
