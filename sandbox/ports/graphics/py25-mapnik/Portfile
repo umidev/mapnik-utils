@@ -3,29 +3,28 @@
 
 PortSystem 1.0
 
-name                    py25-mapnik
-version                 trunk
-categories            graphics gis
-platforms             darwin
+name                 py25-mapnik
+version              0.6.0
+categories           graphics gis
+platforms            darwin
 maintainers          gmail.com:dbsgeo
-description           Open Source toolkit for developing mapping applications.
+description          Open Source C++/Python mapping toolkit.
 homepage             http://mapnik.org/
-platforms              darwin
+platforms            darwin
 
+master_sites         http://download.berlios.de/mapnik/ \
+                     http://download2.berlios.de/mapnik/ 
 
-distname            ${name}-${version}
-checksums           md5 3cba5f847eabb88be6f5047ee7ed0be3 \
-                            sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
-                            rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
+distname             ${name}-${version}
+checksums            md5 3cba5f847eabb88be6f5047ee7ed0be3 \
+                     sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
+                     rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
 
-worksrcdir      ${version}
-use_configure   no
-
-fetch.type          svn
-svn.url             http://svn.mapnik.org/tags/release-0.6.0/
+worksrcdir           ${name}-${version}
+use_configure        no
 
 long_description \
-    Mapnik is a Open Source for developing mapping \
+    Mapnik is a Open Source tookit for developing mapping \
     applications. It's written in C++ and there are \
     Python bindings to facilitate fast-paced agile \
     development. It can comfortably be used for both \
@@ -41,8 +40,6 @@ long_description \
     regular expressions, parsing and so on, Mapnik \
     doesn't re-invent the wheel, but utilises best of \
     breed industry standard libraries from boost.org. \
-
-depends_build       bin:svn:subversion
 
 depends_lib         port:boost \
                     port:libpng \
@@ -62,7 +59,7 @@ variant cairo description {Builds port with Cairo Support} {
     depends_lib-append port:cairo
     depends_lib-append port:cairomm
     depends_lib-append port:py25-cairo
-    build.args-delete CAIRO=False
+    build.args-delete  CAIRO=False
     build.args-append  CAIRO=True
 }
 
