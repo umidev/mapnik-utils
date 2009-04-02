@@ -12,8 +12,7 @@ description          Open Source C++/Python mapping toolkit.
 homepage             http://mapnik.org/
 platforms            darwin
 
-master_sites         http://download.berlios.de/mapnik/ \
-                     http://download2.berlios.de/mapnik/ 
+master_sites         http://mapnik-utils.googlecode.com/svn/sandbox/ports/graphics/py25-mapnik/
 
 distname             mapnik-${version}
 checksums            md5 981271ac1cd1432314a963809c245fe1 \
