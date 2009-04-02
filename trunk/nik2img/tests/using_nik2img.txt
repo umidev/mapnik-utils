@@ -17,9 +17,9 @@ A bunch of levels
 A bunch of formats at 256 by 256 pixels
 ---------------------------------------
 
->>> from nik2img import Map
->>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all',width=256,height=256)
->>> m.open()
+#>>> from nik2img import Map
+#>>> m = Map('tests/mapfile_lambert.xml','tests_output/formats/',format='all',width=256,height=256)
+#>>> m.open()
 
 
 Google Reprojection

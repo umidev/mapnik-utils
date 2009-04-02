@@ -2,7 +2,7 @@
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.2.2SVN"
+__version__ = "0.2.3"
 __license__ = "GPLv2"
 
 import os
@@ -23,6 +23,7 @@ try:
         from mapnik import ProjTransform
 except ImportError, E:
     HAS_MAPNIK_PYTHON = False
+    PRE_6_SERIES = False
     print
     print "WARNING: Mapnik's python bindings not found..."
     print E

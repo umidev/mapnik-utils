@@ -10,7 +10,7 @@ also type the following to download and install in one step::
     $ easy_install nik2img
     $ easy_install --upgrade nik2img # to force upgrading
 
-Or if you're using `pip`::
+Or if you are using `pip`::
 
     $ pip install nik2img
 
