@@ -15,7 +15,7 @@ platforms            darwin
 master_sites         http://download.berlios.de/mapnik/ \
                      http://download2.berlios.de/mapnik/ 
 
-distname             ${name}-${version}
+distname             mapnik-${version}
 checksums            md5 981271ac1cd1432314a963809c245fe1 \
                      sha1 4a092f27fe66b8a9f9800a3944a50c6f5b97473a \
                      rmd160 aa1cbe18a9d0ce96b5c826ea3c8546e1fdf0cc86
