@@ -16,9 +16,9 @@ master_sites         http://download.berlios.de/mapnik/ \
                      http://download2.berlios.de/mapnik/ 
 
 distname             ${name}-${version}
-checksums            md5 3cba5f847eabb88be6f5047ee7ed0be3 \
-                     sha1 e0c94afdd29af9bc0014707e29596ec86fc399b5 \
-                     rmd160 9290fcb8bf8b63d78727e837577fa2fdfa3587a9
+checksums            md5 981271ac1cd1432314a963809c245fe1 \
+                     sha1 4a092f27fe66b8a9f9800a3944a50c6f5b97473a \
+                     rmd160 aa1cbe18a9d0ce96b5c826ea3c8546e1fdf0cc86
 
 worksrcdir           ${name}-${version}
 use_configure        no
