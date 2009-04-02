@@ -15,9 +15,10 @@ platforms            darwin
 master_sites         http://mapnik-utils.googlecode.com/svn/sandbox/ports/graphics/py25-mapnik/
 
 distname             mapnik-${version}
-checksums            md5 981271ac1cd1432314a963809c245fe1 \
-                     sha1 4a092f27fe66b8a9f9800a3944a50c6f5b97473a \
-                     rmd160 aa1cbe18a9d0ce96b5c826ea3c8546e1fdf0cc86
+checksums           md5     f854378749bfebdbacedcda2d18f1c19 \
+                    sha1    051e9c7d409fbadda0d09dfa0feba826126a9fa1 \
+                    rmd160  0109f5dd9bfb0cb7f99f1482c46d01b3cf7cc8d5
+
 
 worksrcdir           ${name}-${version}
 use_configure        no
