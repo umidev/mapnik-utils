@@ -24,12 +24,7 @@ $ sudo python setup.py install
 
 To Install the latest release with [http://peak.telecommunity.com/DevCenter/EasyInstall easy_install] do:
 {{{
-$ sudo easy_install nik2img
-}}}
-
-Or to install the SVN version with easy_install do:
-{{{
-$ sudo easy_install http://mapnik-utils.googlecode.com/svn/trunk/nik2img/
+$ sudo easy_install -U nik2img
 }}}
 
 
@@ -49,12 +44,12 @@ $ nik2img.py -h # should display usage
 }}}
 
 To run the full test suite for nik2img:
- * This will test the generation and automatic opening of a variety of map graphics
+ * This will test the generation and automatic opening (except on linux) of a variety of map graphics
 
 {{{
 $ svn co http://mapnik-utils.googlecode.com/svn/trunk/nik2img/ nik2img-svn
 $ cd nik2img-svn
-$ sudo python setup.py test
+$ sudo python tests/tests.py
 }}}
 
 
