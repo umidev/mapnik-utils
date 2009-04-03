@@ -21,12 +21,13 @@ SELECT ST_GeomFromEWKT('SRID=4326;POLYGON((100 0,101 0,101 1,100 1,100 0))') AS 
 from mapnik import *
 
 # Database settings
-DBNAME = 'mapnik'
-USER= 'postgres'
-TABLE = 'polygon'
-PASSWORD = ''
-HOST = 'localhost'
-
+db_params = dict(
+dbname = 'mapnik',
+#user = 'postgres',
+table = 'polygon',
+#password = '',
+#host = 'localhost'
+)
 
 m = Map(600,300,"+proj=latlong +datum=WGS84")
 m.background = Color('transparent')
@@ -38,7 +39,7 @@ r.symbols.append(LineSymbolizer(Color('darkorange'),2))
 s.rules.append(r)
 m.append_style('My Style',s)
 lyr = Layer('shape')
-lyr.datasource = PostGIS(host=HOST,user=USER,password=PASSWORD,dbname=DBNAME,table=TABLE)
+lyr.datasource = PostGIS(**db_params)
 lyr.styles.append('My Style')
 
 
@@ -50,8 +51,8 @@ r2.symbols.append(LineSymbolizer(Color('darkblue'),3))
 s2.rules.append(r2)
 m.append_style('My Style2',s2)
 lyr2 = Layer('shape_buffer')
-BUFFERED_TABLE = '(select ST_Buffer(geometry, 1) as geometry from %s) polygon' % TABLE
-lyr2.datasource = PostGIS(host=HOST,user=USER,password=PASSWORD,dbname=DBNAME,table=BUFFERED_TABLE)
+db_params['table'] = '(select ST_Buffer(geometry, 1) as geometry from %s) polygon' % db_params['table']
+lyr2.datasource = PostGIS(**db_params)
 lyr2.styles.append('My Style2')
 
 # Append the second, background layer first, since Mapnik uses the painter's model
@@ -61,4 +62,5 @@ m.layers.append(lyr)
 m.zoom_to_box(lyr2.envelope())
 # We have to manually zoom out since the buffered layer's envelope is not properly read by Mapnik
 m.zoom(-5)
+save_map(m,'postgis.xml')
 render_to_file(m,'postgis_geometry.png')
