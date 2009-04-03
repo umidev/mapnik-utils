@@ -3,7 +3,7 @@
 from mapnik import *
 import os
 
-data = '../data'
+data = '../data/benchmarks/data'
 mapfiles = '../mapfiles'
 PROJ_LITERALS =True
 
@@ -108,7 +108,7 @@ def pg_layer(name,srs,styles=[]):
     return lyr
 
 def main():
-    m = Map(600,350,proj[4326])
+    m = Map(600,350,'bunk')#proj[4326])
     m.background = Color("white")
     
     # Styles
@@ -139,24 +139,18 @@ def main():
     m.layers.append(generate_layer('merano2','gdal',
         srs=proj[32632],
         styles=['raster_style']))
-    m.layers.append(generate_layer('n_sid','gdal',
-        srs =proj[32632],
-        styles=['raster_style']))
-    m.layers.append(generate_layer('s_sid','gdal',
-        srs = proj[32634],
-        styles=['raster_style']))
+    #m.layers.append(generate_layer('n_sid','gdal',
+   #     srs =proj[32632],
+    #    styles=['raster_style']))
+    #m.layers.append(generate_layer('s_sid','gdal',
+    #    srs = proj[32634],
+    #    styles=['raster_style']))
     return m
 
 if __name__ == "__main__":
   m = main()
   mapfile = mapfiles + '/pygen_bench.xml'
-  if os.path.exists(mapfile):
-    print '-'*75
-    print 'ERROR:'
-    print "Mapnik's save_map() function cannot overwrite existing files, please delete %s to regenerate" % mapfile
-    print '-'*75
-  else:
-    save_map(m,mapfile)
-    print '-'*75
-    print 'Mapfile (with all layers INACTIVE by default) output to: %s' % mapfile 
-    print '-'*75
+  save_map(m,mapfile)
+  print '-'*75
+  print 'Mapfile (with all layers INACTIVE by default) output to: %s' % mapfile 
+  print '-'*75

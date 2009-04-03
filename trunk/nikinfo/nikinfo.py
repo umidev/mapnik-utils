@@ -29,7 +29,7 @@ def get_attr_list(l):
 map_xml = '''<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
 <Map bgcolor="transparent">
-    <Style name="%(name)s_style">
+    <Style name="%(name)s_style" srs="%(srs)s">
         <Rule>
             <!--
             <PolygonSymbolizer>
@@ -37,18 +37,21 @@ map_xml = '''<?xml version="1.0" encoding="utf-8"?>
             </PolygonSymbolizer>
             -->
             <LineSymbolizer>
-                <CssParameter name="stroke">black</CssParameter>
-                <CssParameter name="stroke-width">1</CssParameter>
+                <CssParameter name="stroke">grey</CssParameter>
+                <CssParameter name="stroke-width">2</CssParameter>
             </LineSymbolizer>
-            <TextSymbolizer name="%(labelfield)s" face_name="DejaVu Sans Book" size="12"/>
+            <LineSymbolizer>
+                <CssParameter name="stroke">steelblue</CssParameter>
+                <CssParameter name="stroke-width">1.5</CssParameter>
+            </LineSymbolizer>
         </Rule>    
     </Style> 
     <Style name="%(name)s_label_style">
         <Rule>
-            <TextSymbolizer name="%(labelfield)s" allow_overlap="yes" face_name="DejaVu Sans Book" size="10"/>
+            <TextSymbolizer name="%(labelfield)s" min_distance="45" spacing="65" max_char_angle_delta="90" placement="line" fill="#1C2237" halo_fill="#E6EBEB" halo_radius="1" face_name="DejaVu Sans Bold" size="11"/>
         </Rule>    
     </Style>
-    <Layer name="%(name)s" status="on">
+    <Layer name="%(name)s" status="on" srs="%(srs)s">
         <StyleName>%(name)s_style</StyleName>
         <StyleName>%(name)s_label_style</StyleName>
         <Datasource>
@@ -79,7 +82,7 @@ m.zoom_to_box(lyr.envelope())
 render_to_file(m, '%(name)s.png')
 '''
 
-def main(shapefile,xml_only=False):
+def main(shapefile,xml_only=False,srid=None):
     shp_dir = os.path.abspath(shapefile).split('.shp')[0]
     name = shapefile.split('.shp')[0]
     lyr = Shapefile(file=shp_dir)
@@ -88,6 +91,10 @@ def main(shapefile,xml_only=False):
     labelfield = attributes[0]['name']
     e = lyr.envelope()
     context = {'labelfield':labelfield,'name':name,'file':shp_dir,'e':e,'minx':e.minx,'miny':e.miny,'maxx': e.maxx,'maxy': e.maxy}
+    if srid:
+        context['srs'] = '+init=epsg:%s' % srid
+    else:
+        context['srs'] = '+proj=latlong +datum=WGS84'
     if not xml_only:
         info = "\nInfo for '%(name)s' shapefile:\nEnvelope: %(e)s\nMaxX, MaxY, MinX, MinY: %(minx)s%(miny)s%(maxx)s%(maxy)s" % (context)
         info += '\nAttributes:\n'
@@ -108,10 +115,14 @@ if __name__ == '__main__':
     parser.add_option('--xml',
         action='store_const', const=True, dest='xml_only',
         help='Only output sample XML')
-        
+
+    parser.add_option('--srid',
+        type='int', dest='srid',
+        help='Provide an epsg code for the srs')
+                
     (options, args) = parser.parse_args()
     
     if len(args) < 1:
       parser.error('Please specify a shapefile to query')
     else:
-      main(args[0],options.xml_only)
+      main(args[0],options.xml_only,options.srid)
