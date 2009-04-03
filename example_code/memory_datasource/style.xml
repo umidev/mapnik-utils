@@ -12,7 +12,6 @@
     <Rule>
       <Filter>[STATE] &lt;&gt; 'Washington'</Filter>
       <LineSymbolizer>
-  <CssParameter name="fill">#888888</CssParameter>
         <CssParameter name="stroke-opacity">0.25</CssParameter>
         <CssParameter name="stroke-dasharray">10,6</CssParameter>
       </LineSymbolizer>
