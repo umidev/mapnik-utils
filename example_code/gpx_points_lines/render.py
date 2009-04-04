@@ -10,7 +10,7 @@ r.symbols.append(LineSymbolizer(Color('black'),1))
 s.rules.append(r)
 m.append_style('My Style',s)
 lyr = Layer('world')
-lyr.datasource = Ogr(file='test_point_line.gpx',layer='tracks')
+lyr.datasource = Ogr(file='fells_loop.gpx',layer='routes')
 
 # tracks
 # routes
