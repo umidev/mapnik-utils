@@ -12,6 +12,8 @@ m.append_style('My Style',s)
 lyr = Layer('world')
 lyr.datasource = Ogr(file='fells_loop.gpx',layer='routes')
 
+## Possible 'layer' values are:
+
 # tracks
 # routes
 # waypoints
