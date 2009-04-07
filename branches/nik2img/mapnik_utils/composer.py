@@ -30,13 +30,12 @@ class Compose(object):
         self.center = None
         self.radius = None
         self.zoom_to_layers = None
-        #self.extent = None
+        self.extent = None
         self.max_extent = None
         self.srs = None
         self.layers = None
         self.re_render_times = None
         self.post_step_pause = None
-        self.trace = None
         self.max_resolution = None
         self.find_and_replace = None
         self.world_file = None
@@ -44,6 +43,10 @@ class Compose(object):
         self.save_map = None
         self.app = None
         self.dry_run = False
+        
+        self.zoom_in = None
+        self.horizontal = 1
+        self.vertical = 1
 
         self.changed = []
         self.font_handler = None
@@ -75,11 +78,12 @@ class Compose(object):
 
     def output_error(msg, E=None):
         if E:
-            msg = E
+            msg += E
         raise sys.exit(msg)
 
     def msg(msg):
-        sys.stderr.write('%s\n' % msg)
+        if self.verbose:
+            sys.stderr.write('%s\n' % msg)
 
     def register_fonts(self,fonts):
         from fonts import FontHandler
@@ -89,41 +93,76 @@ class Compose(object):
             self.mapsg("Failed to register: '%s'" % self.font_handler.failed)
 
     def build(self):
-        loader = Load(self.mapfile)
+        loader = Load(self.mapfile,variables={},paths_relative_to_xml=True)
         self.map = loader.build_map(self.width,self.height)
 
         if self.srs:
+            self.msg('Setting srs to: %s' % self.srs)
             self.map.set_easy_srs(self.srs)
 
         if self.layers:
             selected, disactivated = self.map.select_layers(self.layers)
+            self.msg('Selected layers: %s' % selected)
             if not selected:
-                self.output_error('Layer not found: available layers are: "%s"' % ', '.join(disactivated))
+                self.output_error('Layer not found: available layers are: "%s"' % ',  '.join(disactivated))
                 
+        # handle shifts in pixel dimensions or bbox ratio
+        # need to make as an option
+        try:
+            self.map.aspect_fix_mode = mapnik.aspect_fix_mode.ADJUST_CANVAS_HEIGHT
+        except:
+            self.msg('aspect_fix_mode not available!')
+
+        
+        # zoom to max extent at beginning if we later need to 
+        # zoom to a center point
+        # or need to zoom to a zoom-level
         if self.center or not self.zoom is None:
             if self.max_extent:
+                self.msg('Zooming to max extent: %s' % self.max_extent) 
                 self.map.zoom_to_box(mapnik.Envelope(*self.max_extent))
             else:
                 self.map.zoom_max()
+                self.msg('Zoomed to *estimated* max extent: %s' % self.map.envelope()) 
 
         if self.center and not self.zoom is None:
+            self.msg('Zooming to Center (%s) and Zoom Level "%s"' % (self.center,self.zoom))
             self.map.set_center_and_zoom(self.center[0],self.center[1],self.zoom)
         elif self.center and self.radius:
+            self.msg('Zooming to Center (%s) and Radius "%s"' % (self.center,self.radius))
             self.map.set_center_and_radius(self.center[0],self.center[1],self.radius)
         elif not self.zoom is None:
+            self.msg('Zooming to Zoom Level "%s"' % (self.zoom))
             self.map.zoom_to_level(self.zoom)
         elif self.zoom_to_layers:
+            self.msg('Zooming to Layers: "%s"' % (self.zoom_to_layers))
             self.map.activate_layers(self.zoom_to_layers)
             if len(self.zoom_to_layers) > 1:
                 self.map.zoom_to_layers(self.zoom_to_layers)
             else:
                 self.map.zoom_to_layer(self.zoom_to_layers[0])
         else:
-            if self.max_extent:
-                self.map.zoom_to_box(mapnik.Envelope(*self.max_extent))
+            if self.extent:
+                env = mapnik.Envelope(*self.extent)
+                self.msg('Zooming to custom projected extent: "%s"' % env)
+                self.map.zoom_to_box(env)
+                from_prj = mapnik.Projection(self.map.srs)
+                to_prj = mapnik.Projection('+init=epsg:4326')
+                bbox = env.transform(from_prj,to_prj)
+                self.msg('Custom extent in geographic coordinates: "%s"' % bbox)
+            elif self.bbox:
+                env = mapnik.Envelope(*self.bbox)
+                self.msg('Zooming to custom geographic extent: "%s"' % env)
+                from_prj = mapnik.Projection('+init=epsg:4326')
+                to_prj = mapnik.Projection(self.map.srs)
+                self.map.zoom_to_box(env.transform(from_prj,to_prj))
             else:
                 self.map.zoom_all()
-          
+                self.msg('Zoom to extent of all layers: "%s"' % self.map.envelope())
+
+        if self.zoom_in:
+            self.map.zoom(self.zoom_in)
+            #self.map.pan(self.map.width/2.0*self.horizontal,self.map.height/2.0*self.vertical) 
         #if self.verbose:
         #    self.layers_in_extent(self.map)
   
@@ -140,7 +179,10 @@ class Compose(object):
         if self.save_map:
             renderer.save_map = self.save_map
         if self.image:
-            renderer.render_file()
+            try:
+                renderer.render_file()
+            except Exception, E:
+                self.output_error(E)
         else:
             renderer.print_stream()
         self.rendered = True

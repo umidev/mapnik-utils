@@ -1,10 +1,12 @@
+import sys
 from mapnik import Map, load_map
 from os.path import exists, dirname, basename
-from sys import path
+
 
 class Load(object):
-    def __init__(self,mapfile,variables={}):
+    def __init__(self,mapfile,variables={},paths_relative_to_xml=True):
         self.mapfile = mapfile
+        self.paths_relative_to_xml = paths_relative_to_xml
         self.variables = variables
         self.mapfile_types = {'xml':'XML mapfile','mml':'Mapnik Markup Language', 'py':'Python map variable'}
         self.file_type = self.mapfile.split('.')[-1]
@@ -28,7 +30,11 @@ class Load(object):
             return None
 
     def load_xml(self,m):
-        return load_map(m,self.mapfile)
+        try:
+            return load_map(m,self.mapfile,False,self.paths_relative_to_xml,False)
+        except Exception, E:
+            #sys.stderr.write('Warning: %s' % E)
+            return load_map(m,self.mapfile)
 
     def load_mml(self,m):    
         from cascadenik import load_map as load
@@ -39,8 +45,8 @@ class Load(object):
         Instanciate a Mapnik Map object from an external python script.
         """
         py_path = dirname(self.mapfile)
-        path.append(py_path)
-        py_module = basename(path).split('.')[0]
+        os.path.append(py_path)
+        py_module = basename(os.path).split('.')[0]
         module = __import__(py_module)
         py_map = getattr(module,map_variable,None)
         py_map.width = self.m.width

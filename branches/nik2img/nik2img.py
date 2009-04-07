@@ -2,8 +2,9 @@
 
 import os
 import sys
-from pdb import set_trace
+import tempfile
 from timeit import time
+from pdb import set_trace
 from optparse import OptionParser
 
 version = '0.2.3'
@@ -39,16 +40,16 @@ class ComposeDebug(Compose):
         self.no_color = kwargs.get('no_color')   
         self.pause = kwargs.get('pause')
         self.trace_steps = kwargs.get('trace_steps')
+        self.verbose = kwargs.get('verbose')
 
         self.timing_started = False
         self.step_counter = 0
         self.start_time = 0
-        self.versbose = True
 
         Compose.__init__(self,mapfile,**kwargs)
 
     def setup(self):
-        if self.trace and not self.verbose:
+        if self.trace_steps and not self.verbose:
             self.verbose = True
             self.debug_msg('PDB trace requested, automatically entering verbose mode')
 
@@ -180,22 +181,32 @@ parser.add_option('-f', '--format', dest='format',
                   help='Format of image: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).')
 
 # tilecache and osm2pgsql use -b
-# should we assume lon/lat, geographic?
+# we shall assume lon/lat, geographic
+# while extent will be projected extents
+# that must match the map
 parser.add_option('-b','--bbox', dest='bbox',
                   type='float', nargs=4,
                   help='Geographical bounding box. Two long,lat pairs e.g. -124.731422 24.955967 -66.969849 49.371735',
                   action='store')
 
 parser.add_option('-c', '--center', dest='center', nargs=2,
-                  help='Center Coordinate. A long,lat pair e.g.: -122.263 37.804', type='float',
+                  help='Center Coordinate. A long,lat pair e.g.: -122.263 37.804',
+                  type='float',
                   action='store')
 
 parser.add_option('-z', '--zoom', dest='zoom',
-                  help='Zoom level', type='int',
+                  help='Zoom level',
+                  type='int',
                   action='store')
 
+# beta...
+parser.add_option('--zoom-in', dest='zoom_in',
+                  help='Zoom increment', type='float',
+                  action='store')
+                  
 parser.add_option('-r', '--radius', dest='radius',
-                  help='Zoom to radius (in map units) around center', type='float',
+                  help='Zoom to radius (in map units) around center',
+                  type='float',
                   action='store')
 
 parser.add_option('--zoom-to-layers', dest='zoom_to_layers',
@@ -205,11 +216,13 @@ parser.add_option('--zoom-to-layers', dest='zoom_to_layers',
                   callback=make_list)
                   
 parser.add_option('-e', '--projected-extent', dest='extent', nargs=4,
-                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map', type='float',
+                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
+                  type='float',
                   action='store')
 
 parser.add_option('-m', '--max-extent', dest='max_extent', nargs=4,
-                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map', type='float',
+                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
+                  type='float',
                   action='store')
                   
 parser.add_option('-s', '--srs',
@@ -217,7 +230,8 @@ parser.add_option('-s', '--srs',
                   help="Spatial reference system to project the image into - accepts either <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/sr-org/6")
 
 parser.add_option('-d', '--dimensions', dest='dimensions', nargs=2,
-                  help='Pixel dimensions of image (width,height)', type='int',
+                  help='Pixel dimensions of image (width,height)',
+                  type='int',
                   default = (600,400),
                   action='store')
 
@@ -243,7 +257,6 @@ parser.add_option('-a', '--app', dest='app',
 parser.add_option('--profile', dest='profile',
                   action='store_true', default=False,
                   help='Output a cProfile report')
-
 
 # todo
 parser.add_option('-v', '--verbose', dest='verbose',
@@ -277,21 +290,27 @@ parser.add_option('--fonts',
 if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
-    if len(args) < 1:
+    if not sys.stdin.isatty():
+        xml = sys.stdin.read()
+        (handle, mapfile) = tempfile.mkstemp('.xml', 'mapfile_string')
+        os.close(handle)
+        open(mapfile, 'w').write(xml)
+        print mapfile
+        if len(args) > 0:
+            options.image = args[0]
+    elif len(args) == 0:
         parser.error(color_text(1,'\n\nPlease provide the path to a mapnik xml or cascadenik mml file\n',options.no_color))
     else:
         mapfile = args[0]
         if len(args) > 1:
             options.image = args[1]
-        else:
-            options.image = None
            
     options.width, options.height = options.dimensions
 
     def main():
         nik_map = ComposeDebug(mapfile,**options.__dict__)
         if not options.no_open:
-            if options.image:
+            if hasattr(options,'image'):
                 nik_map.open()
             else:
                 nik_map.render()
