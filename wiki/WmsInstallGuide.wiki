@@ -2,20 +2,24 @@
 
 This is a sample mapnik WMS server configuration, along with a testing [http://mapnik-utils.googlecode.com/svn/example_code/wms/openlayers.html Openlayers map].
 
-All files can be found in http://mapnik-utils.googlecode.com/svn/trunk/tutorials/wms/
+All files can be found in http://mapnik-utils.googlecode.com/svn/example_code/wms/
 
 == Installation ==
 
 === Step 1 ===
 
  * Install the wms prequisites listed at: http://trac.mapnik.org/wiki/OgcServer
- * Decide whether to run as cgi or fastcgi (the server works with either)
+ * Decide whether to run as wsgi,mod_python,cgi,fastcgi (the server has wrappers for each)
  * If you want to run in fastcgi mode then install mod_fastcgi or mod_fcgi within apache
   * These hints might help:
    * http://blog.brandonking.net//2008/01/django-app-modfcgid-apache-2-setup-on.html/
    * http://blog.cleverelephant.ca/2008/05/fastcgi-on-osx-leopard.html
  
 === Step 2 ===
+
+Here is an example setup with cgi/fastcgi:
+
+(Update WSGI can be the easiest to setup, see http://trac.mapnik.org/wiki/OgcServer)
 
  Configure Apache to allow python cgi execution in a specific directory, like the cgi-bin by either renaming the script to mapnikserv.cgi or adding an Apache directive to a custom directory like:
  {{{
