@@ -25,7 +25,7 @@ def call(cmd):
     if response < 0:
       sys.exit(response)
   except OSError, E:
-    sys.exit(E)
+    print E
 
 version = __import__(app).__version__
 
