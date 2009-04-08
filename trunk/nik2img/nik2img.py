@@ -2,7 +2,7 @@
 
 __author__ = "Dane Springmeyer (dbsgeo [ -a- ] gmail.com)"
 __copyright__ = "Copyright 2008, Dane Springmeyer"
-__version__ = "0.3.0SVN"
+__version__ = "0.2.4"
 __license__ = "GPLv2"
 
 import os
@@ -1298,4 +1298,3 @@ if __name__ == "__main__":
       cProfile.run('main()', sort=1)
   else:
       main()
-# 1358

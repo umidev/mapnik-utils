@@ -2,6 +2,13 @@
 nik2img changelog
 =================
 
+
+Version 0.2.4, Aplir 7, 2009:
+-----------------------------
+
+* Fix build problem with easy_install zipped egg
+
+
 Version 0.2.3, April 2, 2009:
 -----------------------------
 
