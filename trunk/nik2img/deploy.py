@@ -5,7 +5,7 @@ Release Steps
 -------------
  * create ~./pypirc file with pypi user:pass
  * Edit CHANGELOG.txt
- * Temporarily remove SVN tag from __version__
+ * Temporarily remove SVN tag from __version__ and in setup.py
  * Run `deploy.py` to create sdist, upload, and create tag
  * commit tag
  * Update Google Code wiki
