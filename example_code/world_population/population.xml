@@ -116,7 +116,7 @@
      </Rule>
   </Style>
   
-  <Layer name="countries" status="on">
+  <Layer name="countries" status="on" srs="+proj=latlong +datum=WGS84">
     <!-- Style order determines layering hierarchy -->
     <!-- Labels go on top so they are listed second -->
     <StyleName>population</StyleName>

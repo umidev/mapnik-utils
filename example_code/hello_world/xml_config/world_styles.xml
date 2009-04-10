@@ -14,11 +14,11 @@
     </Rule>
   </Style>
 
-  <Layer name="world">
+  <Layer name="world" srs="+proj=latlong +datum=WGS84">
     <StyleName>My Style</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">../data/world_borders</Parameter>
+      <Parameter name="file">../../../data/world_borders</Parameter>
     </Datasource>
   </Layer>
 
