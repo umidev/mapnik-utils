@@ -4,7 +4,7 @@
 
   <Style name="schools">
     <Rule>
-      <PointSymbolizer file="school.png" width="26" height="26" type="png" allow_overlap="yes"/>
+      <PointSymbolizer file="amenity=school.png" width="24" height="24" type="png" allow_overlap="yes"/>
       <TextSymbolizer name="id" face_name="DejaVu Sans Book" size="12"  allow_overlap="yes" dx="5" dy="5"/>
     </Rule>
   </Style>
