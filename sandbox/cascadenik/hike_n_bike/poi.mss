@@ -471,6 +471,33 @@
     point-allow-overlap: true;
 }
 
+.poi.point[amenity=parking][zoom>=13][fee=yes] name
+{
+    point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.8.png');
+    text-fill: #0092da;
+    text-dy: 9;
+    text-face-name: "DejaVu Sans Book";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 50;
+    text-halo-fill: #fefefe;
+    text-halo-radius: 1;
+}
+
+.poi.point[amenity=parking][zoom>=15][fee=yes] name
+{
+    point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.12.png');
+    text-fill: #0092da;
+    text-dy: 13;
+    text-face-name: "DejaVu Sans Book";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 50;
+    text-halo-fill: #fefefe;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
 .poi.point[amenity=place_of_worship][zoom>=13] name
 {
     point-file: url('map-icons/svg-twotone-png/place_of_worship.p.8.png');
@@ -497,12 +524,6 @@
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-
-/* .poi.point[amenity=parking][fee=yes] */
-/* { */
-/*     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.12.png'); */
-/*     text-fill: #0092da; */
-/* } */
 
 /* .poi.label[zoom>=17][amenity=police], */
 /* .poi.label[zoom>=17][amenity=police] */
@@ -617,7 +638,7 @@
 .poi_shop.point[shop=bicycle][zoom>=13] name
 {
     point-file: url('map-icons/svg-twotone-png/shopping_bicycle.n.14.png');
-    text-fill: #0092da;
+    text-fill: #ac39ac;
     text-dy: 13;
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
@@ -630,7 +651,7 @@
 .poi_shop.point[shop=bicycle][zoom>=15] name
 {
     point-file: url('map-icons/svg-twotone-png/shopping_bicycle.n.16.png');
-    text-fill: #0092da;
+    text-fill: #ac39ac;
     text-dy: 17;
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
