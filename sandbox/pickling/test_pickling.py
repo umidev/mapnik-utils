@@ -59,12 +59,12 @@ def test_equivalence(pickles):
 
 maps = []
 m = Map(45,45)
-#m.background = Color(0,0,0)
+m.background = Color(0,0,0)
 m.buffer_size = 10
 
 maps.extend(pack_em(m))
 
-import pdb;pdb.set_trace()
+#import pdb;pdb.set_trace()
 #
 ## mapnik::color
 #
@@ -77,9 +77,9 @@ colors.append(pickle.loads(pickle.dumps(obj,protocol=PROTOCOL)))
 obj = Color(70,130,180,0)
 colors.append(pickle.loads(pickle.dumps(obj,protocol=PROTOCOL)))
 
-#layers = []
-#lyr = Layer('test')
-#layers.extend(pack_em(lyr))
+layers = []
+lyr = Layer('test')
+layers.extend(pack_em(lyr))
 
 coords = []
 coord = Coord(-122,48)
@@ -89,7 +89,7 @@ def main():
     global tests
     test_equivalence(maps)
     test_equivalence(colors)
-    #test_equivalence(layer)
+    test_equivalence(layer)
 
 if __name__ == '__main__':
     main()
