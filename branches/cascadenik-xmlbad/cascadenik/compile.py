@@ -921,6 +921,26 @@ def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
         symbolizer_el.set('width', str(img.size[0]))
         symbolizer_el.set('height', str(img.size[1]))
 
+def new_postprocess_symbolizer_image_file(file_name, out, temp_name):
+    """ Given a file name, an output directory name, and a temporary
+        file name, find the "file" attribute in the symbolizer and save it
+        to a temporary location as a PING while noting its dimensions.
+    """
+    # read the image to get some more details
+    img_path = file_name
+    img_data = urllib.urlopen(img_path).read()
+    img_file = StringIO.StringIO(img_data)
+    img = PIL.Image.open(img_file)
+    
+    # save the image to a tempfile, making it a PNG no matter what
+    (handle, path) = tempfile.mkstemp(suffix='.png', prefix='cascadenik-%s-' % temp_name, dir=out)
+    os.close(handle)
+    
+    img.save(path)
+    os.chmod(path, 0644)
+    
+    return path, 'png', img.size[0], img.size[1]
+
 def get_shield_rule_groups(declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
         create new Style elements with a TextSymbolizer, add them to Map
@@ -930,12 +950,15 @@ def get_shield_rule_groups(declarations, out=None):
                     'shield-fill': 'fill', 'shield-min-distance': 'min_distance',
                     'shield-file': 'file', 'shield-width': 'width', 'shield-height': 'height' }
 
+    property_names = property_map.keys()
+    
     # pull out all the names
     text_names = [dec.selector.elements[1].names[0]
                   for dec in declarations
                   if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1]
-
-    rule_el_groups = []
+    
+    # a place to put groups
+    groups = []
     
     # a separate style element for each text name
     for text_name in set(text_names):
@@ -949,30 +972,78 @@ def get_shield_rule_groups(declarations, out=None):
                                      or (len(dec.selector.elements) == 2
                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
         
-        # a place to put rule elements
-        rule_els = []
+        # a place to put rules
+        rules = []
         
-        for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-            if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
-                symbolizer_el = Element('ShieldSymbolizer')
-            else:
-                # we can do nothing with fontless text
-                continue
-
-            symbolizer_el.set('name', text_name)
-            
-            for (parameter, value) in parameter_values.items():
-                symbolizer_el.set(parameter, str(value))
-    
-            if symbolizer_el.get('file', False):
-                postprocess_symbolizer_image_file(symbolizer_el, out, 'shield')
-    
-                rule_el = make_rule_element(filter, symbolizer_el)
-                rule_els.append(rule_el)
+        shield_face_name, shield_size, shield_file = None, None, None
+        shield_type, shield_width, shield_height = None, None, None
         
-        rule_el_groups.append((text_name, rule_els))
+        for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+            for (parameter, value) in sorted(values.items()):
+                if parameter == 'shield-file':
+                    shield_file, shield_type, image_width, image_height = new_postprocess_symbolizer_image_file(str(value.value), out, 'shield')
+                    shield_width = shield_width or image_width
+                    shield_height = shield_height or image_height
+                if parameter == 'shield-width':
+                    shield_width = value.value
+                if parameter == 'shield-height':
+                    shield_height = value.value
+                if parameter == 'shield-face-name':
+                    shield_face_name = value.value
+                if parameter == 'shield-size':
+                    shield_size = value.value
+        
+            if shield_face_name and shield_size:
+                symbolizer = output.ShieldSymbolizer(shield_face_name, shield_size, shield_file, shield_type, shield_width, shield_height)
+                rules.append(new_make_rule_element(filter, symbolizer))
+        
+        groups.append((text_name, rules))
+    
+    return dict(groups)
 
-    return rule_el_groups
+    #     # pull out all the names
+    #     text_names = [dec.selector.elements[1].names[0]
+    #                   for dec in declarations
+    #                   if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1]
+    # 
+    #     rule_el_groups = []
+    #     
+    #     # a separate style element for each text name
+    #     for text_name in set(text_names):
+    #     
+    #         # just the ones we care about here.
+    #         # the complicated conditional means: get all declarations that
+    #         # apply to this text_name specifically, or text in general.
+    #         name_declarations = [dec for dec in declarations
+    #                              if dec.property.name in property_map
+    #                                 and (len(dec.selector.elements) == 1
+    #                                      or (len(dec.selector.elements) == 2
+    #                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
+    #         
+    #         # a place to put rule elements
+    #         rule_els = []
+    #         
+    #         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
+    #             if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
+    #                 symbolizer_el = Element('ShieldSymbolizer')
+    #             else:
+    #                 # we can do nothing with fontless text
+    #                 continue
+    # 
+    #             symbolizer_el.set('name', text_name)
+    #             
+    #             for (parameter, value) in parameter_values.items():
+    #                 symbolizer_el.set(parameter, str(value))
+    #     
+    #             if symbolizer_el.get('file', False):
+    #                 postprocess_symbolizer_image_file(symbolizer_el, out, 'shield')
+    #     
+    #                 rule_el = make_rule_element(filter, symbolizer_el)
+    #                 rule_els.append(rule_el)
+    #         
+    #         rule_el_groups.append((text_name, rule_els))
+    # 
+    #     return rule_el_groups
 
 def get_point_rules(declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,

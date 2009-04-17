@@ -61,3 +61,18 @@ class TextSymbolizer:
 
     def __repr__(self):
         return 'Text(%s, %s)' % (self.face_name, self.size)
+
+class ShieldSymbolizer:
+    def __init__(self, face_name, size, file, filetype, width, height):
+        assert type(size) is int
+        assert type(width) is int
+        assert type(height) is int
+        self.face_name = face_name
+        self.size = size
+        self.file = file
+        self.filetype = filetype
+        self.width = width
+        self.height = height
+
+    def __repr__(self):
+        return 'Shield(%s, %s, %s)' % (self.face_name, self.size, self.file)

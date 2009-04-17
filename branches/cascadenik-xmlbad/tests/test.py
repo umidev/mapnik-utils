@@ -1046,8 +1046,6 @@ class StyleRuleTests(unittest.TestCase):
         
         text_rule_groups = get_text_rule_groups(declarations)
         
-        print text_rule_groups
-
         self.assertEqual(399999, text_rule_groups['label'][0].maxscale.value)
         self.assertEqual('Arial', text_rule_groups['label'][0].symbolizers[0].face_name)
         self.assertEqual(12, text_rule_groups['label'][0].symbolizers[0].size)
@@ -1175,6 +1173,80 @@ class StyleRuleTests(unittest.TestCase):
     
         declarations = stylesheet_declarations(s, is_gym=True)
         
+        text_rule_groups = get_text_rule_groups(declarations)
+        
+        self.assertEqual(399999, text_rule_groups['label'][0].maxscale.value)
+        self.assertEqual('Arial', text_rule_groups['label'][0].symbolizers[0].face_name)
+        self.assertEqual(12, text_rule_groups['label'][0].symbolizers[0].size)
+        self.assertEqual('[foo] < 1', text_rule_groups['label'][0].filter.text)
+        
+        self.assertEqual(399999, text_rule_groups['label'][1].maxscale.value)
+        self.assertEqual('Helvetica', text_rule_groups['label'][1].symbolizers[0].face_name)
+        self.assertEqual(12, text_rule_groups['label'][1].symbolizers[0].size)
+        self.assertEqual('[foo] >= 1', text_rule_groups['label'][1].filter.text)
+    
+        self.assertEqual(400000, text_rule_groups['label'][2].minscale.value)
+        self.assertEqual('Arial', text_rule_groups['label'][2].symbolizers[0].face_name)
+        self.assertEqual(10, text_rule_groups['label'][2].symbolizers[0].size)
+        self.assertEqual('[foo] < 1', text_rule_groups['label'][2].filter.text)
+        
+        self.assertEqual(400000, text_rule_groups['label'][3].minscale.value)
+        self.assertEqual('Helvetica', text_rule_groups['label'][3].symbolizers[0].face_name)
+        self.assertEqual(10, text_rule_groups['label'][3].symbolizers[0].size)
+        self.assertEqual('[foo] >= 1', text_rule_groups['label'][3].filter.text)
+        
+        shield_rule_groups = get_shield_rule_groups(declarations)
+        
+        assert shield_rule_groups['label'][0].minscale is None
+        assert shield_rule_groups['label'][0].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][0].symbolizers[0].face_name)
+        self.assertEqual(12, shield_rule_groups['label'][0].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][0].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][0].symbolizers[0].height)
+        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] <= 1", shield_rule_groups['label'][0].filter.text)
+        
+        assert shield_rule_groups['label'][1].minscale is None
+        assert shield_rule_groups['label'][1].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][1].symbolizers[0].face_name)
+        self.assertEqual(10, shield_rule_groups['label'][1].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][1].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][1].symbolizers[0].height)
+        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][1].filter.text)
+        
+        assert shield_rule_groups['label'][2].minscale is None
+        assert shield_rule_groups['label'][2].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][2].symbolizers[0].face_name)
+        self.assertEqual(14, shield_rule_groups['label'][2].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][2].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][2].symbolizers[0].height)
+        self.assertEqual("[bar] = 'baz' and [foo] <= 1", shield_rule_groups['label'][2].filter.text)
+        
+        assert shield_rule_groups['label'][3].minscale is None
+        assert shield_rule_groups['label'][3].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][3].symbolizers[0].face_name)
+        self.assertEqual(14, shield_rule_groups['label'][3].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][3].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][3].symbolizers[0].height)
+        self.assertEqual("[bar] = 'baz' and [foo] > 1", shield_rule_groups['label'][3].filter.text)
+        
+        assert shield_rule_groups['label'][4].minscale is None
+        assert shield_rule_groups['label'][4].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][4].symbolizers[0].face_name)
+        self.assertEqual(16, shield_rule_groups['label'][4].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][4].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][4].symbolizers[0].height)
+        self.assertEqual("[bar] = 'quux' and [foo] <= 1", shield_rule_groups['label'][4].filter.text)
+        
+        assert shield_rule_groups['label'][5].minscale is None
+        assert shield_rule_groups['label'][5].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][5].symbolizers[0].face_name)
+        self.assertEqual(16, shield_rule_groups['label'][5].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].height)
+        self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][5].filter.text)
+
+        return # TODO: for now
+        
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))
     
@@ -1290,6 +1362,58 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+        
+        shield_rule_groups = get_shield_rule_groups(declarations)
+        
+        assert shield_rule_groups['label'][0].minscale is None
+        assert shield_rule_groups['label'][0].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][0].symbolizers[0].face_name)
+        self.assertEqual(12, shield_rule_groups['label'][0].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][0].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][0].symbolizers[0].height)
+        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] <= 1", shield_rule_groups['label'][0].filter.text)
+        
+        assert shield_rule_groups['label'][1].minscale is None
+        assert shield_rule_groups['label'][1].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][1].symbolizers[0].face_name)
+        self.assertEqual(10, shield_rule_groups['label'][1].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][1].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][1].symbolizers[0].height)
+        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][1].filter.text)
+        
+        assert shield_rule_groups['label'][2].minscale is None
+        assert shield_rule_groups['label'][2].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][2].symbolizers[0].face_name)
+        self.assertEqual(14, shield_rule_groups['label'][2].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][2].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][2].symbolizers[0].height)
+        self.assertEqual("[bar] = 'baz' and [foo] <= 1", shield_rule_groups['label'][2].filter.text)
+        
+        assert shield_rule_groups['label'][3].minscale is None
+        assert shield_rule_groups['label'][3].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][3].symbolizers[0].face_name)
+        self.assertEqual(14, shield_rule_groups['label'][3].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][3].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][3].symbolizers[0].height)
+        self.assertEqual("[bar] = 'baz' and [foo] > 1", shield_rule_groups['label'][3].filter.text)
+        
+        assert shield_rule_groups['label'][4].minscale is None
+        assert shield_rule_groups['label'][4].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][4].symbolizers[0].face_name)
+        self.assertEqual(16, shield_rule_groups['label'][4].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][4].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][4].symbolizers[0].height)
+        self.assertEqual("[bar] = 'quux' and [foo] <= 1", shield_rule_groups['label'][4].filter.text)
+        
+        assert shield_rule_groups['label'][5].minscale is None
+        assert shield_rule_groups['label'][5].maxscale is None
+        self.assertEqual('Helvetica', shield_rule_groups['label'][5].symbolizers[0].face_name)
+        self.assertEqual(16, shield_rule_groups['label'][5].symbolizers[0].size)
+        self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].width)
+        self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].height)
+        self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][5].filter.text)
+
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))
