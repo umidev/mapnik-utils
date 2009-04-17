@@ -11,7 +11,7 @@ import PIL.Image
 import os.path
 import zipfile
 
-import style
+import style, output
 
 try:
     import xml.etree.ElementTree as ElementTree
@@ -551,6 +551,43 @@ def make_rule_element(filter, *symbolizer_els):
     
     return rule_el
 
+def new_make_rule_element(filter, *symbolizers):
+    """ Given a Filter, return a Rule element prepopulated with
+        applicable min/max scale denominator and filter elements.
+    """
+    scale_tests = [test for test in filter.tests if test.isMapScaled()]
+    other_tests = [test for test in filter.tests if not test.isMapScaled()]
+    
+    # these will be replaced with values as necessary
+    minscale, maxscale, filter = None, None, None
+    
+    for scale_test in scale_tests:
+
+        if scale_test.op in ('>', '>='):
+            if scale_test.op == '>=':
+                value = scale_test.value
+            elif scale_test.op == '>':
+                value = scale_test.value + 1
+
+            minscale = output.MinScaleDenominator(value)
+
+        if scale_test.op in ('<', '<='):
+            if scale_test.op == '<=':
+                value = scale_test.value
+            elif scale_test.op == '<':
+                value = scale_test.value - 1
+
+            maxscale = output.MaxScaleDenominator(value)
+    
+    filter_text = ' and '.join(test2str(test) for test in other_tests)
+    
+    if filter_text:
+        filter = output.Filter(filter_text)
+
+    rule = output.Rule(minscale, maxscale, filter, *[s for s in symbolizers if s])
+    
+    return rule
+
 def insert_layer_style(map_el, layer_el, style_name, rule_els):
     """ Given a Map element, a Layer element, a style name and a list of Rule
         elements, create a new Style element and insert it into the flow and
@@ -618,28 +655,47 @@ def filtered_property_declarations(declarations, property_map):
 
     return rules
 
+def new_filtered_property_declarations(declarations, property_names):
+    """
+    """
+    # just the ones we care about here
+    declarations = [dec for dec in declarations if dec.property.name in property_names]
+    selectors = [dec.selector for dec in declarations]
+
+    # a place to put rules
+    rules = []
+    
+    for filter in tests_filter_combinations(selectors_tests(selectors)):
+        rule = (filter, {})
+        
+        # collect all the applicable declarations into a list of parameters and values
+        for dec in declarations:
+            if is_applicable_selector(dec.selector, filter):
+                rule[1][dec.property.name] = dec.value
+
+        if rule[1]:
+            rules.append(rule)
+
+    return rules
+
 def get_polygon_rules(declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
         create a new Style element with a PolygonSymbolizer, add it to Map
         and refer to it in Layer.
     """
-    property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
+    property_names = ['polygon-fill', 'polygon-opacity']
     
-    # a place to put rule elements
-    rule_els = []
+    # a place to put rules
+    rules = []
     
-    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-        symbolizer_el = Element('PolygonSymbolizer')
+    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+        fill = values.has_key('polygon-fill') and values['polygon-fill'].value or None
+        opacity = values.has_key('polygon-opacity') and values['polygon-opacity'].value or None
+        symbolizer = output.PolygonSymbolizer(fill, opacity)
         
-        for (parameter, value) in sorted(parameter_values.items()):
-            parameter = Element('CssParameter', {'name': parameter})
-            parameter.text = str(value)
-            symbolizer_el.append(parameter)
-
-        rule_el = make_rule_element(filter, symbolizer_el)
-        rule_els.append(rule_el)
+        rules.append(new_make_rule_element(filter, symbolizer))
     
-    return rule_els
+    return rules
 
 def get_line_rules(declarations):
     """ Given a Map element, a Layer element, and a list of declarations,

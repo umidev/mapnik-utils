@@ -7,6 +7,7 @@ import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
+from cascadenik.style import color
 from cascadenik.compile import tests_filter_combinations, Filter, selectors_tests
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
@@ -716,6 +717,25 @@ class StyleRuleTests(unittest.TestCase):
         """
 
         declarations = stylesheet_declarations(s, is_gym=True)
+        rules = get_polygon_rules(declarations)
+        
+        self.assertEqual(399999, rules[0].maxscale.value)
+        self.assertEqual(color(0xCC, 0xCC, 0xCC), rules[0].symbolizers[0].fill)
+        self.assertEqual("[use] = 'cemetery'", rules[0].filter.text)
+        
+        self.assertEqual(399999, rules[1].maxscale.value)
+        self.assertEqual(color(0x66, 0xFF, 0x66), rules[1].symbolizers[0].fill)
+        self.assertEqual("[use] = 'park'", rules[1].filter.text)
+    
+        self.assertEqual(400000, rules[2].minscale.value)
+        self.assertEqual(color(0x99, 0x99, 0x99), rules[2].symbolizers[0].fill)
+        self.assertEqual("[use] = 'cemetery'", rules[2].filter.text)
+        
+        self.assertEqual(400000, rules[3].minscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0x00), rules[3].symbolizers[0].fill)
+        self.assertEqual("[use] = 'park'", rules[3].filter.text)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))

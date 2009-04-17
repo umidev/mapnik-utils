@@ -16,15 +16,11 @@ class color:
     def __str__(self):
         return repr(self)
 
-class color_transparent:
-    def __init__(self, r, g, b):
-        self.channels = r, g, b
+    def __eq__(self, other):
+        return self.channels == other.channels
 
-    def __repr__(self):
-        return '#%02x%02x%02x' % self.channels
-
-    def __str__(self):
-        return repr(self)
+class color_transparent(color):
+    pass
 
 class uri:
     def __init__(self, address, base=None):
