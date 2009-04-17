@@ -785,6 +785,25 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+        rules = get_polygon_rules(declarations)
+        
+        self.assertEqual(399999, rules[0].maxscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0x00), rules[0].symbolizers[0].fill)
+        self.assertEqual('[foo] < 1', rules[0].filter.text)
+        
+        self.assertEqual(399999, rules[1].maxscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0x00), rules[1].symbolizers[0].fill)
+        self.assertEqual('[foo] > 1', rules[1].filter.text)
+    
+        self.assertEqual(400000, rules[2].minscale.value)
+        self.assertEqual(color(0x00, 0x00, 0x00), rules[2].symbolizers[0].fill)
+        self.assertEqual('[foo] < 1', rules[2].filter.text)
+        
+        self.assertEqual(400000, rules[3].minscale.value)
+        self.assertEqual(color(0x00, 0x00, 0xFF), rules[3].symbolizers[0].fill)
+        self.assertEqual('[foo] > 1', rules[3].filter.text)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))
@@ -840,6 +859,58 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+
+        poly_rules = get_polygon_rules(declarations)
+        
+        self.assertEqual(399999, poly_rules[0].maxscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0x00), poly_rules[0].symbolizers[0].fill)
+        self.assertEqual('[foo] < 1', poly_rules[0].filter.text)
+        
+        self.assertEqual(399999, poly_rules[1].maxscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0x00), poly_rules[1].symbolizers[0].fill)
+        self.assertEqual('[foo] > 1', poly_rules[1].filter.text)
+    
+        self.assertEqual(400000, poly_rules[2].minscale.value)
+        self.assertEqual(color(0x00, 0x00, 0x00), poly_rules[2].symbolizers[0].fill)
+        self.assertEqual('[foo] < 1', poly_rules[2].filter.text)
+        
+        self.assertEqual(400000, poly_rules[3].minscale.value)
+        self.assertEqual(color(0x00, 0x00, 0xFF), poly_rules[3].symbolizers[0].fill)
+        self.assertEqual('[foo] > 1', poly_rules[3].filter.text)
+        
+        line_rules = get_line_rules(declarations)
+
+        self.assertEqual(399999, line_rules[0].maxscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0xFF), line_rules[0].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[0].symbolizers[0].width)
+        self.assertEqual('[foo] < 1', line_rules[0].filter.text)
+        
+        self.assertEqual(399999, line_rules[1].maxscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0xFF), line_rules[1].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[1].symbolizers[0].width)
+        self.assertEqual('[foo] = 1', line_rules[1].filter.text)
+    
+        self.assertEqual(399999, line_rules[2].maxscale.value)
+        self.assertEqual(color(0xFF, 0xFF, 0x00), line_rules[2].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[2].symbolizers[0].width)
+        self.assertEqual('[foo] > 1', line_rules[2].filter.text)
+    
+        self.assertEqual(400000, line_rules[3].minscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0xFF), line_rules[3].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[3].symbolizers[0].width)
+        self.assertEqual('[foo] < 1', line_rules[3].filter.text)
+        
+        self.assertEqual(400000, line_rules[4].minscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0xFF), line_rules[4].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[4].symbolizers[0].width)
+        self.assertEqual('[foo] = 1', line_rules[4].filter.text)
+        
+        self.assertEqual(400000, line_rules[5].minscale.value)
+        self.assertEqual(color(0xFF, 0xFF, 0x00), line_rules[5].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[5].symbolizers[0].width)
+        self.assertEqual('[foo] > 1', line_rules[5].filter.text)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))
@@ -940,6 +1011,64 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+        
+        line_rules = get_line_rules(declarations)
+
+        self.assertEqual(399999, line_rules[0].maxscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0xFF), line_rules[0].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[0].symbolizers[0].width)
+        self.assertEqual('[foo] < 1', line_rules[0].filter.text)
+        
+        self.assertEqual(399999, line_rules[1].maxscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0xFF), line_rules[1].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[1].symbolizers[0].width)
+        self.assertEqual('[foo] = 1', line_rules[1].filter.text)
+    
+        self.assertEqual(399999, line_rules[2].maxscale.value)
+        self.assertEqual(color(0xFF, 0xFF, 0x00), line_rules[2].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[2].symbolizers[0].width)
+        self.assertEqual('[foo] > 1', line_rules[2].filter.text)
+    
+        self.assertEqual(400000, line_rules[3].minscale.value)
+        self.assertEqual(color(0x00, 0xFF, 0xFF), line_rules[3].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[3].symbolizers[0].width)
+        self.assertEqual('[foo] < 1', line_rules[3].filter.text)
+        
+        self.assertEqual(400000, line_rules[4].minscale.value)
+        self.assertEqual(color(0xFF, 0x00, 0xFF), line_rules[4].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[4].symbolizers[0].width)
+        self.assertEqual('[foo] = 1', line_rules[4].filter.text)
+        
+        self.assertEqual(400000, line_rules[5].minscale.value)
+        self.assertEqual(color(0xFF, 0xFF, 0x00), line_rules[5].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[5].symbolizers[0].width)
+        self.assertEqual('[foo] > 1', line_rules[5].filter.text)
+        
+        text_rule_groups = get_text_rule_groups(declarations)
+        
+        print text_rule_groups
+
+        self.assertEqual(399999, text_rule_groups['label'][0].maxscale.value)
+        self.assertEqual('Arial', text_rule_groups['label'][0].symbolizers[0].face_name)
+        self.assertEqual(12, text_rule_groups['label'][0].symbolizers[0].size)
+        self.assertEqual('[foo] < 1', text_rule_groups['label'][0].filter.text)
+        
+        self.assertEqual(399999, text_rule_groups['label'][1].maxscale.value)
+        self.assertEqual('Helvetica', text_rule_groups['label'][1].symbolizers[0].face_name)
+        self.assertEqual(12, text_rule_groups['label'][1].symbolizers[0].size)
+        self.assertEqual('[foo] >= 1', text_rule_groups['label'][1].filter.text)
+    
+        self.assertEqual(400000, text_rule_groups['label'][2].minscale.value)
+        self.assertEqual('Arial', text_rule_groups['label'][2].symbolizers[0].face_name)
+        self.assertEqual(10, text_rule_groups['label'][2].symbolizers[0].size)
+        self.assertEqual('[foo] < 1', text_rule_groups['label'][2].filter.text)
+        
+        self.assertEqual(400000, text_rule_groups['label'][3].minscale.value)
+        self.assertEqual('Helvetica', text_rule_groups['label'][3].symbolizers[0].face_name)
+        self.assertEqual(10, text_rule_groups['label'][3].symbolizers[0].size)
+        self.assertEqual('[foo] >= 1', text_rule_groups['label'][3].filter.text)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))

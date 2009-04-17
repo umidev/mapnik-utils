@@ -709,62 +709,99 @@ def get_line_rules(declarations):
                     'line-opacity': 'stroke-opacity', 'line-join': 'stroke-linejoin',
                     'line-cap': 'stroke-linecap', 'line-dasharray': 'stroke-dasharray'}
 
-    # temporarily prepend parameter names with 'in:', 'on:', and 'out:' to be removed later
-    for (property_name, parameter) in property_map.items():
-        property_map['in' + property_name] = 'in:' + parameter
-        property_map['out' + property_name] = 'out:' + parameter
-        property_map[property_name] = 'on:' + parameter
+    property_names = property_map.keys()
     
-    # a place to put rule elements
-    rule_els = []
+    # prepend parameter names with 'in' and 'out'
+    for i in range(len(property_names)):
+        property_names.append('in' + property_names[i])
+        property_names.append('out' + property_names[i])
+
+    # a place to put rules
+    rules = []
     
-    for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-        if 'on:stroke' in parameter_values and 'on:stroke-width' in parameter_values:
-            line_symbolizer_el = Element('LineSymbolizer')
-        else:
-            # we can do nothing with a weightless, colorless line
-            continue
-        
-        if 'out:stroke' in parameter_values and 'out:stroke-width' in parameter_values:
-            outline_symbolizer_el = Element('LineSymbolizer')
-        else:
-            # we can do nothing with a weightless, colorless outline
-            outline_symbolizer_el = False
-        
-        if 'in:stroke' in parameter_values and 'in:stroke-width' in parameter_values:
-            inline_symbolizer_el = Element('LineSymbolizer')
-        else:
-            # we can do nothing with a weightless, colorless inline
-            inline_symbolizer_el = False
-        
-        for (parameter, value) in sorted(parameter_values.items()):
-            if parameter.startswith('on:'):
-                # knock off the leading 'on:' from above
-                parameter = Element('CssParameter', {'name': parameter[3:]})
-                parameter.text = str(value)
-                line_symbolizer_el.append(parameter)
-
-            elif parameter.startswith('in:') and inline_symbolizer_el != False:
-                # knock off the leading 'in:' from above
-                parameter = Element('CssParameter', {'name': parameter[3:]})
-                parameter.text = str(value)
-                inline_symbolizer_el.append(parameter)
-
-            elif parameter.startswith('out:') and outline_symbolizer_el != False:
-                # for the width...
-                if parameter == 'out:stroke-width':
-                    # ...double the weight and add the interior to make a proper outline
-                    value = parameter_values['on:stroke-width'].value + 2 * value.value
-            
-                # knock off the leading 'out:' from above
-                parameter = Element('CssParameter', {'name': parameter[4:]})
-                parameter.text = str(value)
-                outline_symbolizer_el.append(parameter)
-
-        rule_el = make_rule_element(filter, outline_symbolizer_el, line_symbolizer_el, inline_symbolizer_el)
-        rule_els.append(rule_el)
+    line_color, line_width = None, None
+    inline_color, inline_width = None, None
+    outline_color, outline_width = None, None
+    outline_symbolizer, line_symbolizer, inline_symbolizer = None, None, None
     
-    return rule_els
+    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+        for (parameter, value) in sorted(values.items()):
+            if parameter == 'line-color':
+                line_color = value.value
+            if parameter == 'line-width':
+                line_width = value.value
+
+            if parameter == 'inline-color':
+                inline_color = value.value
+            if parameter == 'inline-width':
+                inline_width = value.value
+
+            if parameter == 'outline-color':
+                outline_color = value.value
+            if parameter == 'outline-width':
+                # double the weight and add the interior to make a proper outline
+                outline_width = values['line-width'].value + 2 * value.value
+
+        if line_color and line_width:
+            line_symbolizer = output.LineSymbolizer(line_color, line_width)
+
+        if inline_color and inline_width:
+            inline_symbolizer = output.LineSymbolizer(inline_color, inline_width)
+
+        if outline_color and outline_width:
+            outline_symbolizer = output.LineSymbolizer(outline_color, outline_width)
+        
+        rules.append(new_make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
+
+    return rules
+    
+    #     for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
+    #         if 'on:stroke' in parameter_values and 'on:stroke-width' in parameter_values:
+    #             line_symbolizer_el = Element('LineSymbolizer')
+    #         else:
+    #             # we can do nothing with a weightless, colorless line
+    #             continue
+    #         
+    #         if 'out:stroke' in parameter_values and 'out:stroke-width' in parameter_values:
+    #             outline_symbolizer_el = Element('LineSymbolizer')
+    #         else:
+    #             # we can do nothing with a weightless, colorless outline
+    #             outline_symbolizer_el = False
+    #         
+    #         if 'in:stroke' in parameter_values and 'in:stroke-width' in parameter_values:
+    #             inline_symbolizer_el = Element('LineSymbolizer')
+    #         else:
+    #             # we can do nothing with a weightless, colorless inline
+    #             inline_symbolizer_el = False
+    #         
+    #         for (parameter, value) in sorted(parameter_values.items()):
+    #             if parameter.startswith('on:'):
+    #                 # knock off the leading 'on:' from above
+    #                 parameter = Element('CssParameter', {'name': parameter[3:]})
+    #                 parameter.text = str(value)
+    #                 line_symbolizer_el.append(parameter)
+    # 
+    #             elif parameter.startswith('in:') and inline_symbolizer_el != False:
+    #                 # knock off the leading 'in:' from above
+    #                 parameter = Element('CssParameter', {'name': parameter[3:]})
+    #                 parameter.text = str(value)
+    #                 inline_symbolizer_el.append(parameter)
+    # 
+    #             elif parameter.startswith('out:') and outline_symbolizer_el != False:
+    #                 # for the width...
+    #                 if parameter == 'out:stroke-width':
+    #                     # ...double the weight and add the interior to make a proper outline
+    #                     value = parameter_values['on:stroke-width'].value + 2 * value.value
+    #             
+    #                 # knock off the leading 'out:' from above
+    #                 parameter = Element('CssParameter', {'name': parameter[4:]})
+    #                 parameter.text = str(value)
+    #                 outline_symbolizer_el.append(parameter)
+    # 
+    #         rule_el = make_rule_element(filter, outline_symbolizer_el, line_symbolizer_el, inline_symbolizer_el)
+    #         rule_els.append(rule_el)
+    #     
+    #     return rule_els
 
 def get_text_rule_groups(declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
@@ -780,12 +817,15 @@ def get_text_rule_groups(declarations):
                     'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance',
                     'text-allow-overlap': 'allow_overlap', 'text-placement': 'placement'}
 
+    property_names = property_map.keys()
+    
     # pull out all the names
     text_names = [dec.selector.elements[1].names[0]
                   for dec in declarations
                   if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1]
-
-    rule_el_groups = []
+    
+    # a place to put groups
+    groups = []
     
     # a separate style element for each text name
     for text_name in set(text_names):
@@ -799,27 +839,61 @@ def get_text_rule_groups(declarations):
                                      or (len(dec.selector.elements) == 2
                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
         
-        # a place to put rule elements
-        rule_els = []
+        # a place to put rules
+        rules = []
         
-        for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-            if 'face_name' in parameter_values and 'size' in parameter_values:
-                symbolizer_el = Element('TextSymbolizer')
-            else:
-                # we can do nothing with fontless text
-                continue
-
-            symbolizer_el.set('name', text_name)
-            
-            for (parameter, value) in parameter_values.items():
-                symbolizer_el.set(parameter, str(value))
+        text_face_name, text_size = None, None
+        
+        for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+            for (parameter, value) in sorted(values.items()):
+                if parameter == 'text-face-name':
+                    text_face_name = value.value
+                if parameter == 'text-size':
+                    text_size = value.value
+        
+            if text_face_name and text_size:
+                symbolizer = output.TextSymbolizer(text_face_name, text_size)
+                rules.append(new_make_rule_element(filter, symbolizer))
+        
+        groups.append((text_name, rules))
     
-            rule_el = make_rule_element(filter, symbolizer_el)
-            rule_els.append(rule_el)
-        
-        rule_el_groups.append((text_name, rule_els))
+    return dict(groups)
 
-    return rule_el_groups
+    #     rule_el_groups = []
+    #     
+    #     # a separate style element for each text name
+    #     for text_name in set(text_names):
+    #     
+    #         # just the ones we care about here.
+    #         # the complicated conditional means: get all declarations that
+    #         # apply to this text_name specifically, or text in general.
+    #         name_declarations = [dec for dec in declarations
+    #                              if dec.property.name in property_map
+    #                                 and (len(dec.selector.elements) == 1
+    #                                      or (len(dec.selector.elements) == 2
+    #                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
+    #         
+    #         # a place to put rule elements
+    #         rule_els = []
+    #         
+    #         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
+    #             if 'face_name' in parameter_values and 'size' in parameter_values:
+    #                 symbolizer_el = Element('TextSymbolizer')
+    #             else:
+    #                 # we can do nothing with fontless text
+    #                 continue
+    # 
+    #             symbolizer_el.set('name', text_name)
+    #             
+    #             for (parameter, value) in parameter_values.items():
+    #                 symbolizer_el.set(parameter, str(value))
+    #     
+    #             rule_el = make_rule_element(filter, symbolizer_el)
+    #             rule_els.append(rule_el)
+    #         
+    #         rule_el_groups.append((text_name, rule_els))
+    # 
+    #     return rule_el_groups
 
 def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
     """ Given a sumbolizer element, output directory name, and temporary

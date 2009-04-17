@@ -1,3 +1,5 @@
+import style
+
 class Rule:
     def __init__(self, minscale, maxscale, filter, *symbolizers):
         self.minscale = minscale
@@ -32,10 +34,9 @@ class Filter:
         return str(self.text)
 
 class PolygonSymbolizer:
-
-    property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
-
-    def __init__(self, fill=None, opacity=None):
+    def __init__(self, fill, opacity=None):
+        assert fill.__class__ is style.color
+        assert type(opacity) in (int, float) or opacity is None
         self.fill = fill
         self.opacity = opacity
 
@@ -43,12 +44,20 @@ class PolygonSymbolizer:
         return 'Polygon(%s, %s)' % (self.fill, self.opacity)
 
 class LineSymbolizer:
-    
     def __init__(self, color, width):
+        assert color.__class__ is style.color
+        assert type(width) in (int, float)
         self.color = color
         self.width = width
-        
-        self.opacity = None
-        self.join = None
-        self.cap = None
-        self.dasharray = None
+
+    def __repr__(self):
+        return 'Line(%s, %s)' % (self.color, self.width)
+
+class TextSymbolizer:
+    def __init__(self, face_name, size):
+        assert type(size) is int
+        self.face_name = face_name
+        self.size = size
+
+    def __repr__(self):
+        return 'Text(%s, %s)' % (self.face_name, self.size)
