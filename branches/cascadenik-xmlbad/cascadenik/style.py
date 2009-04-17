@@ -4,9 +4,6 @@ import os.path
 import urlparse
 import operator
 from binascii import unhexlify as unhex
-
-# monkey with sys.path due to some weirdness inside cssutils
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from cssutils.tokenize2 import Tokenizer as cssTokenizer
 
 class color:
