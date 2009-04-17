@@ -12,6 +12,10 @@ from werkzeug import Response, Request, DebuggedApplication,  run_simple
 
 sys.stdout = sys.stderr
 
+PROCESSES = 10
+PORT = 8085
+HOST = 'localhost'
+THREADED= True
 MAP_CACHE = None
 #mapfile = None
 mapfile = ''
@@ -101,7 +105,7 @@ html = """
                 maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
                 };
             map = new OpenLayers.Map("map", options);
-            mapnik = wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000/tiles?", 
+            mapnik = wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://%s:%s/tiles?", 
                 {format:'image/png'},
                 {
                 //singleTile:true,
@@ -175,7 +179,7 @@ html = """
     </div>
  </body>
 </html>
-"""
+""" % (HOST,POST)
 
 class MapResponse(object):
     """
@@ -276,7 +280,10 @@ def application(environ, start_response):
       tmp.seek(0)
       tmp.close()
       MAP_CACHE.mapfile = mapfile
-      MAP_CACHE.load_map()
+      try:
+        MAP_CACHE.load_map()
+      except UserWarning:
+        MAP_CACHE.load_map()
       print 'assigning mapfile!!!'
     else:
       print 'NOPE....%s' % req.data
@@ -323,4 +330,4 @@ if __name__ == '__main__':
     application = DebuggedApplication(application, evalex=True)
       
     #call('open http://localhost:8000/ -a safari',shell=True)
-    run_simple('localhost', 8085, application)
+    run_simple('localhost', PORT, application,threaded=THREADED)#processes=PROCESSES)
