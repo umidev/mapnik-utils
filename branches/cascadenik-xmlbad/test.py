@@ -1607,8 +1607,6 @@ class StyleRuleTests(unittest.TestCase):
         
         line_rules = get_line_rules(declarations)
         
-        print line_rules
-    
         self.assertEqual(4, len(line_rules))
         
     
@@ -1772,6 +1770,22 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+        
+        line_rules = get_line_rules(declarations)
+        
+        self.assertEqual('[ELEVATION] = 0', line_rules[0].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x00), line_rules[0].symbolizers[0].color)
+        self.assertEqual(1.0, line_rules[0].symbolizers[0].width)
+    
+        self.assertEqual('[ELEVATION] = 50', line_rules[1].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x00), line_rules[1].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[1].symbolizers[0].width)
+    
+        self.assertEqual('[ELEVATION] > 900', line_rules[2].filter.text)
+        self.assertEqual(color(0xFF, 0xFF, 0xFF), line_rules[2].symbolizers[0].color)
+        self.assertEqual(3.0, line_rules[2].symbolizers[0].width)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))

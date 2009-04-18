@@ -692,9 +692,9 @@ def get_polygon_rules(declarations):
 
         fill = values.has_key('polygon-fill') and values['polygon-fill'].value
         opacity = values.has_key('polygon-opacity') and values['polygon-opacity'].value or None
+        symbolizer = fill and output.PolygonSymbolizer(fill, opacity)
         
-        if fill:
-            symbolizer = output.PolygonSymbolizer(fill, opacity)
+        if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
@@ -737,7 +737,8 @@ def get_line_rules(declarations):
         color = values.has_key('outline-color') and values['outline-color'].value
         outline_symbolizer = color and width and output.LineSymbolizer(color, width) or False
         
-        rules.append(new_make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
+        if outline_symbolizer or line_symbolizer or inline_symbolizer:
+            rules.append(new_make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
 
     return rules
     
@@ -834,9 +835,9 @@ def get_text_rule_groups(declarations):
             
             face_name = values.has_key('text-face-name') and values['text-face-name'].value
             size = values.has_key('text-size') and values['text-size'].value
+            symbolizer = face_name and size and output.TextSymbolizer(face_name, size)
             
-            if face_name and size:
-                symbolizer = output.TextSymbolizer(face_name, size)
+            if symbolizer:
                 rules.append(new_make_rule_element(filter, symbolizer))
         
         groups.append((text_name, rules))
@@ -971,9 +972,11 @@ def get_shield_rule_groups(declarations, out=None):
             
             shield_width = values.has_key('shield-width') and values['shield-width'].value or shield_width
             shield_height = values.has_key('shield-height') and values['shield-height'].value or shield_height
+
+            symbolizer = (shield_face_name and shield_size or shield_file) \
+                and output.ShieldSymbolizer(shield_face_name, shield_size, shield_file, shield_type, shield_width, shield_height)
             
-            if shield_face_name and shield_size or shield_file:
-                symbolizer = output.ShieldSymbolizer(shield_face_name, shield_size, shield_file, shield_type, shield_width, shield_height)
+            if symbolizer:
                 rules.append(new_make_rule_element(filter, symbolizer))
         
         groups.append((text_name, rules))
@@ -1050,8 +1053,9 @@ def get_point_rules(declarations, out=None):
         point_width = values.has_key('point-width') and values['point-width'].value or point_width
         point_height = values.has_key('point-height') and values['point-height'].value or point_height
         
-        if point_file:
-            symbolizer = output.PointSymbolizer(point_file, point_type, point_width, point_height)
+        symbolizer = point_file and output.PointSymbolizer(point_file, point_type, point_width, point_height)
+
+        if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
@@ -1091,16 +1095,16 @@ def get_polygon_pattern_rules(declarations, out=None):
     
     for (filter, values) in new_filtered_property_declarations(declarations, property_names):
     
-        polygon_pattern_file, polygon_pattern_type, polygon_pattern_width, polygon_pattern_height \
+        poly_pattern_file, poly_pattern_type, poly_pattern_width, poly_pattern_height \
             = values.has_key('polygon-pattern-file') \
             and new_postprocess_symbolizer_image_file(str(values['polygon-pattern-file'].value), out, 'polygon-pattern') \
             or (None, None, None, None)
         
-        polygon_pattern_width = values.has_key('polygon-pattern-width') and values['polygon-pattern-width'].value or polygon_pattern_width
-        polygon_pattern_height = values.has_key('polygon-pattern-height') and values['polygon-pattern-height'].value or polygon_pattern_height
+        poly_pattern_width = values.has_key('polygon-pattern-width') and values['polygon-pattern-width'].value or poly_pattern_width
+        poly_pattern_height = values.has_key('polygon-pattern-height') and values['polygon-pattern-height'].value or poly_pattern_height
+        symbolizer = poly_pattern_file and output.PolygonPatternSymbolizer(poly_pattern_file, poly_pattern_type, poly_pattern_width, poly_pattern_height)
         
-        if polygon_pattern_file:
-            symbolizer = output.PolygonPatternSymbolizer(polygon_pattern_file, polygon_pattern_type, polygon_pattern_width, polygon_pattern_height)
+        if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
@@ -1147,9 +1151,9 @@ def get_line_pattern_rules(declarations, out=None):
         
         line_pattern_width = values.has_key('line-pattern-width') and values['line-pattern-width'].value or line_pattern_width
         line_pattern_height = values.has_key('line-pattern-height') and values['line-pattern-height'].value or line_pattern_height
+        symbolizer = line_pattern_file and output.LinePatternSymbolizer(line_pattern_file, line_pattern_type, line_pattern_width, line_pattern_height)
         
-        if line_pattern_file:
-            symbolizer = output.LinePatternSymbolizer(line_pattern_file, line_pattern_type, line_pattern_width, line_pattern_height)
+        if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
