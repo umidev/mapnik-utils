@@ -106,10 +106,16 @@ class TextSymbolizer:
         return 'Text(%s, %s)' % (self.face_name, self.size)
 
 class ShieldSymbolizer:
-    def __init__(self, face_name, size, file, filetype, width, height):
-        assert type(size) is int
-        assert type(width) is int
-        assert type(height) is int
+    def __init__(self, face_name=None, size=None, file=None, filetype=None, width=None, height=None, color=None, min_distance=None):
+        assert face_name and size or file
+        
+        assert face_name is None or type(face_name) is str
+        assert size is None or type(size) is int
+        assert width is None or type(width) is int
+        assert height is None or type(height) is int
+
+        assert color is None or color.__class__ is style.color
+        assert min_distance is None or type(min_distance) is int
 
         self.face_name = face_name
         self.size = size
@@ -117,6 +123,9 @@ class ShieldSymbolizer:
         self.type = filetype
         self.width = width
         self.height = height
+
+        self.color = color
+        self.min_distance = min_distance
 
     def __repr__(self):
         return 'Shield(%s, %s, %s)' % (self.face_name, self.size, self.file)

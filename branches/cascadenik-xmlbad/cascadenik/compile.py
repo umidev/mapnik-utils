@@ -866,19 +866,22 @@ def get_shield_rule_groups(declarations, out=None):
         
         for (filter, values) in filtered_property_declarations(declarations, property_names):
         
-            shield_face_name = values.has_key('shield-face-name') and values['shield-face-name'].value or shield_face_name
-            shield_size = values.has_key('shield-size') and values['shield-size'].value or shield_size
+            face_name = values.has_key('shield-face-name') and values['shield-face-name'].value
+            size = values.has_key('shield-size') and values['shield-size'].value
             
-            shield_file, shield_type, shield_width, shield_height \
+            file, filetype, width, height \
                 = values.has_key('shield-file') \
                 and postprocess_symbolizer_image_file(str(values['shield-file'].value), out, 'shield') \
                 or (None, None, None, None)
             
-            shield_width = values.has_key('shield-width') and values['shield-width'].value or shield_width
-            shield_height = values.has_key('shield-height') and values['shield-height'].value or shield_height
-
-            symbolizer = (shield_face_name and shield_size or shield_file) \
-                and output.ShieldSymbolizer(shield_face_name, shield_size, shield_file, shield_type, shield_width, shield_height)
+            width = values.has_key('shield-width') and values['shield-width'].value or width
+            height = values.has_key('shield-height') and values['shield-height'].value or height
+            
+            color = values.has_key('shield-fill') and values['shield-fill'].value or None
+            min_distance = values.has_key('shield-min-distance') and values['shield-min-distance'].value or None
+            
+            symbolizer = (face_name and size or file) \
+                and output.ShieldSymbolizer(face_name, size, file, filetype, width, height, color, min_distance)
             
             if symbolizer:
                 rules.append(new_make_rule_element(filter, symbolizer))
