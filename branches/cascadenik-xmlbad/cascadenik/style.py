@@ -48,6 +48,9 @@ class boolean:
     def __str__(self):
         return repr(self)
 
+    def __eq__(self, other):
+        return bool(self.value) == bool(other.value)
+
 class numbers:
     def __init__(self, *values):
         self.values = values
@@ -154,8 +157,8 @@ properties = {
     # space between repeated labels
     'text-spacing': int,
 
-    # allow labels to be moved from their point
-    'text-label-position-tolerance': None, # ?
+    # allow labels to be moved from their point by some distance
+    'text-label-position-tolerance': int,
 
     # Maximum angle (in degrees) between two consecutive characters in a label allowed (to stop placing labels around sharp corners)
     'text-max-char-angle-delta': int,

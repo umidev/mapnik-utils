@@ -7,7 +7,7 @@ import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.style import color, numbers
+from cascadenik.style import color, numbers, boolean
 from cascadenik.compile import tests_filter_combinations, Filter, selectors_tests
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
@@ -1443,6 +1443,50 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual('miter', line_rules[0].symbolizers[0].join)
         self.assertEqual('butt', line_rules[0].symbolizers[0].cap)
         self.assertEqual(numbers(1, 2, 3), line_rules[0].symbolizers[0].dashes)
+
+    def testStyleRules12(self):
+        s = """
+            Layer label
+            {
+                text-face-name: 'Helvetica';
+                text-size: 12;
+                
+                text-fill: #f00;
+                text-wrap-width: 100;
+                text-spacing: 50;
+                text-label-position-tolerance: 25;
+                text-max-char-angle-delta: 10;
+                text-halo-fill: #ff0;
+                text-halo-radius: 2;
+                text-dx: 10;
+                text-dy: 15;
+                text-avoid-edges: true;
+                text-min-distance: 5;
+                text-allow-overlap: false;
+                text-placement: point;
+            }
+        """
+
+        declarations = stylesheet_declarations(s, is_gym=True)
+
+        text_rule_groups = get_text_rule_groups(declarations)
+        
+        self.assertEqual('Helvetica', text_rule_groups['label'][0].symbolizers[0].face_name)
+        self.assertEqual(12, text_rule_groups['label'][0].symbolizers[0].size)
+
+        self.assertEqual(color(0xFF, 0x00, 0x00), text_rule_groups['label'][0].symbolizers[0].color)
+        self.assertEqual(100, text_rule_groups['label'][0].symbolizers[0].wrap_width)
+        self.assertEqual(50, text_rule_groups['label'][0].symbolizers[0].spacing)
+        self.assertEqual(25, text_rule_groups['label'][0].symbolizers[0].label_position_tolerance)
+        self.assertEqual(10, text_rule_groups['label'][0].symbolizers[0].max_char_angle_delta)
+        self.assertEqual(color(0xFF, 0xFF, 0x00), text_rule_groups['label'][0].symbolizers[0].halo_color)
+        self.assertEqual(2, text_rule_groups['label'][0].symbolizers[0].halo_radius)
+        self.assertEqual(10, text_rule_groups['label'][0].symbolizers[0].dx)
+        self.assertEqual(15, text_rule_groups['label'][0].symbolizers[0].dy)
+        self.assertEqual(boolean(1), text_rule_groups['label'][0].symbolizers[0].avoid_edges)
+        self.assertEqual(5, text_rule_groups['label'][0].symbolizers[0].min_distance)
+        self.assertEqual(boolean(0), text_rule_groups['label'][0].symbolizers[0].allow_overlap)
+        self.assertEqual('point', text_rule_groups['label'][0].symbolizers[0].placement)
 
 if __name__ == '__main__':
     unittest.main()

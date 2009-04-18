@@ -783,7 +783,25 @@ def get_text_rule_groups(declarations):
             
             face_name = values.has_key('text-face-name') and values['text-face-name'].value
             size = values.has_key('text-size') and values['text-size'].value
-            symbolizer = face_name and size and output.TextSymbolizer(face_name, size)
+            
+            color = values.has_key('text-fill') and values['text-fill'].value or None
+            ratio = values.has_key('text-ratio') and values['text-ratio'].value or None
+            wrap_width = values.has_key('text-wrap-width') and values['text-wrap-width'].value or None
+            spacing = values.has_key('text-spacing') and values['text-spacing'].value or None
+            label_position_tolerance = values.has_key('text-label-position-tolerance') and values['text-label-position-tolerance'].value or None
+            max_char_angle_delta = values.has_key('text-max-char-angle-delta') and values['text-max-char-angle-delta'].value or None
+            halo_color = values.has_key('text-halo-fill') and values['text-halo-fill'].value or None
+            halo_radius = values.has_key('text-halo-radius') and values['text-halo-radius'].value or None
+            dx = values.has_key('text-dx') and values['text-dx'].value or None
+            dy = values.has_key('text-dy') and values['text-dy'].value or None
+            avoid_edges = values.has_key('text-avoid-edges') and values['text-avoid-edges'].value or None
+            min_distance = values.has_key('text-min-distance') and values['text-min-distance'].value or None
+            allow_overlap = values.has_key('text-allow-overlap') and values['text-allow-overlap'].value or None
+            placement = values.has_key('text-placement') and values['text-placement'].value or None
+            
+            symbolizer = face_name and size and output.TextSymbolizer(face_name, size, \
+                color, wrap_width, spacing, label_position_tolerance, max_char_angle_delta, \
+                halo_color, halo_radius, dx, dy, avoid_edges, min_distance, allow_overlap, placement)
             
             if symbolizer:
                 rules.append(new_make_rule_element(filter, symbolizer))
