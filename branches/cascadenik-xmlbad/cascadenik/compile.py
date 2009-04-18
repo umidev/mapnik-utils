@@ -634,12 +634,10 @@ def get_polygon_rules(declarations):
     return rules
 
 def get_line_rules(declarations):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create a new Style element with a LineSymbolizer, add it to Map
-        and refer to it in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
         
-        This function is wise to both line-<foo> and outline-<foo> properties,
-        and will generate pairs of LineSymbolizers if necessary.
+        This function is wise to line-<foo>, inline-<foo>, and outline-<foo> properties,
+        and will generate multiple LineSymbolizers if necessary.
     """
     property_map = {'line-color': 'stroke', 'line-width': 'stroke-width',
                     'line-opacity': 'stroke-opacity', 'line-join': 'stroke-linejoin',
@@ -695,9 +693,7 @@ def get_line_rules(declarations):
     return rules
 
 def get_text_rule_groups(declarations):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create new Style elements with a TextSymbolizer, add them to Map
-        and refer to them in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
     """
     property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
                     'text-ratio': 'text_ratio', 'text-wrap-width': 'wrap_width', 'text-spacing': 'spacing',
@@ -787,9 +783,9 @@ def postprocess_symbolizer_image_file(file_name, out, temp_name):
     return path, 'png', img.size[0], img.size[1]
 
 def get_shield_rule_groups(declarations, out=None):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create new Style elements with a TextSymbolizer, add them to Map
-        and refer to them in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
+        
+        Optionally provide an output directory for local copies of image files.
     """
     property_map = {'shield-face-name': 'face_name', 'shield-size': 'size', 
                     'shield-fill': 'fill', 'shield-min-distance': 'min_distance',
@@ -847,9 +843,7 @@ def get_shield_rule_groups(declarations, out=None):
     return dict(groups)
 
 def get_point_rules(declarations, out=None):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create a new Style element with a PointSymbolizer, add it to Map
-        and refer to it in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
         
         Optionally provide an output directory for local copies of image files.
     """
@@ -881,9 +875,7 @@ def get_point_rules(declarations, out=None):
     return rules
 
 def get_polygon_pattern_rules(declarations, out=None):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create a new Style element with a PolygonPatternSymbolizer, add it to Map
-        and refer to it in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
         
         Optionally provide an output directory for local copies of image files.
     """
@@ -912,9 +904,7 @@ def get_polygon_pattern_rules(declarations, out=None):
     return rules
 
 def get_line_pattern_rules(declarations, out=None):
-    """ Given a Map element, a Layer element, and a list of declarations,
-        create a new Style element with a LinePatternSymbolizer, add it to Map
-        and refer to it in Layer.
+    """ Given a list of declarations, return a list of output.Rule objects.
         
         Optionally provide an output directory for local copies of image files.
     """
