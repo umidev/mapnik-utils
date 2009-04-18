@@ -753,28 +753,6 @@ class StyleRuleTests(unittest.TestCase):
         
         assert style_el is not None
         self.assertEqual(stylename, style_el.get('name'))
-        
-        rule_els = style_el.findall('Rule')
-        
-        self.assertEqual('399999', rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', rule_els[0].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#cccccc', rule_els[0].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual("[use] = 'cemetery'", rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', rule_els[1].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#66ff66', rule_els[1].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual("[use] = 'park'", rule_els[1].find('Filter').text)
-    
-        self.assertEqual('400000', rule_els[2].find('MinScaleDenominator').text)
-        self.assertEqual('fill', rule_els[2].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#999999', rule_els[2].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual("[use] = 'cemetery'", rule_els[2].find('Filter').text)
-        
-        self.assertEqual('400000', rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('fill', rule_els[3].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#00ff00', rule_els[3].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual("[use] = 'park'", rule_els[3].find('Filter').text)
 
     def testStyleRules2(self):
         s = """
@@ -821,28 +799,6 @@ class StyleRuleTests(unittest.TestCase):
         
         assert style_el is not None
         self.assertEqual(stylename, style_el.get('name'))
-        
-        rule_els = style_el.findall('Rule')
-        
-        self.assertEqual('399999', rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', rule_els[0].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#00ff00', rule_els[0].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] < 1', rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', rule_els[1].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#ff0000', rule_els[1].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] > 1', rule_els[1].find('Filter').text)
-    
-        self.assertEqual('400000', rule_els[2].find('MinScaleDenominator').text)
-        self.assertEqual('fill', rule_els[2].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000000', rule_els[2].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] < 1', rule_els[2].find('Filter').text)
-        
-        self.assertEqual('400000', rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('fill', rule_els[3].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#0000ff', rule_els[3].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] > 1', rule_els[3].find('Filter').text)
 
     def testStyleRules3(self):
         s = """
@@ -930,72 +886,7 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(2, len(style_els))
     
         assert style_els[0].get('name') in (stylenames)
-        poly_rule_els = style_els[0].findall('Rule')
-        
-        self.assertEqual('399999', poly_rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', poly_rule_els[0].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#00ff00', poly_rule_els[0].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] < 1', poly_rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', poly_rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('fill', poly_rule_els[1].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#ff0000', poly_rule_els[1].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] > 1', poly_rule_els[1].find('Filter').text)
-    
-        self.assertEqual('400000', poly_rule_els[2].find('MinScaleDenominator').text)
-        self.assertEqual('fill', poly_rule_els[2].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000000', poly_rule_els[2].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] < 1', poly_rule_els[2].find('Filter').text)
-        
-        self.assertEqual('400000', poly_rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('fill', poly_rule_els[3].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#0000ff', poly_rule_els[3].find('PolygonSymbolizer/CssParameter').text)
-        self.assertEqual('[foo] > 1', poly_rule_els[3].find('Filter').text)
-    
         assert style_els[1].get('name') in (stylenames)
-        line_rule_els = style_els[1].findall('Rule')
-        
-        self.assertEqual('399999', line_rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#00ffff', line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] < 1', line_rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', line_rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ff00ff', line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] = 1', line_rule_els[1].find('Filter').text)
-    
-        self.assertEqual('399999', line_rule_els[2].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ffff00', line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] > 1', line_rule_els[2].find('Filter').text)
-    
-        self.assertEqual('400000', line_rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#00ffff', line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] < 1', line_rule_els[3].find('Filter').text)
-        
-        self.assertEqual('400000', line_rule_els[4].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ff00ff', line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] = 1', line_rule_els[4].find('Filter').text)
-        
-        self.assertEqual('400000', line_rule_els[5].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ffff00', line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] > 1', line_rule_els[5].find('Filter').text)
 
     def testStyleRules4(self):
         s = """
@@ -1088,76 +979,7 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(2, len(style_els))
     
         assert style_els[0].get('name') in (stylenames)
-        line_rule_els = style_els[0].findall('Rule')
-        
-        self.assertEqual('399999', line_rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#00ffff', line_rule_els[0].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[0].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] < 1', line_rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', line_rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ff00ff', line_rule_els[1].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[1].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] = 1', line_rule_els[1].find('Filter').text)
-    
-        self.assertEqual('399999', line_rule_els[2].find('MaxScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ffff00', line_rule_els[2].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', line_rule_els[2].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] > 1', line_rule_els[2].find('Filter').text)
-    
-        self.assertEqual('400000', line_rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#00ffff', line_rule_els[3].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[3].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] < 1', line_rule_els[3].find('Filter').text)
-        
-        self.assertEqual('400000', line_rule_els[4].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ff00ff', line_rule_els[4].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[4].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] = 1', line_rule_els[4].find('Filter').text)
-        
-        self.assertEqual('400000', line_rule_els[5].find('MinScaleDenominator').text)
-        self.assertEqual('stroke', line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ffff00', line_rule_els[5].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', line_rule_els[5].findall('LineSymbolizer/CssParameter')[1].text)
-        self.assertEqual('[foo] > 1', line_rule_els[5].find('Filter').text)
-        
         assert style_els[1].get('name') in (stylenames)
-        text_rule_els = style_els[1].findall('Rule')
-        
-        self.assertEqual('399999', text_rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[0].find('TextSymbolizer').get('name'))
-        self.assertEqual('Arial', text_rule_els[0].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('12', text_rule_els[0].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] < 1', text_rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', text_rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[1].find('TextSymbolizer').get('name'))
-        self.assertEqual('Helvetica', text_rule_els[1].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('12', text_rule_els[1].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] >= 1', text_rule_els[1].find('Filter').text)
-    
-        self.assertEqual('400000', text_rule_els[2].find('MinScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[2].find('TextSymbolizer').get('name'))
-        self.assertEqual('Arial', text_rule_els[2].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('10', text_rule_els[2].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] < 1', text_rule_els[2].find('Filter').text)
-        
-        self.assertEqual('400000', text_rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[3].find('TextSymbolizer').get('name'))
-        self.assertEqual('Helvetica', text_rule_els[3].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('10', text_rule_els[3].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] >= 1', text_rule_els[3].find('Filter').text)
 
     def testStyleRules5(self):
         s = """
@@ -1268,88 +1090,7 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(2, len(style_els))
     
         assert style_els[0].get('name') in (stylenames)
-        text_rule_els = style_els[0].findall('Rule')
-        
-        self.assertEqual('399999', text_rule_els[0].find('MaxScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[0].find('TextSymbolizer').get('name'))
-        self.assertEqual('Arial', text_rule_els[0].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('12', text_rule_els[0].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] < 1', text_rule_els[0].find('Filter').text)
-        
-        self.assertEqual('399999', text_rule_els[1].find('MaxScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[1].find('TextSymbolizer').get('name'))
-        self.assertEqual('Helvetica', text_rule_els[1].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('12', text_rule_els[1].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] >= 1', text_rule_els[1].find('Filter').text)
-    
-        self.assertEqual('400000', text_rule_els[2].find('MinScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[2].find('TextSymbolizer').get('name'))
-        self.assertEqual('Arial', text_rule_els[2].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('10', text_rule_els[2].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] < 1', text_rule_els[2].find('Filter').text)
-        
-        self.assertEqual('400000', text_rule_els[3].find('MinScaleDenominator').text)
-        self.assertEqual('label', text_rule_els[3].find('TextSymbolizer').get('name'))
-        self.assertEqual('Helvetica', text_rule_els[3].find('TextSymbolizer').get('face_name'))
-        self.assertEqual('10', text_rule_els[3].find('TextSymbolizer').get('size'))
-        self.assertEqual('[foo] >= 1', text_rule_els[3].find('Filter').text)
-    
         assert style_els[1].get('name') in (stylenames)
-        shield_rule_els = style_els[1].findall('Rule')
-        
-        assert shield_rule_els[0].find('MinScaleDenominator') is None
-        assert shield_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[0].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[0].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('12', shield_rule_els[0].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[0].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[0].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] <= 1", shield_rule_els[0].find('Filter').text)
-        
-        assert shield_rule_els[1].find('MinScaleDenominator') is None
-        assert shield_rule_els[1].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[1].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[1].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('10', shield_rule_els[1].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[1].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[1].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] > 1", shield_rule_els[1].find('Filter').text)
-        
-        assert shield_rule_els[2].find('MinScaleDenominator') is None
-        assert shield_rule_els[2].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[2].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[2].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('14', shield_rule_els[2].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[2].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[2].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'baz' and [foo] <= 1", shield_rule_els[2].find('Filter').text)
-        
-        assert shield_rule_els[3].find('MinScaleDenominator') is None
-        assert shield_rule_els[3].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[3].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[3].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('14', shield_rule_els[3].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[3].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[3].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'baz' and [foo] > 1", shield_rule_els[3].find('Filter').text)
-        
-        assert shield_rule_els[4].find('MinScaleDenominator') is None
-        assert shield_rule_els[4].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[4].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[4].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('16', shield_rule_els[4].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[4].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[4].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'quux' and [foo] <= 1", shield_rule_els[4].find('Filter').text)
-        
-        assert shield_rule_els[5].find('MinScaleDenominator') is None
-        assert shield_rule_els[5].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[5].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[5].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('16', shield_rule_els[5].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[5].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[5].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_els[5].find('Filter').text)
 
     def testStyleRules6(self):
         s = """
@@ -1444,71 +1185,7 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(2, len(style_els))
     
         assert style_els[0].get('name') in (stylenames)
-        shield_rule_els = style_els[0].findall('Rule')
-        
-        assert shield_rule_els[0].find('MinScaleDenominator') is None
-        assert shield_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[0].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[0].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('12', shield_rule_els[0].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[0].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[0].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] <= 1", shield_rule_els[0].find('Filter').text)
-        
-        assert shield_rule_els[1].find('MinScaleDenominator') is None
-        assert shield_rule_els[1].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[1].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[1].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('10', shield_rule_els[1].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[1].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[1].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("not [bar] = 'baz' and not [bar] = 'quux' and [foo] > 1", shield_rule_els[1].find('Filter').text)
-        
-        assert shield_rule_els[2].find('MinScaleDenominator') is None
-        assert shield_rule_els[2].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[2].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[2].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('14', shield_rule_els[2].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[2].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[2].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'baz' and [foo] <= 1", shield_rule_els[2].find('Filter').text)
-        
-        assert shield_rule_els[3].find('MinScaleDenominator') is None
-        assert shield_rule_els[3].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[3].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[3].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('14', shield_rule_els[3].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[3].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[3].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'baz' and [foo] > 1", shield_rule_els[3].find('Filter').text)
-        
-        assert shield_rule_els[4].find('MinScaleDenominator') is None
-        assert shield_rule_els[4].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[4].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[4].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('16', shield_rule_els[4].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[4].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[4].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'quux' and [foo] <= 1", shield_rule_els[4].find('Filter').text)
-        
-        assert shield_rule_els[5].find('MinScaleDenominator') is None
-        assert shield_rule_els[5].find('MaxScaleDenominator') is None
-        self.assertEqual('label', shield_rule_els[5].find('ShieldSymbolizer').get('name'))
-        self.assertEqual('Helvetica', shield_rule_els[5].find('ShieldSymbolizer').get('face_name'))
-        self.assertEqual('16', shield_rule_els[5].find('ShieldSymbolizer').get('size'))
-        self.assertEqual('8', shield_rule_els[5].find('ShieldSymbolizer').get('height'))
-        self.assertEqual('8', shield_rule_els[5].find('ShieldSymbolizer').get('width'))
-        self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_els[5].find('Filter').text)
-    
         assert style_els[1].get('name') in (stylenames)
-        point_rule_els = style_els[1].findall('Rule')
-        
-        assert point_rule_els[0].find('Filter') is None
-        assert point_rule_els[0].find('MinScaleDenominator') is None
-        assert point_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('png', point_rule_els[0].find('PointSymbolizer').get('type'))
-        self.assertEqual('8', point_rule_els[0].find('PointSymbolizer').get('height'))
-        self.assertEqual('8', point_rule_els[0].find('PointSymbolizer').get('width'))
 
     def testStyleRules7(self):
         s = """
@@ -1567,34 +1244,8 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(3, len(style_els))
     
         assert style_els[0].get('name') in (stylenames)
-        point_rule_els = style_els[0].findall('Rule')
-        
-        assert point_rule_els[0].find('Filter') is None
-        assert point_rule_els[0].find('MinScaleDenominator') is None
-        assert point_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('png', point_rule_els[0].find('PointSymbolizer').get('type'))
-        self.assertEqual('8', point_rule_els[0].find('PointSymbolizer').get('height'))
-        self.assertEqual('8', point_rule_els[0].find('PointSymbolizer').get('width'))
-    
         assert style_els[1].get('name') in (stylenames)
-        point_rule_els = style_els[1].findall('Rule')
-        
-        assert point_rule_els[0].find('Filter') is None
-        assert point_rule_els[0].find('MinScaleDenominator') is None
-        assert point_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('png', point_rule_els[0].find('PolygonPatternSymbolizer').get('type'))
-        self.assertEqual('8', point_rule_els[0].find('PolygonPatternSymbolizer').get('height'))
-        self.assertEqual('8', point_rule_els[0].find('PolygonPatternSymbolizer').get('width'))
-    
         assert style_els[2].get('name') in (stylenames)
-        point_rule_els = style_els[2].findall('Rule')
-        
-        assert point_rule_els[0].find('Filter') is None
-        assert point_rule_els[0].find('MinScaleDenominator') is None
-        assert point_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual('png', point_rule_els[0].find('LinePatternSymbolizer').get('type'))
-        self.assertEqual('8', point_rule_els[0].find('LinePatternSymbolizer').get('height'))
-        self.assertEqual('8', point_rule_els[0].find('LinePatternSymbolizer').get('width'))
 
     def testStyleRules8(self):
         s = """
@@ -1684,81 +1335,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(1, len(style_els))
         
         assert style_els[0].get('name') in (stylenames)
-        line_rule_els = style_els[0].findall('Rule')
-    
-        self.assertEqual(4, len(line_rule_els))
-        
-    
-        assert line_rule_els[0].find('MinScaleDenominator') is None
-        assert line_rule_els[0].find('MaxScaleDenominator') is None
-        self.assertEqual("not [bar] = 1 and not [foo] = 1", line_rule_els[0].find('Filter').text)
-        self.assertEqual(1, len(line_rule_els[0].findall('LineSymbolizer')))
-        
-        line_symbolizer = line_rule_els[0].findall('LineSymbolizer')[0]
-        self.assertEqual('stroke', line_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#ffffff', line_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('3.0', line_symbolizer.findall('CssParameter')[1].text)
-        
-    
-        assert line_rule_els[1].find('MinScaleDenominator') is None
-        assert line_rule_els[1].find('MaxScaleDenominator') is None
-        self.assertEqual("not [bar] = 1 and [foo] = 1", line_rule_els[1].find('Filter').text)
-        self.assertEqual(2, len(line_rule_els[1].findall('LineSymbolizer')))
-        
-        outline_symbolizer = line_rule_els[1].findall('LineSymbolizer')[0]
-        self.assertEqual('stroke', outline_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#000000', outline_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', outline_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('5.0', outline_symbolizer.findall('CssParameter')[1].text)
-        
-        line_symbolizer = line_rule_els[1].findall('LineSymbolizer')[1]
-        self.assertEqual('stroke', line_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#ffffff', line_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('3.0', line_symbolizer.findall('CssParameter')[1].text)
-    
-    
-        assert line_rule_els[2].find('MinScaleDenominator') is None
-        assert line_rule_els[2].find('MaxScaleDenominator') is None
-        self.assertEqual("[bar] = 1 and not [foo] = 1", line_rule_els[2].find('Filter').text)
-        self.assertEqual(2, len(line_rule_els[2].findall('LineSymbolizer')))
-        
-        line_symbolizer = line_rule_els[2].findall('LineSymbolizer')[0]
-        self.assertEqual('stroke', line_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#ffffff', line_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('3.0', line_symbolizer.findall('CssParameter')[1].text)
-        
-        inline_symbolizer = line_rule_els[2].findall('LineSymbolizer')[1]
-        self.assertEqual('stroke', inline_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#999999', inline_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', inline_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('1.0', inline_symbolizer.findall('CssParameter')[1].text)
-        
-    
-        assert line_rule_els[3].find('MinScaleDenominator') is None
-        assert line_rule_els[3].find('MaxScaleDenominator') is None
-        self.assertEqual("[bar] = 1 and [foo] = 1", line_rule_els[3].find('Filter').text)
-        self.assertEqual(3, len(line_rule_els[3].findall('LineSymbolizer')))
-        
-        outline_symbolizer = line_rule_els[3].findall('LineSymbolizer')[0]
-        self.assertEqual('stroke', outline_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#000000', outline_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', outline_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('5.0', outline_symbolizer.findall('CssParameter')[1].text)
-        
-        line_symbolizer = line_rule_els[3].findall('LineSymbolizer')[1]
-        self.assertEqual('stroke', line_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#ffffff', line_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', line_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('3.0', line_symbolizer.findall('CssParameter')[1].text)
-        
-        inline_symbolizer = line_rule_els[3].findall('LineSymbolizer')[2]
-        self.assertEqual('stroke', inline_symbolizer.findall('CssParameter')[0].get('name'))
-        self.assertEqual('#999999', inline_symbolizer.findall('CssParameter')[0].text)
-        self.assertEqual('stroke-width', inline_symbolizer.findall('CssParameter')[1].get('name'))
-        self.assertEqual('1.0', inline_symbolizer.findall('CssParameter')[1].text)
 
     def testStyleRules9(self):
         s = """
@@ -1803,26 +1379,6 @@ class StyleRuleTests(unittest.TestCase):
         
         assert style_el is not None
         self.assertEqual(stylename, style_el.get('name'))
-        
-        rule_els = style_el.findall('Rule')
-        
-        self.assertEqual('[ELEVATION] = 0', rule_els[0].find('Filter').text)
-        self.assertEqual('stroke', rule_els[0].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#000000', rule_els[0].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', rule_els[0].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('1.0', rule_els[0].findall('LineSymbolizer/CssParameter')[1].text)
-    
-        self.assertEqual('[ELEVATION] = 50', rule_els[1].find('Filter').text)
-        self.assertEqual('stroke', rule_els[1].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#000000', rule_els[1].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', rule_els[1].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('2.0', rule_els[1].findall('LineSymbolizer/CssParameter')[1].text)
-    
-        self.assertEqual('[ELEVATION] > 900', rule_els[2].find('Filter').text)
-        self.assertEqual('stroke', rule_els[2].findall('LineSymbolizer/CssParameter')[0].get('name'))
-        self.assertEqual('#ffffff', rule_els[2].findall('LineSymbolizer/CssParameter')[0].text)
-        self.assertEqual('stroke-width', rule_els[2].findall('LineSymbolizer/CssParameter')[1].get('name'))
-        self.assertEqual('3.0', rule_els[2].findall('LineSymbolizer/CssParameter')[1].text)
 
     def testStyleRules10(self):
         s = """
@@ -1855,34 +1411,6 @@ class StyleRuleTests(unittest.TestCase):
         
         self.assertEqual("[landuse] = 'woods'", polygon_rules[5].filter.text)
         self.assertEqual(color(0x00, 0x00, 0x44), polygon_rules[5].symbolizers[0].color)
-        
-        return # TODO: for now
-        
-        rule_els = get_polygon_rules(declarations)
-        
-        self.assertEqual("not [landuse] = 'field' and not [landuse] = 'woods' and not [landuse] = 'desert' and not [landuse] = 'forest' and not [landuse] = 'meadow'", rule_els[0].find('Filter').text)
-        self.assertEqual('fill', rule_els[0].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000066', rule_els[0].find('PolygonSymbolizer/CssParameter').text)
-        
-        self.assertEqual("[landuse] = 'desert'", rule_els[1].find('Filter').text)
-        self.assertEqual('fill', rule_els[1].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000000', rule_els[1].find('PolygonSymbolizer/CssParameter').text)
-        
-        self.assertEqual("[landuse] = 'field'", rule_els[2].find('Filter').text)
-        self.assertEqual('fill', rule_els[2].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000011', rule_els[2].find('PolygonSymbolizer/CssParameter').text)
-        
-        self.assertEqual("[landuse] = 'forest'", rule_els[3].find('Filter').text)
-        self.assertEqual('fill', rule_els[3].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000033', rule_els[3].find('PolygonSymbolizer/CssParameter').text)
-        
-        self.assertEqual("[landuse] = 'meadow'", rule_els[4].find('Filter').text)
-        self.assertEqual('fill', rule_els[4].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000022', rule_els[4].find('PolygonSymbolizer/CssParameter').text)
-        
-        self.assertEqual("[landuse] = 'woods'", rule_els[5].find('Filter').text)
-        self.assertEqual('fill', rule_els[5].find('PolygonSymbolizer/CssParameter').get('name'))
-        self.assertEqual('#000044', rule_els[5].find('PolygonSymbolizer/CssParameter').text)
 
 if __name__ == '__main__':
     unittest.main()

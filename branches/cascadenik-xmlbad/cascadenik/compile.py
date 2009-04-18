@@ -631,31 +631,7 @@ def add_map_style(map_el, declarations):
         if dec.property.name in property_map:
             map_el.set(property_map[dec.property.name], str(dec.value))
 
-def filtered_property_declarations(declarations, property_map):
-    """
-    """
-    # just the ones we care about here
-    declarations = [dec for dec in declarations if dec.property.name in property_map]
-    selectors = [dec.selector for dec in declarations]
-
-    # a place to put rules
-    rules = []
-    
-    for filter in tests_filter_combinations(selectors_tests(selectors)):
-        rule = (filter, {})
-        
-        # collect all the applicable declarations into a list of parameters and values
-        for dec in declarations:
-            if is_applicable_selector(dec.selector, filter):
-                parameter = property_map[dec.property.name]
-                rule[1][parameter] = dec.value
-
-        if rule[1]:
-            rules.append(rule)
-
-    return rules
-
-def new_filtered_property_declarations(declarations, property_names):
+def filtered_property_declarations(declarations, property_names):
     """
     """
     # just the ones we care about here
@@ -683,12 +659,14 @@ def get_polygon_rules(declarations):
         create a new Style element with a PolygonSymbolizer, add it to Map
         and refer to it in Layer.
     """
-    property_names = ['polygon-fill', 'polygon-opacity']
+    property_map = {'polygon-fill': 'fill', 'polygon-opacity': 'fill-opacity'}
+    
+    property_names = property_map.keys()
     
     # a place to put rules
     rules = []
     
-    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+    for (filter, values) in filtered_property_declarations(declarations, property_names):
 
         color = values.has_key('polygon-fill') and values['polygon-fill'].value
         opacity = values.has_key('polygon-opacity') and values['polygon-opacity'].value or None
@@ -721,7 +699,7 @@ def get_line_rules(declarations):
     # a place to put rules
     rules = []
     
-    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+    for (filter, values) in filtered_property_declarations(declarations, property_names):
     
         width = values.has_key('line-width') and values['line-width'].value
         color = values.has_key('line-color') and values['line-color'].value
@@ -741,54 +719,6 @@ def get_line_rules(declarations):
             rules.append(new_make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
 
     return rules
-    
-    #     for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-    #         if 'on:stroke' in parameter_values and 'on:stroke-width' in parameter_values:
-    #             line_symbolizer_el = Element('LineSymbolizer')
-    #         else:
-    #             # we can do nothing with a weightless, colorless line
-    #             continue
-    #         
-    #         if 'out:stroke' in parameter_values and 'out:stroke-width' in parameter_values:
-    #             outline_symbolizer_el = Element('LineSymbolizer')
-    #         else:
-    #             # we can do nothing with a weightless, colorless outline
-    #             outline_symbolizer_el = False
-    #         
-    #         if 'in:stroke' in parameter_values and 'in:stroke-width' in parameter_values:
-    #             inline_symbolizer_el = Element('LineSymbolizer')
-    #         else:
-    #             # we can do nothing with a weightless, colorless inline
-    #             inline_symbolizer_el = False
-    #         
-    #         for (parameter, value) in sorted(parameter_values.items()):
-    #             if parameter.startswith('on:'):
-    #                 # knock off the leading 'on:' from above
-    #                 parameter = Element('CssParameter', {'name': parameter[3:]})
-    #                 parameter.text = str(value)
-    #                 line_symbolizer_el.append(parameter)
-    # 
-    #             elif parameter.startswith('in:') and inline_symbolizer_el != False:
-    #                 # knock off the leading 'in:' from above
-    #                 parameter = Element('CssParameter', {'name': parameter[3:]})
-    #                 parameter.text = str(value)
-    #                 inline_symbolizer_el.append(parameter)
-    # 
-    #             elif parameter.startswith('out:') and outline_symbolizer_el != False:
-    #                 # for the width...
-    #                 if parameter == 'out:stroke-width':
-    #                     # ...double the weight and add the interior to make a proper outline
-    #                     value = parameter_values['on:stroke-width'].value + 2 * value.value
-    #             
-    #                 # knock off the leading 'out:' from above
-    #                 parameter = Element('CssParameter', {'name': parameter[4:]})
-    #                 parameter.text = str(value)
-    #                 outline_symbolizer_el.append(parameter)
-    # 
-    #         rule_el = make_rule_element(filter, outline_symbolizer_el, line_symbolizer_el, inline_symbolizer_el)
-    #         rule_els.append(rule_el)
-    #     
-    #     return rule_els
 
 def get_text_rule_groups(declarations):
     """ Given a Map element, a Layer element, and a list of declarations,
@@ -831,7 +761,7 @@ def get_text_rule_groups(declarations):
         
         text_face_name, text_size = None, None
         
-        for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+        for (filter, values) in filtered_property_declarations(declarations, property_names):
             
             face_name = values.has_key('text-face-name') and values['text-face-name'].value
             size = values.has_key('text-size') and values['text-size'].value
@@ -844,72 +774,10 @@ def get_text_rule_groups(declarations):
     
     return dict(groups)
 
-    #     rule_el_groups = []
-    #     
-    #     # a separate style element for each text name
-    #     for text_name in set(text_names):
-    #     
-    #         # just the ones we care about here.
-    #         # the complicated conditional means: get all declarations that
-    #         # apply to this text_name specifically, or text in general.
-    #         name_declarations = [dec for dec in declarations
-    #                              if dec.property.name in property_map
-    #                                 and (len(dec.selector.elements) == 1
-    #                                      or (len(dec.selector.elements) == 2
-    #                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
-    #         
-    #         # a place to put rule elements
-    #         rule_els = []
-    #         
-    #         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-    #             if 'face_name' in parameter_values and 'size' in parameter_values:
-    #                 symbolizer_el = Element('TextSymbolizer')
-    #             else:
-    #                 # we can do nothing with fontless text
-    #                 continue
-    # 
-    #             symbolizer_el.set('name', text_name)
-    #             
-    #             for (parameter, value) in parameter_values.items():
-    #                 symbolizer_el.set(parameter, str(value))
-    #     
-    #             rule_el = make_rule_element(filter, symbolizer_el)
-    #             rule_els.append(rule_el)
-    #         
-    #         rule_el_groups.append((text_name, rule_els))
-    # 
-    #     return rule_el_groups
-
-def postprocess_symbolizer_image_file(symbolizer_el, out, temp_name):
-    """ Given a sumbolizer element, output directory name, and temporary
-        file name, find the "file" attribute in the symbolizer and save it
-        to a temporary location as a PING while noting its dimensions.
-    """
-    # read the image to get some more details
-    img_path = symbolizer_el.get('file')
-    img_data = urllib.urlopen(img_path).read()
-    img_file = StringIO.StringIO(img_data)
-    img = PIL.Image.open(img_file)
-    
-    # save the image to a tempfile, making it a PNG no matter what
-    (handle, path) = tempfile.mkstemp(suffix='.png', prefix='cascadenik-%s-' % temp_name, dir=out)
-    os.close(handle)
-    
-    img.save(path)
-    os.chmod(path, 0644);
-
-    symbolizer_el.set('file', path)
-    symbolizer_el.set('type', 'png')
-    
-    # if no width/height have been provided, set them
-    if not (symbolizer_el.get('width', False) and symbolizer_el.get('height', False)):
-        symbolizer_el.set('width', str(img.size[0]))
-        symbolizer_el.set('height', str(img.size[1]))
-
-def new_postprocess_symbolizer_image_file(file_name, out, temp_name):
+def postprocess_symbolizer_image_file(file_name, out, temp_name):
     """ Given a file name, an output directory name, and a temporary
-        file name, find the "file" attribute in the symbolizer and save it
-        to a temporary location as a PING while noting its dimensions.
+        file name, save the file to a temporary location as a PING
+        while noting its dimensions.
     """
     # read the image to get some more details
     img_path = file_name
@@ -960,14 +828,14 @@ def get_shield_rule_groups(declarations, out=None):
         # a place to put rules
         rules = []
         
-        for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+        for (filter, values) in filtered_property_declarations(declarations, property_names):
         
             shield_face_name = values.has_key('shield-face-name') and values['shield-face-name'].value or shield_face_name
             shield_size = values.has_key('shield-size') and values['shield-size'].value or shield_size
             
             shield_file, shield_type, shield_width, shield_height \
                 = values.has_key('shield-file') \
-                and new_postprocess_symbolizer_image_file(str(values['shield-file'].value), out, 'shield') \
+                and postprocess_symbolizer_image_file(str(values['shield-file'].value), out, 'shield') \
                 or (None, None, None, None)
             
             shield_width = values.has_key('shield-width') and values['shield-width'].value or shield_width
@@ -982,50 +850,6 @@ def get_shield_rule_groups(declarations, out=None):
         groups.append((text_name, rules))
     
     return dict(groups)
-
-    #     # pull out all the names
-    #     text_names = [dec.selector.elements[1].names[0]
-    #                   for dec in declarations
-    #                   if len(dec.selector.elements) is 2 and len(dec.selector.elements[1].names) is 1]
-    # 
-    #     rule_el_groups = []
-    #     
-    #     # a separate style element for each text name
-    #     for text_name in set(text_names):
-    #     
-    #         # just the ones we care about here.
-    #         # the complicated conditional means: get all declarations that
-    #         # apply to this text_name specifically, or text in general.
-    #         name_declarations = [dec for dec in declarations
-    #                              if dec.property.name in property_map
-    #                                 and (len(dec.selector.elements) == 1
-    #                                      or (len(dec.selector.elements) == 2
-    #                                          and dec.selector.elements[1].names[0] in (text_name, '*')))]
-    #         
-    #         # a place to put rule elements
-    #         rule_els = []
-    #         
-    #         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-    #             if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
-    #                 symbolizer_el = Element('ShieldSymbolizer')
-    #             else:
-    #                 # we can do nothing with fontless text
-    #                 continue
-    # 
-    #             symbolizer_el.set('name', text_name)
-    #             
-    #             for (parameter, value) in parameter_values.items():
-    #                 symbolizer_el.set(parameter, str(value))
-    #     
-    #             if symbolizer_el.get('file', False):
-    #                 postprocess_symbolizer_image_file(symbolizer_el, out, 'shield')
-    #     
-    #                 rule_el = make_rule_element(filter, symbolizer_el)
-    #                 rule_els.append(rule_el)
-    #         
-    #         rule_el_groups.append((text_name, rule_els))
-    # 
-    #     return rule_el_groups
 
 def get_point_rules(declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
@@ -1043,11 +867,11 @@ def get_point_rules(declarations, out=None):
     # a place to put rules
     rules = []
     
-    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+    for (filter, values) in filtered_property_declarations(declarations, property_names):
     
         point_file, point_type, point_width, point_height \
             = values.has_key('point-file') \
-            and new_postprocess_symbolizer_image_file(str(values['point-file'].value), out, 'point') \
+            and postprocess_symbolizer_image_file(str(values['point-file'].value), out, 'point') \
             or (None, None, None, None)
         
         point_width = values.has_key('point-width') and values['point-width'].value or point_width
@@ -1059,24 +883,6 @@ def get_point_rules(declarations, out=None):
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
-
-    #     # a place to put rule elements
-    #     rule_els = []
-    #     
-    #     for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-    #         symbolizer_el = Element('PointSymbolizer')
-    #         
-    #         # collect all the applicable declarations into a symbolizer element
-    #         for (parameter, value) in parameter_values.items():
-    #             symbolizer_el.set(parameter, str(value))
-    #     
-    #         if symbolizer_el.get('file', False):
-    #             postprocess_symbolizer_image_file(symbolizer_el, out, 'point')
-    #             
-    #             rule_el = make_rule_element(filter, symbolizer_el)
-    #             rule_els.append(rule_el)
-    #     
-    #     return rule_els
 
 def get_polygon_pattern_rules(declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
@@ -1093,11 +899,11 @@ def get_polygon_pattern_rules(declarations, out=None):
     # a place to put rules
     rules = []
     
-    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+    for (filter, values) in filtered_property_declarations(declarations, property_names):
     
         poly_pattern_file, poly_pattern_type, poly_pattern_width, poly_pattern_height \
             = values.has_key('polygon-pattern-file') \
-            and new_postprocess_symbolizer_image_file(str(values['polygon-pattern-file'].value), out, 'polygon-pattern') \
+            and postprocess_symbolizer_image_file(str(values['polygon-pattern-file'].value), out, 'polygon-pattern') \
             or (None, None, None, None)
         
         poly_pattern_width = values.has_key('polygon-pattern-width') and values['polygon-pattern-width'].value or poly_pattern_width
@@ -1108,24 +914,6 @@ def get_polygon_pattern_rules(declarations, out=None):
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
-
-    #     # a place to put rule elements
-    #     rule_els = []
-    #     
-    #     for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-    #         symbolizer_el = Element('PolygonPatternSymbolizer')
-    #         
-    #         # collect all the applicable declarations into a symbolizer element
-    #         for (parameter, value) in parameter_values.items():
-    #             symbolizer_el.set(parameter, str(value))
-    #     
-    #         if symbolizer_el.get('file', False):
-    #             postprocess_symbolizer_image_file(symbolizer_el, out, 'polygon-pattern')
-    #             
-    #             rule_el = make_rule_element(filter, symbolizer_el)
-    #             rule_els.append(rule_el)
-    #     
-    #     return rule_els
 
 def get_line_pattern_rules(declarations, out=None):
     """ Given a Map element, a Layer element, and a list of declarations,
@@ -1142,11 +930,11 @@ def get_line_pattern_rules(declarations, out=None):
     # a place to put rules
     rules = []
     
-    for (filter, values) in new_filtered_property_declarations(declarations, property_names):
+    for (filter, values) in filtered_property_declarations(declarations, property_names):
     
         line_pattern_file, line_pattern_type, line_pattern_width, line_pattern_height \
             = values.has_key('line-pattern-file') \
-            and new_postprocess_symbolizer_image_file(str(values['line-pattern-file'].value), out, 'line-pattern') \
+            and postprocess_symbolizer_image_file(str(values['line-pattern-file'].value), out, 'line-pattern') \
             or (None, None, None, None)
         
         line_pattern_width = values.has_key('line-pattern-width') and values['line-pattern-width'].value or line_pattern_width
@@ -1157,24 +945,6 @@ def get_line_pattern_rules(declarations, out=None):
             rules.append(new_make_rule_element(filter, symbolizer))
     
     return rules
-
-    #     # a place to put rule elements
-    #     rule_els = []
-    #     
-    #     for (filter, parameter_values) in filtered_property_declarations(declarations, property_map):
-    #         symbolizer_el = Element('LinePatternSymbolizer')
-    #         
-    #         # collect all the applicable declarations into a symbolizer element
-    #         for (parameter, value) in parameter_values.items():
-    #             symbolizer_el.set(parameter, str(value))
-    #     
-    #         if symbolizer_el.get('file', False):
-    #             postprocess_symbolizer_image_file(symbolizer_el, out, 'line-pattern')
-    #             
-    #             rule_el = make_rule_element(filter, symbolizer_el)
-    #             rule_els.append(rule_el)
-    #     
-    #     return rule_els
 
 def get_applicable_declarations(element, declarations):
     """ Given an XML element and a list of declarations, return the ones
