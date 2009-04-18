@@ -1605,6 +1605,70 @@ class StyleRuleTests(unittest.TestCase):
     
         declarations = stylesheet_declarations(s, is_gym=True)
         
+        line_rules = get_line_rules(declarations)
+        
+        print line_rules
+    
+        self.assertEqual(4, len(line_rules))
+        
+    
+        assert line_rules[0].minscale is None
+        assert line_rules[0].maxscale is None
+        self.assertEqual("not [bar] = 1 and not [foo] = 1", line_rules[0].filter.text)
+        self.assertEqual(1, len(line_rules[0].symbolizers))
+        
+        line_symbolizer = line_rules[0].symbolizers[0]
+        self.assertEqual(color(0xFF, 0xFF, 0xFF), line_symbolizer.color)
+        self.assertEqual(3.0, line_symbolizer.width)
+        
+    
+        assert line_rules[1].minscale is None
+        assert line_rules[1].maxscale is None
+        self.assertEqual("not [bar] = 1 and [foo] = 1", line_rules[1].filter.text)
+        self.assertEqual(2, len(line_rules[1].symbolizers))
+        
+        outline_symbolizer = line_rules[1].symbolizers[0]
+        self.assertEqual(color(0x00, 0x00, 0x00), outline_symbolizer.color)
+        self.assertEqual(5.0, outline_symbolizer.width)
+        
+        line_symbolizer = line_rules[1].symbolizers[1]
+        self.assertEqual(color(0xff, 0xff, 0xff), line_symbolizer.color)
+        self.assertEqual(3.0, line_symbolizer.width)
+    
+    
+        assert line_rules[2].minscale is None
+        assert line_rules[2].maxscale is None
+        self.assertEqual("[bar] = 1 and not [foo] = 1", line_rules[2].filter.text)
+        self.assertEqual(2, len(line_rules[2].symbolizers))
+        
+        line_symbolizer = line_rules[2].symbolizers[0]
+        self.assertEqual(color(0xff, 0xff, 0xff), line_symbolizer.color)
+        self.assertEqual(3.0, line_symbolizer.width)
+        
+        inline_symbolizer = line_rules[2].symbolizers[1]
+        self.assertEqual(color(0x99, 0x99, 0x99), inline_symbolizer.color)
+        self.assertEqual(1.0, inline_symbolizer.width)
+        
+    
+        assert line_rules[3].minscale is None
+        assert line_rules[3].maxscale is None
+        self.assertEqual("[bar] = 1 and [foo] = 1", line_rules[3].filter.text)
+        self.assertEqual(3, len(line_rules[3].symbolizers))
+        
+        outline_symbolizer = line_rules[3].symbolizers[0]
+        self.assertEqual(color(0x00, 0x00, 0x00), outline_symbolizer.color)
+        self.assertEqual(5.0, outline_symbolizer.width)
+        
+        line_symbolizer = line_rules[3].symbolizers[1]
+        self.assertEqual(color(0xff, 0xff, 0xff), line_symbolizer.color)
+        self.assertEqual(3.0, line_symbolizer.width)
+        
+        inline_symbolizer = line_rules[3].symbolizers[2]
+        self.assertEqual(color(0x99, 0x99, 0x99), inline_symbolizer.color)
+        self.assertEqual(1.0, inline_symbolizer.width)
+        
+        return # TODO: for now
+        
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))
     

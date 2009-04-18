@@ -723,16 +723,18 @@ def get_line_rules(declarations):
     
     for (filter, values) in new_filtered_property_declarations(declarations, property_names):
     
-        color = values.has_key('line-color') and values['line-color'].value
         width = values.has_key('line-width') and values['line-width'].value
+        color = values.has_key('line-color') and values['line-color'].value
         line_symbolizer = color and width and output.LineSymbolizer(color, width) or False
 
-        color = values.has_key('inline-color') and values['inline-color'].value
         width = values.has_key('inline-width') and values['inline-width'].value
+        color = values.has_key('inline-color') and values['inline-color'].value
         inline_symbolizer = color and width and output.LineSymbolizer(color, width) or False
 
+        # outline requires regular line to have a meaningful width
+        width = values.has_key('outline-width') and values.has_key('line-width') \
+            and values['line-width'].value + values['outline-width'].value * 2
         color = values.has_key('outline-color') and values['outline-color'].value
-        width = values.has_key('outline-width') and values['outline-width'].value
         outline_symbolizer = color and width and output.LineSymbolizer(color, width) or False
         
         rules.append(new_make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
