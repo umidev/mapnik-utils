@@ -44,11 +44,19 @@ class PolygonSymbolizer:
         return 'Polygon(%s, %s)' % (self.color, self.opacity)
 
 class LineSymbolizer:
-    def __init__(self, color, width):
+    def __init__(self, color, width, opacity=None, join=None, cap=None, dashes=None):
         assert color.__class__ is style.color
         assert type(width) in (int, float)
+        assert type(opacity) in (int, float) or opacity is None
+        assert type(join) is str or join is None
+        assert type(cap) is str or cap is None
+        assert dashes.__class__ is style.numbers or dashes is None
         self.color = color
         self.width = width
+        self.opacity = opacity
+        self.join = join
+        self.cap = cap
+        self.dashes = dashes
 
     def __repr__(self):
         return 'Line(%s, %s)' % (self.color, self.width)

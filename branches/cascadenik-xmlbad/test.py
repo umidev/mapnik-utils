@@ -7,7 +7,7 @@ import xml.etree.ElementTree
 from cascadenik.style import ParseException, stylesheet_rulesets, rulesets_declarations, stylesheet_declarations
 from cascadenik.style import Selector, SelectorElement, SelectorAttributeTest
 from cascadenik.style import postprocess_property, postprocess_value, Property
-from cascadenik.style import color
+from cascadenik.style import color, numbers
 from cascadenik.compile import tests_filter_combinations, Filter, selectors_tests
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
@@ -708,7 +708,7 @@ class StyleRuleTests(unittest.TestCase):
         # destroy the above-created directory
         shutil.rmtree(self.tmpdir)
 
-    def testStyleRules1(self):
+    def testStyleRules01(self):
         s = """
             Layer[zoom<=10][use=park] { polygon-fill: #0f0; }
             Layer[zoom<=10][use=cemetery] { polygon-fill: #999; }
@@ -754,7 +754,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_el is not None
         self.assertEqual(stylename, style_el.get('name'))
 
-    def testStyleRules2(self):
+    def testStyleRules02(self):
         s = """
             Layer[zoom<=10][foo<1] { polygon-fill: #000; }
             Layer[zoom<=10][foo>1] { polygon-fill: #00f; }
@@ -800,7 +800,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_el is not None
         self.assertEqual(stylename, style_el.get('name'))
 
-    def testStyleRules3(self):
+    def testStyleRules03(self):
         s = """
             Layer[zoom<=10][foo<1] { polygon-fill: #000; }
             Layer[zoom<=10][foo>1] { polygon-fill: #00f; }
@@ -888,7 +888,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_els[0].get('name') in (stylenames)
         assert style_els[1].get('name') in (stylenames)
 
-    def testStyleRules4(self):
+    def testStyleRules04(self):
         s = """
             Layer[zoom<=10] { line-width: 1; }
             Layer[zoom>10] { line-width: 2; }
@@ -981,7 +981,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_els[0].get('name') in (stylenames)
         assert style_els[1].get('name') in (stylenames)
 
-    def testStyleRules5(self):
+    def testStyleRules05(self):
         s = """
             Layer label { text-face-name: 'Helvetica'; text-size: 12; text-fill: #000; }
             Layer[foo<1] label { text-face-name: 'Arial'; }
@@ -1092,7 +1092,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_els[0].get('name') in (stylenames)
         assert style_els[1].get('name') in (stylenames)
 
-    def testStyleRules6(self):
+    def testStyleRules06(self):
         s = """
             Layer label { shield-face-name: 'Helvetica'; shield-size: 12; shield-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png'); }
             Layer[foo>1] label { shield-size: 10; }
@@ -1187,7 +1187,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_els[0].get('name') in (stylenames)
         assert style_els[1].get('name') in (stylenames)
 
-    def testStyleRules7(self):
+    def testStyleRules07(self):
         s = """
             Layer { point-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png'); }
             Layer { polygon-pattern-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png'); }
@@ -1247,7 +1247,7 @@ class StyleRuleTests(unittest.TestCase):
         assert style_els[1].get('name') in (stylenames)
         assert style_els[2].get('name') in (stylenames)
 
-    def testStyleRules8(self):
+    def testStyleRules08(self):
         s = """
             Layer { line-width: 3; line-color: #fff; }
             Layer[foo=1] { outline-width: 1; outline-color: #000; }
@@ -1336,7 +1336,7 @@ class StyleRuleTests(unittest.TestCase):
         
         assert style_els[0].get('name') in (stylenames)
 
-    def testStyleRules9(self):
+    def testStyleRules09(self):
         s = """
             Layer { line-color: #000; }
             
@@ -1411,6 +1411,38 @@ class StyleRuleTests(unittest.TestCase):
         
         self.assertEqual("[landuse] = 'woods'", polygon_rules[5].filter.text)
         self.assertEqual(color(0x00, 0x00, 0x44), polygon_rules[5].symbolizers[0].color)
+
+    def testStyleRules11(self):
+        s = """
+            Layer
+            {
+                polygon-fill: #000;
+                polygon-opacity: .5;
+
+                line-color: #000;
+                line-width: 2;
+                line-opacity: .5;
+                line-join: miter;
+                line-cap: butt;
+                line-dasharray: 1,2,3;
+            }
+        """
+
+        declarations = stylesheet_declarations(s, is_gym=True)
+
+        polygon_rules = get_polygon_rules(declarations)
+        
+        self.assertEqual(color(0x00, 0x00, 0x00), polygon_rules[0].symbolizers[0].color)
+        self.assertEqual(0.5, polygon_rules[0].symbolizers[0].opacity)
+
+        line_rules = get_line_rules(declarations)
+        
+        self.assertEqual(color(0x00, 0x00, 0x00), line_rules[0].symbolizers[0].color)
+        self.assertEqual(2.0, line_rules[0].symbolizers[0].width)
+        self.assertEqual(0.5, line_rules[0].symbolizers[0].opacity)
+        self.assertEqual('miter', line_rules[0].symbolizers[0].join)
+        self.assertEqual('butt', line_rules[0].symbolizers[0].cap)
+        self.assertEqual(numbers(1, 2, 3), line_rules[0].symbolizers[0].dashes)
 
 if __name__ == '__main__':
     unittest.main()

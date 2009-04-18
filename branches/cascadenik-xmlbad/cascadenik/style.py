@@ -58,6 +58,9 @@ class numbers:
     def __str__(self):
         return repr(self)
 
+    def __eq__(self, other):
+        return self.values == other.values
+
 # recognized properties
 
 properties = {
