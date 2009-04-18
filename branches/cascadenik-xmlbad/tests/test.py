@@ -1413,6 +1413,15 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].height)
         self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][5].filter.text)
 
+        point_rules = get_point_rules(declarations)
+        
+        assert point_rules[0].filter is None
+        assert point_rules[0].minscale is None
+        assert point_rules[0].maxscale is None
+        self.assertEqual('png', point_rules[0].symbolizers[0].type)
+        self.assertEqual(8, point_rules[0].symbolizers[0].width)
+        self.assertEqual(8, point_rules[0].symbolizers[0].height)
+        
         return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
@@ -1509,6 +1518,35 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+
+        point_rules = get_point_rules(declarations)
+        
+        assert point_rules[0].filter is None
+        assert point_rules[0].minscale is None
+        assert point_rules[0].maxscale is None
+        self.assertEqual('png', point_rules[0].symbolizers[0].type)
+        self.assertEqual(8, point_rules[0].symbolizers[0].width)
+        self.assertEqual(8, point_rules[0].symbolizers[0].height)
+
+        polygon_pattern_rules = get_polygon_pattern_rules(declarations)
+        
+        assert polygon_pattern_rules[0].filter is None
+        assert polygon_pattern_rules[0].minscale is None
+        assert polygon_pattern_rules[0].maxscale is None
+        self.assertEqual('png', polygon_pattern_rules[0].symbolizers[0].type)
+        self.assertEqual(8, polygon_pattern_rules[0].symbolizers[0].width)
+        self.assertEqual(8, polygon_pattern_rules[0].symbolizers[0].height)
+
+        line_pattern_rules = get_line_pattern_rules(declarations)
+        
+        assert line_pattern_rules[0].filter is None
+        assert line_pattern_rules[0].minscale is None
+        assert line_pattern_rules[0].maxscale is None
+        self.assertEqual('png', line_pattern_rules[0].symbolizers[0].type)
+        self.assertEqual(8, line_pattern_rules[0].symbolizers[0].width)
+        self.assertEqual(8, line_pattern_rules[0].symbolizers[0].height)
+        
+        return # TODO: for now
         
         layer = xml.etree.ElementTree.Element('Layer')
         layer.append(xml.etree.ElementTree.Element('Datasource'))

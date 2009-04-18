@@ -70,9 +70,29 @@ class ShieldSymbolizer:
         self.face_name = face_name
         self.size = size
         self.file = file
-        self.filetype = filetype
+        self.type = filetype
         self.width = width
         self.height = height
 
     def __repr__(self):
         return 'Shield(%s, %s, %s)' % (self.face_name, self.size, self.file)
+
+class PointSymbolizer:
+    def __init__(self, file, filetype, width, height):
+        assert type(width) is int
+        assert type(height) is int
+        self.file = file
+        self.type = filetype
+        self.width = width
+        self.height = height
+
+    def __repr__(self):
+        return 'Point(%s)' % self.file
+
+class PolygonPatternSymbolizer(PointSymbolizer):
+    def __repr__(self):
+        return 'PolyPat(%s)' % self.file
+
+class LinePatternSymbolizer(PointSymbolizer):
+    def __repr__(self):
+        return 'LinePat(%s)' % self.file
