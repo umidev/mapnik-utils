@@ -34,14 +34,14 @@ class Filter:
         return str(self.text)
 
 class PolygonSymbolizer:
-    def __init__(self, fill, opacity=None):
-        assert fill.__class__ is style.color
+    def __init__(self, color, opacity=None):
+        assert color.__class__ is style.color
         assert type(opacity) in (int, float) or opacity is None
-        self.fill = fill
+        self.color = color
         self.opacity = opacity
 
     def __repr__(self):
-        return 'Polygon(%s, %s)' % (self.fill, self.opacity)
+        return 'Polygon(%s, %s)' % (self.color, self.opacity)
 
 class LineSymbolizer:
     def __init__(self, color, width):

@@ -690,9 +690,9 @@ def get_polygon_rules(declarations):
     
     for (filter, values) in new_filtered_property_declarations(declarations, property_names):
 
-        fill = values.has_key('polygon-fill') and values['polygon-fill'].value
+        color = values.has_key('polygon-fill') and values['polygon-fill'].value
         opacity = values.has_key('polygon-opacity') and values['polygon-opacity'].value or None
-        symbolizer = fill and output.PolygonSymbolizer(fill, opacity)
+        symbolizer = color and output.PolygonSymbolizer(color, opacity)
         
         if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))

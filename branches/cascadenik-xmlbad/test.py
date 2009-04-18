@@ -720,19 +720,19 @@ class StyleRuleTests(unittest.TestCase):
         rules = get_polygon_rules(declarations)
         
         self.assertEqual(399999, rules[0].maxscale.value)
-        self.assertEqual(color(0xCC, 0xCC, 0xCC), rules[0].symbolizers[0].fill)
+        self.assertEqual(color(0xCC, 0xCC, 0xCC), rules[0].symbolizers[0].color)
         self.assertEqual("[use] = 'cemetery'", rules[0].filter.text)
         
         self.assertEqual(399999, rules[1].maxscale.value)
-        self.assertEqual(color(0x66, 0xFF, 0x66), rules[1].symbolizers[0].fill)
+        self.assertEqual(color(0x66, 0xFF, 0x66), rules[1].symbolizers[0].color)
         self.assertEqual("[use] = 'park'", rules[1].filter.text)
     
         self.assertEqual(400000, rules[2].minscale.value)
-        self.assertEqual(color(0x99, 0x99, 0x99), rules[2].symbolizers[0].fill)
+        self.assertEqual(color(0x99, 0x99, 0x99), rules[2].symbolizers[0].color)
         self.assertEqual("[use] = 'cemetery'", rules[2].filter.text)
         
         self.assertEqual(400000, rules[3].minscale.value)
-        self.assertEqual(color(0x00, 0xFF, 0x00), rules[3].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0xFF, 0x00), rules[3].symbolizers[0].color)
         self.assertEqual("[use] = 'park'", rules[3].filter.text)
         
         return # TODO: for now
@@ -788,19 +788,19 @@ class StyleRuleTests(unittest.TestCase):
         rules = get_polygon_rules(declarations)
         
         self.assertEqual(399999, rules[0].maxscale.value)
-        self.assertEqual(color(0x00, 0xFF, 0x00), rules[0].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0xFF, 0x00), rules[0].symbolizers[0].color)
         self.assertEqual('[foo] < 1', rules[0].filter.text)
         
         self.assertEqual(399999, rules[1].maxscale.value)
-        self.assertEqual(color(0xFF, 0x00, 0x00), rules[1].symbolizers[0].fill)
+        self.assertEqual(color(0xFF, 0x00, 0x00), rules[1].symbolizers[0].color)
         self.assertEqual('[foo] > 1', rules[1].filter.text)
     
         self.assertEqual(400000, rules[2].minscale.value)
-        self.assertEqual(color(0x00, 0x00, 0x00), rules[2].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x00), rules[2].symbolizers[0].color)
         self.assertEqual('[foo] < 1', rules[2].filter.text)
         
         self.assertEqual(400000, rules[3].minscale.value)
-        self.assertEqual(color(0x00, 0x00, 0xFF), rules[3].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0xFF), rules[3].symbolizers[0].color)
         self.assertEqual('[foo] > 1', rules[3].filter.text)
         
         return # TODO: for now
@@ -863,19 +863,19 @@ class StyleRuleTests(unittest.TestCase):
         poly_rules = get_polygon_rules(declarations)
         
         self.assertEqual(399999, poly_rules[0].maxscale.value)
-        self.assertEqual(color(0x00, 0xFF, 0x00), poly_rules[0].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0xFF, 0x00), poly_rules[0].symbolizers[0].color)
         self.assertEqual('[foo] < 1', poly_rules[0].filter.text)
         
         self.assertEqual(399999, poly_rules[1].maxscale.value)
-        self.assertEqual(color(0xFF, 0x00, 0x00), poly_rules[1].symbolizers[0].fill)
+        self.assertEqual(color(0xFF, 0x00, 0x00), poly_rules[1].symbolizers[0].color)
         self.assertEqual('[foo] > 1', poly_rules[1].filter.text)
     
         self.assertEqual(400000, poly_rules[2].minscale.value)
-        self.assertEqual(color(0x00, 0x00, 0x00), poly_rules[2].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x00), poly_rules[2].symbolizers[0].color)
         self.assertEqual('[foo] < 1', poly_rules[2].filter.text)
         
         self.assertEqual(400000, poly_rules[3].minscale.value)
-        self.assertEqual(color(0x00, 0x00, 0xFF), poly_rules[3].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0xFF), poly_rules[3].symbolizers[0].color)
         self.assertEqual('[foo] > 1', poly_rules[3].filter.text)
         
         line_rules = get_line_rules(declarations)
@@ -1839,22 +1839,22 @@ class StyleRuleTests(unittest.TestCase):
         polygon_rules = get_polygon_rules(declarations)
         
         self.assertEqual("not [landuse] = 'field' and not [landuse] = 'woods' and not [landuse] = 'desert' and not [landuse] = 'forest' and not [landuse] = 'meadow'", polygon_rules[0].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x66), polygon_rules[0].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x66), polygon_rules[0].symbolizers[0].color)
         
         self.assertEqual("[landuse] = 'desert'", polygon_rules[1].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x00), polygon_rules[1].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x00), polygon_rules[1].symbolizers[0].color)
         
         self.assertEqual("[landuse] = 'field'", polygon_rules[2].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x11), polygon_rules[2].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x11), polygon_rules[2].symbolizers[0].color)
         
         self.assertEqual("[landuse] = 'forest'", polygon_rules[3].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x33), polygon_rules[3].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x33), polygon_rules[3].symbolizers[0].color)
         
         self.assertEqual("[landuse] = 'meadow'", polygon_rules[4].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x22), polygon_rules[4].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x22), polygon_rules[4].symbolizers[0].color)
         
         self.assertEqual("[landuse] = 'woods'", polygon_rules[5].filter.text)
-        self.assertEqual(color(0x00, 0x00, 0x44), polygon_rules[5].symbolizers[0].fill)
+        self.assertEqual(color(0x00, 0x00, 0x44), polygon_rules[5].symbolizers[0].color)
         
         return # TODO: for now
         
