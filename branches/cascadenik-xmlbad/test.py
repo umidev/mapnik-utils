@@ -1835,6 +1835,29 @@ class StyleRuleTests(unittest.TestCase):
         """
     
         declarations = stylesheet_declarations(s, is_gym=True)
+        
+        polygon_rules = get_polygon_rules(declarations)
+        
+        self.assertEqual("not [landuse] = 'field' and not [landuse] = 'woods' and not [landuse] = 'desert' and not [landuse] = 'forest' and not [landuse] = 'meadow'", polygon_rules[0].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x66), polygon_rules[0].symbolizers[0].fill)
+        
+        self.assertEqual("[landuse] = 'desert'", polygon_rules[1].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x00), polygon_rules[1].symbolizers[0].fill)
+        
+        self.assertEqual("[landuse] = 'field'", polygon_rules[2].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x11), polygon_rules[2].symbolizers[0].fill)
+        
+        self.assertEqual("[landuse] = 'forest'", polygon_rules[3].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x33), polygon_rules[3].symbolizers[0].fill)
+        
+        self.assertEqual("[landuse] = 'meadow'", polygon_rules[4].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x22), polygon_rules[4].symbolizers[0].fill)
+        
+        self.assertEqual("[landuse] = 'woods'", polygon_rules[5].filter.text)
+        self.assertEqual(color(0x00, 0x00, 0x44), polygon_rules[5].symbolizers[0].fill)
+        
+        return # TODO: for now
+        
         rule_els = get_polygon_rules(declarations)
         
         self.assertEqual("not [landuse] = 'field' and not [landuse] = 'woods' and not [landuse] = 'desert' and not [landuse] = 'forest' and not [landuse] = 'meadow'", rule_els[0].find('Filter').text)
