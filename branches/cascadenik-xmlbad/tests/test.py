@@ -1488,5 +1488,42 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(boolean(0), text_rule_groups['label'][0].symbolizers[0].allow_overlap)
         self.assertEqual('point', text_rule_groups['label'][0].symbolizers[0].placement)
 
+    def testStyleRules13(self):
+        s = """
+            Layer
+            {
+                point-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png');
+                point-width: 16;
+                point-height: 16;
+                point-allow-overlap: true;
+
+                polygon-pattern-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png');
+                polygon-pattern-width: 16;
+                polygon-pattern-height: 16;
+
+                line-pattern-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png');
+                line-pattern-width: 16;
+                line-pattern-height: 16;
+            }
+        """
+
+        declarations = stylesheet_declarations(s, is_gym=True)
+
+        point_rules = get_point_rules(declarations)
+        
+        self.assertEqual(16, point_rules[0].symbolizers[0].width)
+        self.assertEqual(16, point_rules[0].symbolizers[0].height)
+        self.assertEqual(boolean(True), point_rules[0].symbolizers[0].allow_overlap)
+
+        polygon_pattern_rules = get_polygon_pattern_rules(declarations)
+        
+        self.assertEqual(16, polygon_pattern_rules[0].symbolizers[0].width)
+        self.assertEqual(16, polygon_pattern_rules[0].symbolizers[0].height)
+
+        line_pattern_rules = get_line_pattern_rules(declarations)
+        
+        self.assertEqual(16, line_pattern_rules[0].symbolizers[0].width)
+        self.assertEqual(16, line_pattern_rules[0].symbolizers[0].height)
+
 if __name__ == '__main__':
     unittest.main()

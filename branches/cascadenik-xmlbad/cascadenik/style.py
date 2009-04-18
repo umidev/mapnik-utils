@@ -49,7 +49,7 @@ class boolean:
         return repr(self)
 
     def __eq__(self, other):
-        return bool(self.value) == bool(other.value)
+        return hasattr(other, 'value') and bool(self.value) == bool(other.value)
 
 class numbers:
     def __init__(self, *values):

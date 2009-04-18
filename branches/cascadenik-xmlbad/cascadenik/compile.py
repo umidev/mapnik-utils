@@ -912,8 +912,9 @@ def get_point_rules(declarations, out=None):
         
         point_width = values.has_key('point-width') and values['point-width'].value or point_width
         point_height = values.has_key('point-height') and values['point-height'].value or point_height
+        point_allow_overlap = values.has_key('point-allow-overlap') and values['point-allow-overlap'].value or None
         
-        symbolizer = point_file and output.PointSymbolizer(point_file, point_type, point_width, point_height)
+        symbolizer = point_file and output.PointSymbolizer(point_file, point_type, point_width, point_height, point_allow_overlap)
 
         if symbolizer:
             rules.append(new_make_rule_element(filter, symbolizer))

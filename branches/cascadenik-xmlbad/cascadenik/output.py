@@ -122,22 +122,32 @@ class ShieldSymbolizer:
         return 'Shield(%s, %s, %s)' % (self.face_name, self.size, self.file)
 
 class PointSymbolizer:
-    def __init__(self, file, filetype, width, height):
+    def __init__(self, file, filetype, width, height, allow_overlap=None):
+        assert type(file) is str
+        assert type(filetype) is str
         assert type(width) is int
         assert type(height) is int
+        assert allow_overlap is None or allow_overlap.__class__ is style.boolean
 
         self.file = file
         self.type = filetype
         self.width = width
         self.height = height
+        self.allow_overlap = allow_overlap
 
     def __repr__(self):
         return 'Point(%s)' % self.file
 
 class PolygonPatternSymbolizer(PointSymbolizer):
+    def __init__(self, file, filetype, width, height):
+        PointSymbolizer.__init__(self, file, filetype, width, height)
+    
     def __repr__(self):
         return 'PolyPat(%s)' % self.file
 
 class LinePatternSymbolizer(PointSymbolizer):
+    def __init__(self, file, filetype, width, height):
+        PointSymbolizer.__init__(self, file, filetype, width, height)
+    
     def __repr__(self):
         return 'LinePat(%s)' % self.file
