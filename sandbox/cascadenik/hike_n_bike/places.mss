@@ -26,6 +26,12 @@
 .place[zoom>=14][zoom<=15] name { text-size: 10; }
 .place[zoom=16] name { text-size: 12; }
 
+.place[place=locality][zoom>=13][zoom<=13] name { text-size: 7; }
+.place[place=locality][zoom>=14][zoom<=16] name { text-size: 9; }
+
+.place[place=hamlet][zoom>=12][zoom<=13] name { text-size: 8; }
+.place[place=hamlet][zoom>=14][zoom<=16] name { text-size: 10; }
+
 .place[place=village][zoom>=12][zoom<=13] name { text-size: 10; }
 .place[place=village][zoom>=14][zoom<=16] name { text-size: 12; }
 
