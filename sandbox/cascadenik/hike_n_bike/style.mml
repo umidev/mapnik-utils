@@ -32,7 +32,8 @@ zoom level  - scale denominator
     <!ENTITY user "postgres">
     <!ENTITY dbname "gis">
     <!ENTITY estimate_extent "false">
-    <!ENTITY extent "1448357,6446222,1669795,6799934">
+    <!ENTITY extent "1148357,6146222,1869795,6999934">
+<!--     <!ENTITY extent "1448357,6446222,1669795,6799934"> -->
 <!--[Lon min, Lat min, Lon max, Lat max]--> 
 <!--     <!ENTITY extent "12.8,50.65,15.3,51.5"> -->
 ]>
@@ -181,7 +182,7 @@ zoom level  - scale denominator
       	<StyleName>raster</StyleName>
         <Datasource>
 	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/hill_8_z3.tif</Parameter>
+ 	    <Parameter name="file">/opt/applications/tilesathome/contours/hill2_8_z3.tif</Parameter>
 	    <Parameter name="format">tiff</Parameter>
         </Datasource>
     </Layer>
@@ -540,7 +541,7 @@ zoom level  - scale denominator
                           WHEN place = 'town' THEN 1
                           WHEN place = 'village' THEN 2
                           ELSE 3 END) AS priority FROM planet_osm_point
-                     WHERE place IN ('city', 'town', 'hamlet', 'village')
+                     WHERE place IN ('city', 'town', 'village', 'hamlet', 'locality')
                      ORDER BY priority ASC, correct_z_order DESC) AS places]]></Parameter>
         </Datasource>
     </Layer>
