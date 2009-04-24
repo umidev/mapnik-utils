@@ -80,7 +80,7 @@ variant sqlite description {Builds port with SQLite3 plugin} {
 
 use_configure        no
 
-build.args      PREFIX=${prefix} \
+build.args           PREFIX=${prefix} \
                      CAIRO=False \
                      INPUT_PLUGINS=all \
                      PYTHON_PREFIX=${prefix} \

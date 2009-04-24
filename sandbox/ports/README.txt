@@ -9,7 +9,7 @@ This is a testing sandbox for building Mapnik SVN Head using Macports.
 
 'py25-mapnik' is under development and once ready will be branched into a 'py26' version.
 
-The port script takes advantage of new options in SVN trunk to handle custom builds.
+The port script takes advantage of new options in the 0.6.0 release to handle custom builds.
 One example is the ability to request linking against the non-system/framework version of
 Python with FRAMEWORK_PYTHON=False.
 (see http://lists.berlios.de/pipermail/mapnik-users/2008-April/000865.html)
@@ -42,12 +42,12 @@ Currently one major issue prevents a proper build:
   
 2. And several todo items remain:
     * Get cairo support working/tested
-    * troubleshoot library linking issues (avoiding use of DYLIB_PATH)
+    * troubleshoot library linking issues
+     - Currently requires `export DYLD_LIBRARY_PATH=/opt/local/lib/mapnik/`
     * provide a few more variants for xml_parser, etc
     * write a tool to validate/test python linking
     * break off py26 port
     * break off a mapnik-devel port to track trunk
-    * post ticket for formal inclusion in hosted ports
 
 
 Using Portfile Locally
