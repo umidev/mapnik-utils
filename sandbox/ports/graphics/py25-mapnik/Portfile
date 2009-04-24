@@ -5,29 +5,26 @@ PortSystem 1.0
 
 name                 py25-mapnik
 version              0.6.0
-categories           graphics gis
-platforms            darwin
+categories           python gis
+
 maintainers          gmail.com:dbsgeo
-description          Open Source C++/Python mapping toolkit.
 homepage             http://mapnik.org/
 platforms            darwin
 
 master_sites         http://download.berlios.de/mapnik/ \
                      http://download2.berlios.de/mapnik/
-
-
+                     
 distname             mapnik-${version}
-checksums           md5     f854378749bfebdbacedcda2d18f1c19 \
-                    sha1    051e9c7d409fbadda0d09dfa0feba826126a9fa1 \
-                    rmd160  0109f5dd9bfb0cb7f99f1482c46d01b3cf7cc8d5
-
-
 worksrcdir           mapnik-${version}
-use_configure        no
+checksums            md5     981271ac1cd1432314a963809c245fe1 \
+                     sha1    4a092f27fe66b8a9f9800a3944a50c6f5b97473a \
+                     rmd160  aa1cbe18a9d0ce96b5c826ea3c8546e1fdf0cc86
+use_bzip2            yes
 
+description          Open Source C++/Python mapping toolkit.
 long_description \
     Mapnik is a Open Source tookit for developing mapping \
-    applications. It's written in C++ and there are \
+    applications. It is written in C++ and there are \
     Python bindings to facilitate fast-paced agile \
     development. It can comfortably be used for both \
     desktop and web development. \
@@ -36,11 +33,11 @@ long_description \
     AGG library and offers world class anti-aliasing \
     rendering with subpixel accuracy for geographic \
     data. It is written from scratch in modern C++ and \
-    doesn't suffer from design decisions made a decade \
+    does not suffer from design decisions made a decade \
     ago. When it comes to handling common software tasks \
     such as memory management, filesystem access, \
     regular expressions, parsing and so on, Mapnik \
-    doesn't re-invent the wheel, but utilises best of \
+    does not re-invent the wheel, but utilises best of \
     breed industry standard libraries from boost.org. \
 
 depends_lib         port:boost \
@@ -81,6 +78,8 @@ variant sqlite description {Builds port with SQLite3 plugin} {
                        SQLITE_LIBS=${prefix}/lib
 }
 
+use_configure        no
+
 build.args      PREFIX=${prefix} \
                      CAIRO=False \
                      INPUT_PLUGINS=all \
@@ -104,7 +103,7 @@ build.args      PREFIX=${prefix} \
                      PROJ_LIBS=${prefix}/lib \
                      PYTHON=${python} \
                      LIB_DIR_NAME=/mapnik/0.6 \
-                     FRAMEWORK_PYTHON=False \
+                     FRAMEWORK_PYTHON=True \
                      DESTDIR=${destroot}
 
 build {
