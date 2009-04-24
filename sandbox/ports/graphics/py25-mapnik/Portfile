@@ -102,7 +102,6 @@ build.args      PREFIX=${prefix} \
                      PROJ_INCLUDES=${prefix}/include \
                      PROJ_LIBS=${prefix}/lib \
                      PYTHON=${python} \
-                     LIB_DIR_NAME=/mapnik/0.6 \
                      FRAMEWORK_PYTHON=True \
                      DESTDIR=${destroot}
 
