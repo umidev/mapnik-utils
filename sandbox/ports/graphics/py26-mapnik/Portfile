@@ -79,13 +79,16 @@ variant sqlite description {Builds port with SQLite3 plugin} {
                        SQLITE_LIBS=${prefix}/lib
 }
 
+use_parallel_build  yes
+
 use_configure        no
 
 build.args      PREFIX=${prefix} \
+                     JOBS=4 \
+                     FAST=True \
                      CAIRO=False \
                      INPUT_PLUGINS=all \
                      PYTHON=${python} \
-                     PYTHON_PREFIX=${prefix} \
                      FREETYPE_CONFIG=${prefix}/bin/freetype-config \
                      XML2_CONFIG=${prefix}/bin/xml2-config \
                      BOOST_INCLUDES=${prefix}/include \
