@@ -88,7 +88,6 @@ use_parallel_build  yes
 
 configure.args      PREFIX=${prefix} \
                      JOBS=4 \
-                     FAST=True \
                      CAIRO=False \
                      INPUT_PLUGINS=all \
                      PYTHON=${python} \
