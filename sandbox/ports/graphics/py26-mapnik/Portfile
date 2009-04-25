@@ -21,6 +21,8 @@ checksums            md5     981271ac1cd1432314a963809c245fe1 \
                      rmd160  aa1cbe18a9d0ce96b5c826ea3c8546e1fdf0cc86
 use_bzip2            yes
 
+universal_variant       no
+
 patchfiles            patch-src-Sconscript.diff
                            
 description          Open Source C++/Python mapping toolkit.
@@ -59,31 +61,32 @@ variant cairo description {Builds port with Cairo Support} {
     depends_lib-append port:cairo
     depends_lib-append port:cairomm
     depends_lib-append port:py26-cairo
-    build.args-delete  CAIRO=False
-    build.args-append  CAIRO=True
+    configure.args-delete  CAIRO=False
+    configure.args-append  CAIRO=True
+    configure.pkg_config_path-append ${prefix}/Library/Frameworks/Python.framework/Versions/2.6/lib/pkgconfig/
 }
 
 variant postgis description {Builds port with PostGIS plugin} {
+    depends_lib-append port:postgresql83
+    depends_lib-append port:postgresql83-server
     depends_lib-append port:postgis
-    build.args-append  PG_CONFIG=${prefix}/bin/pg_config
+    configure.args-append  PG_CONFIG=${prefix}/lib/postgresql83/bin/pg_config
 }
 
 variant gdal description {Builds port with GDAL/OGR plugin} {
     depends_lib-append port:gdal
-    build.args-append  GDAL_CONFIG=${prefix}/bin/gdal-config
+    configure.args-append  GDAL_CONFIG=${prefix}/bin/gdal-config
 }
 
 variant sqlite description {Builds port with SQLite3 plugin} {
     depends_lib-append port:sqlite3
-    build.args-append  SQLITE_INCLUDES=${prefix}/include \
+    configure.args-append  SQLITE_INCLUDES=${prefix}/include \
                        SQLITE_LIBS=${prefix}/lib
 }
 
 use_parallel_build  yes
 
-use_configure        no
-
-build.args      PREFIX=${prefix} \
+configure.args      PREFIX=${prefix} \
                      JOBS=4 \
                      FAST=True \
                      CAIRO=False \
@@ -108,8 +111,12 @@ build.args      PREFIX=${prefix} \
                      FRAMEWORK_PYTHON=False \
                      DESTDIR=${destroot}
 
+configure {
+    system "cd ${worksrcpath} && ${python} scons/scons.py ${configure.args} configure"
+}
+
 build {
-    system "cd ${worksrcpath} && ${python} scons/scons.py ${build.args}"
+    system "cd ${worksrcpath} && ${python} scons/scons.py"
 }
 
 destroot {
