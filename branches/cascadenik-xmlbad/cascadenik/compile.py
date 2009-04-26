@@ -943,7 +943,7 @@ def get_applicable_declarations(element, declarations):
     return [dec for dec in declarations
             if dec.selector.matches(element_tag, element_id, element_classes)]
 
-def localize_shapefile(src, shapefile, dir=None):
+def localize_shapefile(base, shapefile, dir=None):
     """ Given a stylesheet path, a shapefile name, and a temp directory,
         modify the shapefile name so it's an absolute path.
     
@@ -955,7 +955,7 @@ def localize_shapefile(src, shapefile, dir=None):
     
     if scheme == '':
         # assumed to be local
-        return os.path.realpath(urlparse.urljoin(src, shapefile))
+        return os.path.realpath(urlparse.urljoin(base, shapefile))
 
     # assumed to be a remote zip archive with .shp, .shx, and .dbf files
     zip_data = urllib.urlopen(shapefile).read()
@@ -990,56 +990,116 @@ def localize_shapefile(src, shapefile, dir=None):
 def compile(src, dir=None):
     """
     """
-    doc = ElementTree.parse(urllib.urlopen(src))
-    map = doc.getroot()
+    try:
+        # guessing src is a literal XML string?
+        map_el = ElementTree.fromstring(src)
+        base = None
+    except:
+        # or a URL or file location?
+        doc = ElementTree.parse(urllib.urlopen(src))
+        map_el = doc.getroot()
+        base = src
     
-    declarations = extract_declarations(map, src)
+    declarations = extract_declarations(map_el, base)
     
-    add_map_style(map, get_applicable_declarations(map, declarations))
+    # a list of layers and a sequential ID generator
+    layers, ids = [], (i for i in xrange(1, 999999))
+    
+    for layer_el in map_el.findall('Layer'):
+    
+        # nevermind with this one
+        if layer_el.get('status', None) in ('off', '0', 0):
+            continue
+        
+        layer_declarations = get_applicable_declarations(layer_el, declarations)
+        
+        # a list of styles
+        styles = []
+        
+        styles.append(output.Style('polygon style %d' % ids.next(),
+                                   get_polygon_rules(layer_declarations)))
 
-    for layer in map.findall('Layer'):
+        styles.append(output.Style('polygon pattern style %d' % ids.next(),
+                                   get_polygon_pattern_rules(layer_declarations, dir)))
+
+        styles.append(output.Style('line style %d' % ids.next(),
+                                   get_line_rules(layer_declarations)))
+
+        styles.append(output.Style('line pattern style %d' % ids.next(),
+                                   get_line_pattern_rules(layer_declarations, dir)))
+
+        for (shield_name, shield_rules) in get_shield_rule_groups(layer_declarations, dir).items():
+            styles.append(output.Style('shield style %d (%s)' % (ids.next(), shield_name), shield_rules))
+
+        for (text_name, text_rules) in get_text_rule_groups(layer_declarations).items():
+            styles.append(output.Style('text style %d (%s)' % (ids.next(), text_name), text_rules))
+
+        styles.append(output.Style('point style %d' % ids.next(),
+                                   get_point_rules(layer_declarations, dir)))
+                                   
+        styles = [s for s in styles if s.rules]
+        
+        if styles:
+            datasource_params = dict([(p.get('name'), p.text) for p in layer_el.find('Datasource').findall('Parameter')])
+            assert 'plugin_name' in datasource_params, "Datasource will complain if there's no plugin_name parameter"
     
-        for parameter in layer.find('Datasource').findall('Parameter'):
-            if parameter.get('name', None) == 'file':
+            datasource = output.Datasource(**datasource_params)
+            
+            layer = output.Layer('layer %d' % ids.next(),
+                                 datasource, styles,
+                                 layer_el.get('srs', None),
+                                 layer_el.get('min_zoom', None) and int(layer_el.get('min_zoom')) or None,
+                                 layer_el.get('max_zoom', None) and int(layer_el.get('max_zoom')) or None)
+    
+            layers.append(layer)
+    
+    return output.Map(map_el.attrib.get('srs', None), layers)
+
+    add_map_style(map_el, get_applicable_declarations(map_el, declarations))
+
+    for layer_el in map_el.findall('Layer'):
+    
+        for parameter_el in layer_el.find('Datasource').findall('Parameter'):
+            if parameter_el.get('name', None) == 'file':
                 # make shapefiles local, absolute paths
-                parameter.text = localize_shapefile(src, parameter.text, dir)
+                parameter_el.text = localize_shapefile(base, parameter_el.text, dir)
 
-            elif parameter.get('name', None) == 'table':
+            elif parameter_el.get('name', None) == 'table':
                 # remove line breaks from possible SQL
-                parameter.text = parameter.text.replace('\r', ' ').replace('\n', ' ')
+                parameter_el.text = parameter_el.text.replace('\r', ' ').replace('\n', ' ')
 
-        if layer.get('status') == 'off':
+        if layer_el.get('status') == 'off':
             # don't bother
             continue
     
         # the default...
-        layer.set('status', 'off')
+        layer_el.set('status', 'off')
 
-        layer_declarations = get_applicable_declarations(layer, declarations)
+        layer_declarations = get_applicable_declarations(layer_el, declarations)
         
         #pprint.PrettyPrinter().pprint(layer_declarations)
         
-        insert_layer_style(map, layer, 'polygon style %d' % next_counter(),
+        insert_layer_style(map_el, layer_el, 'polygon style %d' % next_counter(),
                            get_polygon_rules(layer_declarations) + get_polygon_pattern_rules(layer_declarations, dir))
         
-        insert_layer_style(map, layer, 'line style %d' % next_counter(),
+        insert_layer_style(map_el, layer_el, 'line style %d' % next_counter(),
                            get_line_rules(layer_declarations) + get_line_pattern_rules(layer_declarations, dir))
 
         for (shield_name, shield_rule_els) in get_shield_rule_groups(layer_declarations):
-            insert_layer_style(map, layer, 'shield style %d (%s)' % (next_counter(), shield_name), shield_rule_els)
+            insert_layer_style(map_el, layer_el, 'shield style %d (%s)' % (next_counter(), shield_name), shield_rule_els)
 
         for (text_name, text_rule_els) in get_text_rule_groups(layer_declarations):
-            insert_layer_style(map, layer, 'text style %d (%s)' % (next_counter(), text_name), text_rule_els)
+            insert_layer_style(map_el, layer_el, 'text style %d (%s)' % (next_counter(), text_name), text_rule_els)
 
-        insert_layer_style(map, layer, 'point style %d' % next_counter(), get_point_rules(layer_declarations, dir))
+        insert_layer_style(map_el, layer_el, 'point style %d' % next_counter(), get_point_rules(layer_declarations, dir))
         
-        layer.set('name', 'layer %d' % next_counter())
+        layer_el.set('name', 'layer %d' % next_counter())
         
-        if 'id' in layer.attrib:
-            del layer.attrib['id']
+        if 'id' in layer_el.attrib:
+            del layer_el.attrib['id']
     
-        if 'class' in layer.attrib:
-            del layer.attrib['class']
+        if 'class' in layer_el.attrib:
+            del layer_el.attrib['class']
 
     out = StringIO.StringIO()
     doc.write(out)

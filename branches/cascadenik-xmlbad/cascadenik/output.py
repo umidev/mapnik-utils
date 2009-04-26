@@ -1,5 +1,27 @@
 import style
 
+class Map:
+    def __init__(self, srs=None, layers=None):
+        assert srs is None or type(srs) is str
+        assert layers is None or type(layers) in (list, tuple)
+        
+        self.srs = srs
+        self.layers = layers or []
+
+    def __repr__(self):
+        return 'Map(%s)' % repr(self.layers)
+
+class Style:
+    def __init__(self, name, rules):
+        assert name is None or type(name) is str
+        assert rules is None or type(rules) in (list, tuple)
+        
+        self.name = name
+        self.rules = rules or []
+
+    def __repr__(self):
+        return 'Style(%s: %s)' % (self.name, repr(self.rules))
+
 class Rule:
     def __init__(self, minscale, maxscale, filter, *symbolizers):
         self.minscale = minscale
@@ -9,6 +31,28 @@ class Rule:
 
     def __repr__(self):
         return 'Rule(%s:%s, %s, %s)' % (repr(self.minscale), repr(self.maxscale), repr(self.filter), repr(self.symbolizers))
+
+class Layer:
+    def __init__(self, name, datasource, styles=None, srs=None, minzoom=None, maxzoom=None):
+        assert name is None or type(name) is str
+        assert styles is None or type(styles) in (list, tuple)
+        assert srs is None or type(srs) is str
+        assert minzoom is None or type(minzoom) in (int, float)
+        assert maxzoom is None or type(maxzoom) in (int, float)
+        
+        self.name = name
+        self.datasource = datasource
+        self.styles = styles or []
+        self.srs = srs
+        self.minzoom = minzoom
+        self.maxzoom = maxzoom
+
+    def __repr__(self):
+        return 'Layer(%s: %s)' % (self.name, repr(self.styles))
+
+class Datasource:
+    def __init__(self, plugin_name, **parameters):
+        self.parameters = dict([('plugin_name', plugin_name)] + parameters.items())
 
 class MinScaleDenominator:
     def __init__(self, value):

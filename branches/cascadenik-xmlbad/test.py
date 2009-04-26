@@ -12,7 +12,7 @@ from cascadenik.compile import tests_filter_combinations, Filter, selectors_test
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
 from cascadenik.compile import get_point_rules, get_polygon_pattern_rules, get_line_pattern_rules
-from cascadenik.compile import insert_layer_style, test2str
+from cascadenik.compile import insert_layer_style, test2str, compile
 
 class ParseTests(unittest.TestCase):
     
@@ -1578,6 +1578,49 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(16, shield_rule_groups['both'][0].symbolizers[0].width)
         self.assertEqual(16, shield_rule_groups['both'][0].symbolizers[0].height)
         self.assertEqual(5, shield_rule_groups['both'][0].symbolizers[0].min_distance)
+
+class CompileXMLTests(unittest.TestCase):
+
+    def setUp(self):
+        # a directory for all the temp files to be created below
+        self.tmpdir = tempfile.mkdtemp(prefix='cascadenik-tests-')
+
+    def tearDown(self):
+        # destroy the above-created directory
+        shutil.rmtree(self.tmpdir)
+
+    def testCompile1(self):
+        """
+        """
+        s = """<?xml version="1.0"?>
+               <Map>
+                   <Stylesheet>
+                       Layer { polygon-fill: #000; }
+                   </Stylesheet>
+                   <Layer>
+                       <Datasource>
+                           <Parameter name="plugin_name">example</Parameter>
+                       </Datasource>
+                   </Layer>
+                   <Layer>
+                       <Datasource>
+                           <Parameter name="plugin_name">example</Parameter>
+                       </Datasource>
+                   </Layer>
+               </Map>
+        """
+        map = compile(s, self.tmpdir)
+        
+        self.assertEqual(2, len(map.layers))
+        
+        self.assertEqual(1, len(map.layers[0].styles))
+        self.assertEqual(1, len(map.layers[1].styles))
+        
+        self.assertEqual(1, len(map.layers[0].styles[0].rules))
+        self.assertEqual(1, len(map.layers[1].styles[0].rules))
+        
+        self.assertEqual(1, len(map.layers[0].styles[0].rules[0].symbolizers))
+        self.assertEqual(1, len(map.layers[1].styles[0].rules[0].symbolizers))
 
 if __name__ == '__main__':
     unittest.main()
