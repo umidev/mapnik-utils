@@ -81,7 +81,7 @@ class Compose(object):
             msg += E
         raise sys.exit(msg)
 
-    def msg(msg):
+    def msg(self, msg, E=None):
         if self.verbose:
             sys.stderr.write('%s\n' % msg)
 
@@ -108,10 +108,10 @@ class Compose(object):
                 
         # handle shifts in pixel dimensions or bbox ratio
         # need to make as an option
-        try:
-            self.map.aspect_fix_mode = mapnik.aspect_fix_mode.ADJUST_CANVAS_HEIGHT
-        except:
-            self.msg('aspect_fix_mode not available!')
+        #try:
+        #    self.map.aspect_fix_mode = mapnik.aspect_fix_mode.ADJUST_CANVAS_HEIGHT
+        #except:
+        #    self.msg('aspect_fix_mode not available!')
 
         
         # zoom to max extent at beginning if we later need to 

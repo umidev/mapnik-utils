@@ -70,7 +70,8 @@ class ComposeDebug(Compose):
             self.debug_msg('active layers: %s' % self.map.active_layers())
         self.debug_msg('center: %s' % self.map.envelope().center())
         self.debug_msg('envelope: %s' % self.map.envelope())
-        self.debug_msg('layers bounds: %s' % self.map.layers_bounds())
+        if self.map.layers_bounds():
+            self.debug_msg('layers bounds: %s' % self.map.layers_bounds())
         
     def render(self):
         if not self.map:

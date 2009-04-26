@@ -46,12 +46,14 @@ class _Map(Map,_injector):
         self.zoom_to_box(box)
 
     def layers_bounds(self):
-        first = self.layers[0]
-        new_box = first.envelope().transform(first.proj_obj,self.proj_obj)
-        for layer in self.layers:
-            layer_box = layer.envelope()
-            box = layer_box.transform(layer.proj_obj,self.proj_obj)
-            new_box.expand_to_include(box)
+        new_box = None
+        if len(self.layers):
+            first = self.layers[0]
+            new_box = first.envelope().transform(first.proj_obj,self.proj_obj)
+            for layer in self.layers:
+                layer_box = layer.envelope()
+                box = layer_box.transform(layer.proj_obj,self.proj_obj)
+                new_box.expand_to_include(box)
         return new_box
     
     def zoom_to_layers(self,layers):
