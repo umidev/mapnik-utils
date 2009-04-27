@@ -1,5 +1,11 @@
 import style
 
+try:
+    import mapnik
+except ImportError:
+    # Map.to_mapnik won't work, maybe that's okay?
+    pass
+
 class Map:
     def __init__(self, srs=None, layers=None, bgcolor=None):
         assert srs is None or type(srs) is str
@@ -12,6 +18,54 @@ class Map:
 
     def __repr__(self):
         return 'Map(%s %s)' % (self.bgcolor, repr(self.layers))
+
+    def to_mapnik(self, mmap):
+        """
+        """
+        mmap.srs = self.srs or mmap.srs
+        mmap.bgcolor = str(self.bgcolor) or mmap.bgcolor
+        
+        ids = (i for i in xrange(1, 999999))
+        
+        for layer in self.layers:
+        
+            for style in layer.styles:
+
+                sty = mapnik.Style()
+                
+                for rule in style.rules:
+                    rul = mapnik.Rule('rule %d' % ids.next())
+
+                    rul.filter = rule.filter and mapnik.Filter(rule.filter.text) or rul.filter
+                    rul.min_scale = rule.minscale and rule.minscale.value or rul.min_scale
+                    rul.max_scale = rule.maxscale and rule.maxscale.value or rul.max_scale
+                    
+                    for symbolizer in rule.symbolizers:
+                    
+                        if symbolizer.__class__ is PolygonSymbolizer:
+                            sym = mapnik.PolygonSymbolizer(mapnik.Color(str(symbolizer.color)))
+                            sym.fill_opacity = symbolizer.opacity
+
+                        else:
+                            continue
+                        
+                        rul.symbols.append(sym)
+                    sty.rules.append(rul)
+                mmap.append_style(style.name, sty)
+
+            lay = mapnik.Layer(layer.name) # TODO: min/max zoom
+            
+            lay.srs = layer.srs or lay.srs
+            lay.minzoom = layer.minzoom or lay.minzoom
+            lay.maxzoom = layer.maxzoom or lay.maxzoom
+            
+            for style in layer.styles:
+                lay.styles.append(style.name)
+
+            mmap.layers.append(lay)
+                    
+                    
+        
 
 class Style:
     def __init__(self, name, rules):
@@ -26,6 +80,10 @@ class Style:
 
 class Rule:
     def __init__(self, minscale, maxscale, filter, symbolizers):
+        assert minscale is None or minscale.__class__ is MinScaleDenominator
+        assert maxscale is None or maxscale.__class__ is MaxScaleDenominator
+        assert filter is None or filter.__class__ is Filter
+
         self.minscale = minscale
         self.maxscale = maxscale
         self.filter = filter
