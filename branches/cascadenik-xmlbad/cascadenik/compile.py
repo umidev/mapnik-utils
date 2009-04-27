@@ -698,14 +698,12 @@ def get_text_rule_groups(declarations):
         # a place to put rules
         rules = []
         
-        text_face_name, text_size = None, None
-        
         for (filter, values) in filtered_property_declarations(declarations, property_names):
             
             face_name = values.has_key('text-face-name') and values['text-face-name'].value
             size = values.has_key('text-size') and values['text-size'].value
+            color = values.has_key('text-fill') and values['text-fill'].value
             
-            color = values.has_key('text-fill') and values['text-fill'].value or None
             ratio = values.has_key('text-ratio') and values['text-ratio'].value or None
             wrap_width = values.has_key('text-wrap-width') and values['text-wrap-width'].value or None
             spacing = values.has_key('text-spacing') and values['text-spacing'].value or None
@@ -720,9 +718,11 @@ def get_text_rule_groups(declarations):
             allow_overlap = values.has_key('text-allow-overlap') and values['text-allow-overlap'].value or None
             placement = values.has_key('text-placement') and values['text-placement'].value or None
             
-            symbolizer = face_name and size and output.TextSymbolizer(face_name, size, \
-                color, wrap_width, spacing, label_position_tolerance, max_char_angle_delta, \
-                halo_color, halo_radius, dx, dy, avoid_edges, min_distance, allow_overlap, placement)
+            symbolizer = face_name and size and color \
+                and output.TextSymbolizer(text_name, face_name, size, color, \
+                                          wrap_width, spacing, label_position_tolerance, \
+                                          max_char_angle_delta, halo_color, halo_radius, dx, dy, \
+                                          avoid_edges, min_distance, allow_overlap, placement)
             
             if symbolizer:
                 rules.append(make_rule(filter, symbolizer))

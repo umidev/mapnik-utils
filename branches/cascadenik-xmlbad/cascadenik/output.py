@@ -28,14 +28,12 @@ class Map:
         ids = (i for i in xrange(1, 999999))
         
         for layer in self.layers:
-        
             for style in layer.styles:
 
                 sty = mapnik.Style()
                 
                 for rule in style.rules:
                     rul = mapnik.Rule('rule %d' % ids.next())
-
                     rul.filter = rule.filter and mapnik.Filter(rule.filter.text) or rul.filter
                     rul.min_scale = rule.minscale and rule.minscale.value or rul.min_scale
                     rul.max_scale = rule.maxscale and rule.maxscale.value or rul.max_scale
@@ -46,6 +44,29 @@ class Map:
                             sym = mapnik.PolygonSymbolizer(mapnik.Color(str(symbolizer.color)))
                             sym.fill_opacity = symbolizer.opacity
 
+                        elif symbolizer.__class__ is LineSymbolizer:
+                            stroke = mapnik.Stroke(mapnik.Color(str(symbolizer.color)), symbolizer.width)
+                            stroke.opacity = symbolizer.opacity or stroke.opacity
+                            stroke.line_cap = symbolizer.cap or stroke.line_cap
+                            stroke.line_join = symbolizer.join or stroke.line_join
+                            sym = mapnik.LineSymbolizer(stroke)
+
+                        elif symbolizer.__class__ is TextSymbolizer:
+                            sym = mapnik.TextSymbolizer(symbolizer.name, symbolizer.face_name, symbolizer.size,
+                                                        mapnik.Color(str(symbolizer.color)))
+
+                            sym.wrap_width = symbolizer.wrap_width or sym.wrap_width
+                            sym.label_spacing = symbolizer.spacing or sym.label_spacing
+                            sym.label_position_tolerance = symbolizer.label_position_tolerance or sym.label_position_tolerance
+                            sym.max_char_angle_delta = symbolizer.max_char_angle_delta or sym.max_char_angle_delta
+                            sym.halo_fill = symbolizer.halo_color or sym.halo_fill
+                            sym.halo_radius = symbolizer.halo_radius or sym.halo_radius
+                            sym.avoid_edges = symbolizer.avoid_edges or sym.avoid_edges
+                            sym.minimum_distance = symbolizer.min_distance or sym.minimum_distance
+                            sym.allow_overlap = symbolizer.allow_overlap or sym.allow_overlap
+                            
+                            sym.displacement(symbolizer.dx or 0, symbolizer.dy or 0)
+
                         else:
                             continue
                         
@@ -53,8 +74,7 @@ class Map:
                     sty.rules.append(rul)
                 mmap.append_style(style.name, sty)
 
-            lay = mapnik.Layer(layer.name) # TODO: min/max zoom
-            
+            lay = mapnik.Layer(layer.name)
             lay.srs = layer.srs or lay.srs
             lay.minzoom = layer.minzoom or lay.minzoom
             lay.maxzoom = layer.maxzoom or lay.maxzoom
@@ -168,14 +188,15 @@ class LineSymbolizer:
         return 'Line(%s, %s)' % (self.color, self.width)
 
 class TextSymbolizer:
-    def __init__(self, face_name, size, color=None, wrap_width=None, \
+    def __init__(self, name, face_name, size, color, wrap_width=None, \
         spacing=None, label_position_tolerance=None, max_char_angle_delta=None, \
         halo_color=None, halo_radius=None, dx=None, dy=None, avoid_edges=None, \
         min_distance=None, allow_overlap=None, placement=None):
 
+        assert type(name) is str
         assert type(face_name) is str
         assert type(size) is int
-        assert color is None or color.__class__ is style.color
+        assert color.__class__ is style.color
         assert wrap_width is None or type(wrap_width) is int
         assert spacing is None or type(spacing) is int
         assert label_position_tolerance is None or type(label_position_tolerance) is int
@@ -189,10 +210,11 @@ class TextSymbolizer:
         assert allow_overlap is None or allow_overlap.__class__ is style.boolean
         assert placement is None or type(placement) is str
 
+        self.name = name
         self.face_name = face_name
         self.size = size
-
         self.color = color
+
         self.wrap_width = wrap_width
         self.spacing = spacing
         self.label_position_tolerance = label_position_tolerance

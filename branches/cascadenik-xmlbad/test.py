@@ -12,7 +12,7 @@ from cascadenik.compile import tests_filter_combinations, Filter, selectors_test
 from cascadenik.compile import filtered_property_declarations, is_applicable_selector
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
 from cascadenik.compile import get_point_rules, get_polygon_pattern_rules, get_line_pattern_rules
-from cascadenik.compile import insert_layer_style, test2str, compile
+from cascadenik.compile import test2str, compile
 
 class ParseTests(unittest.TestCase):
     
@@ -836,7 +836,7 @@ class StyleRuleTests(unittest.TestCase):
             Layer[foo=1] { line-color: #f0f; }
             Layer[foo>1] { line-color: #ff0; }
             
-            Layer label { text-face-name: 'Helvetica'; text-size: 12; }
+            Layer label { text-face-name: 'Helvetica'; text-size: 12; text-fill: #000; }
             Layer[foo<1] label { text-face-name: 'Arial'; }
             Layer[zoom<=10] label { text-size: 10; }
         """
@@ -1414,6 +1414,7 @@ class CompileXMLTests(unittest.TestCase):
                     {
                         text-face-name: 'Comic Sans';
                         text-size: 14;
+                        text-fill: #f90;
                     }
                 </Stylesheet>
                 <Layer>
@@ -1447,6 +1448,55 @@ class CompileXMLTests(unittest.TestCase):
 
         self.assertEqual('Comic Sans', map.layers[0].styles[2].rules[0].symbolizers[0].face_name)
         self.assertEqual(14, map.layers[0].styles[2].rules[0].symbolizers[0].size)
+
+    def testCompile2(self):
+        """
+        """
+        s = """<?xml version="1.0"?>
+            <Map>
+                <Stylesheet>
+                    Map { map-bgcolor: #fff; }
+                    
+                    Layer
+                    {
+                        polygon-fill: #999;
+                        polygon-opacity: 0.5;
+                        line-color: #fff;
+                        line-width: 2;
+                        outline-color: #000;
+                        outline-width: 1;
+                    }
+                    
+                    Layer name
+                    {
+                        text-face-name: 'Comic Sans';
+                        text-size: 14;
+                        text-fill: #f90;
+                    }
+                </Stylesheet>
+                <Layer>
+                    <Datasource>
+                        <Parameter name="plugin_name">example</Parameter>
+                    </Datasource>
+                </Layer>
+            </Map>
+        """
+        map = compile(s, self.tmpdir)
+        
+        import mapnik
+        
+        mmap = mapnik.Map(640, 480)
+        
+        map.to_mapnik(mmap)
+        
+        return
+        
+        (handle, path) = tempfile.mkstemp(suffix='.xml', prefix='cascadenik-mapnik-')
+        os.close(handle)
+        
+        mapnik.save_map(mmap, path)
+        
+        print open(path, 'r').read()
 
 if __name__ == '__main__':
     unittest.main()
