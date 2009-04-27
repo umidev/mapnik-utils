@@ -23,7 +23,7 @@ class Style:
         return 'Style(%s: %s)' % (self.name, repr(self.rules))
 
 class Rule:
-    def __init__(self, minscale, maxscale, filter, *symbolizers):
+    def __init__(self, minscale, maxscale, filter, symbolizers):
         self.minscale = minscale
         self.maxscale = maxscale
         self.filter = filter
@@ -34,7 +34,7 @@ class Rule:
 
 class Layer:
     def __init__(self, name, datasource, styles=None, srs=None, minzoom=None, maxzoom=None):
-        assert name is None or type(name) is str
+        assert type(name) is str
         assert styles is None or type(styles) in (list, tuple)
         assert srs is None or type(srs) is str
         assert minzoom is None or type(minzoom) in (int, float)
@@ -83,7 +83,7 @@ class PolygonSymbolizer:
         assert opacity is None or type(opacity) in (int, float)
 
         self.color = color
-        self.opacity = opacity
+        self.opacity = opacity or 1.0
 
     def __repr__(self):
         return 'Polygon(%s, %s)' % (self.color, self.opacity)

@@ -135,7 +135,7 @@ class SelectorTests(unittest.TestCase):
     def testMatch10(self):
         assert Selector(SelectorElement(['*'])).matches('Layer', None, [])
 
-    def testMatch10(self):
+    def testMatch11(self):
         assert Selector(SelectorElement(['*'])).matches('Map', None, [])
 
     def testRange1(self):
@@ -734,25 +734,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(400000, rules[3].minscale.value)
         self.assertEqual(color(0x00, 0xFF, 0x00), rules[3].symbolizers[0].color)
         self.assertEqual("[use] = 'park'", rules[3].filter.text)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test polygon style', get_polygon_rules(declarations))
-        
-        assert map.find('Layer/StyleName') is not None
-        
-        stylename = map.find('Layer/StyleName').text
-        
-        style_el = map.find('Style')
-        
-        assert style_el is not None
-        self.assertEqual(stylename, style_el.get('name'))
 
     def testStyleRules02(self):
         s = """
@@ -780,25 +761,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(400000, rules[3].minscale.value)
         self.assertEqual(color(0x00, 0x00, 0xFF), rules[3].symbolizers[0].color)
         self.assertEqual('[foo] > 1', rules[3].filter.text)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test polygon style', get_polygon_rules(declarations))
-        
-        assert map.find('Layer/StyleName') is not None
-        
-        stylename = map.find('Layer/StyleName').text
-        
-        style_el = map.find('Style')
-        
-        assert style_el is not None
-        self.assertEqual(stylename, style_el.get('name'))
 
     def testStyleRules03(self):
         s = """
@@ -865,28 +827,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(color(0xFF, 0xFF, 0x00), line_rules[5].symbolizers[0].color)
         self.assertEqual(1.0, line_rules[5].symbolizers[0].width)
         self.assertEqual('[foo] > 1', line_rules[5].filter.text)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test polygon style', get_polygon_rules(declarations))
-        insert_layer_style(map, layer, 'test line style', get_line_rules(declarations))
-
-        self.assertEqual(2, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(2, len(style_els))
-    
-        assert style_els[0].get('name') in (stylenames)
-        assert style_els[1].get('name') in (stylenames)
 
     def testStyleRules04(self):
         s = """
@@ -956,30 +896,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual('Helvetica', text_rule_groups['label'][3].symbolizers[0].face_name)
         self.assertEqual(10, text_rule_groups['label'][3].symbolizers[0].size)
         self.assertEqual('[foo] >= 1', text_rule_groups['label'][3].filter.text)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test line style', get_line_rules(declarations))
-        
-        for (text_name, text_rule_els) in get_text_rule_groups(declarations):
-            insert_layer_style(map, layer, 'test text style (%s)' % text_name, text_rule_els)
-        
-        self.assertEqual(2, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(2, len(style_els))
-    
-        assert style_els[0].get('name') in (stylenames)
-        assert style_els[1].get('name') in (stylenames)
 
     def testStyleRules05(self):
         s = """
@@ -1067,31 +983,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual(8, shield_rule_groups['label'][5].symbolizers[0].height)
         self.assertEqual("[bar] = 'quux' and [foo] > 1", shield_rule_groups['label'][5].filter.text)
 
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        for (text_name, text_rule_els) in get_text_rule_groups(declarations):
-            insert_layer_style(map, layer, 'test text style (%s)' % text_name, text_rule_els)
-
-        for (shield_name, shield_rule_els) in get_shield_rule_groups(declarations):
-            insert_layer_style(map, layer, 'test shield style (%s)' % shield_name, shield_rule_els)
-        
-        self.assertEqual(2, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(2, len(style_els))
-    
-        assert style_els[0].get('name') in (stylenames)
-        assert style_els[1].get('name') in (stylenames)
-
     def testStyleRules06(self):
         s = """
             Layer label { shield-face-name: 'Helvetica'; shield-size: 12; shield-file: url('http://cascadenik-sampledata.s3.amazonaws.com/purple-point.png'); }
@@ -1162,30 +1053,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual('png', point_rules[0].symbolizers[0].type)
         self.assertEqual(8, point_rules[0].symbolizers[0].width)
         self.assertEqual(8, point_rules[0].symbolizers[0].height)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        for (shield_name, shield_rule_els) in get_shield_rule_groups(declarations):
-            insert_layer_style(map, layer, 'test shield style (%s)' % shield_name, shield_rule_els)
-
-        insert_layer_style(map, layer, 'test point style', get_point_rules(declarations, self.tmpdir))
-        
-        self.assertEqual(2, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(2, len(style_els))
-    
-        assert style_els[0].get('name') in (stylenames)
-        assert style_els[1].get('name') in (stylenames)
 
     def testStyleRules07(self):
         s = """
@@ -1222,30 +1089,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual('png', line_pattern_rules[0].symbolizers[0].type)
         self.assertEqual(8, line_pattern_rules[0].symbolizers[0].width)
         self.assertEqual(8, line_pattern_rules[0].symbolizers[0].height)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test point style', get_point_rules(declarations, self.tmpdir))
-        insert_layer_style(map, layer, 'test polygon pattern style', get_polygon_pattern_rules(declarations, self.tmpdir))
-        insert_layer_style(map, layer, 'test line pattern style', get_line_pattern_rules(declarations, self.tmpdir))
-        
-        self.assertEqual(3, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(3, len(style_els))
-    
-        assert style_els[0].get('name') in (stylenames)
-        assert style_els[1].get('name') in (stylenames)
-        assert style_els[2].get('name') in (stylenames)
 
     def testStyleRules08(self):
         s = """
@@ -1315,26 +1158,6 @@ class StyleRuleTests(unittest.TestCase):
         inline_symbolizer = line_rules[3].symbolizers[2]
         self.assertEqual(color(0x99, 0x99, 0x99), inline_symbolizer.color)
         self.assertEqual(1.0, inline_symbolizer.width)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test line style', get_line_rules(declarations))
-        
-        self.assertEqual(1, len(map.findall('Layer/StyleName')))
-        
-        stylenames = [stylename.text for stylename in map.findall('Layer/StyleName')]
-        
-        style_els = map.findall('Style')
-        
-        self.assertEqual(1, len(style_els))
-        
-        assert style_els[0].get('name') in (stylenames)
 
     def testStyleRules09(self):
         s = """
@@ -1360,25 +1183,6 @@ class StyleRuleTests(unittest.TestCase):
         self.assertEqual('[ELEVATION] > 900', line_rules[2].filter.text)
         self.assertEqual(color(0xFF, 0xFF, 0xFF), line_rules[2].symbolizers[0].color)
         self.assertEqual(3.0, line_rules[2].symbolizers[0].width)
-        
-        return # TODO: for now
-        
-        layer = xml.etree.ElementTree.Element('Layer')
-        layer.append(xml.etree.ElementTree.Element('Datasource'))
-    
-        map = xml.etree.ElementTree.Element('Map')
-        map.append(layer)
-        
-        insert_layer_style(map, layer, 'test line style', get_line_rules(declarations))
-        
-        assert map.find('Layer/StyleName') is not None
-        
-        stylename = map.find('Layer/StyleName').text
-        
-        style_el = map.find('Style')
-        
-        assert style_el is not None
-        self.assertEqual(stylename, style_el.get('name'))
 
     def testStyleRules10(self):
         s = """
@@ -1593,34 +1397,56 @@ class CompileXMLTests(unittest.TestCase):
         """
         """
         s = """<?xml version="1.0"?>
-               <Map>
-                   <Stylesheet>
-                       Layer { polygon-fill: #000; }
-                   </Stylesheet>
-                   <Layer>
-                       <Datasource>
-                           <Parameter name="plugin_name">example</Parameter>
-                       </Datasource>
-                   </Layer>
-                   <Layer>
-                       <Datasource>
-                           <Parameter name="plugin_name">example</Parameter>
-                       </Datasource>
-                   </Layer>
-               </Map>
+            <Map>
+                <Stylesheet>
+                    Map { map-bgcolor: #fff; }
+                    
+                    Layer
+                    {
+                        polygon-fill: #999;
+                        line-color: #fff;
+                        line-width: 1;
+                        outline-color: #000;
+                        outline-width: 1;
+                    }
+                    
+                    Layer name
+                    {
+                        text-face-name: 'Comic Sans';
+                        text-size: 14;
+                    }
+                </Stylesheet>
+                <Layer>
+                    <Datasource>
+                        <Parameter name="plugin_name">example</Parameter>
+                    </Datasource>
+                </Layer>
+            </Map>
         """
         map = compile(s, self.tmpdir)
         
-        self.assertEqual(2, len(map.layers))
-        
-        self.assertEqual(1, len(map.layers[0].styles))
-        self.assertEqual(1, len(map.layers[1].styles))
-        
+        self.assertEqual(1, len(map.layers))
+        self.assertEqual(3, len(map.layers[0].styles))
+
         self.assertEqual(1, len(map.layers[0].styles[0].rules))
-        self.assertEqual(1, len(map.layers[1].styles[0].rules))
-        
         self.assertEqual(1, len(map.layers[0].styles[0].rules[0].symbolizers))
-        self.assertEqual(1, len(map.layers[1].styles[0].rules[0].symbolizers))
+
+        self.assertEqual(color(0x99, 0x99, 0x99), map.layers[0].styles[0].rules[0].symbolizers[0].color)
+        self.assertEqual(1.0, map.layers[0].styles[0].rules[0].symbolizers[0].opacity)
+
+        self.assertEqual(1, len(map.layers[0].styles[1].rules))
+        self.assertEqual(2, len(map.layers[0].styles[1].rules[0].symbolizers))
+
+        self.assertEqual(color(0x00, 0x00, 0x00), map.layers[0].styles[1].rules[0].symbolizers[0].color)
+        self.assertEqual(color(0xFF, 0xFF, 0xFF), map.layers[0].styles[1].rules[0].symbolizers[1].color)
+        self.assertEqual(3.0, map.layers[0].styles[1].rules[0].symbolizers[0].width)
+        self.assertEqual(1.0, map.layers[0].styles[1].rules[0].symbolizers[1].width)
+
+        self.assertEqual(1, len(map.layers[0].styles[2].rules))
+        self.assertEqual(1, len(map.layers[0].styles[2].rules[0].symbolizers))
+
+        self.assertEqual('Comic Sans', map.layers[0].styles[2].rules[0].symbolizers[0].face_name)
+        self.assertEqual(14, map.layers[0].styles[2].rules[0].symbolizers[0].size)
 
 if __name__ == '__main__':
     unittest.main()

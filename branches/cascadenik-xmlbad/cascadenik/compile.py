@@ -507,9 +507,9 @@ def test2str(test):
     else:
         raise Exception('"%s" is not a valid filter operation' % test.op)
 
-def make_rule_element(filter, *symbolizers):
-    """ Given a Filter and some symbolizers, return a Rule element prepopulated
-        with applicable min/max scale denominator and filter elements.
+def make_rule(filter, *symbolizers):
+    """ Given a Filter and some symbolizers, return a Rule prepopulated
+        with applicable min/max scale denominator and filter.
     """
     scale_tests = [test for test in filter.tests if test.isMapScaled()]
     other_tests = [test for test in filter.tests if not test.isMapScaled()]
@@ -540,7 +540,7 @@ def make_rule_element(filter, *symbolizers):
     if filter_text:
         filter = output.Filter(filter_text)
 
-    rule = output.Rule(minscale, maxscale, filter, *[s for s in symbolizers if s])
+    rule = output.Rule(minscale, maxscale, filter, [s for s in symbolizers if s])
     
     return rule
 
@@ -598,15 +598,15 @@ def filtered_property_declarations(declarations, property_names):
     rules = []
     
     for filter in tests_filter_combinations(selectors_tests(selectors)):
-        rule = (filter, {})
+        rule = {}
         
         # collect all the applicable declarations into a list of parameters and values
         for dec in declarations:
             if is_applicable_selector(dec.selector, filter):
-                rule[1][dec.property.name] = dec.value
+                rule[dec.property.name] = dec.value
 
-        if rule[1]:
-            rules.append(rule)
+        if rule:
+            rules.append((filter, rule))
 
     return rules
 
@@ -629,7 +629,7 @@ def get_polygon_rules(declarations):
         symbolizer = color and output.PolygonSymbolizer(color, opacity)
         
         if symbolizer:
-            rules.append(make_rule_element(filter, symbolizer))
+            rules.append(make_rule(filter, symbolizer))
     
     return rules
 
@@ -688,7 +688,7 @@ def get_line_rules(declarations):
         outline_symbolizer = color and width and output.LineSymbolizer(color, width, opacity, join, cap, dashes) or False
         
         if outline_symbolizer or line_symbolizer or inline_symbolizer:
-            rules.append(make_rule_element(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
+            rules.append(make_rule(filter, outline_symbolizer, line_symbolizer, inline_symbolizer))
 
     return rules
 
@@ -756,7 +756,7 @@ def get_text_rule_groups(declarations):
                 halo_color, halo_radius, dx, dy, avoid_edges, min_distance, allow_overlap, placement)
             
             if symbolizer:
-                rules.append(make_rule_element(filter, symbolizer))
+                rules.append(make_rule(filter, symbolizer))
         
         groups.append((text_name, rules))
     
@@ -836,7 +836,7 @@ def get_shield_rule_groups(declarations, out=None):
                 and output.ShieldSymbolizer(face_name, size, file, filetype, width, height, color, min_distance)
             
             if symbolizer:
-                rules.append(make_rule_element(filter, symbolizer))
+                rules.append(make_rule(filter, symbolizer))
         
         groups.append((text_name, rules))
     
@@ -870,7 +870,7 @@ def get_point_rules(declarations, out=None):
         symbolizer = point_file and output.PointSymbolizer(point_file, point_type, point_width, point_height, point_allow_overlap)
 
         if symbolizer:
-            rules.append(make_rule_element(filter, symbolizer))
+            rules.append(make_rule(filter, symbolizer))
     
     return rules
 
@@ -899,7 +899,7 @@ def get_polygon_pattern_rules(declarations, out=None):
         symbolizer = poly_pattern_file and output.PolygonPatternSymbolizer(poly_pattern_file, poly_pattern_type, poly_pattern_width, poly_pattern_height)
         
         if symbolizer:
-            rules.append(make_rule_element(filter, symbolizer))
+            rules.append(make_rule(filter, symbolizer))
     
     return rules
 
@@ -928,7 +928,7 @@ def get_line_pattern_rules(declarations, out=None):
         symbolizer = line_pattern_file and output.LinePatternSymbolizer(line_pattern_file, line_pattern_type, line_pattern_width, line_pattern_height)
         
         if symbolizer:
-            rules.append(make_rule_element(filter, symbolizer))
+            rules.append(make_rule(filter, symbolizer))
     
     return rules
 
