@@ -23,13 +23,6 @@ except ImportError:
 opsort = {lt: 1, le: 2, eq: 3, ge: 4, gt: 5}
 opstr = {lt: '<', le: '<=', eq: '==', ge: '>=', gt: '>'}
     
-counter = 0
-
-def next_counter():
-    global counter
-    counter += 1
-    return counter
-
 class Range:
     """ Represents a range for use in min/max scale denominator.
     
@@ -544,30 +537,6 @@ def make_rule(filter, *symbolizers):
     
     return rule
 
-def insert_layer_style(map_el, layer_el, style_name, rule_els):
-    """ Given a Map element, a Layer element, a style name and a list of Rule
-        elements, create a new Style element and insert it into the flow and
-        point to it from the Layer element.
-    """
-    if not rule_els:
-        return
-    
-    style_el = Element('Style', {'name': style_name})
-    style_el.text = '\n        '
-    
-    for rule_el in rule_els:
-        style_el.append(rule_el)
-    
-    style_el.tail = '\n    '
-    map_el.insert(map_el._children.index(layer_el), style_el)
-    
-    stylename_el = Element('StyleName')
-    stylename_el.text = style_name
-    stylename_el.tail = '\n        '
-
-    layer_el.insert(layer_el._children.index(layer_el.find('Datasource')), stylename_el)
-    layer_el.set('status', 'on')
-
 def is_applicable_selector(selector, filter):
     """ Given a Selector and Filter, return True if the Selector is
         compatible with the given Filter, and False if they contradict.
@@ -578,14 +547,14 @@ def is_applicable_selector(selector, filter):
     
     return True
 
-def add_map_style(map_el, declarations):
+def get_map_attributes(declarations):
     """
     """
     property_map = {'map-bgcolor': 'bgcolor'}
     
-    for dec in declarations:
-        if dec.property.name in property_map:
-            map_el.set(property_map[dec.property.name], str(dec.value))
+    return dict([(property_map[dec.property.name], dec.value.value)
+                 for dec in declarations
+                 if dec.property.name in property_map])
 
 def filtered_property_declarations(declarations, property_names):
     """
@@ -1011,6 +980,15 @@ def compile(src, dir=None):
         if layer_el.get('status', None) in ('off', '0', 0):
             continue
         
+        for parameter_el in layer_el.find('Datasource').findall('Parameter'):
+            if parameter_el.get('name', None) == 'file':
+                # make shapefiles local, absolute paths
+                parameter_el.text = localize_shapefile(base, parameter_el.text, dir)
+
+            elif parameter_el.get('name', None) == 'table':
+                # remove line breaks from possible SQL
+                parameter_el.text = parameter_el.text.replace('\r', ' ').replace('\n', ' ')
+
         layer_declarations = get_applicable_declarations(layer_el, declarations)
         
         # a list of styles
@@ -1053,55 +1031,6 @@ def compile(src, dir=None):
     
             layers.append(layer)
     
-    return output.Map(map_el.attrib.get('srs', None), layers)
-
-    add_map_style(map_el, get_applicable_declarations(map_el, declarations))
-
-    for layer_el in map_el.findall('Layer'):
+    map_attrs = get_map_attributes(get_applicable_declarations(map_el, declarations))
     
-        for parameter_el in layer_el.find('Datasource').findall('Parameter'):
-            if parameter_el.get('name', None) == 'file':
-                # make shapefiles local, absolute paths
-                parameter_el.text = localize_shapefile(base, parameter_el.text, dir)
-
-            elif parameter_el.get('name', None) == 'table':
-                # remove line breaks from possible SQL
-                parameter_el.text = parameter_el.text.replace('\r', ' ').replace('\n', ' ')
-
-        if layer_el.get('status') == 'off':
-            # don't bother
-            continue
-    
-        # the default...
-        layer_el.set('status', 'off')
-
-        layer_declarations = get_applicable_declarations(layer_el, declarations)
-        
-        #pprint.PrettyPrinter().pprint(layer_declarations)
-        
-        insert_layer_style(map_el, layer_el, 'polygon style %d' % next_counter(),
-                           get_polygon_rules(layer_declarations) + get_polygon_pattern_rules(layer_declarations, dir))
-        
-        insert_layer_style(map_el, layer_el, 'line style %d' % next_counter(),
-                           get_line_rules(layer_declarations) + get_line_pattern_rules(layer_declarations, dir))
-
-        for (shield_name, shield_rule_els) in get_shield_rule_groups(layer_declarations):
-            insert_layer_style(map_el, layer_el, 'shield style %d (%s)' % (next_counter(), shield_name), shield_rule_els)
-
-        for (text_name, text_rule_els) in get_text_rule_groups(layer_declarations):
-            insert_layer_style(map_el, layer_el, 'text style %d (%s)' % (next_counter(), text_name), text_rule_els)
-
-        insert_layer_style(map_el, layer_el, 'point style %d' % next_counter(), get_point_rules(layer_declarations, dir))
-        
-        layer_el.set('name', 'layer %d' % next_counter())
-        
-        if 'id' in layer_el.attrib:
-            del layer_el.attrib['id']
-    
-        if 'class' in layer_el.attrib:
-            del layer_el.attrib['class']
-
-    out = StringIO.StringIO()
-    doc.write(out)
-    
-    return out.getvalue()
+    return output.Map(map_el.attrib.get('srs', None), layers, **map_attrs)

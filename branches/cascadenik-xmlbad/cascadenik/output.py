@@ -1,15 +1,17 @@
 import style
 
 class Map:
-    def __init__(self, srs=None, layers=None):
+    def __init__(self, srs=None, layers=None, bgcolor=None):
         assert srs is None or type(srs) is str
         assert layers is None or type(layers) in (list, tuple)
+        assert bgcolor is None or bgcolor.__class__ is style.color or bgcolor == 'transparent'
         
         self.srs = srs
         self.layers = layers or []
+        self.bgcolor = bgcolor
 
     def __repr__(self):
-        return 'Map(%s)' % repr(self.layers)
+        return 'Map(%s %s)' % (self.bgcolor, repr(self.layers))
 
 class Style:
     def __init__(self, name, rules):
