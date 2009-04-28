@@ -1019,8 +1019,6 @@ def compile(src, dir=None):
         
         if styles:
             datasource_params = dict([(p.get('name'), p.text) for p in layer_el.find('Datasource').findall('Parameter')])
-            assert 'plugin_name' in datasource_params, "Datasource will complain if there's no plugin_name parameter"
-    
             datasource = output.Datasource(**datasource_params)
             
             layer = output.Layer('layer %d' % ids.next(),

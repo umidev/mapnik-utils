@@ -104,8 +104,8 @@ class Layer:
         return 'Layer(%s: %s)' % (self.name, repr(self.styles))
 
 class Datasource:
-    def __init__(self, plugin_name, **parameters):
-        self.parameters = dict([('plugin_name', plugin_name)] + parameters.items())
+    def __init__(self, **parameters):
+        self.parameters = parameters
 
 class MinScaleDenominator:
     def __init__(self, value):

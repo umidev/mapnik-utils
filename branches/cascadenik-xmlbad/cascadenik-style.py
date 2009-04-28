@@ -36,4 +36,9 @@ def main(filename):
 
 if __name__ == '__main__':
     stylefile = sys.argv[1]
+
+    if stylefile.endswith('.mml'):
+        print >> sys.stderr, 'Only accepts an .mss file'
+        sys.exit(1)
+
     sys.exit(main(stylefile))

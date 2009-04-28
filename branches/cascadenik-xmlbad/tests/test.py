@@ -1521,7 +1521,7 @@ class CompileXMLTests(unittest.TestCase):
         """
         map = output.Map(layers=[
             output.Layer('this',
-            output.Datasource('example'), [
+            output.Datasource(), [
                 output.Style('a style', [
                     output.Rule(
                         output.MinScaleDenominator(1),
@@ -1533,7 +1533,7 @@ class CompileXMLTests(unittest.TestCase):
                     ])
                 ]),
             output.Layer('that',
-            output.Datasource('example'), [
+            output.Datasource(), [
                 output.Style('another style', [
                     output.Rule(
                         output.MinScaleDenominator(101),
