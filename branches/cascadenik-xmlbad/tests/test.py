@@ -13,6 +13,7 @@ from cascadenik.compile import filtered_property_declarations, is_applicable_sel
 from cascadenik.compile import get_polygon_rules, get_line_rules, get_text_rule_groups, get_shield_rule_groups
 from cascadenik.compile import get_point_rules, get_polygon_pattern_rules, get_line_pattern_rules
 from cascadenik.compile import test2str, compile
+import cascadenik.output as output
 
 class ParseTests(unittest.TestCase):
     
@@ -1514,6 +1515,73 @@ class CompileXMLTests(unittest.TestCase):
 
             if style_el.get('name').startswith('text style '):
                 self.assertEqual(1, len(style_el.find('Rule').findall('TextSymbolizer')))
+
+    def testCompile3(self):
+        """
+        """
+        map = output.Map(layers=[
+            output.Layer('this',
+            output.Datasource('example'), [
+                output.Style('a style', [
+                    output.Rule(
+                        output.MinScaleDenominator(1),
+                        output.MaxScaleDenominator(100),
+                        output.Filter("[this] = 'that'"),
+                        [
+                            output.PolygonSymbolizer(color(0xCC, 0xCC, 0xCC))
+                        ])
+                    ])
+                ]),
+            output.Layer('that',
+            output.Datasource('example'), [
+                output.Style('another style', [
+                    output.Rule(
+                        output.MinScaleDenominator(101),
+                        output.MaxScaleDenominator(200),
+                        output.Filter("[this] = 2"),
+                        [
+                            output.PolygonSymbolizer(color(0x33, 0x33, 0x33)),
+                            output.LineSymbolizer(color(0x66, 0x66, 0x66), 2)
+                        ])
+                    ])
+                ])
+            ])
+        
+        import mapnik
+        
+        mmap = mapnik.Map(640, 480)
+        map.to_mapnik(mmap)
+        
+        (handle, path) = tempfile.mkstemp(suffix='.xml', prefix='cascadenik-mapnik-')
+        os.close(handle)
+        
+        mapnik.save_map(mmap, path)
+        doc = xml.etree.ElementTree.parse(path)
+        map_el = doc.getroot()
+        
+        # print open(path, 'r').read()
+        os.unlink(path)
+        
+        self.assertEqual(2, len(map_el.findall('Style')))
+        self.assertEqual(2, len(map_el.findall('Layer')))
+        
+        for layer_el in map_el.findall('Layer'):
+            self.assertEqual(1, len(layer_el.findall('StyleName')))
+            self.assertTrue(layer_el.find('StyleName').text in [style_el.get('name') for style_el in map_el.findall('Style')])
+
+        for style_el in map_el.findall('Style'):
+            if style_el.get('name') == 'a style':
+                self.assertEqual("([this]='that')", style_el.find('Rule').find('Filter').text)
+                self.assertEqual('1', style_el.find('Rule').find('MinScaleDenominator').text)
+                self.assertEqual('100', style_el.find('Rule').find('MaxScaleDenominator').text)
+                self.assertEqual(1, len(style_el.find('Rule').findall('PolygonSymbolizer')))
+
+            if style_el.get('name') == 'another style':
+                self.assertEqual('([this]=2)', style_el.find('Rule').find('Filter').text)
+                self.assertEqual('101', style_el.find('Rule').find('MinScaleDenominator').text)
+                self.assertEqual('200', style_el.find('Rule').find('MaxScaleDenominator').text)
+                self.assertEqual(1, len(style_el.find('Rule').findall('PolygonSymbolizer')))
+                self.assertEqual(1, len(style_el.find('Rule').findall('LineSymbolizer')))
         
 if __name__ == '__main__':
     unittest.main()
