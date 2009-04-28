@@ -3,7 +3,7 @@ import style
 try:
     import mapnik
 except ImportError:
-    # Map.to_mapnik won't work, maybe that's okay?
+    # *.to_mapnik() won't work, maybe that's okay?
     pass
 
 class Map:
@@ -39,37 +39,10 @@ class Map:
                     rul.max_scale = rule.maxscale and rule.maxscale.value or rul.max_scale
                     
                     for symbolizer in rule.symbolizers:
-                    
-                        if symbolizer.__class__ is PolygonSymbolizer:
-                            sym = mapnik.PolygonSymbolizer(mapnik.Color(str(symbolizer.color)))
-                            sym.fill_opacity = symbolizer.opacity
-
-                        elif symbolizer.__class__ is LineSymbolizer:
-                            stroke = mapnik.Stroke(mapnik.Color(str(symbolizer.color)), symbolizer.width)
-                            stroke.opacity = symbolizer.opacity or stroke.opacity
-                            stroke.line_cap = symbolizer.cap or stroke.line_cap
-                            stroke.line_join = symbolizer.join or stroke.line_join
-                            sym = mapnik.LineSymbolizer(stroke)
-
-                        elif symbolizer.__class__ is TextSymbolizer:
-                            sym = mapnik.TextSymbolizer(symbolizer.name, symbolizer.face_name, symbolizer.size,
-                                                        mapnik.Color(str(symbolizer.color)))
-
-                            sym.wrap_width = symbolizer.wrap_width or sym.wrap_width
-                            sym.label_spacing = symbolizer.spacing or sym.label_spacing
-                            sym.label_position_tolerance = symbolizer.label_position_tolerance or sym.label_position_tolerance
-                            sym.max_char_angle_delta = symbolizer.max_char_angle_delta or sym.max_char_angle_delta
-                            sym.halo_fill = symbolizer.halo_color or sym.halo_fill
-                            sym.halo_radius = symbolizer.halo_radius or sym.halo_radius
-                            sym.avoid_edges = symbolizer.avoid_edges or sym.avoid_edges
-                            sym.minimum_distance = symbolizer.min_distance or sym.minimum_distance
-                            sym.allow_overlap = symbolizer.allow_overlap or sym.allow_overlap
-                            
-                            sym.displacement(symbolizer.dx or 0, symbolizer.dy or 0)
-
-                        else:
+                        if not hasattr(symbolizer, 'to_mapnik'):
                             continue
-                        
+
+                        sym = symbolizer.to_mapnik()
                         rul.symbols.append(sym)
                     sty.rules.append(rul)
                 mmap.append_style(style.name, sty)
@@ -168,6 +141,12 @@ class PolygonSymbolizer:
     def __repr__(self):
         return 'Polygon(%s, %s)' % (self.color, self.opacity)
 
+    def to_mapnik(self):
+        sym = mapnik.PolygonSymbolizer(mapnik.Color(str(self.color)))
+        sym.fill_opacity = self.opacity
+        
+        return sym
+
 class LineSymbolizer:
     def __init__(self, color, width, opacity=None, join=None, cap=None, dashes=None):
         assert color.__class__ is style.color
@@ -186,6 +165,15 @@ class LineSymbolizer:
 
     def __repr__(self):
         return 'Line(%s, %s)' % (self.color, self.width)
+
+    def to_mapnik(self):
+        stroke = mapnik.Stroke(mapnik.Color(str(self.color)), self.width)
+        stroke.opacity = self.opacity or stroke.opacity
+        stroke.line_cap = self.cap or stroke.line_cap
+        stroke.line_join = self.join or stroke.line_join
+        sym = mapnik.LineSymbolizer(stroke)
+        
+        return sym
 
 class TextSymbolizer:
     def __init__(self, name, face_name, size, color, wrap_width=None, \
@@ -230,6 +218,24 @@ class TextSymbolizer:
 
     def __repr__(self):
         return 'Text(%s, %s)' % (self.face_name, self.size)
+
+    def to_mapnik(self):
+        sym = mapnik.TextSymbolizer(self.name, self.face_name, self.size,
+                                    mapnik.Color(str(self.color)))
+
+        sym.wrap_width = self.wrap_width or sym.wrap_width
+        sym.label_spacing = self.spacing or sym.label_spacing
+        sym.label_position_tolerance = self.label_position_tolerance or sym.label_position_tolerance
+        sym.max_char_angle_delta = self.max_char_angle_delta or sym.max_char_angle_delta
+        sym.halo_fill = self.halo_color or sym.halo_fill
+        sym.halo_radius = self.halo_radius or sym.halo_radius
+        sym.avoid_edges = self.avoid_edges or sym.avoid_edges
+        sym.minimum_distance = self.min_distance or sym.minimum_distance
+        sym.allow_overlap = self.allow_overlap or sym.allow_overlap
+        
+        sym.displacement(self.dx or 0, self.dy or 0)
+        
+        return sym
 
 class ShieldSymbolizer:
     def __init__(self, face_name=None, size=None, file=None, filetype=None, width=None, height=None, color=None, min_distance=None):

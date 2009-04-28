@@ -1486,17 +1486,34 @@ class CompileXMLTests(unittest.TestCase):
         import mapnik
         
         mmap = mapnik.Map(640, 480)
-        
         map.to_mapnik(mmap)
-        
-        return
         
         (handle, path) = tempfile.mkstemp(suffix='.xml', prefix='cascadenik-mapnik-')
         os.close(handle)
         
         mapnik.save_map(mmap, path)
+        doc = xml.etree.ElementTree.parse(path)
+        map_el = doc.getroot()
         
-        print open(path, 'r').read()
+        # print open(path, 'r').read()
+        os.unlink(path)
+        
+        self.assertEqual(3, len(map_el.findall('Style')))
+        self.assertEqual(1, len(map_el.findall('Layer')))
+        self.assertEqual(3, len(map_el.find('Layer').findall('StyleName')))
+        
+        for stylename_el in map_el.find('Layer').findall('StyleName'):
+            self.assertTrue(stylename_el.text in [style_el.get('name') for style_el in map_el.findall('Style')])
 
+        for style_el in map_el.findall('Style'):
+            if style_el.get('name').startswith('polygon style '):
+                self.assertEqual(1, len(style_el.find('Rule').findall('PolygonSymbolizer')))
+
+            if style_el.get('name').startswith('line style '):
+                self.assertEqual(2, len(style_el.find('Rule').findall('LineSymbolizer')))
+
+            if style_el.get('name').startswith('text style '):
+                self.assertEqual(1, len(style_el.find('Rule').findall('TextSymbolizer')))
+        
 if __name__ == '__main__':
     unittest.main()
