@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="128"
+   height="128"
+   version="1.0"
+   sodipodi:docname="Wegzeichen_Zirkel.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:title>Dresdner Heide, Wegzeichen Zirkel</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>M. Ruttkowski, Colin Marquardt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Dresdner Heide</rdf:li>
+            <rdf:li>Wegzeichen</rdf:li>
+            <rdf:li>Zirkel</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>* de: Dieses Bild zeigt ein historisches Wegzeichen der Dresdner Heide
+* en: This picture shows a historical way sign, as used in a forest in Dresden / Germany</dc:description>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>* Neugestaltung: M. Ruttkowski, 1985
+* Wiedereinrichtung: Interessengemeinschaft/ Arbeitskreis Dresdner Heide (im Landesverein Sächsischer Heimatschutz), 1985-95
+* Pflege: Arbeitskreis Dresdner Heide und Privatpersonen</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <dc:date>2009-04-30</dc:date>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs5">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+    <inkscape:perspective
+       id="perspective2553"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3455"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="978"
+     inkscape:window-width="1680"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10000"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="4.3144104"
+     inkscape:cx="43.277036"
+     inkscape:cy="64.329156"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="true"
+     inkscape:object-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-center="true"
+     inkscape:snap-intersection-line-segments="true"
+     inkscape:snap-guide="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="19.469636,119.13563"
+       id="guide2509" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-26.88664,9.2712552"
+       id="guide2511" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="9.5030366,65.130568"
+       id="guide3370" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="119.31497,53.921187"
+       id="guide3372" />
+  </sodipodi:namedview>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Hintergrund"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Wegzeichen"
+     transform="translate(-14.388239,-20.759691)"
+     style="display:inline">
+    <rect
+       style="fill:#ffffff"
+       id="rect2414"
+       width="128"
+       height="128"
+       x="0.4655025"
+       y="0"
+       transform="translate(14.388239,20.759691)" />
+    <path
+       style="fill:#aa0000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline"
+       d="M 96.982849,40.496286 L 96.568863,40.635858 L 96.501415,40.875379 L 96.568863,41.256792 L 97.017742,41.705671 L 97.845696,42.326606 L 98.95042,43.291829 L 99.880715,44.189587 L 100.43424,45.189615 L 100.81334,46.085052 L 101.12266,47.052507 L 101.14358,62.200075 L 100.8017,64.297848 L 100.36214,66.665483 L 99.752798,68.544707 L 98.775991,70.835507 L 96.775865,74.496235 L 77.33503,40.789351 L 54.238154,81.173377 L 51.856597,78.896498 L 50.219278,76.894034 L 48.942453,75.135821 L 47.993561,73.63337 L 47.181875,72.047212 L 46.493457,70.598306 L 45.80271,68.751655 L 45.284081,67.114362 L 44.802647,65.544446 L 44.544484,64.025754 L 44.681709,47.810782 L 44.904979,46.52697 L 45.242209,45.498922 L 45.586418,44.782589 L 46.146919,44.050015 L 46.646951,43.429081 L 47.458636,42.72203 L 48.070299,42.126618 L 48.588946,41.747525 L 48.863378,41.496403 L 48.95874,41.23823 L 48.907569,40.928923 L 48.770353,40.668431 L 48.50987,40.600965 L 26.154903,40.600965 L 25.533933,40.842806 L 25.292056,41.221899 L 25.396708,41.635885 L 25.77581,41.980085 L 26.913089,42.740592 L 28.052697,43.705815 L 28.810892,44.740736 L 29.364414,46.224624 L 29.638855,47.32701 L 29.603962,48.466609 L 29.673739,51.813301 L 29.915616,54.297217 L 30.431925,57.402067 L 31.122672,60.437132 L 31.915751,63.197782 L 32.915815,65.888646 L 34.192639,68.649296 L 35.918342,71.754147 L 38.023129,74.858997 L 40.679118,78.205778 L 43.646761,81.345521 L 46.681844,83.794544 L 48.302877,85.071306 L 50.926302,86.899394 L 30.673802,122.64128 L 29.622569,124.07394 L 28.017822,125.57404 L 26.792151,126.52293 L 25.189724,127.38578 L 24.326877,127.93698 L 23.947775,128.28119 L 23.947775,128.66261 L 24.187332,128.99054 L 39.54183,129.00682 L 39.972103,128.78355 L 40.1628,128.4719 L 39.988371,128.09281 L 39.402294,127.47183 L 38.506874,126.50433 L 37.746368,125.43682 L 37.350989,124.36698 L 37.160282,123.29714 L 37.332382,122.69244 L 56.101073,89.625156 L 59.396639,91.074056 L 62.689885,91.988056 L 64.845834,92.453266 L 66.727359,92.781136 L 68.090229,92.953286 L 67.641368,122.26219 L 67.536716,123.22737 L 67.208784,124.33209 L 66.727359,125.35077 L 66.020335,126.45317 L 65.208649,127.26484 L 64.517902,127.86721 L 64.087648,128.2998 L 64.173693,128.67889 L 64.431856,128.93705 L 64.724895,129.0231 L 83.407532,128.95565 L 83.649409,128.83471 L 83.805232,128.60912 L 83.735455,128.2998 L 83.407532,127.88581 L 82.321406,127.22996 L 81.493451,126.62527 L 80.525943,125.74614 L 79.837525,124.64142 L 79.404942,123.64134 L 79.19794,122.72734 L 79.284003,92.841646 L 81.967898,92.304416 L 83.723836,91.864816 L 86.505413,91.085656 L 89.62887,90.011206 L 106.26486,119.33409 L 106.65559,120.52952 L 107.04631,121.72494 L 107.24167,122.94363 L 107.16724,124.1158 L 106.82769,125.43217 L 106.3137,126.57875 L 105.7532,127.33695 L 105.24154,127.72534 L 104.82523,128.09281 L 104.77639,128.40911 L 104.97175,128.7254 L 105.33921,128.94635 L 133.12477,128.94635 L 133.5155,128.77424 L 133.75971,128.43468 L 133.75971,128.09281 L 133.29456,127.70208 L 131.73399,127.26252 L 130.17342,126.67644 L 128.51285,125.84847 L 127.02669,124.9205 L 125.65917,123.84834 L 124.31722,122.70175 L 123.39158,121.60401 L 101.43431,82.740973 L 103.04604,81.424588 L 104.60661,79.959351 L 106.85095,77.4243 L 108.89992,74.740397 L 110.31629,72.544905 L 111.87686,69.812187 L 112.85135,67.835335 L 113.58395,66.079353 L 114.41424,63.835047 L 115.21895,61.395395 L 115.82829,58.834732 L 116.38879,55.662416 L 116.70043,53.141287 L 116.85626,50.813274 L 117.00976,48.122409 L 117.30281,46.361787 L 118.09821,44.67095 L 118.85639,43.740708 L 119.78669,42.808057 L 120.89141,42.014978 L 121.54727,41.46383 L 121.51238,40.807913 L 120.99607,40.531179 L 120.20067,40.496286 L 96.982849,40.496286 z M 72.695192,60.472025 C 77.231939,68.407009 81.768642,76.343243 86.305389,84.278227 C 85.062244,84.900321 83.887957,85.666985 82.579569,86.148169 C 80.575793,87.058242 78.393965,87.428411 76.248912,87.848287 C 73.679459,88.022752 71.075435,88.079866 68.5298,87.636609 C 67.041057,87.373439 65.526193,87.142753 64.096946,86.645863 C 62.373804,86.034745 60.734789,85.230689 59.101272,84.415478 C 63.632272,76.434446 68.164191,68.453057 72.695192,60.472025 z"
+       id="path3461" />
+  </g>
+</svg>

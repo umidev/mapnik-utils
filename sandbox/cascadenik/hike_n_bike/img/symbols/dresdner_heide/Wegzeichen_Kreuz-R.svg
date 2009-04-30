@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="128"
+   height="128"
+   version="1.0"
+   sodipodi:docname="Wegzeichen_Kreuz-R.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:title>Dresdner Heide, Wegzeichen Kreuz-R</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>M. Ruttkowski, Colin Marquardt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Dresdner Heide</rdf:li>
+            <rdf:li>Wegzeichen</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>* de: Dieses Bild zeigt ein historisches Wegzeichen der Dresdner Heide
+* en: This picture shows a historical way sign, as used in a forest in Dresden / Germany</dc:description>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>* Neugestaltung: M. Ruttkowski, 1985
+* Wiedereinrichtung: Interessengemeinschaft/ Arbeitskreis Dresdner Heide (im Landesverein Sächsischer Heimatschutz), 1985-95
+* Pflege: Arbeitskreis Dresdner Heide und Privatpersonen</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <dc:date>2009-04-30</dc:date>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs5">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="886"
+     inkscape:window-width="1159"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="2.1572052"
+     inkscape:cx="24.726853"
+     inkscape:cy="69.676553"
+     inkscape:window-x="338"
+     inkscape:window-y="73"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="19.469636,119.13563"
+       id="guide2509" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="2.7813766,9.2712552"
+       id="guide2511" />
+  </sodipodi:namedview>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Hintergrund">
+    <rect
+       style="fill:#ffffff"
+       id="rect2414"
+       width="128"
+       height="128"
+       x="0.4655025"
+       y="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Wegzeichen"
+     transform="translate(-14.388239,-20.759691)">
+    <path
+       style="fill:#aa0000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;display:inline"
+       d="M 47.612203,29.827501 L 47.338456,30.836949 L 47.703453,31.715224 L 49.408678,32.684751 L 55.448255,36.551445 L 56.645903,38.028547 L 57.427227,39.271822 L 57.569804,41.621494 L 57.615431,88.820289 L 40.055608,88.632086 L 40.044202,74.853413 L 42.821608,71.30609 L 29.179808,71.351716 L 31.791825,74.767865 L 32.037059,88.586462 L 18.252684,88.586462 L 14.431613,85.866085 L 14.659737,100.20367 L 18.070188,97.711412 L 31.945809,97.665794 L 31.848855,110.43502 L 28.301535,115.04312 L 43.557305,114.99749 L 40.101231,110.57189 L 39.964357,97.574545 L 57.569804,97.711412 L 57.381604,126.47212 L 57.244726,129.74569 L 56.326528,131.54216 L 54.478727,133.01355 L 47.937279,136.97721 L 47.013378,137.71861 L 46.967755,138.68244 L 47.65783,139.00751 L 52.916082,138.22618 L 63.14743,137.76423 L 72.591751,137.76423 L 79.600848,138.36306 L 82.594977,138.59118 L 83.929499,138.68244 L 84.716525,137.99236 L 84.944647,137.34791 L 84.300197,136.70346 L 76.926101,132.27787 L 74.98705,130.20192 L 74.205725,127.71539 L 74.251348,121.26519 L 74.388226,97.620163 L 85.589099,97.665794 L 87.431197,98.173364 L 89.045168,99.325394 L 90.938593,101.40132 L 93.932722,106.19191 L 99.413382,116.42327 L 104.99102,124.85814 L 112.45635,134.62754 L 114.33837,136.30425 L 117.3325,138.19197 L 120.4635,139.17289 L 122.80747,139.56071 L 143.27587,139.69188 L 143.08197,138.26041 L 142.2322,136.76049 L 140.80073,135.12941 L 138.38833,133.89184 L 129.58845,130.82927 L 124.50699,128.87311 L 121.43873,127.11086 L 118.70125,124.76689 L 116.48844,121.83549 L 114.33837,116.94224 L 111.03058,107.52644 L 108.95467,102.13701 L 106.00616,96.006193 L 110.38613,94.854162 L 116.32876,92.133781 L 120.38366,89.464735 L 123.79411,86.145535 L 126.37761,83.100086 L 129.00102,79.529951 L 130.95719,75.623332 L 132.51984,70.861247 L 133.17569,66.629557 L 133.10726,62.648796 L 132.97609,57.89242 L 131.80695,53.067602 L 129.45728,47.467164 L 126.33198,42.573915 L 122.61357,38.667295 L 117.3325,34.561068 L 112.51339,32.27983 L 106.58218,30.517575 L 102.1794,29.827501 L 47.612203,29.827501 z M 74.899186,36.694488 C 84.486905,36.795536 85.131961,36.738493 90.200575,36.962533 C 92.428215,37.060998 94.744962,37.216458 96.841302,37.897377 C 103.67556,39.521554 108.93175,44.363611 112.95824,50.010744 C 114.19533,52.453337 115.50913,55.049843 116.07782,57.82398 C 117.23681,63.477584 116.45442,69.581133 113.72815,74.62529 C 110.56487,80.129641 107.36272,83.601352 101.74024,86.544754 C 99.262762,87.47959 96.792372,88.364566 93.932722,88.654897 C 87.524001,89.305558 80.274728,88.432907 74.485175,88.820289 C 74.700257,71.42977 74.684108,54.085007 74.899186,36.694488 z"
+       id="path2488"
+       sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccsccsccscc" />
+  </g>
+</svg>
