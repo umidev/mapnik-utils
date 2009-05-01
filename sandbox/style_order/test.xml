@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="transparent">
+
+<Style name="road_casing6">
+  <Rule>
+    <LineSymbolizer>
+        <CssParameter name="stroke">white</CssParameter>
+        <CssParameter name="stroke-width">16</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="road_casing5">
+  <Rule>
+    <LineSymbolizer>
+        <CssParameter name="stroke">green</CssParameter>
+        <CssParameter name="stroke-width">10</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="road_casing4">
+  <Rule>
+    <LineSymbolizer>
+        <CssParameter name="stroke">blue</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Style name="road_casing3">
+  <Rule>
+    <LineSymbolizer>
+        <CssParameter name="stroke">yellow</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+    </LineSymbolizer>
+  </Rule>
+</Style>
+
+<Layer name="world" srs="+init=epsg:27572" status="on">
+   <StyleName>road_casing6</StyleName>
+   <StyleName>road_casing5</StyleName>
+   <StyleName>road_casing4</StyleName>
+   <StyleName>road_casing3</StyleName>
+   <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">line</Parameter>
+    </Datasource>
+  </Layer>
+
+</Map>
