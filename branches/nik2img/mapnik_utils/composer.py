@@ -45,7 +45,6 @@ class Compose(object):
         self.dry_run = False
         self.from_string = False
         
-        self.zoom_in = None
         self.horizontal = 1
         self.vertical = 1
 
@@ -100,7 +99,12 @@ class Compose(object):
             self.mapsg("Failed to register: '%s'" % self.font_handler.failed)
 
     def build(self):
+        self.msg('Loading mapfile...')
         loader = Load(self.mapfile,variables={},from_string=self.from_string)
+        if not self.from_string:
+            self.msg('Loaded %s...' % self.mapfile)
+        else:
+            self.msg('Loaded XML from string')
         self.map = loader.build_map(self.width,self.height)
 
         if self.srs:
@@ -166,17 +170,13 @@ class Compose(object):
             else:
                 self.map.zoom_all()
                 self.msg('Zoom to extent of all layers: "%s"' % self.map.envelope())
-
-        if self.zoom_in:
-            self.map.zoom(self.zoom_in)
-            #self.map.pan(self.map.width/2.0*self.horizontal,self.map.height/2.0*self.vertical) 
-  
+ 
     def render(self):
         if not self.map:
             self.build()
         
         if self.dry_run:
-            self.output_error("Dry run complete")
+            self.output_error("Dry run completed successfully...")
 
         renderer = Render(self.map,self.image,self.format) #render_times/loops
         if self.world_file:

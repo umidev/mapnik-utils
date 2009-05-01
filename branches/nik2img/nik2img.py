@@ -7,11 +7,14 @@ from timeit import time
 from pdb import set_trace
 from optparse import OptionParser
 
-__version__ = '0.2.3'
+__version__ = '0.3.0'
+__author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
+__copyright__ = 'Copyright 2009, Dane Springmeyer'
+__license__ = 'GPLv2'
 
 from mapnik_utils import Compose
 
-def color_print(color,text,no_color=False):
+def color_print(color, text, no_color=False):
     """
     Accepts an integer key for one of several color choices along with the text string to color
       keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
@@ -22,7 +25,7 @@ def color_print(color,text,no_color=False):
     else:
         print text
 
-def color_text(color, text,no_color=False):
+def color_text(color, text, no_color=False):
     """
     Accepts an integer key for one of several color choices along with the text string to color
       keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
@@ -57,39 +60,41 @@ class ComposeDebug(Compose):
         super(ComposeDebug,self).prepare()
         self.timing_started = True
         self.start_time = time.time()
-        self.debug_msg('format: %s' % self.format)
-        self.debug_msg('mime: %s' % self.mime)
+        self.debug_msg('Nik2img starting...')
+        self.debug_msg('Format: %s' % self.format)
+        #self.debug_msg('mime: %s' % self.mime)
 
     def build(self):
         self.debug_msg('Building map...')
         super(ComposeDebug,self).build()
-        self.debug_msg('srs: %s' % self.map.srs)
+        self.debug_msg('SRS: %s' % self.map.srs)
         if self.map.proj_obj.srid:
-            self.debug_msg('srid: %s' % self.map.proj_obj.srid)
-        self.debug_msg('map envelope: %s' % self.map.envelope())
-        self.debug_msg('map center: %s' % self.map.envelope().center())
-        self.debug_msg('map scale denonminator: %s' % self.map.scale_denominator())
+            self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
+        self.debug_msg('Map envelope: %s' % self.map.envelope())
+        self.debug_msg('Map center: %s' % self.map.envelope().center())
+        self.debug_msg('Map scale denonminator: %s' % self.map.scale_denominator())
         if self.layers:
-            self.debug_msg('active layers: %s' % self.map.active_layers())
+            self.debug_msg('Active layers: %s' % self.map.active_layers())
         if self.map.layers_bounds():
-            self.debug_msg('bounds of all layers: %s' % self.map.layers_bounds())
+            self.debug_msg('Bounds of all layers: %s' % self.map.layers_bounds())
         if self.verbose:
             lyrs = self.map.intersecting_layers()
-            self.debug_msg('layers intersecting map: %s' % ', '.join([l.name for l in lyrs]))
-            self.debug_msg("at current scale of '%s'..." % self.map.scale(),print_time=False)
+            self.debug_msg("Layers intersecting map: [%s]" % ', '.join([l.name for l in lyrs]))
+            self.debug_msg("At current scale of '%s'..." % self.map.scale(),print_time=False)
             for lyr in lyrs:
                 if not l.visible(self.map.scale()):
-                    self.debug_msg("layer '%s' is NOT visible" % lyr.name,warn=True,print_time=False)
+                    self.debug_msg("Layer '%s' is NOT visible" % lyr.name,warn=True,print_time=False)
                 else:
                     self.debug_msg("layer '%s' is visible" % lyr.name,print_time=False)
-                    rules = ', '.join(['%s:%s (%s -> %s)' % (r.parent,str(r.filter)[:10],r.min_scale,r.max_scale) for r in lyr.active_rules])
-                    self.debug_msg('active rules for %s: %s' % (l.name,rules),print_time=False)
+                # crashing in filter on os x...
+                #    rules = ', '.join(['%s:%s (%s -> %s)' % (r.parent,str(r.filter)[:10],r.min_scale,r.max_scale) for r in lyr.active_rules])
+                #    self.debug_msg('active rules for %s: %s' % (l.name,rules),print_time=False)
                 
         
     def render(self):
         if not self.map:
             self.debug_msg('Calling build from render...')
-        self.debug_msg('Rendering...')            
+        self.debug_msg('Rendering map...')            
         super(ComposeDebug,self).render()
 
     def register_fonts(self,fonts):
@@ -163,14 +168,24 @@ class ComposeDebug(Compose):
             val = color_text(4,self.elapsed(time.time()),self.no_color)
             sys.stderr.write('%s\n' % val)
 
-parser = OptionParser(usage="""%prog <mapfile> [options]
+parser = OptionParser(usage="""%prog <mapfile> [image] [options]
 
-Example usage:
-    $ %prog --help (for possible options)
-    $ %prog mapfile.xml image.png
-    $ %prog mapfile.xml > image.png
+Example usage
+-------------
 
-""", version='%prog ' + '%s' % __version__)
+Full help:
+ $ %prog -h (or --help for possible options)
+
+Read XML, output image:
+ $ %prog mapfile.xml image.png
+
+Read MML, pipe to image
+ $ %prog mapfile.mml > image.png
+
+Accept piped XML
+$ <xml stream> | %proj image.png
+
+""", version='%prog ' + __version__)
 
 def make_float_list(option, opt, value, parser):
     try:
@@ -200,22 +215,17 @@ parser.add_option('-f', '--format', dest='format',
 # that must match the map
 parser.add_option('-b','--bbox', dest='bbox',
                   type='float', nargs=4,
-                  help='Geographical bounding box. Two long,lat pairs e.g. -124.731422 24.955967 -66.969849 49.371735',
+                  help='Geographical bounding box. Two long,lat pairs e.g. -126 24 -66 49 (United States)',
                   action='store')
 
 parser.add_option('-c', '--center', dest='center', nargs=2,
-                  help='Center Coordinate. A long,lat pair e.g.: -122.263 37.804',
+                  help='Center coordinates. A long,lat pair e.g. -122.3 47.6 (Seattle)',
                   type='float',
                   action='store')
 
 parser.add_option('-z', '--zoom', dest='zoom',
                   help='Zoom level',
                   type='int',
-                  action='store')
-
-# beta...
-parser.add_option('--zoom-in', dest='zoom_in',
-                  help='Zoom increment', type='float',
                   action='store')
                   
 parser.add_option('-r', '--radius', dest='radius',
@@ -241,7 +251,7 @@ parser.add_option('-m', '--max-extent', dest='max_extent', nargs=4,
                   
 parser.add_option('-s', '--srs',
                   dest='srs',
-                  help="Spatial reference system to project the image into - accepts either <epsg:code>, <proj4 literal>, or a url like 'http://spatialreference.org/ref/sr-org/6")
+                  help='Spatial reference system to project the image into - accepts either <epsg:code>, <proj4 literal>, or a url like http://spatialreference.org/ref/sr-org/6')
 
 parser.add_option('-d', '--dimensions', dest='dimensions', nargs=2,
                   help='Pixel dimensions of image (width,height)',
@@ -260,7 +270,7 @@ parser.add_option('-n', '--dry-run', dest='dry_run',
                   action='store_true')
 
 parser.add_option('-w','--world-file',
-                  help="Georeference the image by providing a worldfile output extension ( ie 'wld')")
+                  help="Georeference the image by providing a file extention for worldfile output ( ie 'wld')")
 
 parser.add_option('-x', '--xml', dest='save_map',
                   help='Serialize the map to xml.')
@@ -272,7 +282,6 @@ parser.add_option('--profile', dest='profile',
                   action='store_true', default=False,
                   help='Output a cProfile report')
 
-# todo
 parser.add_option('-v', '--verbose', dest='verbose',
                   help='Make a bunch of noise',
                   action='store_true')
@@ -319,7 +328,7 @@ if __name__ == '__main__':
         if len(args) > 0:
             options.image = args[0]
     elif len(args) == 0:
-        parser.error(color_text(1,'\n\nPlease provide the path to a mapnik xml or cascadenik mml file\n',options.no_color))
+        parser.error(color_text(4,'\n\nPlease provide the path to a Mapnik xml, Cascadenik mml file\n',options.no_color))
     else:
         mapfile = args[0]
         if len(args) > 1:

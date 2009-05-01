@@ -16,13 +16,15 @@ class EasyProjection(Projection):
             Projection.__init__(self,self.proj)
         except RuntimeError, E:
             if self.method == 'epsg srid':
-                socket.setdefaulttimeout(2)
+                socket.setdefaulttimeout(6)
                 sr_org = 'http://spatialreference.org/ref'
                 srs_types = ['epsg','esri','sr-org','iau2000']
-                for provider in srs_types:                
-                    proj = self.get_from_sr_org('%s/%s/%s' % (sr_org,provider, self.srs))
+                for provider in srs_types:
+                    url = '%s/%s/%s/' % (sr_org,provider, self.srs)       
+                    print url
+                    proj = self.get_from_sr_org(url)
                     if proj:
-                        break
+                        continue
                 if proj:
                     self.srid = self.srs
                     Projection.__init__(self,proj)
