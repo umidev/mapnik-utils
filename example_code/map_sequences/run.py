@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+'''
+REQUIRES Mapnik trunk post r1124
+'''
+
 import os
 import mapnik
 
