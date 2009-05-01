@@ -2,7 +2,7 @@ Basic map in 8-bit PNG format
 -----------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_lambert.xml',image='tests_output/png256/8_bit.png',format='png256')
+>>> c = Compose('tests/mapfile_lambert.xml',image='/tmp/png256/8_bit.png',format='png256')
 >>> c.open()
 
 
@@ -13,17 +13,17 @@ Zoom to a set zoom levels
 >>> c = Compose('tests/mapfile_lambert.xml')
 >>> c.map.zoom_max()
 >>> c.zoom = 0
->>> c.image = 'tests_output/zoom0.png'
+>>> c.image = '/tmp/zoom0.png'
 >>> c.build()
 >>> c.open()
 >>> c.map.zoom_max()
 >>> c.zoom = 2
->>> c.image = 'tests_output/zoom2.png'
+>>> c.image = '/tmp/zoom2.png'
 >>> c.build()
 >>> c.open()
 >>> c.map.zoom_max()
 >>> c.zoom = 5
->>> c.image = 'tests_output/zoom5.png'
+>>> c.image = '/tmp/zoom5.png'
 >>> c.build()
 >>> c.open()
 
@@ -32,7 +32,7 @@ Google Reprojection
 -------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/projected/google_mercator_via_projcode.png',srs=900913)
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/projected/google_mercator_via_projcode.png',srs=900913)
 >>> c.open()
 
 
@@ -40,7 +40,7 @@ Google Reprojection using spatialreference.org
 ----------------------------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
 >>> c.open()
 
 
@@ -48,5 +48,5 @@ Zooming to a lon, lat, and level
 --------------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='tests_output/zoomto/washington.png',center=(-120.7,47.2),zoom=5)
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/zoomto/washington.png',center=(-120.7,47.2),zoom=5)
 >>> c.open()
