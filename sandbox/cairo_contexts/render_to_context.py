@@ -3,14 +3,14 @@
 import cairo
 from mapnik import *
 
-format = 'pdf'
+format = 'svg'
 filename = 'world.%s' % format
 
 m = Map(600,400,'+proj=latlong +datum=WGS84')
 load_map(m,'../../example_code/world_population/population.xml')
 
 # remove text otherwise bus errors in libcairo.dylib...
-m.remove_style('countries_label')
+#m.remove_style('countries_label')
 m.zoom_all()
 m.zoom(.98)
 
