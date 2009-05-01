@@ -57,13 +57,15 @@ depends_lib         port:boost \
 
 set python  "${prefix}/bin/python2.6"
 
+configure.pkg_config ${prefix}/bin/pkg-config
+
 variant cairo description {Builds port with Cairo Support} {
+    configure.pkg_config_path  ${prefix}/lib/pkgconfig:${x11prefix}/lib/pkgconfig:${prefix}/Library/Frameworks/Python.framework/Versions/2.6/lib/pkgconfig
     depends_lib-append port:cairo
     depends_lib-append port:cairomm
     depends_lib-append port:py26-cairo
     configure.args-delete  CAIRO=False
     configure.args-append  CAIRO=True
-    configure.pkg_config_path-append ${prefix}/Library/Frameworks/Python.framework/Versions/2.6/lib/pkgconfig/
 }
 
 variant postgis description {Builds port with PostGIS plugin} {
