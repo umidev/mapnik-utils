@@ -45,7 +45,7 @@ class _injector(object):
             return type.__init__(self, name, bases, dict)
 
 class _Map(Map,_injector):
-    @property
+
     def scale_denominator(self):
         srs = Projection(self.srs)
         return scale_denominator(self,srs.geographic)

@@ -7,10 +7,10 @@ from timeit import time
 from pdb import set_trace
 from optparse import OptionParser
 
-version = '0.2.3'
+__version__ = '0.2.3'
 
 from mapnik_utils import Compose
-    
+
 def color_print(color,text,no_color=False):
     """
     Accepts an integer key for one of several color choices along with the text string to color
@@ -43,7 +43,7 @@ class ComposeDebug(Compose):
         self.verbose = kwargs.get('verbose')
 
         self.timing_started = False
-        self.step_counter = 0
+        self.step_counter = 1
         self.start_time = 0
 
         Compose.__init__(self,mapfile,**kwargs)
@@ -66,12 +66,25 @@ class ComposeDebug(Compose):
         self.debug_msg('srs: %s' % self.map.srs)
         if self.map.proj_obj.srid:
             self.debug_msg('srid: %s' % self.map.proj_obj.srid)
+        self.debug_msg('map envelope: %s' % self.map.envelope())
+        self.debug_msg('map center: %s' % self.map.envelope().center())
+        self.debug_msg('map scale denonminator: %s' % self.map.scale_denominator())
         if self.layers:
             self.debug_msg('active layers: %s' % self.map.active_layers())
-        self.debug_msg('center: %s' % self.map.envelope().center())
-        self.debug_msg('envelope: %s' % self.map.envelope())
         if self.map.layers_bounds():
-            self.debug_msg('layers bounds: %s' % self.map.layers_bounds())
+            self.debug_msg('bounds of all layers: %s' % self.map.layers_bounds())
+        if self.verbose:
+            lyrs = self.map.intersecting_layers()
+            self.debug_msg('layers intersecting map: %s' % ', '.join([l.name for l in lyrs]))
+            self.debug_msg("at current scale of '%s'..." % self.map.scale(),print_time=False)
+            for lyr in lyrs:
+                if not l.visible(self.map.scale()):
+                    self.debug_msg("layer '%s' is NOT visible" % lyr.name,warn=True,print_time=False)
+                else:
+                    self.debug_msg("layer '%s' is visible" % lyr.name,print_time=False)
+                    rules = ', '.join(['%s:%s (%s -> %s)' % (r.parent,str(r.filter)[:10],r.min_scale,r.max_scale) for r in lyr.active_rules])
+                    self.debug_msg('active rules for %s: %s' % (l.name,rules),print_time=False)
+                
         
     def render(self):
         if not self.map:
@@ -94,14 +107,14 @@ class ComposeDebug(Compose):
         sys.exit(1)
 
     def msg(self, msg, warn=False, print_time=True):
-        self.debug_msg(msg,warn=True,print_time=False)
+        self.debug_msg(msg,warn=warn,print_time=print_time)
 
     def debug_msg(self, msg, warn=False, print_time=True):
         """
         Output a colored message or warning, incrementing the step_counter
         to enable a pdb trace to be set at any point a verbose message is printed.
         """
-        color = 4
+        color = 2
         if warn:
             color = 1
         if self.verbose:
@@ -157,7 +170,7 @@ Example usage:
     $ %prog mapfile.xml image.png
     $ %prog mapfile.xml > image.png
 
-""", version='%prog ' + '%s' % version)
+""", version='%prog ' + '%s' % __version__)
 
 def make_float_list(option, opt, value, parser):
     try:
@@ -293,10 +306,16 @@ if __name__ == '__main__':
     
     if not sys.stdin.isatty():
         xml = sys.stdin.read()
-        (handle, mapfile) = tempfile.mkstemp('.xml', 'mapfile_string')
-        os.close(handle)
-        open(mapfile, 'w').write(xml)
-        print mapfile
+        import mapnik
+        if hasattr(mapnik,'load_map_from_string'):
+            options.from_string = True
+            mapfile = xml
+        else:
+            options.from_string = False
+            (handle, mapfile) = tempfile.mkstemp('.xml', 'mapfile_string')
+            os.close(handle)
+            open(mapfile, 'w').write(xml)
+            print mapfile
         if len(args) > 0:
             options.image = args[0]
     elif len(args) == 0:

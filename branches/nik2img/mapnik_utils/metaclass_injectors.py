@@ -1,5 +1,5 @@
 import re
-from mapnik import Map, Layer, Coord, Envelope
+from mapnik import Map, Layer, Coord, Envelope, Datasource
 from projection import EasyProjection
 
 try:
@@ -126,43 +126,14 @@ class _Map(Map,_injector):
                 lyr.active = True
                 selected.append(lyr.name)
         return selected, disactivated 
-
-    def validate_datasources(self):
-        for layer in self.layers:
-            if not layer.datasource:
-                raise IOError("Datasource not found for layer '%s'" % layer.name)
-        return True
-
-    def active_rules_for_layer(self,layer):
-        active = []
-        if not isinstance(layer,Layer):
-            layer = self.find_layer(layer)
-        for style in layer.styles:
-            try:
-                sty_obj = self.find_style(style)
-            except KeyError:
-                sty_obj = None
-            if sty_obj:
-                for rule in sty_obj.rules:
-                    rule_attr = {}
-                    if rule.active(self.scale()):
-                        rule_attr['parent_style'] = style 
-                        rule_attr['filter'] = str(rule.filter)
-                        rule_attr['min_scale'] = rule.min_scale
-                        rule_attr['max_scale'] = rule.max_scale
-                        active.append(rule_attr)
-        return active
     
     def intersecting_layers(self):
         lyrs = []
         for layer in self.layers:
-            lyr_attr = {}
             layer_box = layer.envelope().transform(layer.proj_obj,self.proj_obj)
             if layer_box.intersects(self.envelope()):
-                lyr_attr['name'] = layer.name
-                lyr_attr['visible'] = layer.visible(self.scale())
-                lyr_attr['active_style_rules'] = self.active_rules_for_layer(layer)
-                lyrs.append(lyr_attr)
+                layer.active_rules = layer.active_rules(self)
+                lyrs.append(layer)
         return lyrs
 
     def to_wld(self, x_rotation=0.0, y_rotation=0.0):
@@ -209,29 +180,15 @@ class _Layer(Layer,_injector):
     def set_srs_by_srid(self,srid):
         self.srs = EasyProjection(srid).params()
     
-    def datasource_dict(self):
-        d = {}
-        attr = []
-        if self.datasource:
-            groups = self.datasource.describe().split('\n\n')
-            prefix = groups[0].split('\n')
-            d['type'] = prefix[0].split('=')[1]
-            d['encoding'] = prefix[1].split('=')[1]
-            p = {}
-            p['name'] = prefix[2].split('=')[1]
-            p['type'] = prefix[3].split('=')[1]
-            p['size'] = prefix[4].split('=')[1]
-            attr.append(p)
-            for group in groups[1:]:
-                for item in group.split('\n'):
-                    p = {}
-                    if item:
-                        i = item.split('=')
-                        p[i[0]] = i[1]
-                        attr.append(p)
-        d['properties'] = attr
-        return d
-
+    def active_rules(self,map):
+        rules = []
+        for style in self.styles:
+            sty_obj = map.find_style(style)
+            for rule in sty_obj.rules:
+                if rule.active(map.scale()):
+                    rule.parent = style 
+                    rules.append(rule)
+        return rules
 
 class _Coord(Coord,_injector):
     def transform(self,from_prj,to_prj):

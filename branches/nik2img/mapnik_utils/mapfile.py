@@ -1,16 +1,19 @@
 import sys
-from mapnik import Map, load_map
+from mapnik import Map, load_map, load_map_from_string
 from os.path import exists, dirname, basename
 
 
 class Load(object):
-    def __init__(self,mapfile,variables={},paths_relative_to_xml=True):
+    def __init__(self,mapfile,variables={},from_string=False):
         self.mapfile = mapfile
-        self.paths_relative_to_xml = paths_relative_to_xml
+        self.from_string = from_string
         self.variables = variables
         self.mapfile_types = {'xml':'XML mapfile','mml':'Mapnik Markup Language', 'py':'Python map variable'}
-        self.file_type = self.mapfile.split('.')[-1]
-        self.validate()
+        if self.from_string:
+            self.file_type = 'xml'
+        else:
+            self.file_type = self.mapfile.split('.')[-1]
+            self.validate()
         
     def validate(self):
         if not exists(self.mapfile):
@@ -30,10 +33,9 @@ class Load(object):
             return None
 
     def load_xml(self,m):
-        try:
-            return load_map(m,self.mapfile,False,self.paths_relative_to_xml,False)
-        except Exception, E:
-            #sys.stderr.write('Warning: %s' % E)
+        if self.from_string:
+            return load_map_from_string(m,self.mapfile)
+        else:
             return load_map(m,self.mapfile)
 
     def load_mml(self,m):    
@@ -55,7 +57,10 @@ class Load(object):
 
     def variable_replace(self):
         import tempfile
-        mapfile_string = open(self.mapfile).read()
+        if self.from_string:
+            mapfile_string = mapfile
+        else:
+            mapfile_string = open(self.mapfile).read()
         for line in mapfile_string.splitlines():
             for key,value in self.variables.items():
                 line.replace(key,value)

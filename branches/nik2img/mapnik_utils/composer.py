@@ -43,6 +43,7 @@ class Compose(object):
         self.save_map = None
         self.app = None
         self.dry_run = False
+        self.from_string = False
         
         self.zoom_in = None
         self.horizontal = 1
@@ -51,8 +52,12 @@ class Compose(object):
         self.changed = []
         self.font_handler = None
         self.map = None
-        self.verbose = False
         self.rendered = False
+        self.verbose = False
+        if self.verbose:
+            self.msg = self.verbose_msg
+        else:
+            self.msg = self.quiet
               
         if kwargs:
             self.handle_options(kwargs)
@@ -81,9 +86,11 @@ class Compose(object):
             msg += E
         raise sys.exit(msg)
 
-    def msg(self, msg, E=None):
-        if self.verbose:
-            sys.stderr.write('%s\n' % msg)
+    def verbose_msg(self, msg):
+        sys.stderr.write('%s\n' % msg)
+
+    def quiet(self, msg):
+        pass
 
     def register_fonts(self,fonts):
         from fonts import FontHandler
@@ -93,7 +100,7 @@ class Compose(object):
             self.mapsg("Failed to register: '%s'" % self.font_handler.failed)
 
     def build(self):
-        loader = Load(self.mapfile,variables={},paths_relative_to_xml=True)
+        loader = Load(self.mapfile,variables={},from_string=self.from_string)
         self.map = loader.build_map(self.width,self.height)
 
         if self.srs:
@@ -163,8 +170,6 @@ class Compose(object):
         if self.zoom_in:
             self.map.zoom(self.zoom_in)
             #self.map.pan(self.map.width/2.0*self.horizontal,self.map.height/2.0*self.vertical) 
-        #if self.verbose:
-        #    self.layers_in_extent(self.map)
   
     def render(self):
         if not self.map:
