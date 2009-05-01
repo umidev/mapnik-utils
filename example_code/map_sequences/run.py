@@ -31,11 +31,11 @@ for feature in queryset:
     s,r = mapnik.Style(),mapnik.Rule()
     r.symbols.append(mapnik.LineSymbolizer(mapnik.Color('darkorange'),3))
     r.symbols.append(mapnik.LineSymbolizer(mapnik.Color('yellow'),2))
-    t = mapnik.TextSymbolizer('NAME', 'DejaVu Sans Book', 30, mapnik.Color('black'))
+    t = mapnik.TextSymbolizer('NAME', 'DejaVu Sans Book', 30, mapnik.Color('rgba(0,0,0,.8)') )
     t.avoid_edges = True
     #t.allow_overlap = False
-    t.halo_fill = mapnik.Color('white')
-    t.halo_radius = 1
+    t.halo_fill = mapnik.Color('rgba(255,255,255,.2)')
+    t.halo_radius = 2
     r.symbols.append(t)
     r.filter = feature_filter
     s.rules.append(r)
