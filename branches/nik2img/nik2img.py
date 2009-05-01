@@ -328,7 +328,7 @@ if __name__ == '__main__':
         if len(args) > 0:
             options.image = args[0]
     elif len(args) == 0:
-        parser.error(color_text(4,'\n\nPlease provide the path to a Mapnik xml, Cascadenik mml file\n',options.no_color))
+        parser.error(color_text(4,'\n\nPlease provide the path to a Mapnik xml or Cascadenik mml file\n',options.no_color))
     else:
         mapfile = args[0]
         if len(args) > 1:
