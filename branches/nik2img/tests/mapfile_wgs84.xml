@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- http://spatialreference.org/ref/epsg/2163/ -->
-<Map bgcolor="#8cb6d3">
+<Map bgcolor="#8cb6d3" paths_from_xml="false">
     <Style name="states_outlines">
         <Rule>
             <LineSymbolizer>
@@ -38,7 +38,7 @@
         <StyleName>states_outlines</StyleName>
         <StyleName>states_shp_labels</StyleName>
         <Datasource>
-            <Parameter name="base">tests</Parameter>
+            <Parameter name="base">tests/data</Parameter>
             <Parameter name="file">us_states_wgs84</Parameter>
             <Parameter name="type">shape</Parameter>
         </Datasource>
