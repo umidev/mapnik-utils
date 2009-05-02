@@ -50,3 +50,21 @@ Zooming to a lon, lat, and level
 >>> from mapnik_utils import Compose
 >>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/washington.png',center=(-120.7,47.2),zoom=5)
 >>> c.open()
+
+
+Render a Map from an XML string
+-------------------------------
+
+>>> from mapnik_utils import Compose
+>>> xml_string = '''<?xml version="1.0" encoding="utf-8"?>
+... <Map bgcolor="#8cb6d3">
+... <Style name="states_line">
+... <Rule><LineSymbolizer /><PointSymbolizer /></Rule>
+... </Style>
+... <Layer name="states" status="1">
+... <StyleName>states_line</StyleName><Datasource><Parameter name="file">tests/data/us_states_wgs84.shp</Parameter><Parameter name="type">shape</Parameter></Datasource>
+... </Layer>
+... </Map>'''
+>>> c = Compose(xml_string,from_string=True,image='/tmp/states_line.pdf',format='pdf')
+>>> c.open()
+
