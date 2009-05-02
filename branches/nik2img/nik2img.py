@@ -183,7 +183,7 @@ Read MML, pipe to image
  $ %prog mapfile.mml > image.png
 
 Accept piped XML
-$ <xml stream> | %proj image.png
+$ <xml stream> | %prog image.png
 
 """, version='%prog ' + __version__)
 
@@ -209,15 +209,16 @@ def make_list(option, opt, value, parser):
 parser.add_option('-f', '--format', dest='format',
                   help='Format of image: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).')
 
-# tilecache and osm2pgsql use -b
-# we shall assume lon/lat, geographic
-# while extent will be projected extents
-# that must match the map
 parser.add_option('-b','--bbox', dest='bbox',
                   type='float', nargs=4,
                   help='Geographical bounding box. Two long,lat pairs e.g. -126 24 -66 49 (United States)',
                   action='store')
 
+parser.add_option('-e', '--projected-extent', dest='extent', nargs=4,
+                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
+                  type='float',
+                  action='store')
+                  
 parser.add_option('-c', '--center', dest='center', nargs=2,
                   help='Center coordinates. A long,lat pair e.g. -122.3 47.6 (Seattle)',
                   type='float',
@@ -238,11 +239,6 @@ parser.add_option('--zoom-to-layers', dest='zoom_to_layers',
                   type='string', # actually results in a comma-delimited list
                   action='callback',
                   callback=make_list)
-                  
-parser.add_option('-e', '--projected-extent', dest='extent', nargs=4,
-                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
-                  type='float',
-                  action='store')
 
 parser.add_option('-m', '--max-extent', dest='max_extent', nargs=4,
                   help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
@@ -335,6 +331,12 @@ if __name__ == '__main__':
             options.image = args[1]
            
     options.width, options.height = options.dimensions
+    if not options.format:
+        if not options.image.endswith('png'):
+            try:
+                options.format = options.image.split('.')[-1]
+            except:
+                pass
 
     def main():
         nik_map = ComposeDebug(mapfile,**options.__dict__)

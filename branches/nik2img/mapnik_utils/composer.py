@@ -45,9 +45,6 @@ class Compose(object):
         self.dry_run = False
         self.from_string = False
         
-        self.horizontal = 1
-        self.vertical = 1
-
         self.changed = []
         self.font_handler = None
         self.map = None

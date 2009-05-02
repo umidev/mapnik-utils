@@ -2,7 +2,7 @@ Basic map in 8-bit PNG format
 -----------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_lambert.xml',image='/tmp/png256/8_bit.png',format='png256')
+>>> c = Compose('tests/mapfile_lambert.xml',image='/tmp/8_bit.png',format='png256')
 >>> c.open()
 
 
@@ -32,7 +32,7 @@ Google Reprojection
 -------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/projected/google_mercator_via_projcode.png',srs=900913)
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/google_mercator_via_projcode.png',srs=900913)
 >>> c.open()
 
 
@@ -40,7 +40,7 @@ Google Reprojection using spatialreference.org
 ----------------------------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/projected/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/na_albers_via_sr.org.png',srs='http://spatialreference.org/ref/esri/102008/')
 >>> c.open()
 
 
@@ -48,5 +48,5 @@ Zooming to a lon, lat, and level
 --------------------------------
 
 >>> from mapnik_utils import Compose
->>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/zoomto/washington.png',center=(-120.7,47.2),zoom=5)
+>>> c = Compose('tests/mapfile_wgs84.xml',image='/tmp/washington.png',center=(-120.7,47.2),zoom=5)
 >>> c.open()
