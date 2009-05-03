@@ -30,7 +30,7 @@ def call(cmd):
     sys.exit(E)
 
 def cleanup():
-    call('sudo rm *.egg* *.pyc tests_output dist/ build/ -r -f')
+    call('sudo rm *.egg* *.pyc dist/ build/ -r -f')
 
 def tag():
     call('svn cp ../%s/ %s/%s' % (app,tag_dir,version))
