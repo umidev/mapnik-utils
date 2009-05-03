@@ -5,55 +5,32 @@ Macports Portfile for Mapnik
 Overview
 --------
 
-This is a testing sandbox for building Mapnik SVN Head using Macports.
+This is a testing sandbox for building Mapnik using Macports.
 
-'py25-mapnik' is under development and once ready will be branched into a 'py26' version.
-
-The port script takes advantage of new options in the 0.6.0 release to handle custom builds.
-One example is the ability to request linking against the non-system/framework version of
-Python with FRAMEWORK_PYTHON=False.
-(see http://lists.berlios.de/pipermail/mapnik-users/2008-April/000865.html)
+Mapnik 0.6.0 was accepted into the Macport tree on May 1, 2009 (http://trac.macports.org/changeset/50499)
 
 This Portfile was originally adapted from http://trac.macports.org/ticket/12784 (thanks Paul!).
-See also: http://trac.macports.org/ticket/18071
 
+Requirements
+------------
+
+ * Python26 from Macports
+ * Boost +python26 variant
 
 Issues
 ------
 
-Currently one major issue prevents a proper build:
- 
-1. A bug in the macports version of boost prevents boost from linking against the
-  macports version of python, while this 'py25-mapnik' is able to correctly link
-  against the macports boost. This results in a 'Python Version Mismatch' error.
-  
-  See:
-    http://trac.mapnik.org/wiki/InstallationTroubleshooting#PythonVersionMismatch
-  
-  Details on the boost bug:
-    http://trac.macports.org/ticket/17998
-
-  Boost portfile:
-    http://trac.macports.org/browser/trunk/dports/devel/boost/Portfile
-  
-  Related:
-    http://trac.macports.org/ticket/15099
-    http://trac.macports.org/ticket/16111
-  
-2. And several todo items remain:
-    * Get cairo support working/tested
-    * troubleshoot library linking issues
-     - Currently requires `export DYLD_LIBRARY_PATH=/opt/local/lib/mapnik/`
-    * provide a few more variants for xml_parser, etc
-    * write a tool to validate/test python linking
-    * break off py26 port
-    * break off a mapnik-devel port to track trunk
+ * Cairo variant not yet working because pycairo cannot be found (some pkg-config problem)
+ * Provide a few more variants for xml_parser, etc
+ * SQLITE Rtree support
+ * write a tool to validate/test python linking
+ * break off a mapnik-devel port to track trunk
 
 
 Using Portfile Locally
 ----------------------
 
-1. Make a 'port/graphics' directory in your user folder like::
+1. Make a 'port/graphics' directory in your USER folder like::
 
   $ mkdir -p ~/ports/graphics
 
@@ -67,7 +44,7 @@ Using Portfile Locally
 
 4. Add a line before the line that says 'rsync://' to point to your '~/ports' folder::
 
-  file:///Users/YOUR_USER/ports/
+  file:///Users/YOUR_USER/ports/ [nosync]
 
 5. In your terminal go into the mapnik directory::
 
@@ -80,11 +57,11 @@ Using Portfile Locally
 7. Then to install run from anywhere (do 'port -d' for debug output)::
   
   # make sure you have installed Macports and XCode
-  $ sudo port install jam python25 python_select
-  $ sudo port install boost +icu +python25
-  $ sudo python_select python25 # see below for more info on python_select
-  $ sudo port install py25-mapnik # to install
-  $ sudo port uninstall py25-mapnik # to remove
+  $ sudo port install jam python26 python_select
+  $ sudo port install boost +icu +python26
+  $ sudo python_select python26 # see below for more info on python_select
+  $ sudo port install py26-mapnik # to install
+  $ sudo port uninstall py26-mapnik # to remove
 
 8. Post your problems or successes to http://code.google.com/p/mapnik-utils/issues/list
 
@@ -96,28 +73,29 @@ Using Portfile Locally
   $ sudo rm -rf /opt/local/include/mapnik
   $ sudo rm -rf /opt/local/lib/mapnik
   $ sudo rm /opt/local/lib/libmapnik.dylib
-  $ sudo rm -rf /opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/site-packages/mapnik
+  $ sudo rm -rf /opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages/mapnik
 
 
 Notes on 'python_select'
 ------------------------
 
 If you want to use Mapnik built with Macports you have to switch to the Macports Python.
-Thats just the way that MacPorts works, for better or worse.
+That's just the way that MacPorts works, for better or worse.
 
 The python_select tool available via macports is a fairly handy way to switch your
 default python interpreter between various versions of python installed on your system.
 
 It is able to autodetect all macports versions and the one system-provided python.
 
-First run this command to see the list of python versions it is able to switch to::
+First run this command to see the list of python versions available to switch to::
 
   $ python_select -l
   Available versions:
   current none python25 python25-apple
 
 Note that if you have a MacPython version installed, such as Python 2.6, python_select will not detect it.
-Run the command::
+
+So, if you want to switch back to that MacPython version run the command::
 
  $ python_select -n python25-apple
 
