@@ -58,8 +58,8 @@ Using Portfile Locally
   
   # make sure you have installed Macports and XCode
   $ sudo port install jam python26 python_select
-  $ sudo port install boost +icu +python26
   $ sudo python_select python26 # see below for more info on python_select
+  $ sudo port install boost +icu +python26
   $ sudo port install py26-mapnik # to install
   $ sudo port uninstall py26-mapnik # to remove
 
