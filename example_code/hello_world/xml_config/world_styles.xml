@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
-<Map bgcolor="steelblue" srs="+proj=latlong +datum=WGS84">
+<Map bgcolor="steelblue" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
 
   <Style name="My Style">
     <Rule>
@@ -14,7 +14,7 @@
     </Rule>
   </Style>
 
-  <Layer name="world" srs="+proj=latlong +datum=WGS84">
+  <Layer name="world" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
     <StyleName>My Style</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
