@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
 <!-- Sample Mapnik XML template by Dane Springmeyer -->
-<Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
+<Map bgcolor="white" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
   
   <Style name="population">
 
@@ -116,7 +116,7 @@
      </Rule>
   </Style>
   
-  <Layer name="countries" status="on" srs="+proj=latlong +datum=WGS84">
+  <Layer name="countries" status="on" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
     <!-- Style order determines layering hierarchy -->
     <!-- Labels go on top so they are listed second -->
     <StyleName>population</StyleName>
