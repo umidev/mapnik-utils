@@ -1,3 +1,4 @@
+import os
 import sys
 from mapnik import Map, load_map, load_map_from_string
 from os.path import exists, dirname, basename
@@ -46,13 +47,14 @@ class Load(object):
         """
         Instanciate a Mapnik Map object from an external python script.
         """
-        py_path = dirname(self.mapfile)
-        os.path.append(py_path)
-        py_module = basename(os.path).split('.')[0]
+        py_path = os.path.abspath(self.mapfile)
+        sys.path.append(dirname(py_path))
+        py_module = basename(py_path).rstrip('.py')
+        #import pdb;pdb.set_trace()
         module = __import__(py_module)
         py_map = getattr(module,map_variable,None)
-        py_map.width = self.m.width
-        py_map.height = self.m.height
+        py_map.width = m.width
+        py_map.height = m.height
         return py_map
 
     def variable_replace(self):
@@ -77,5 +79,4 @@ class Load(object):
 
     def build_map(self,width,height):
         m = Map(width,height)
-        self.load_mapfile(m)
-        return m
+        return self.load_mapfile(m)
