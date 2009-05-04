@@ -82,6 +82,22 @@ m.zoom_to_box(lyr.envelope())
 render_to_file(m, '%(name)s.png')
 '''
 
+def proj4_from_osr(shp_dir):
+    from osgeo import osr
+    srs = osr.SpatialReference()
+    prj_file = open(shp_dir+ '.prj','r').read()
+    srs.SetFromUserInput(prj_file)
+    proj4 = srs.ExportToProj4()
+    if not proj4:
+        #ERROR 6: No translation for Lambert_Conformal_Conic to PROJ.4 format is known.
+        srs.MorphFromESRI()
+    proj4 = srs.ExportToProj4()
+    if proj4:
+        return proj4
+    else:
+        return None
+
+    
 def main(shapefile,xml_only=False,srid=None):
     shp_dir = os.path.abspath(shapefile).split('.shp')[0]
     name = shapefile.split('.shp')[0]
@@ -94,7 +110,11 @@ def main(shapefile,xml_only=False,srid=None):
     if srid:
         context['srs'] = '+init=epsg:%s' % srid
     else:
-        context['srs'] = '+proj=latlong +datum=WGS84'
+        srs = proj4_from_osr(shp_dir)
+        if srs:
+            context['srs'] = srs
+        else:
+            context['srs'] = '+proj=latlong +datum=WGS84'
     if not xml_only:
         info = "\nInfo for '%(name)s' shapefile:\nEnvelope: %(e)s\nMaxX, MaxY, MinX, MinY: %(minx)s%(miny)s%(maxx)s%(maxy)s" % (context)
         info += '\nAttributes:\n'
