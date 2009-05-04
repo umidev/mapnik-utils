@@ -7,9 +7,9 @@ m = Map(600,300,'+proj=latlong +datum=WGS84')
 m.background = Color('steelblue')
 
 # Styles
-poly = PolygonSymbolizer(Color('#f2eff9'))
-line = LineSymbolizer(Color('rgb(50%,50%,50%)'),0.1)
-s, r = Style(), Rule()
+poly = PolygonSymbolizer(Color('lavender'))
+line = LineSymbolizer(Color('slategray'),.3)
+s,r = Style(),Rule()
 r.symbols.extend([poly,line])
 s.rules.append(r)
 m.append_style('My Style',s)
