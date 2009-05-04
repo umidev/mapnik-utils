@@ -13,7 +13,7 @@ class Load(object):
         if self.from_string:
             self.file_type = 'xml'
         else:
-            self.file_type = self.mapfile.split('.')[-1]
+            self.file_type = self.get_type()
             self.validate()
         
     def validate(self):
@@ -23,39 +23,15 @@ class Load(object):
             raise AttributeError('Invalid mapfile type: only these extension allowed: %s' % ', '.join(self.mapfile_types.keys()))
         return True
 
-    def get_type_desc(self):
+    def get_type(self):
         if self.mapfile.endswith('xml'):
-            return self.mapfile_types['xml']
+            return 'xml'
         elif self.mapfile.endswith('mml'):
-            return self.mapfile_types['mml']
+            return 'mml'
         elif self.mapfile.endswith('py'):
-            return self.mapfile_types['py']
+            return 'py'
         else:
-            return None
-
-    def load_xml(self,m):
-        if self.from_string:
-            return load_map_from_string(m,self.mapfile)
-        else:
-            return load_map(m,self.mapfile)
-
-    def load_mml(self,m):    
-        from cascadenik import load_map as load
-        return load(m,self.mapfile)
-
-    def load_py(self,m,map_variable='m'):
-        """
-        Instanciate a Mapnik Map object from an external python script.
-        """
-        py_path = os.path.abspath(self.mapfile)
-        sys.path.append(dirname(py_path))
-        py_module = basename(py_path).rstrip('.py')
-        #import pdb;pdb.set_trace()
-        module = __import__(py_module)
-        py_map = getattr(module,map_variable,None)
-        py_map.width = m.width
-        py_map.height = m.height
-        return py_map
+            raise ValueError("Unknown Mapfile type: '%s'" % self.mapfile)
 
     def variable_replace(self):
         import tempfile
@@ -70,13 +46,42 @@ class Load(object):
         tmp.write(mapfile_string)
         tmp.flush()
         return tmp.name
+
+    def load_xml(self,m):
+        if self.from_string:
+            return load_map_from_string(m,self.mapfile)
+        else:
+            return load_map(m,self.mapfile)
+
+    def load_mml(self,m):    
+        from cascadenik import load_map as load
+        load(m,self.mapfile)
+
+    def load_py(self,m,map_variable='m'):
+        """
+        Instanciate a Mapnik Map object from an external python script.
+        """
+        py_path = os.path.abspath(self.mapfile)
+        sys.path.append(dirname(py_path))
+        py_module = basename(py_path).rstrip('.py')
+        module = __import__(py_module)
+        py_map = getattr(module,map_variable,None)
+        if not py_map:
+            raise ValueError('No variable found in python file with the name: "%s"' % map_variable)
+        py_map.width = m.width
+        py_map.height = m.height
+        return py_map
           
     def load_mapfile(self,m):
         if self.variables:
             self.mapfile = self.variable_replace()
         load = getattr(self,'load_%s' % self.file_type)
-        return load(m)
+        load(m)
 
     def build_map(self,width,height):
         m = Map(width,height)
-        return self.load_mapfile(m)
+        if self.file_type == 'py':
+            return self.load_py(m)
+        else:
+            self.load_mapfile(m)
+            return m

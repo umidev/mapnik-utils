@@ -331,7 +331,7 @@ if __name__ == '__main__':
             options.image = args[1]
            
     options.width, options.height = options.dimensions
-    if not options.format:
+    if not options.format and hasattr(options,'image'):
         if not options.image.endswith('png'):
             try:
                 options.format = options.image.split('.')[-1]
