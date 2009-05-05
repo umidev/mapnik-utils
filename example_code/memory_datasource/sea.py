@@ -29,7 +29,7 @@ m.background = Color(220, 226, 240)
 # Layers are added in stacking order (i.e. bottom layer first)
  
 state_lyr = Layer('States')
-state_lyr.datasource = Shapefile(file='../../../data/statesp020')
+state_lyr.datasource = Shapefile(file='../../data/statesp020')
 state_lyr.styles.append('states')
 m.layers.append(state_lyr)
  
@@ -43,11 +43,10 @@ q.add_property_name('STATE') # Without this call, no properties will be found
 extent = Envelope()
 featureset = ds.features(q) # Zoom into WA by querying feature geometry
  
-feat = featureset.next()
 filt = Filter("[STATE] = 'Washington'")
  
 extent = Envelope()
-while (feat):
+for feat in featureset.features:
     if filt.passes(feat): # note 'pass' is a reserved word in Python
         for i in range(feat.num_geometries()):
             geom = feat.get_geometry(i)
@@ -55,7 +54,6 @@ while (feat):
                 extent = geom.envelope()
             extent.expand_to_include(geom.envelope())
  
-    feat = featureset.next()
  
 print extent
  
