@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+zoom level  - scale denominator
+1 279541132.014
+2 139770566.007
+3 69885283.0036
+4 34942641.5018
+5 17471320.7509
+6 8735660.37545
+7 4367830.18772
+8 2183915.09386
+9 1091957.54693
+10 545978.773466
+11 272989.386733
+12 136494.693366
+13 68247.3466832
+14 34123.6733416
+15 17061.8366708
+16 8530.91833539
+17 4265.4591677
+18 2132.72958385
+-->
+
+
+<!DOCTYPE Map[
+    <!ENTITY map_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY coastlines "/opt/applications/tilesathome/world_boundaries/processed_p">
+    <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
+    <!ENTITY user "postgres">
+    <!ENTITY dbname "gis">
+    <!ENTITY estimate_extent "false">
+    <!ENTITY extent "1148357,6146222,1869795,6999934">
+]>
+<Map srs="&map_srs;">
+    <Stylesheet>
+        Map { map-bgcolor: #1c2742; }
+    </Stylesheet>
+     <Stylesheet src="lighting.mss"/>
+
+
+    <Layer class="road lighting" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *,
+                    (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                          WHEN highway IN ('trunk', 'primary') THEN 1
+                          WHEN highway = 'secondary' THEN 2
+                          WHEN highway = 'tertiary' THEN 3
+                          ELSE 4 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                              ELSE 'minor' END) AS prominence
+                 FROM planet_osm_line
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC, priority DESC)
+
+                 AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>
