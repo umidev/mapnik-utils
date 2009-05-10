@@ -63,7 +63,7 @@ class Load(object):
         """
         py_path = os.path.abspath(self.mapfile)
         sys.path.append(dirname(py_path))
-        py_module = basename(py_path).rstrip('.py')
+        py_module = basename(py_path).replace('.py','')
         module = __import__(py_module)
         py_map = getattr(module,map_variable,None)
         if not py_map:

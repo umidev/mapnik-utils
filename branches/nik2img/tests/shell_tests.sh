@@ -36,3 +36,9 @@ nik2img.py tests/mapfile_wgs84.xml --bbox -125.5 31.7 -113.3 42.6 -d 500 500 /tm
 
 # zoom to san jose
 nik2img.py tests/mapfile_wgs84.xml --bbox -121.945 37.312 -121.886 37.355 -d 500 500 /tmp/san_jose.png
+
+# load map from python script
+nik2img.py tests/pymap.py /tmp/map_frompy.png
+
+# load map from cascadenik mml
+nik2img.py tests/mapfile_wgs84.mml /tmp/from_css.png
