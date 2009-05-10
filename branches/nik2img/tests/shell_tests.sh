@@ -1,6 +1,14 @@
 # mapfile from string
 cat tests/mapfile_wgs84.xml | nik2img.py /tmp/from_string.png
 
+# redirect image stream
+nik2img.py tests/mapfile_wgs84.xml > /tmp/image_stream.png
+open /tmp/image_stream.png
+
+# redirect image jpeg stream
+nik2img.py tests/mapfile_wgs84.xml -f jpeg > /tmp/image_stream.jpeg
+open /tmp/image_stream.jpeg
+
 # worldfile registration
 nik2img.py tests/mapfile_lambert.xml /tmp/lambert.png --world-file wld -d 2000 1500 --no-open
 # open both in qgis
