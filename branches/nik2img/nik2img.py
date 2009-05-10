@@ -305,9 +305,22 @@ parser.add_option('--fonts',
                   help='List of paths to .ttf or .otf fonts to register (comma separated)',
                   action='callback',
                   callback=make_list)
+
+def parse_config(cfg_file):
+    from ConfigParser import SafeConfigParser
+    config = SafeConfigParser()
+    config.read(cfg_file)
+    params = {}
+    for section in config.sections():
+        options = config.items(section)
+        for param in options:
+            params[param[0]] = param[1]
+    return params
     
 if __name__ == '__main__':
+
     (options, args) = parser.parse_args()
+    config_opts = parse_config(os.path.expanduser('~/.nik2imgrc'))
     
     if not sys.stdin.isatty():
         xml = sys.stdin.read()
@@ -328,9 +341,19 @@ if __name__ == '__main__':
         mapfile = args[0]
         if len(args) > 1:
             options.image = args[1]
+    
+    # if no image argument yet supplied check in nik2img user config
+    if not hasattr(options,'image'):
+        if config_opts.get('image'):
+            options.image = config_opts['image']
+        else:
+            options.image = None
+    else:
+        # we'll default to printing image to stdout...
+        options.image = None
            
     options.width, options.height = options.dimensions
-    if not options.format and hasattr(options,'image'):
+    if not options.format and options.image:
         if not options.image.endswith('png'):
             try:
                 options.format = options.image.split('.')[-1]
@@ -342,7 +365,7 @@ if __name__ == '__main__':
         if options.no_open:
             nik_map.render()
         else:
-            if hasattr(options,'image'):
+            if options.image:
                 nik_map.open()
             else:
                 nik_map.render()
