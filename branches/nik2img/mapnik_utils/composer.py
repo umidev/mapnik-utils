@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import mapnik
 import platform
 from renderer import Render
@@ -39,7 +40,7 @@ class Compose(object):
         self.max_resolution = None
         self.find_and_replace = None
         self.world_file = None
-        self.fonts = None
+        self.fonts = []
         self.save_map = None
         self.app = None
         self.dry_run = False
@@ -72,12 +73,12 @@ class Compose(object):
         self.format = self.format.lower().replace('image/','')
         self.mime = 'image/%s' % self.format.replace('256','')
         if self.fonts:
-            self.register_fonts(self.fonts)
+            self.register_fonts()
 
     def setup(self):
         pass
 
-    def output_error(msg, E=None):
+    def output_error(self, msg, E=None):
         if E:
             msg += E
         raise sys.exit(msg)
@@ -88,12 +89,12 @@ class Compose(object):
     def quiet(self, msg):
         pass
 
-    def register_fonts(self,fonts):
+    def register_fonts(self):
         from fonts import FontHandler
         self.font_handler = FontHandler()
         self.font_handler.add_fonts(self.fonts)
         if self.font_handler.failed:
-            self.mapsg("Failed to register: '%s'" % self.font_handler.failed)
+            self.msg("Failed to register: '%s'" % self.font_handler.failed)
 
     def build(self):
         self.msg('Loading mapfile...')
@@ -181,10 +182,7 @@ class Compose(object):
         if self.save_map:
             renderer.save_map = self.save_map
         if self.image:
-            try:
-                renderer.render_file()
-            except Exception, E:
-                self.output_error(E)
+            renderer.render_file()
         else:
             renderer.print_stream()
         self.rendered = True
@@ -199,7 +197,7 @@ class Compose(object):
         try:
             if os.name == 'nt':
                 if app:
-                    self.mapsg('Overriding default image viewer not yet supported on Win32')
+                    self.msg('Overriding default image viewer not yet supported on Win32')
                 os.system('start %s' % self.image.replace('/','\\'))
             elif platform.uname()[0] == 'Linux':
                 if app:
@@ -209,5 +207,5 @@ class Compose(object):
                     os.system('open %s -a %s' % (self.image, app))
                 else:
                     os.system('open %s' % self.image)
-        except Exception, E:
+        except Exception:
             pass # this is fluf, so fail quietly if there is a problem

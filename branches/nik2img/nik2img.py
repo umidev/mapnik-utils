@@ -97,14 +97,14 @@ class ComposeDebug(Compose):
         self.debug_msg('Rendering map...')            
         super(ComposeDebug,self).render()
 
-    def register_fonts(self,fonts):
-        super(ComposeDebug,self).register_fonts(fonts)
-        if self.font_handler.added:
-            self.debug_msg("Registered: '%s'" % f.added)
-        elif self.font_handler.failed:
+    def register_fonts(self):
+        super(ComposeDebug,self).register_fonts()
+        if len(self.font_handler.added):
+            self.debug_msg("Registered: '%s'" % self.font_handler.added)
+        elif len(self.font_handler.failed):
             self.debug_msg("Available fonts are: '%s'" % self.font_handler.available,warn=True)
       
-    def output_error(self,msg, E=None):
+    def output_error(self, msg, E=None):
         if E:
             sys.stderr.write(color_text(1, '// --> %s: \n\t %s\n' % (msg, E),self.no_color))
         else:
@@ -320,7 +320,6 @@ if __name__ == '__main__':
             (handle, mapfile) = tempfile.mkstemp('.xml', 'mapfile_string')
             os.close(handle)
             open(mapfile, 'w').write(xml)
-            print mapfile
         if len(args) > 0:
             options.image = args[0]
     elif len(args) == 0:
@@ -340,7 +339,9 @@ if __name__ == '__main__':
 
     def main():
         nik_map = ComposeDebug(mapfile,**options.__dict__)
-        if not options.no_open:
+        if options.no_open:
+            nik_map.render()
+        else:
             if hasattr(options,'image'):
                 nik_map.open()
             else:

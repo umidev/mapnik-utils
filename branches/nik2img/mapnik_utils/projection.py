@@ -16,7 +16,6 @@ class EasyProjection(Projection):
             Projection.__init__(self,self.proj)
         except RuntimeError, E:
             if self.method == 'epsg srid':
-                socket.setdefaulttimeout(6)
                 sr_org = 'http://spatialreference.org/ref'
                 srs_types = ['epsg','esri','sr-org','iau2000']
                 for provider in srs_types:
@@ -29,7 +28,7 @@ class EasyProjection(Projection):
                     self.srid = self.srs
                     Projection.__init__(self,proj)
                 else:
-                    raise RuntimeError('Sorry, that projection was not found')
+                    raise RuntimeError('Sorry, that projection was not found:' + E)
     
     @property
     def proj_obj(self):

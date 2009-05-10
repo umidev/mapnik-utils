@@ -36,7 +36,7 @@ class Load(object):
     def variable_replace(self):
         import tempfile
         if self.from_string:
-            mapfile_string = mapfile
+            mapfile_string = self.mapfile
         else:
             mapfile_string = open(self.mapfile).read()
         for line in mapfile_string.splitlines():
