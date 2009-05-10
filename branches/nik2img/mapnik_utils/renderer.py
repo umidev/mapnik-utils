@@ -2,7 +2,7 @@
 
 import os
 import sys
-from mapnik import render, render_to_file, save_map, Image
+import mapnik
 
 try:
     import cairo
@@ -54,8 +54,8 @@ class Render(object):
         """
         Routine to render the an image to a string
         """
-        im = Image(self.m.width,self.m.height)
-        render(self.m,im)
+        im = mapnik.Image(self.m.width,self.m.height)
+        mapnik.render(self.m,im)
         return im.tostring(self.format)
 
     def print_stream(self):
@@ -90,12 +90,12 @@ class Render(object):
                 surface = cairo.ImageSurface(cairo_mapping[args[2]], *context[1:])
             if self.re_render_times:
                 for n in range(1, int(self.re_render_times)):
-                    render(args[0],surface)
+                    mapnik.render(args[0],surface)
                     if args[2] in self.CAIRO_IMAGE_FORMATS:
                         surface.write_to_png(args[1])
                 surface.finish()
             else:
-                render(args[0],surface)
+                mapnik.render(args[0],surface)
                 if args[2] in self.CAIRO_IMAGE_FORMATS:
                     surface.write_to_png(args[1])
                 surface.finish()
@@ -106,7 +106,7 @@ class Render(object):
                 f.write(self.m.to_wld())
                 f.close()
             if self.save_map:
-                save_map(self.m,self.save_map)
+                mapnik.save_map(self.m,self.save_map)
 
     def call_CAIRO_FORMATS(self, basename):
         """
@@ -129,9 +129,9 @@ class Render(object):
         """
         if self.re_render_times:
             for n in range(1, int(self.re_render_times)):
-                render_to_file(*args)
+                mapnik.render_to_file(*args)
         else:
-            render_to_file(*args)
+            mapnik.render_to_file(*args)
         if self.world_file:
             basename = args[1].split('.')[0]
             f_ptr = '%s.%s' % (basename, self.world_file)
@@ -139,7 +139,7 @@ class Render(object):
             f.write(self.m.to_wld())
             f.close()
         if self.save_map:
-            save_map(self.m,self.save_map)
+            mapnik.save_map(self.m,self.save_map)
 
     def call_AGG_FORMATS(self, basename):
         """

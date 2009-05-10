@@ -1,17 +1,17 @@
-from mapnik import FontEngine, paths
+import mapnik
 
 class FontHandler(object):
     def __init__(self):
         self.added = []
         self.failed = []
-        self.fontdir = paths.fontscollectionpath
+        self.fontdir = mapnik.paths.fontscollectionpath
     
     @property
     def available(self):
-        return [f for f in FontEngine.face_names()]
+        return [f for f in mapnik.FontEngine.face_names()]
 
     def add_fonts(self,fonts):
-        engine = FontEngine.instance()
+        engine = mapnik.FontEngine.instance()
         for font in fonts:
             if engine.register_font(font):
                 self.added.append(font)

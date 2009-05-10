@@ -5,6 +5,7 @@ Release Steps
 -------------
  * create ~./pypirc file with pypi user:pass
  * Edit CHANGELOG.txt
+ * rebuild MANIFEST 'python setup.py sdist --manifest-only'
  * Increment '__version__' in main script and 'version' in setup.py
  * Run `deploy.py` to create sdist, upload, and create tag
  * Commit tag

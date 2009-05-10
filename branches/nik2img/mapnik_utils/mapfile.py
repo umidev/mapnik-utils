@@ -1,8 +1,6 @@
 import os
 import sys
-from mapnik import Map, load_map, load_map_from_string
-from os.path import exists, dirname, basename
-
+import mapnik
 
 class Load(object):
     def __init__(self,mapfile,variables={},from_string=False):
@@ -17,7 +15,7 @@ class Load(object):
             self.validate()
         
     def validate(self):
-        if not exists(self.mapfile):
+        if not os.path.exists(self.mapfile):
             raise AttributeError('Mapfile not found')
         if not self.file_type in self.mapfile_types:
             raise AttributeError('Invalid mapfile type: only these extension allowed: %s' % ', '.join(self.mapfile_types.keys()))
@@ -49,9 +47,9 @@ class Load(object):
 
     def load_xml(self,m):
         if self.from_string:
-            return load_map_from_string(m,self.mapfile)
+            return mapnik.load_map_from_string(m,self.mapfile)
         else:
-            return load_map(m,self.mapfile)
+            return mapnik.load_map(m,self.mapfile)
 
     def load_mml(self,m):    
         from cascadenik import load_map as load
@@ -62,8 +60,8 @@ class Load(object):
         Instanciate a Mapnik Map object from an external python script.
         """
         py_path = os.path.abspath(self.mapfile)
-        sys.path.append(dirname(py_path))
-        py_module = basename(py_path).replace('.py','')
+        sys.path.append(os.path.dirname(py_path))
+        py_module = os.path.basename(py_path).replace('.py','')
         module = __import__(py_module)
         py_map = getattr(module,map_variable,None)
         if not py_map:
@@ -79,7 +77,7 @@ class Load(object):
         load(m)
 
     def build_map(self,width,height):
-        m = Map(width,height)
+        m = mapnik.Map(width,height)
         if self.file_type == 'py':
             return self.load_py(m)
         else:
