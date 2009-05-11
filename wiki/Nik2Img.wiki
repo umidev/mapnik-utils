@@ -67,7 +67,12 @@ Loop through verbosely outputting all possible image formats and a custom tile s
 $ nik2img.py mapfile.xml maps/ -f all -d 256 256  -v
 }}}
 
-General all image formats within a folder in spherical mercator projection with custom bbox in projected coordinates:
+General a map in spherical mercator projection by supplying Long/Lat bounding box (of the United States):
 {{{
-$ nik2img.py mapfile.xml maps/ -f all --srs epsg:900913 -e 1003750 -1706377 10037508 2810502
+$ nik2img.py mapfile.xml mercator.png --srs 900913 --bbox -124.73 24.95 -66.96 49.37 -v
+}}}
+
+General that same map in spherical mercator projection but by supplying the projected coordinates (in mercator):
+{{{
+$ nik2img.py mapfile.xml mercator.png --srs 900913 --projected-extent -13885038.383 2870337 -7455049 6338174 -v
 }}}
