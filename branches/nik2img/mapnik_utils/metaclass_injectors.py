@@ -5,7 +5,8 @@ from projection import EasyProjection
 try:
     from mapnik import ProjTransform
 except:
-    pass
+    from compatibility import ProjTransform
+
 
 BoostPythonMetaclass = Coord.__class__
                 
