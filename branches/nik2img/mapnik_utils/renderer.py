@@ -87,7 +87,7 @@ class Render(object):
         Routine to render the requested Cairo format.
         """
         if not HAS_CAIRO:
-            sys.exit('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
+            raise ImportError('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
             context = [args[1], self.m.width, self.m.height]
             if args[2] in self.CAIRO_FILE_FORMATS:
@@ -107,7 +107,7 @@ class Render(object):
         to any image and file formats requested from Cairo.
         """
         if not HAS_CAIRO:
-            sys.exit('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
+            raise ImportError('PyCairo is not installed or available, therefore you cannot write to svg, pdf, ps, or cairo-rendered png')
         else:
             for k, v in self.CAIRO_FILE_FORMATS.iteritems():
                 path = '%s_%s.%s' % (basename,k,v)
@@ -140,13 +140,13 @@ class Render(object):
         dirname, basename = os.path.dirname(self.image),os.path.basename(self.image)
         if basename:
             if not True in [self.image.split('.')[-1].lower() == ext for ext in self.ALL_FORMATS]:
-                sys.exit("Unrecognized format (needs .ext) or directory (needs trailing /).")
+                raise AttributeError("Unrecognized format (needs .ext) or directory (needs trailing /).")
         else:
             basename_from_dir = dirname.split('/')[-1]
             if not basename_from_dir: 
                 basename_from_dir = 'nik2img_output'
             if dirname == '':
-                sys.exit("Must write to either file or directory")
+                raise IOError("Must write to either file or directory")
         if not os.path.exists(dirname) and dirname != '':
             try:
                 os.mkdir(dirname)
@@ -156,7 +156,7 @@ class Render(object):
             dirname = dirname + '/'
         if self.format == 'all':
             if basename:
-                sys.exit("Must write to a directory/ to produce all formats")
+                raise IOError("Must write to a directory/ to produce all formats")
             else:                    
                 self.call_agg(dirname + basename_from_dir)
                 if HAS_CAIRO:

@@ -66,7 +66,10 @@ class ComposeDebug(Compose):
 
     def build(self):
         self.debug_msg('Building map...')
-        super(ComposeDebug,self).build()
+        try:
+            super(ComposeDebug,self).build()
+        except Exception, E:
+            self.output_error(E)        
         self.debug_msg('SRS: %s' % self.map.srs)
         if self.map.proj_obj.srid:
             self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
@@ -94,8 +97,11 @@ class ComposeDebug(Compose):
     def render(self):
         if not self.map:
             self.debug_msg('Calling build from render...')
-        self.debug_msg('Rendering map...')            
-        super(ComposeDebug,self).render()
+        self.debug_msg('Rendering map to... %s' % self.image)            
+        try:
+            super(ComposeDebug,self).render()
+        except Exception, E:
+            self.output_error(E)
 
     def register_fonts(self):
         super(ComposeDebug,self).register_fonts()
@@ -108,7 +114,7 @@ class ComposeDebug(Compose):
         if E:
             sys.stderr.write(color_text(1, '// --> %s: \n\t %s\n' % (msg, E),self.no_color))
         else:
-            sys.stderr.write(color_text(1, '// --> %s: \n' % msg,self.no_color))
+            sys.stderr.write(color_text(1, '// --> %s \n' % msg,self.no_color))
         sys.exit(1)
 
     def msg(self, msg, warn=False, print_time=True):
@@ -209,16 +215,6 @@ def make_list(option, opt, value, parser):
 parser.add_option('-f', '--format', dest='format',
                   help='Format of image: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).')
 
-parser.add_option('-b','--bbox', dest='bbox',
-                  type='float', nargs=4,
-                  help='Geographical bounding box. Two long,lat pairs e.g. -126 24 -66 49 (United States)',
-                  action='store')
-
-parser.add_option('-e', '--projected-extent', dest='extent', nargs=4,
-                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
-                  type='float',
-                  action='store')
-                  
 parser.add_option('-c', '--center', dest='center', nargs=2,
                   help='Center coordinates. A long,lat pair e.g. -122.3 47.6 (Seattle)',
                   type='float',
@@ -227,6 +223,16 @@ parser.add_option('-c', '--center', dest='center', nargs=2,
 parser.add_option('-z', '--zoom', dest='zoom',
                   help='Zoom level',
                   type='int',
+                  action='store')
+
+parser.add_option('-b','--bbox', dest='bbox',
+                  type='float', nargs=4,
+                  help='Geographical bounding box. Two long,lat pairs e.g. -126 24 -66 49 (United States)',
+                  action='store')
+
+parser.add_option('-e', '--projected-extent', dest='extent', nargs=4,
+                  help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
+                  type='float',
                   action='store')
                   
 parser.add_option('-r', '--radius', dest='radius',

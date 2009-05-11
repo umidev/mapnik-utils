@@ -4,9 +4,8 @@ from projection import EasyProjection
 
 try:
     from mapnik import ProjTransform
-    HAS_TRANS = True
 except:
-    HAS_TRANS = False
+    pass
 
 BoostPythonMetaclass = Coord.__class__
                 
@@ -191,16 +190,16 @@ class _Layer(Layer,_injector):
                     rules.append(rule)
         return rules
 
-if HAS_TRANS:
-    class _Coord(Coord,_injector):
-        def transform(self,from_prj,to_prj):
-            trans = ProjTransform(from_prj,to_prj)
-            return trans.forward(self)
-    
-    class _Envelope(Envelope,_injector):
-        def transform(self,from_prj,to_prj):
-            trans = ProjTransform(from_prj,to_prj)
-            return trans.forward(self)
+
+class _Coord(Coord,_injector):
+    def transform(self,from_prj,to_prj):
+        trans = ProjTransform(from_prj,to_prj)
+        return trans.forward(self)
+
+class _Envelope(Envelope,_injector):
+    def transform(self,from_prj,to_prj):
+        trans = ProjTransform(from_prj,to_prj)
+        return trans.forward(self)
 
 if __name__ == '__main__':
     import doctest
