@@ -42,3 +42,6 @@ nik2img.py tests/pymap.py /tmp/map_frompy.png
 
 # load map from cascadenik mml
 nik2img.py tests/mapfile_wgs84.mml /tmp/from_css.png
+
+# render all possible image formats into a folder
+nik2img.py tests/mapfile_wgs84.xml /tmp/all_formats/ -f all

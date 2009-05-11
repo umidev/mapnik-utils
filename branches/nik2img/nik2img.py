@@ -268,7 +268,7 @@ parser.add_option('-n', '--dry-run', dest='dry_run',
 parser.add_option('-w','--world-file',
                   help="Georeference the image by providing a file extention for worldfile output ( ie 'wld')")
 
-parser.add_option('-x', '--xml', dest='save_map',
+parser.add_option('-x', '--xml', dest='save_xml',
                   help='Serialize the map to xml.')
 
 parser.add_option('-a', '--app', dest='app',

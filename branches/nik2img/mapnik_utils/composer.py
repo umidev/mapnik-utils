@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import sys
 import mapnik
@@ -41,7 +39,7 @@ class Compose(object):
         self.find_and_replace = None
         self.world_file = None
         self.fonts = []
-        self.save_map = None
+        self.save_xml = None
         self.app = None
         self.dry_run = False
         self.from_string = False
@@ -168,19 +166,19 @@ class Compose(object):
             else:
                 self.map.zoom_all()
                 self.msg('Zoom to extent of all layers: "%s"' % self.map.envelope())
+
+        if self.save_xml:
+            mapnik.save_map(self.map,self.save_xml)
+
  
     def render(self):
         if not self.map:
             self.build()
         
         if self.dry_run:
-            self.output_error("Dry run completed successfully...")
+            self.output_error("Dry run completed successfully...")            
 
-        renderer = Render(self.map,self.image,self.format) #render_times/loops
-        if self.world_file:
-            renderer.world_file = self.world_file
-        if self.save_map:
-            renderer.save_map = self.save_map
+        renderer = Render(self.map,self.image,self.format,self.world_file)
         if self.image:
             renderer.render_file()
         else:

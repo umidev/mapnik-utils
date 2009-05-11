@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import os
 import sys
 import mapnik
@@ -33,23 +31,31 @@ def binaryPrint(binary_data):
 
 
 class Render(object):
-    def __init__(self,m,image,format):
+    def __init__(self,m,image,format,world_file_ext=None):
         
         self.m = m
         self.image = image
-        self.format = format #kwargs.get('format','png')
-        self.re_render_times = 0 #kwargs.get('re_render_times',0)
-        self.world_file = None
-        self.save_map = None
+        self.format = format
+        self.world_file_ext = world_file_ext
         
         self.ALL_FORMATS = {}
         self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg'}
-        self.ALL_FORMATS.update(self.AGG_FORMATS)
         self.CAIRO_FILE_FORMATS = {'svg':'svg','pdf':'pdf','ps':'ps'}
-        self.ALL_FORMATS.update(self.CAIRO_FILE_FORMATS)
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
-        self.ALL_FORMATS.update(self.CAIRO_IMAGE_FORMATS)
+        self.setup_formats()
 
+    def setup_formats(self):
+        self.ALL_FORMATS.update(self.AGG_FORMATS)
+        self.ALL_FORMATS.update(self.CAIRO_FILE_FORMATS)
+        self.ALL_FORMATS.update(self.CAIRO_IMAGE_FORMATS)
+    
+    def write_wld(self,rendered_image):
+        basename = rendered_image.split('.')[0]
+        f_ptr = '%s.%s' % (basename, self.world_file_ext)
+        f = open(f_ptr, 'w')
+        f.write(self.m.to_wld())
+        f.close()
+        
     def stream(self): 
         """
         Routine to render the an image to a string
@@ -88,27 +94,14 @@ class Render(object):
                 surface = cairo_mapping[args[2]](*context)
             elif args[2] in self.CAIRO_IMAGE_FORMATS:
                 surface = cairo.ImageSurface(cairo_mapping[args[2]], *context[1:])
-            if self.re_render_times:
-                for n in range(1, int(self.re_render_times)):
-                    mapnik.render(args[0],surface)
-                    if args[2] in self.CAIRO_IMAGE_FORMATS:
-                        surface.write_to_png(args[1])
-                surface.finish()
-            else:
-                mapnik.render(args[0],surface)
-                if args[2] in self.CAIRO_IMAGE_FORMATS:
-                    surface.write_to_png(args[1])
-                surface.finish()
-            if self.world_file:
-                basename = args[1].split('.')[0]
-                f_ptr = '%s.%s' % (basename, self.world_file)
-                f = open(f_ptr, 'w')
-                f.write(self.m.to_wld())
-                f.close()
-            if self.save_map:
-                mapnik.save_map(self.m,self.save_map)
+            mapnik.render(args[0],surface)
+            if args[2] in self.CAIRO_IMAGE_FORMATS:
+                surface.write_to_png(args[1])
+            surface.finish()
+            if self.world_file_ext:
+                self.write_wld(args[1])
 
-    def call_CAIRO_FORMATS(self, basename):
+    def call_cairo(self, basename):
         """
         Abstraction wrapper to allow for the same call
         to any image and file formats requested from Cairo.
@@ -127,21 +120,11 @@ class Render(object):
         """
         Routine to render the requested AGG format.
         """
-        if self.re_render_times:
-            for n in range(1, int(self.re_render_times)):
-                mapnik.render_to_file(*args)
-        else:
-            mapnik.render_to_file(*args)
-        if self.world_file:
-            basename = args[1].split('.')[0]
-            f_ptr = '%s.%s' % (basename, self.world_file)
-            f = open(f_ptr, 'w')
-            f.write(self.m.to_wld())
-            f.close()
-        if self.save_map:
-            mapnik.save_map(self.m,self.save_map)
-
-    def call_AGG_FORMATS(self, basename):
+        mapnik.render_to_file(*args)
+        if self.world_file_ext:
+            self.write_wld(args[1])
+            
+    def call_agg(self, basename):
         """
         Abstraction wrapper to allow for calling 
         any requested AGG Formats.
@@ -175,9 +158,9 @@ class Render(object):
             if basename:
                 sys.exit("Must write to a directory/ to produce all formats")
             else:                    
-                self.call_AGG_FORMATS(dirname + basename_from_dir)
+                self.call_agg(dirname + basename_from_dir)
                 if HAS_CAIRO:
-                    self.call_CAIRO_FORMATS(dirname + basename_from_dir)
+                    self.call_cairo(dirname + basename_from_dir)
         else:
             if not basename:
                 self.local_render_wrapper(self.m, dirname + basename_from_dir + '.' + self.format.rstrip('256'), self.format)
