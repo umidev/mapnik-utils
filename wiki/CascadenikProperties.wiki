@@ -1,3 +1,4 @@
+#labels Featured
 Dictionary of properties and values accepted by [http://code.google.com/p/mapnik-utils/wiki/Cascadenik Cascadenik].
 
 = Types =
