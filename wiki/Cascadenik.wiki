@@ -1,3 +1,4 @@
+#labels Featured
 Cascadenik implements cascading stylesheets for Mapnik.
 
 It's an abstraction layer and preprocessor that converts special, CSS-like syntax into Mapnik-compatible style definitions. It's easier to write complex style rules using the alternative syntax, because it allows for separation of symbolizers and provides a mechanism for inheritance.
