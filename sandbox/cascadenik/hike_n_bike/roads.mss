@@ -20,7 +20,7 @@
 .road.inline[zoom>=16][bridge=true],
 .road.inline[zoom>=16][bridge=yes]
 {
-    outline-width: 2;
+    outline-width: 1;
 }
 
 /*
