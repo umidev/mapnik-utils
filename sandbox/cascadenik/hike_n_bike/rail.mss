@@ -1,5 +1,15 @@
 /* -*- mode: css -*- */
 
+/* -------------------------------------------------- */
+/* normal rail */
+.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=yes],
+.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=true],
+.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=1]
+{
+/* the dark casing when it's a bridge */
+    line-color: #121212;
+    line-width: 10;
+}
 .rail.outline[zoom=17]
 {
 /* the two tracks */
@@ -21,6 +31,14 @@
 }
 
 
+.rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=yes],
+.rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=true],
+.rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=1]
+{
+/* the dark casing when it's a bridge */
+    line-color: #121212;
+    line-width: 9;
+}
 .rail.outline[zoom=16]
 {
 /* the two tracks */
@@ -41,6 +59,22 @@
     line-dasharray: 1, 5;
 }
 
+
+.rail.centerline[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 1;
+}
+
+.rail.line[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 6;
+    line-dasharray: 1, 6;
+}
+
+
+/* -------------------------------------------------- */
 /* trams */
 .rail.centerline[zoom=15][railway=tram]
 {
@@ -95,88 +129,8 @@
     line-dasharray: 1, 5;
 }
 
-
-
-
-.rail.centerline[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{
-    line-color: #808080;
-    line-width: 1;
-}
-
-.rail.line[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{
-    line-color: #808080;
-    line-width: 6;
-    line-dasharray: 1, 6;
-}
-
-.rail.line[zoom>=14][bridge=yes],
-.rail.line[zoom>=14][bridge=true]
-{
-    line-color: #e4f7f2;
-    line-width: 6;
-/*     line-dasharray: 3, 4; */
-    outline-color: #808080;
-    outline-width: 1;
-}
-
-
-/*
-.rail.centerline[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{
-    line-color: #808080;
-    line-width: 1;
-}
-*/
-/*
-.rail.line[zoom>=12][zoom<=13][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
-{
-    line-color: #808080;
-    line-width: 4;
-    line-dasharray: 1, 4;
-}
-*/
-/* .rail.line[zoom>=14][zoom<=15][bridge=yes], */
-/* .rail.line[zoom>=14][zoom<=15][bridge=true] */
-/* { */
-/*     line-color: #00dd00; */
-/*     line-width: 8; */
-/*     line-dasharray: 3, 4; */
-/* } */
-/* .rail.line[zoom=16][bridge=yes], */
-/* .rail.line[zoom=16][bridge=true] */
-/* { */
-/*     line-color: #e4f7f2; */
-/*     line-width: 13; */
-/*     line-dasharray: 1, 5; */
-/* } */
-/* .rail.line[zoom>=17][bridge=yes], */
-/* .rail.line[zoom>=17][bridge=true] */
-/* { */
-/*     line-color: #e4f7f2; */
-/*     line-width: 16; */
-/*     line-dasharray: 1, 7; */
-/* } */
-
-/*
-.rail.centerline[zoom>=15][railway=tram],
-.rail.centerline[zoom>=15][railway=narrow_gauge],
-.rail.centerline[zoom>=15][railway=monorail]
-{
-    line-color: #808080;
-    line-width: 1;
-}
-.rail.line[zoom>=15][railway=tram],
-.rail.line[zoom>=15][railway=narrow_gauge],
-.rail.line[zoom>=15][railway=monorail]
-{
-    line-color: #808080;
-    line-width: 4;
-    line-dasharray: 1, 4;
-}
-*/
-
+/* -------------------------------------------------- */
+/* transit */
 .transit.point[zoom>=13] name
 {
     text-face-name: "DejaVu Sans Book";
