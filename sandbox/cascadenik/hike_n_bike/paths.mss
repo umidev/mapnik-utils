@@ -293,7 +293,7 @@
     text-placement: line;
     text-dy: 5;
     text-halo-radius: 1;
-    text-halo-fill: #fff;
+    text-halo-fill: #fcfcfc;
     text-max-char-angle-delta: 20;
     text-min-distance: 50;
     text-spacing: 400;
@@ -307,7 +307,7 @@
     text-placement: line;
     text-dy: 7;
     text-halo-radius: 1;
-    text-halo-fill: #fff;
+    text-halo-fill: #fcfcfc;
     text-max-char-angle-delta: 20;
     text-min-distance: 50;
     text-spacing: 400;

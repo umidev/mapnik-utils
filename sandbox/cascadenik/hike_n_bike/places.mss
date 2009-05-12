@@ -27,13 +27,16 @@
 .place[zoom=16] name { text-size: 12; }
 
 .place[place=locality][zoom>=13][zoom<=13] name { text-size: 7; }
-.place[place=locality][zoom>=14][zoom<=16] name { text-size: 9; }
+.place[place=locality][zoom>=14][zoom<=16] name { text-size: 8; }
 
 .place[place=hamlet][zoom>=12][zoom<=13] name { text-size: 8; }
 .place[place=hamlet][zoom>=14][zoom<=16] name { text-size: 10; }
 
 .place[place=village][zoom>=12][zoom<=13] name { text-size: 10; }
 .place[place=village][zoom>=14][zoom<=16] name { text-size: 12; }
+
+.place[place=suburb][zoom>=12][zoom<=13] name { text-size: 10; }
+.place[place=suburb][zoom>=14][zoom<=16] name { text-size: 12; }
 
 .place[place=town][zoom>=9][zoom<=12] name { text-size: 10; }
 .place[place=town][zoom>=13][zoom<=14] name { text-size: 12; }

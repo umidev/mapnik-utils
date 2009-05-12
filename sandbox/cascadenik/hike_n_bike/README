@@ -1,3 +1,47 @@
+rm -rf /home/colin/mapnik/tiles/* && nice -n 20 ./generate_tiles_colin.py
+
+http://wiki.openstreetmap.org/index.php/Osmosis
+http://gweb.bretth.com/osmosis-latest.tar.gz
+http://www.bretth.com/osmosis/
+
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+  --read-xml europe.osm.bz2 \
+  --bounding-box left=12.8 right=15.3 bottom=50.65 top=51.5 \
+  --write-xml elbsandsteingebirge.osm.gz
+
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+  --read-xml europe.osm.bz2 \
+  --bounding-box left=10.0 right=16.0 bottom=50.0 top=52.0 \
+  --write-xml thueringen_sachsen.osm.gz
+
+http://planet.openstreetmap.org/daily/
+
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+     --read-xml-change file="20090226-20090227.osc.gz" \
+     --read-xml file="elbsandsteingebirge.osm.gz" \
+     --apply-change \
+     --write-xml file="elbsandsteingebirge2.osm.gz"
+
+
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+     --read-change-interval workingDirectory=/opt/applications/tilesathome/utils/export/osm2pgsql \
+     --write-xml-change /dev/stdout | /opt/applications/tilesathome/utils/export/osm2pgsql/osm2pgsql --slim -a /dev/stdin 
+
+update planet_osm_point set importance=0 where importance is null;
+update planet_osm_line set importance=0 where importance is null;
+update planet_osm_polygon set importance=0 where importance is null;
+
+
+
+python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/style.mml  > /home/colin/mapnik/osm_teczno_customized.xml 
+
+
+sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/replacements.sed /home/colin/mapnik/osm_teczno_customized.xml | sponge /home/colin/mapnik/osm_teczno_customized.xml
+
+
+http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
+
+
 
 
 st_setsrid(st_makebox2d(st_makepoint(12.8,50.65),st_makepoint(15.3,51.5)),4326);
@@ -42,41 +86,6 @@ ALTER TABLE planet_osm_polygon_diff RENAME TO planet_osm_polygon;
 ALTER TABLE planet_osm_line_diff RENAME TO planet_osm_line;
 ALTER TABLE planet_osm_point_diff RENAME TO planet_osm_point;
 
-
-http://wiki.openstreetmap.org/index.php/Osmosis
-http://gweb.bretth.com/osmosis-latest.tar.gz
-
-java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
-  --read-xml europe.osm.bz2 \
-  --bounding-box left=12.8 right=15.3 bottom=50.65 top=51.5 \
-  --write-xml elbsandsteingebirge.osm.gz
-
-http://planet.openstreetmap.org/daily/
-
-java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
-     --read-xml-change file="20090226-20090227.osc.gz" \
-     --read-xml file="elbsandsteingebirge.osm.gz" \
-     --apply-change \
-     --write-xml file="elbsandsteingebirge2.osm.gz"
-
-
-java -Xmx1048m -jar /opt/applications/tilesathome/utils/osmosis/osmosis-0.30/osmosis.jar \
-     --read-change-interval workingDirectory=/opt/applications/tilesathome/utils/export/osm2pgsql \
-     --write-xml-change /dev/stdout | /opt/applications/tilesathome/utils/export/osm2pgsql/osm2pgsql --slim -a /dev/stdin 
-
-update planet_osm_point set importance=0 where importance is null;
-update planet_osm_line set importance=0 where importance is null;
-update planet_osm_polygon set importance=0 where importance is null;
-
-
-
-python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/style.mml  > /home/colin/mapnik/osm_teczno_customized.xml 
-
-
-sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/replacements.sed /home/colin/mapnik/osm_teczno_customized.xml | sponge /home/colin/mapnik/osm_teczno_customized.xml
-
-
-http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
 
 
 inkscape -z -w 3 -h 3 --export-area-canvas --export-png=red_stripe.3.png red_stripe.svg
@@ -135,10 +144,141 @@ inkscape -z -w 8 -h 8 --export-area-canvas --export-png=blue_dot.8.png blue_dot.
 
 
 
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=red_triangle.4.png red_triangle.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=green_triangle.4.png green_triangle.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=yellow_triangle.4.png yellow_triangle.svg
+inkscape -z -w 4 -h 4 --export-area-canvas --export-png=blue_triangle.4.png blue_triangle.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=red_triangle.5.png red_triangle.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_triangle.5.png green_triangle.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=yellow_triangle.5.png yellow_triangle.svg
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=blue_triangle.5.png blue_triangle.svg
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=red_triangle.6.png red_triangle.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_triangle.6.png green_triangle.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=yellow_triangle.6.png yellow_triangle.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=blue_triangle.6.png blue_triangle.svg
+
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=red_triangle.8.png red_triangle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_triangle.8.png green_triangle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=yellow_triangle.8.png yellow_triangle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=blue_triangle.8.png blue_triangle.svg
+
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=red_triangle.10.png red_triangle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=green_triangle.10.png green_triangle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=yellow_triangle.10.png yellow_triangle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=blue_triangle.10.png blue_triangle.svg
+
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=red_triangle.12.png red_triangle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=green_triangle.12.png green_triangle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=yellow_triangle.12.png yellow_triangle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=blue_triangle.12.png blue_triangle.svg
+
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=red_triangle.14.png red_triangle.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=green_triangle.14.png green_triangle.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=yellow_triangle.14.png yellow_triangle.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=blue_triangle.14.png blue_triangle.svg
+
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=red_triangle.16.png red_triangle.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=green_triangle.16.png green_triangle.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=yellow_triangle.16.png yellow_triangle.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=blue_triangle.16.png blue_triangle.svg
+
+
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_backslash.5.png green_backslash.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_backslash.6.png green_backslash.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_backslash.8.png green_backslash.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=green_backslash.10.png green_backslash.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=green_backslash.12.png green_backslash.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=green_backslash.14.png green_backslash.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=green_backslash.16.png green_backslash.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_slash.5.png green_slash.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_slash.6.png green_slash.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_slash.8.png green_slash.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=green_slash.10.png green_slash.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=green_slash.12.png green_slash.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=green_slash.14.png green_slash.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=green_slash.16.png green_slash.svg
+
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=green_pipe.5.png green_pipe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_pipe.6.png green_pipe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_pipe.8.png green_pipe.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=green_pipe.10.png green_pipe.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=green_pipe.12.png green_pipe.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=green_pipe.14.png green_pipe.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=green_pipe.16.png green_pipe.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=yellow_pipe.5.png yellow_pipe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=yellow_pipe.6.png yellow_pipe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=yellow_pipe.8.png yellow_pipe.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=yellow_pipe.10.png yellow_pipe.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=yellow_pipe.12.png yellow_pipe.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=yellow_pipe.14.png yellow_pipe.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=yellow_pipe.16.png yellow_pipe.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=red_pipe.5.png red_pipe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=red_pipe.6.png red_pipe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=red_pipe.8.png red_pipe.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=red_pipe.10.png red_pipe.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=red_pipe.12.png red_pipe.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=red_pipe.14.png red_pipe.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=red_pipe.16.png red_pipe.svg
+
+inkscape -z -w 5 -h 5 --export-area-canvas --export-png=blue_pipe.5.png blue_pipe.svg
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=blue_pipe.6.png blue_pipe.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=blue_pipe.8.png blue_pipe.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=blue_pipe.10.png blue_pipe.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=blue_pipe.12.png blue_pipe.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=blue_pipe.14.png blue_pipe.svg
+inkscape -z -w 16 -h 16 --export-area-canvas --export-png=blue_pipe.16.png blue_pipe.svg
+
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=black_triangle_right_circle.6.png black_triangle_right_circle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=black_triangle_right_circle.8.png black_triangle_right_circle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=black_triangle_right_circle.10.png black_triangle_right_circle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=black_triangle_right_circle.12.png black_triangle_right_circle.svg
+
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=black_triangle_right_circle2.6.png black_triangle_right_circle2.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=black_triangle_right_circle2.8.png black_triangle_right_circle2.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=black_triangle_right_circle2.10.png black_triangle_right_circle2.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=black_triangle_right_circle2.12.png black_triangle_right_circle2.svg
+
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=green_triangle_right_circle.6.png green_triangle_right_circle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=green_triangle_right_circle.8.png green_triangle_right_circle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=green_triangle_right_circle.10.png green_triangle_right_circle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=green_triangle_right_circle.12.png green_triangle_right_circle.svg
+
+inkscape -z -w 6 -h 6 --export-area-canvas --export-png=black_X_circle.6.png black_X_circle.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=black_X_circle.8.png black_X_circle.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=black_X_circle.10.png black_X_circle.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=black_X_circle.12.png black_X_circle.svg
 
 
 
 inkscape -z -w 8 -h 8 --export-area-canvas --export-png=Wegzeichen_Alte8.8.png  Wegzeichen_Alte8.svg
+
+
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=Wegzeichen_Zirkel.8.png  Wegzeichen_Zirkel.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=Wegzeichen_Kreuz-R.8.png  Wegzeichen_Kreuz-R.svg
+inkscape -z -w 8 -h 8 --export-area-canvas --export-png=Wegzeichen_Kuhschwanz.8.png  Wegzeichen_Kuhschwanz.svg
+
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=Wegzeichen_Zirkel.10.png  Wegzeichen_Zirkel.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=Wegzeichen_Kreuz-R.10.png  Wegzeichen_Kreuz-R.svg
+inkscape -z -w 10 -h 10 --export-area-canvas --export-png=Wegzeichen_Kuhschwanz.10.png  Wegzeichen_Kuhschwanz.svg
+
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=Wegzeichen_Zirkel.12.png  Wegzeichen_Zirkel.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=Wegzeichen_Kreuz-R.12.png  Wegzeichen_Kreuz-R.svg
+inkscape -z -w 12 -h 12 --export-area-canvas --export-png=Wegzeichen_Kuhschwanz.12.png  Wegzeichen_Kuhschwanz.svg
+
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=Wegzeichen_Zirkel.14.png  Wegzeichen_Zirkel.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=Wegzeichen_Kreuz-R.14.png  Wegzeichen_Kreuz-R.svg
+inkscape -z -w 14 -h 14 --export-area-canvas --export-png=Wegzeichen_Kuhschwanz.14.png  Wegzeichen_Kuhschwanz.svg
+
 
 
 

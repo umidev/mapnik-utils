@@ -39,9 +39,7 @@
     text-size: 8;
     text-placement: line;
     text-fill: #e4ae80;
-/*     text-halo-fill: #11111180; */
-/*     text-halo-fill: #111111,; */
-    text-halo-fill: #fefefe; /* 20% alpha is a good value */
+    text-halo-fill: #fefefe;
     text-halo-radius: 2;
     text-max-char-angle-delta: 20;
     text-min-distance: 50;

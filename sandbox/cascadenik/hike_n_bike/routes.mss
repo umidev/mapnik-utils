@@ -5,7 +5,7 @@
 {
     shield-face-name: "DejaVu Sans Book";
     shield-size: 0;
-    shield-fill: #070;
+    shield-fill: #777;
 }
 
 
@@ -620,33 +620,63 @@
 
 
 
-.path[name="Kletterzustieg"]
+.path[name="Kletterzustieg"] name
 {
     shield-face-name: "DejaVu Sans Book";
     shield-size: 0;
-    shield-fill: #070;
+    shield-fill: #777;
 }
 
-.path[name="Kletterzustieg"][zoom>=12] name
-{
-    shield-file: url('img/black_triangle_right_circle2.8.png');
-    shield-min-distance: 31;
-    shield-spacing: 31;
-}
-.path[name="Kletterzustieg"][zoom>=14] name
+/* .path[name="Kletterzustieg"][zoom>=12], */
+/* .path[path=climbing_access][zoom>=12] */
+/* { */
+/*     shield-file: url('img/black_triangle_right_circle2.8.png'); */
+/*     shield-min-distance: 31; */
+/*     shield-spacing: 31; */
+/* } */
+.path[name="Kletterzustieg"][zoom>=14],
+.path[path=climbing_access][zoom>=14]
 {
     shield-file: url('img/black_triangle_right_circle2.8.png');
     shield-min-distance: 41;
     shield-spacing: 41;
 }
-.path[name="Kletterzustieg"][zoom>=15] name
+.path[name="Kletterzustieg"][zoom>=15],
+.path[path=climbing_access][zoom>=15]
 {
     shield-file: url('img/black_triangle_right_circle2.10.png');
     shield-min-distance: 61;
     shield-spacing: 61;
 }
 
+
+
+.path[path=mountain_path] name
+{
+    shield-face-name: "DejaVu Sans Book";
+    shield-size: 0;
+    shield-fill: #777;
+}
+
+/* .path[path=mountain_path][zoom>=12] */
+/* { */
+/*     shield-file: url('img/green_triangle_right_circle.8.png'); */
+/*     shield-min-distance: 31; */
+/*     shield-spacing: 31; */
+/* } */
+.path[path=mountain_path][zoom>=14]
+{
+    shield-file: url('img/green_triangle_right_circle.8.png');
+    shield-min-distance: 41;
+    shield-spacing: 41;
+}
+.path[path=mountain_path][zoom>=15]
+{
+    shield-file: url('img/green_triangle_right_circle.10.png');
+    shield-min-distance: 61;
+    shield-spacing: 61;
+}
+
 /*
 gesperrt: black_X_circle.10.png
-Bergpfad: green_triangle_right_circle.10.png
 */

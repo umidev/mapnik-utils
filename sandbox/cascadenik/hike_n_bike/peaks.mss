@@ -387,7 +387,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=16][importance>0] ele
 {
-    text-dy: 12;
+    text-dy: 30;
     text-face-name: "DejaVu Sans Oblique";
     text-fill: #333333;
     text-size: 7;

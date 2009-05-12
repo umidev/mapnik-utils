@@ -27,7 +27,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -40,7 +40,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -54,7 +54,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 
 }
@@ -68,7 +68,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -82,7 +82,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 
 }
@@ -96,7 +96,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -110,7 +110,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -123,7 +123,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -139,7 +139,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -154,7 +154,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -168,7 +168,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -182,7 +182,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -195,7 +195,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -209,7 +209,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -223,7 +223,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -236,7 +236,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -250,7 +250,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -263,7 +263,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -277,12 +277,12 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
 
-.poi_tourism.point[tourism=picnic_area][zoom>=13] name
+.poi_tourism.point[tourism=picnic_site][zoom>=13] name
 {
     point-file: url('map-icons/svg-twotone-png/tourist_picnic.p.12.png');
     text-fill: #734a08;
@@ -291,11 +291,11 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
-.poi_tourism.point[tourism=picnic_area][zoom>=15] name
+.poi_tourism.point[tourism=picnic_site][zoom>=15] name
 {
     point-file: url('map-icons/svg-twotone-png/tourist_picnic.p.16.png');
     text-fill: #734a08;
@@ -304,7 +304,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -318,7 +318,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -331,7 +331,35 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
+/*
+.poi.point[amenity=rescue_box][zoom>=14] name
+{
+    point-file: url('map-icons/svg-twotone-png/health_hospital_emergency.p.10.png');
+    text-fill: #da0092;
+    text-dy: 13;
+    text-face-name: "DejaVu Sans Book";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 500;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+}
+*/
+.poi.point[amenity=rescue_box][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/health_hospital_emergency.p.12.png');
+    text-fill: #da0092;
+    text-dy: 17;
+    text-face-name: "DejaVu Sans Book";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 500; /* basically never */
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -345,7 +373,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -358,7 +386,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -372,7 +400,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -385,7 +413,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -399,7 +427,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -412,7 +440,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -426,7 +454,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -439,7 +467,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -453,7 +481,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -466,7 +494,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -480,7 +508,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -493,7 +521,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -507,7 +535,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -520,7 +548,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -544,7 +572,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -557,7 +585,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -576,7 +604,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -590,7 +618,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -604,7 +632,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -617,7 +645,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -626,10 +654,10 @@
 {
     text-fill: #cf9700;
     text-face-name: "DejaVu Sans Oblique";
-    text-size: 7;
+    text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
@@ -644,7 +672,7 @@
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
 
@@ -657,7 +685,7 @@
     text-size: 10;
     text-placement: point;
     text-wrap-width: 500; /* basically never */
-    text-halo-fill: #fefefe;
+    text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }

@@ -280,14 +280,14 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *,
                     (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
-                          WHEN highway IN ('trunk', 'primary') THEN 1
-                          WHEN highway = 'secondary' THEN 2
+                          WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1
+                          WHEN highway IN ('secondary', 'secondary_link') THEN 2
                           WHEN highway = 'tertiary' THEN 3
                           ELSE 4 END) AS priority,
-                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                        (CASE WHEN highway IN ('secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link') THEN 'major'
                               ELSE 'minor' END) AS prominence
                  FROM planet_osm_line
-                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
                  ORDER BY z_order ASC, priority DESC)
 
                  AS minor_roads]]></Parameter>
@@ -317,14 +317,14 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *,
                     (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
-                          WHEN highway IN ('trunk', 'primary') THEN 1
-                          WHEN highway = 'secondary' THEN 2
+                          WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1
+                          WHEN highway IN ('secondary', 'secondary_link') THEN 2
                           WHEN highway = 'tertiary' THEN 3
                           ELSE 4 END) AS priority,
-                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                        (CASE WHEN highway IN ('secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link') THEN 'major'
                               ELSE 'minor' END) AS prominence
                  FROM planet_osm_line
-                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
                  ORDER BY z_order ASC, priority DESC)
                  AS minor_roads]]></Parameter>
         </Datasource>
@@ -350,14 +350,14 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *,
                         (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
-                              WHEN highway IN ('trunk', 'primary') THEN 1
-                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1
+                              WHEN highway IN ('secondary', 'secondary_link') THEN 2
                               WHEN highway = 'tertiary' THEN 3
                               ELSE 4 END) AS priority,
-                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                        (CASE WHEN highway IN ('secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link') THEN 'major'
                               ELSE 'minor' END) AS prominence
                  FROM planet_osm_line
-                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
                  ORDER BY z_order ASC, priority DESC)
 
                  AS minor_roads]]></Parameter>
@@ -373,14 +373,14 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *,
                         (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
-                              WHEN highway IN ('trunk', 'primary') THEN 1
-                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1
+                              WHEN highway IN ('secondary', 'secondary_link') THEN 2
                               WHEN highway = 'tertiary' THEN 3
                               ELSE 4 END) AS priority,
-                        (CASE WHEN highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link') THEN 'major'
+                        (CASE WHEN highway IN ('secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link') THEN 'major'
                               ELSE 'minor' END) AS prominence
                  FROM planet_osm_line
-                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
                  ORDER BY z_order ASC, priority DESC)
 
                  AS minor_roads]]></Parameter>
@@ -397,7 +397,7 @@ zoom level  - scale denominator
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
                 (SELECT * FROM planet_osm_line
-	             WHERE highway IN ('motorway', 'trunk'))
+	             WHERE highway IN ('motorway', 'trunk', 'trunk_link'))
                      AS motorways]]></Parameter>
         </Datasource>
     </Layer>
@@ -410,7 +410,7 @@ zoom level  - scale denominator
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
 	        (SELECT * FROM planet_osm_line
-	             WHERE highway IN ('motorway', 'trunk'))
+	             WHERE highway IN ('motorway', 'trunk', 'trunk_link'))
 	             AS motorways]]></Parameter>
         </Datasource>
     </Layer>
@@ -541,7 +541,7 @@ zoom level  - scale denominator
                           WHEN place = 'town' THEN 1
                           WHEN place = 'village' THEN 2
                           ELSE 3 END) AS priority FROM planet_osm_point
-                     WHERE place IN ('city', 'town', 'village', 'hamlet', 'locality')
+                     WHERE place IN ('city', 'town', 'village', 'suburb', 'hamlet', 'locality')
                      ORDER BY priority ASC, correct_z_order DESC) AS places]]></Parameter>
         </Datasource>
     </Layer>
@@ -555,7 +555,7 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_line
-                     WHERE route='hiking' OR route='foot')
+                     WHERE route IN ('hiking', 'foot'))
                         AS route]]></Parameter>
         </Datasource>
     </Layer>
@@ -569,7 +569,7 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_line
-                     WHERE route='hiking' OR route='foot')
+                     WHERE route IN ('hiking', 'foot'))
                         AS route]]></Parameter>
         </Datasource>
     </Layer>
@@ -664,7 +664,7 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_point
-                     WHERE tourism IN ('viewpoint', 'information', 'picnic_area', 'summit_cross', 'camp_site', 'alpine_hut')
+                     WHERE tourism IN ('viewpoint', 'information', 'picnic_site', 'summit_cross', 'camp_site', 'alpine_hut')
                      OR man_made IN ('tower'))
                         AS poi_tourism]]></Parameter>
         </Datasource>
@@ -735,7 +735,7 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_point
-                     WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost')
+                     WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost', 'rescue_box')
                         OR amenity IN ('restaurant', 'fast_food', 'pub', 'drinking_water'))
                         AS poi]]></Parameter>
         </Datasource>
@@ -800,12 +800,12 @@ zoom level  - scale denominator
                     (CASE WHEN CHAR_LENGTH(ref) BETWEEN 2 AND 9 THEN ref
                      ELSE NULL END) AS ref_content,
                         (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
-                              WHEN highway IN ('trunk', 'primary') THEN 1
-                              WHEN highway = 'secondary' THEN 2
+                              WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1
+                              WHEN highway IN ('secondary', 'secondary_link') THEN 2
                               WHEN highway = 'tertiary' THEN 3
                               ELSE 4 END) AS priority
                      FROM planet_osm_line
-                     WHERE highway IN ('secondary', 'trunk', 'primary', 'motorway', 'motorway_link')
+                     WHERE highway IN ('secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
                      ORDER BY priority ASC, z_order ASC, length DESC) AS major_roads]]></Parameter>
         </Datasource>
     </Layer>
@@ -875,7 +875,7 @@ zoom level  - scale denominator
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
-            <Parameter name="table">(SELECT *, length(way) AS length, (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0 WHEN highway IN ('trunk', 'primary') THEN 1 WHEN highway = 'secondary' THEN 2 WHEN highway = 'tertiary' THEN 3 ELSE 4 END) AS priority FROM planet_osm_line WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary') ORDER BY priority ASC, z_order ASC, length DESC) AS minor_roads</Parameter>
+            <Parameter name="table">(SELECT *, length(way) AS length, (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0 WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1 WHEN highway IN ('secondary', 'secondary_link') THEN 2 WHEN highway = 'tertiary' THEN 3 ELSE 4 END) AS priority FROM planet_osm_line WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary') ORDER BY priority ASC, z_order ASC, length DESC) AS minor_roads</Parameter>
         </Datasource>
     </Layer>
     <Layer class="path label" srs="&osm_srs;">

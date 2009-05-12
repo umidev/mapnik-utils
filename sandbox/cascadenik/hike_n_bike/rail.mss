@@ -1,18 +1,18 @@
 /* -*- mode: css -*- */
 
-.rail.outline[zoom=17][tunnel!=yes][tunnel!=true]
+.rail.outline[zoom=17]
 {
 /* the two tracks */
     line-color: #808080;
     line-width: 8;
 }
-.rail.centerline[zoom=17][tunnel!=yes][tunnel!=true]
+.rail.centerline[zoom=17]
 {
 /* the white centerline dividing the tracks */
     line-color: #ddd;
     line-width: 6;
 }
-.rail.line[zoom=17][tunnel!=yes][tunnel!=true]
+.rail.line[zoom=17]
 {
 /* the wooden... things */
     line-color: #808080;
@@ -21,19 +21,19 @@
 }
 
 
-.rail.outline[zoom=16][tunnel!=yes][tunnel!=true]
+.rail.outline[zoom=16]
 {
 /* the two tracks */
     line-color: #808080;
     line-width: 6;
 }
-.rail.centerline[zoom=16][tunnel!=yes][tunnel!=true]
+.rail.centerline[zoom=16]
 {
 /* the white centerline dividing the tracks */
     line-color: #ddd;
     line-width: 4;
 }
-.rail.line[zoom=16][tunnel!=yes][tunnel!=true]
+.rail.line[zoom=16]
 {
 /* the wooden... things */
     line-color: #808080;
@@ -41,29 +41,83 @@
     line-dasharray: 1, 5;
 }
 
-
-
-.rail.centerline[zoom>=14][zoom<=15][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+/* trams */
+.rail.centerline[zoom=15][railway=tram]
 {
     line-color: #808080;
     line-width: 1;
 }
 
-.rail.line[zoom>=14][zoom<=15][tunnel!=yes][tunnel!=true][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+.rail.line[zoom=15][railway=tram]
+{
+    line-color: #808080;
+    line-width: 3;
+    line-dasharray: 1, 4;
+}
+
+.rail.outline[zoom=16][railway=tram]
+{
+/* the two tracks */
+    line-color: #808080;
+    line-width: 4;
+}
+.rail.centerline[zoom=16][railway=tram]
+{
+/* the white centerline dividing the tracks */
+    line-color: #ddd;
+    line-width: 2;
+}
+.rail.line[zoom=16][railway=tram]
+{
+/* the wooden... things */
+    line-color: #808080;
+    line-width: 6;
+    line-dasharray: 1, 5;
+}
+
+.rail.outline[zoom>16][railway=tram]
+{
+/* the two tracks */
+    line-color: #808080;
+    line-width: 4;
+}
+.rail.centerline[zoom>16][railway=tram]
+{
+/* the white centerline dividing the tracks */
+    line-color: #ddd;
+    line-width: 2;
+}
+.rail.line[zoom>16][railway=tram]
+{
+/* the wooden... things */
+    line-color: #808080;
+    line-width: 6;
+    line-dasharray: 1, 5;
+}
+
+
+
+
+.rail.centerline[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 1;
+}
+
+.rail.line[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
 {
     line-color: #808080;
     line-width: 6;
     line-dasharray: 1, 6;
 }
 
-.rail.line[zoom>=14][tunnel!=yes][tunnel!=true][bridge=yes],
-.rail.line[zoom>=14][tunnel!=yes][tunnel!=true][bridge=true]
+.rail.line[zoom>=14][bridge=yes],
+.rail.line[zoom>=14][bridge=true]
 {
-/*     line-color: #e4f7f2; */
-    line-color: #00dd00;
+    line-color: #e4f7f2;
     line-width: 6;
 /*     line-dasharray: 3, 4; */
-    outline-color: #8080ff;
+    outline-color: #808080;
     outline-width: 1;
 }
 
