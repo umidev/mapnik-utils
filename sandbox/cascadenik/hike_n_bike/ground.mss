@@ -478,10 +478,10 @@
     point-file: url('img/icons/12x12/symbol/emergency/amenity=hospital.png');
 }
 
-.building.label[zoom>=17][amenity=parking],
-.citylike.label[zoom>=17][amenity=parking]
+.building.label[zoom>=15][amenity=parking],
+.citylike.label[zoom>=15][amenity=parking]
 {
-    point-file: url('img/icons/16x16/panel/transport/amenity=parking.png');
+    point-file: url('map-icons/svg-twotone-png/transport_parking.n.12.png');
 }
 
 .building.label[zoom>=16][size=large] name,

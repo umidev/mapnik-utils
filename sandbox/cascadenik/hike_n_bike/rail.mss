@@ -30,7 +30,6 @@
     line-dasharray: 1, 7;
 }
 
-
 .rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=yes],
 .rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=true],
 .rail.bridge[zoom=16][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=1]
@@ -73,6 +72,30 @@
     line-dasharray: 1, 6;
 }
 
+
+/* ------------------------- */
+/* tunnels */
+.rail.outline[zoom=17][tunnel=yes]
+{
+/* the two tracks are dashed now */
+    line-dasharray: 2, 2;
+}
+.rail.centerline[zoom=17]
+{
+/* the white centerline dividing the tracks is brighter */
+    line-color: #eee;
+}
+
+.rail.outline[zoom=16][tunnel=yes]
+{
+/* the two tracks are dashed now */
+    line-dasharray: 2, 2;
+}
+.rail.centerline[zoom=16]
+{
+/* the white centerline dividing the tracks is brighter */
+    line-color: #eee;
+}
 
 /* -------------------------------------------------- */
 /* trams */

@@ -328,7 +328,15 @@
 
 .road.outline[highway=pedestrian]
 {
-    line-color: #333;
+    line-color: #555;
+}
+
+.road.area[highway=pedestrian]
+{
+    polygon-fill: #ddd;
+    line-color: #555;
+    line-width: 1;
+    line-opacity: 0.25;
 }
 
 .road.inline[highway=tertiary]

@@ -270,6 +270,21 @@ zoom level  - scale denominator
     </Layer>
 
 
+    <Layer class="road area" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_polygon
+                 WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary', 'secondary', 'secondary_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
+                 ORDER BY z_order ASC)
+                 AS road_area]]></Parameter>
+        </Datasource>
+    </Layer>
+
     <Layer class="road texture" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -415,6 +430,19 @@ zoom level  - scale denominator
         </Datasource>
     </Layer>
 
+    <Layer class="rail bridge" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+	             WHERE railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail', 'narrow_gauge')
+                     ORDER BY z_order ASC) AS railways]]></Parameter>
+        </Datasource>
+    </Layer>
     <Layer class="rail outline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
