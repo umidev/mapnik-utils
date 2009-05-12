@@ -20,7 +20,7 @@
 .road.inline[zoom>=16][bridge=true],
 .road.inline[zoom>=16][bridge=yes]
 {
-    outline-width: 1;
+    outline-width: 2;
 }
 
 /*
@@ -405,8 +405,10 @@
 */
 
 /* all repeated from above but applicable to bridges specifically */
-.road.inline { outline-color: #d2d2d2; }
+/* .road.inline { outline-color: #d2d2d2; } */
+.road.inline { outline-color: #121212; }
 
+/*
 .road.inline[highway=tertiary] { outline-color: #c3c3c3; }
 
 .road.inline[highway=secondary] { outline-color: #b5b880; }
@@ -424,7 +426,7 @@
 .road.inline[highway=motorway] { outline-color: #03317d; }
 
 .road.inline[zoom>=16][highway=motorway] { outline-color: #6c7dd5; }
-
+*/
 
 
 .road.texture[zoom>=7][zoom<=11]
