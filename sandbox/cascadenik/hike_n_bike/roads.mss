@@ -177,7 +177,7 @@
 .road.centerline[zoom>=17][lanes=3],
 .road.centerline[zoom>=17][lanes=4]
 {
-    line-width: 17;
+    line-width: 1;
     line-color: #888;
     line-dasharray: 2, 10;
 }
