@@ -187,19 +187,6 @@ zoom level  - scale denominator
         </Datasource>
     </Layer>
 
-    <Layer class="water line" srs="&osm_srs;">
-        <Datasource>
-            <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
-            <Parameter name="dbname">&dbname;</Parameter>
-            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
-            <Parameter name="extent">&extent;</Parameter>
-            <Parameter name="table"><![CDATA[
-	        (SELECT * FROM planet_osm_line
-                     WHERE waterway IN ('river', 'stream', 'canal', 'drain')
-                     ORDER BY z_order ASC) AS rivers]]></Parameter>
-        </Datasource>
-    </Layer>
     <Layer class="water area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -213,6 +200,19 @@ zoom level  - scale denominator
                         OR "natural" IN ('lake', 'water', 'land')
                         OR waterway IN ('canal', 'riverbank', 'river')
                      ORDER BY z_order ASC) AS water]]></Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="water line" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * FROM planet_osm_line
+                     WHERE waterway IN ('river', 'stream', 'canal', 'drain')
+                     ORDER BY z_order ASC) AS rivers]]></Parameter>
         </Datasource>
     </Layer>
     <Layer class="water ferry" srs="&osm_srs;">

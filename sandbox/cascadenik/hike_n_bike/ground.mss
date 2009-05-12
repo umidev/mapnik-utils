@@ -27,8 +27,17 @@
     line-join: round;
 }
 
-.water.line
+.water.line name
 {
+    text-face-name: "DejaVu Sans Book";
+    text-placement: line;
+/*     text-size: 9; */
+    text-fill: #7396bb;
+    text-halo-fill: #e7f6fd;
+    text-halo-radius: 1;
+    text-max-char-angle-delta: 20;
+    text-min-distance: 30;
+    text-spacing: 300;
     line-color: #cae5fb;
     line-join: round;
 }
@@ -43,23 +52,23 @@
 /*     outline-join: round; */
 }
 
-.water.line[zoom>=11][zoom<=12] { line-width: 2; }
-.water.line[zoom>=11][zoom<=12][waterway=stream] { line-width: 1; }
+.water.line[zoom>=11][zoom<=12] { line-width: 2; text-size: 7; }
+.water.line[zoom>=11][zoom<=12][waterway=stream] { line-width: 1; text-size: 0; }
 
-.water.line[zoom=13] { line-width: 3; }
-.water.line[zoom=13][waterway=stream] { line-width: 1.5; }
+.water.line[zoom=13] { line-width: 3; text-size: 8; }
+.water.line[zoom=13][waterway=stream] { line-width: 1.5; text-size: 0; }
 
-.water.line[zoom=14] { line-width: 5; }
-.water.line[zoom=14][waterway=stream] { line-width: 2; }
+.water.line[zoom=14] { line-width: 5; text-size: 9; }
+.water.line[zoom=14][waterway=stream] { line-width: 2; text-size: 0; }
 
-.water.line[zoom=15] { line-width: 6; }
-.water.line[zoom=15][waterway=stream] { line-width: 2.5; }
+.water.line[zoom=15] { line-width: 6; text-size: 10; }
+.water.line[zoom=15][waterway=stream] { line-width: 2.5;  text-size: 7; }
 
-.water.line[zoom=16] { line-width: 7; }
-.water.line[zoom=16][waterway=stream] { line-width: 3; }
+.water.line[zoom=16] { line-width: 7; text-size: 11; }
+.water.line[zoom=16][waterway=stream] { line-width: 3;  text-size: 8; }
 
-.water.line[zoom>=17] { line-width: 9; }
-.water.line[zoom>=17][waterway=stream] { line-width: 5; }
+.water.line[zoom>=17] { line-width: 9; text-size: 12; }
+.water.line[zoom>=17][waterway=stream] { line-width: 5;  text-size: 9; }
 
 .water.ferry[zoom>=11]
 {
