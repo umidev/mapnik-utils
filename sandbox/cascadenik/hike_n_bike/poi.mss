@@ -26,7 +26,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -39,7 +39,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -53,7 +53,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 
@@ -67,7 +67,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -81,7 +81,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 
@@ -95,7 +95,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -109,7 +109,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -122,7 +122,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -138,7 +138,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -153,7 +153,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -167,7 +167,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -181,7 +181,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -194,7 +194,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -208,7 +208,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -222,7 +222,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -235,7 +235,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -249,7 +249,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -262,7 +262,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -276,7 +276,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -290,7 +290,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -303,7 +303,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -317,7 +317,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -330,7 +330,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -358,7 +358,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -372,7 +372,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -385,7 +385,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -399,7 +399,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -412,7 +412,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -426,7 +426,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -439,7 +439,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -453,7 +453,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -466,7 +466,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -571,7 +571,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -584,7 +584,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -603,7 +603,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -617,7 +617,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -631,7 +631,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -644,7 +644,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -656,7 +656,7 @@
     text-face-name: "DejaVu Sans Oblique";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
@@ -671,7 +671,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 8;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
@@ -684,7 +684,7 @@
     text-face-name: "DejaVu Sans Book";
     text-size: 10;
     text-placement: point;
-    text-wrap-width: 500; /* basically never */
+    text-wrap-width: 77;
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
     point-allow-overlap: true;
