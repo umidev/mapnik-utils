@@ -75,7 +75,7 @@ class ComposeDebug(Compose):
             self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
         self.debug_msg('Map envelope: %s' % self.map.envelope())
         self.debug_msg('Map center: %s' % self.map.envelope().center())
-        self.debug_msg('Map scale denonminator: %s' % self.map.scale_denominator())
+        self.debug_msg('Map scale denominator: %s' % self.map.scale_denominator())
         if self.layers:
             self.debug_msg('Active layers: %s' % self.map.active_layers())
         if self.map.layers_bounds():
