@@ -1,0 +1,12 @@
+http://wiki.openstreetmap.org/wiki/Mapnik/PostGIS
+
+createdb -E UTF8 -O colin legend
+createlang plpgsql legend
+psql -d legend -f /usr/share/postgresql-8.3-postgis/lwpostgis.sql
+psql -f /usr/share/postgresql/8.3/contrib/_int.sql legend
+echo "ALTER TABLE geometry_columns OWNER TO colin; ALTER TABLE spatial_ref_sys OWNER TO colin;"  | psql -d legend
+cd /opt/applications/tilesathome/utils/export/osm2pgsql/ && ./osm2pgsql --slim -d legend /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/legend.osm
+
+
+
+nik2img.py -v --bbox=13.9100 51.0543 13.9104 51.0546 /home/colin/mapnik/legend.xml > /home/colin/mapnik/tiles_legend/legend.png
