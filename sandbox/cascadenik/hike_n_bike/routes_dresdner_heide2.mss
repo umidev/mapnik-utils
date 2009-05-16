@@ -8,14 +8,14 @@ http://commons.wikimedia.org/wiki/Category:Footpath_signs_in_Dresdner_Heide
 */
 
 
-.route.hiking_heide_a_h name,
-.route.hiking_heide_k_n name,
-.route.hiking_heide_o_s name,
-.route.hiking_heide_t_z name
+.route.hiking_heide_a_h empty,
+.route.hiking_heide_k_n empty,
+.route.hiking_heide_o_s empty,
+.route.hiking_heide_t_z empty
 {
     shield-face-name: "DejaVu Sans Book";
     shield-size: 0;
-    shield-fill: #070;
+    shield-fill: #777;
 }
 
 .route.hiking_heide_a_h[zoom>=12],

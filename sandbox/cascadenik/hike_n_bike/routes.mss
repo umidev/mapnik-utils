@@ -1,7 +1,7 @@
 @charset "UTF-8"; /* -*- mode: css; coding: utf-8 -*- */
 
-.route.hiking name,
-.route.hiking_small name
+.route.hiking empty,
+.route.hiking_small empty
 {
     shield-face-name: "DejaVu Sans Book";
     shield-size: 0;

@@ -581,10 +581,17 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
+                     FROM planet_osm_line
+                     WHERE route IN ('hiking', 'foot'))
+                        AS route]]></Parameter>
+<!--            <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_line
                      WHERE route IN ('hiking', 'foot'))
                         AS route]]></Parameter>
+-->
         </Datasource>
     </Layer>
     <Layer class="route hiking_small" srs="&osm_srs;">
@@ -595,7 +602,8 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT *
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
                      FROM planet_osm_line
                      WHERE route IN ('hiking', 'foot'))
                         AS route]]></Parameter>
@@ -609,7 +617,8 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT *
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
                      FROM planet_osm_line
                      WHERE route='hiking')
                         AS route]]></Parameter>
@@ -623,7 +632,9 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT * FROM planet_osm_line
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
+                     FROM planet_osm_line
                      WHERE route='hiking')
 	                AS route]]></Parameter>
         </Datasource>
@@ -636,7 +647,9 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT * FROM planet_osm_line
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
+                     FROM planet_osm_line
                      WHERE route='hiking')
 	                AS route]]></Parameter>
         </Datasource>
@@ -649,7 +662,9 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT * FROM planet_osm_line
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
+                     FROM planet_osm_line
                      WHERE route='hiking')
 	                AS route]]></Parameter>
         </Datasource>
@@ -662,7 +677,9 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT * FROM planet_osm_line
+                (SELECT *, 
+                     CASE WHEN route IS NOT null THEN ' ' END AS empty 
+                     FROM planet_osm_line
                      WHERE route='hiking')
 	                AS route]]></Parameter>
         </Datasource>
