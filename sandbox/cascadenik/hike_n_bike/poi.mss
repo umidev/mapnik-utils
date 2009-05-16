@@ -128,9 +128,7 @@
     point-allow-overlap: true;
 }
 
-/* .poi.point[tourism=information][information=guidepost][zoom>=15] name, */
-.poi.point[amenity=guidepost][zoom>=15] name,
-.poi.point[amenity=signpost][zoom>=15] name
+.poi_tourism.point[tourism=information][information=guidepost][zoom>=15] name
 {
     point-file: url('map-icons/svg-twotone-png/tourist_guidepost.p.16.png');
     text-fill: #734a08;
@@ -144,8 +142,7 @@
     point-allow-overlap: true;
 }
 
-/* .poi_tourism.point[tourism=information][information!=guidepost][zoom>=13] name */
-.poi_tourism.point[tourism=information][zoom>=13] name
+.poi_tourism.point[tourism=information][information!=guidepost][zoom>=13] name
 {
     point-file: url('map-icons/svg-twotone-png/amenity_information.p.12.png');
     text-fill: #734a08;
@@ -158,8 +155,7 @@
     text-halo-radius: 1;
 }
 
-/* .poi_tourism.point[tourism=information][information!=guidepost][zoom>=15] name */
-.poi_tourism.point[tourism=information][zoom>=15] name
+.poi_tourism.point[tourism=information][information!=guidepost][zoom>=15] name
 {
     point-file: url('map-icons/svg-twotone-png/amenity_information.p.16.png');
     text-fill: #734a08;
@@ -499,7 +495,7 @@
     point-allow-overlap: true;
 }
 
-.poi.point[amenity=parking][zoom>=13][fee=yes] name
+.poi.point[amenity=parking][zoom>=13][fee!=no] name
 {
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.8.png');
     text-fill: #0092da;
@@ -512,7 +508,7 @@
     text-halo-radius: 1;
 }
 
-.poi.point[amenity=parking][zoom>=15][fee=yes] name
+.poi.point[amenity=parking][zoom>=15][fee!=no] name
 {
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.12.png');
     text-fill: #0092da;

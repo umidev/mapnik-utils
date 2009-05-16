@@ -39,7 +39,7 @@ zoom level  - scale denominator
 ]>
 <Map srs="&map_srs;">
     <Stylesheet>
-        Map { map-bgcolor: #eeeeee; }
+        Map { map-bgcolor: #ffffff; }
     </Stylesheet>
     <Stylesheet src="ground.mss"/>
 <!--     <Stylesheet src="contours.mss"/> -->

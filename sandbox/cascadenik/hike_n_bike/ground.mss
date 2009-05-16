@@ -183,8 +183,8 @@
     polygon-opacity: 0.99;
 }
 
-.cliff.line[natural=cliff][zoom>=14],
-.cliff.area[natural=cliff][zoom>=14]
+.cliff.line[natural=cliff][zoom>=14] name,
+.cliff.area[natural=cliff][zoom>=14] name
 {
     line-pattern-file: url('icons-mapnik/cliff2.png');
 }

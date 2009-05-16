@@ -2,27 +2,27 @@
 
 /* -------------------------------------------------- */
 /* normal rail */
-.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=yes],
-.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=true],
-.rail.bridge[zoom=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=1]
+.rail.bridge[zoom>=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=yes],
+.rail.bridge[zoom>=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=true],
+.rail.bridge[zoom>=17][railway!=tram][railway!=narrow_gauge][railway!=monorail][bridge=1]
 {
 /* the dark casing when it's a bridge */
     line-color: #121212;
     line-width: 10;
 }
-.rail.outline[zoom=17]
+.rail.outline[zoom>=17]
 {
 /* the two tracks */
     line-color: #808080;
     line-width: 8;
 }
-.rail.centerline[zoom=17]
+.rail.centerline[zoom>=17]
 {
 /* the white centerline dividing the tracks */
     line-color: #ddd;
     line-width: 6;
 }
-.rail.line[zoom=17]
+.rail.line[zoom>=17]
 {
 /* the wooden... things */
     line-color: #808080;
@@ -75,12 +75,12 @@
 
 /* ------------------------- */
 /* tunnels */
-.rail.outline[zoom=17][tunnel=yes]
+.rail.outline[zoom>=17][tunnel=yes]
 {
 /* the two tracks are dashed now */
     line-dasharray: 2, 2;
 }
-.rail.centerline[zoom=17]
+.rail.centerline[zoom>=17]
 {
 /* the white centerline dividing the tracks is brighter */
     line-color: #eee;
