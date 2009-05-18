@@ -495,7 +495,7 @@
     point-allow-overlap: true;
 }
 
-.poi.point[amenity=parking][zoom>=13][fee!=no] name
+.poi.point[amenity=parking][zoom>=13][fee=yes] name
 {
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.8.png');
     text-fill: #0092da;
@@ -508,7 +508,7 @@
     text-halo-radius: 1;
 }
 
-.poi.point[amenity=parking][zoom>=15][fee!=no] name
+.poi.point[amenity=parking][zoom>=15][fee=yes] name
 {
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.12.png');
     text-fill: #0092da;
