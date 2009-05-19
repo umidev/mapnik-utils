@@ -3,7 +3,7 @@
 
 A command line utility to take a cascadenik mml or mapnik xml file as input and output an image.
 
-===<font color="red">Note: Version 0.2.3 was used in the Where 2.0 demo, so download that for the exact interface for http://mapsfromscratch.com</font> ===
+===<font color="red">Note: Version 0.2.4 was used in the Where 2.0 demo, so download that for the exact interface for http://mapsfromscratch.com</font> ===
 
 {{{
 svn co http://mapnik-utils.googlecode.com/svn/tags/nik2img/0.2.4/ nik2img2_4
