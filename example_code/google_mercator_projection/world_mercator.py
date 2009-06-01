@@ -12,14 +12,7 @@ m.srs = spherical_mercator
 
 # Set a bbox by reprojection Long/Lat coordinates
 p = Projection(spherical_mercator)
-lower_left_xy = p.forward(Coord(-180.0, -45.0))
-upper_right_xy = p.forward(Coord(180.0, 80.0))
-bbox = Envelope(lower_left_xy,upper_right_xy)
+merc = p.forward(Envelope(-180.0,-45.0,180.0,80.0))
 
-# Or you can set a bbox by reprojecting a Long/Lat envelope
-# wgs84_bbox = Envelope(-180.0,-60.0,180.0, 60.0)
-# alt_bbox = forward_(wgs84_bbox, p)
-# print alt_bbox
-
-m.zoom_to_box(bbox)
+m.zoom_to_box(merc)
 render_to_file(m, map_output)
