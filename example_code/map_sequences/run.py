@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-'''
-REQUIRES Mapnik trunk post r1124
-'''
-
 import os
 import mapnik
 
@@ -28,12 +24,12 @@ for feature in queryset:
     name = str(feature.attributes['NAME'])
     print 'Matched %s...' % name
     feature_filter = mapnik.Filter("[NAME] = '%s'" % name)
+    # selected/highlighted style
     s,r = mapnik.Style(),mapnik.Rule()
     r.symbols.append(mapnik.LineSymbolizer(mapnik.Color('darkorange'),3))
     r.symbols.append(mapnik.LineSymbolizer(mapnik.Color('yellow'),2))
     t = mapnik.TextSymbolizer('NAME', 'DejaVu Sans Book', 30, mapnik.Color('rgba(0,0,0,.8)') )
     t.avoid_edges = True
-    #t.allow_overlap = False
     t.halo_fill = mapnik.Color('rgba(255,255,255,.2)')
     t.halo_radius = 2
     r.symbols.append(t)
@@ -43,8 +39,8 @@ for feature in queryset:
     m.append_style('selected',s)
     im = mapnik.Image(m.width,m.height)
     mapnik.render(m, im)
-    file = 'maps/' + name + '.png'
+    file = name + '.png'
     print 'Rendering %s...' % file
     im.save(file)
 
-os.system('open maps/*.png')
+os.system('open *.png')
