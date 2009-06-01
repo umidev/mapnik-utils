@@ -1,4 +1,5 @@
 import re
+import sys
 import mapnik
 import urllib
 import socket
@@ -15,21 +16,22 @@ class EasyProjection(mapnik.Projection):
         try:
             mapnik.Projection.__init__(self,self.proj)
         except RuntimeError, E:
+            proj = None
             if self.method == 'epsg srid':
                 sys.stderr.write('SRS not found locally checking http://spatialreference.org...\n')
                 sr_org = 'http://spatialreference.org/ref'
                 srs_types = ['epsg','esri','sr-org','iau2000']
                 for provider in srs_types:
-                    url = '%s/%s/%s/' % (sr_org,provider, self.srs)       
+                    url = '%s/%s/%s/' % (sr_org,provider, self.srs)      
                     sys.stderr.write('Checking... %s\n' % url)
                     proj = self.get_from_sr_org(url)
                     if proj:
-                        continue
+                        break
             if proj:
                 self.srid = self.srs
                 mapnik.Projection.__init__(self,proj)
             else:
-                raise RuntimeError('Sorry, that projection was not found: %s' % E)
+                raise RuntimeError('Sorry, that projection was not found.\nMapnik error: "%s"' % E)
     
     @property
     def proj_obj(self):
@@ -41,6 +43,8 @@ class EasyProjection(mapnik.Projection):
         resp = urllib.urlopen(url).read()
         if len(resp) > 1000:
             return None
+        else:
+            sys.stderr.write('Found... %s\n' % url)
         return resp
             
     def get_proj(self,srs):
@@ -70,4 +74,4 @@ class EasyProjection(mapnik.Projection):
             else:
                 return 'epsg srid','+init=%s' % srs
         else:
-            raise RuntimeError('failed to initialize EasyProjection with: %s' % srs)
+            raise RuntimeError('Invalid value for initializing Projection: %s\n Accepts epsg code, proj4 string, or spatialreference.org url...' % srs)
