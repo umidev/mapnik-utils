@@ -16,19 +16,20 @@ class EasyProjection(mapnik.Projection):
             mapnik.Projection.__init__(self,self.proj)
         except RuntimeError, E:
             if self.method == 'epsg srid':
+                sys.stderr.write('SRS not found locally checking http://spatialreference.org...\n')
                 sr_org = 'http://spatialreference.org/ref'
                 srs_types = ['epsg','esri','sr-org','iau2000']
                 for provider in srs_types:
                     url = '%s/%s/%s/' % (sr_org,provider, self.srs)       
-                    print url
+                    sys.stderr.write('Checking... %s\n' % url)
                     proj = self.get_from_sr_org(url)
                     if proj:
                         continue
-                if proj:
-                    self.srid = self.srs
-                    mapnik.Projection.__init__(self,proj)
-                else:
-                    raise RuntimeError('Sorry, that projection was not found:' + E)
+            if proj:
+                self.srid = self.srs
+                mapnik.Projection.__init__(self,proj)
+            else:
+                raise RuntimeError('Sorry, that projection was not found: %s' % E)
     
     @property
     def proj_obj(self):

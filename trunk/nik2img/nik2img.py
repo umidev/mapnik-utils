@@ -82,7 +82,10 @@ class ComposeDebug(Compose):
             self.debug_msg('Bounds of all layers: %s' % self.map.layers_bounds())
         if self.verbose:
             lyrs = self.map.intersecting_layers()
-            self.debug_msg("Layers intersecting map: [%s]" % ', '.join([l.name for l in lyrs]))
+            if not len(lyrs):
+                self.debug_msg("No layers intersecting map!",warn=True)
+            else:
+                self.debug_msg("Layers intersecting map: [%s]" % ', '.join([l.name for l in lyrs]))
             self.debug_msg("At current scale of '%s'..." % self.map.scale(),print_time=False)
             for lyr in lyrs:
                 if not l.visible(self.map.scale()):
