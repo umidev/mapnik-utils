@@ -73,13 +73,17 @@ class ComposeDebug(Compose):
         self.debug_msg('SRS: %s' % self.map.srs)
         if self.map.proj_obj.srid:
             self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
-        self.debug_msg('Map envelope: %s' % self.map.envelope())
+        self.debug_msg('Map extent: %s' % self.map.envelope())
+        self.debug_msg('Map long/lat bbox: %s' % self.map.lon_lat_bbox())
         self.debug_msg('Map center: %s' % self.map.envelope().center())
+        self.debug_msg('Map long/lat center: %s' % self.map.lon_lat_bbox().center())
         self.debug_msg('Map scale denominator: %s' % self.map.scale_denominator())
         if self.layers:
             self.debug_msg('Active layers: %s' % self.map.active_layers())
         if self.map.layers_bounds():
-            self.debug_msg('Bounds of all layers: %s' % self.map.layers_bounds())
+            self.debug_msg('Extent of all layers: %s' % self.map.layers_bounds())
+            self.debug_msg('Long/lat extent of all layers: %s' % self.map.lon_lat_layers_bounds())
+            self.debug_msg('Long/lat center of all layers: %s' % self.map.lon_lat_layers_bounds().center())
         if self.verbose:
             lyrs = self.map.intersecting_layers()
             if not len(lyrs):

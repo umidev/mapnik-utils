@@ -28,6 +28,9 @@ class _Map(Map,_injector):
     def proj_obj(self):
         return EasyProjection(self.srs)
 
+    def lon_lat_bbox(self):
+        return self.envelope().transform(self.proj_obj,EasyProjection(4326))
+
     def find_layer(self,name):
         lyr = [l for l in self.layers if l.name.lower() == name.lower()]
         if not lyr:
@@ -45,6 +48,9 @@ class _Map(Map,_injector):
         layer_box = layer.envelope()
         box = layer_box.transform(layer.proj_obj,self.proj_obj)
         self.zoom_to_box(box)
+
+    def lon_lat_layers_bounds(self):
+        return self.layers_bounds().transform(self.proj_obj,EasyProjection(4326))
 
     def layers_bounds(self):
         new_box = None
