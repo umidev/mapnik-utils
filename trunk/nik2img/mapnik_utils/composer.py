@@ -49,14 +49,12 @@ class Compose(object):
         self.map = None
         self.rendered = False
         self.verbose = False
-        if self.verbose:
-            self.msg = self.verbose_msg
-        else:
-            self.msg = self.quiet
               
         if kwargs:
             self.handle_options(kwargs)
 
+        if not self.verbose:
+            self.msg = self.quiet
         self.prepare()
         self.setup()
         self.build()
@@ -81,7 +79,7 @@ class Compose(object):
             msg += E
         raise sys.exit(msg)
 
-    def verbose_msg(self, msg):
+    def msg(self, msg):
         sys.stderr.write('%s\n' % msg)
 
     def quiet(self, msg):
@@ -154,13 +152,13 @@ class Compose(object):
                 self.msg('Zooming to custom projected extent: "%s"' % env)
                 self.map.zoom_to_box(env)
                 from_prj = mapnik.Projection(self.map.srs)
-                to_prj = mapnik.Projection('+init=epsg:4326')
+                to_prj = mapnik.Projection('+proj=latlong +datum=WGS84')
                 bbox = env.transform(from_prj,to_prj)
                 self.msg('Custom extent in geographic coordinates: "%s"' % bbox)
             elif self.bbox:
                 env = mapnik.Envelope(*self.bbox)
                 self.msg('Zooming to custom geographic extent: "%s"' % env)
-                from_prj = mapnik.Projection('+init=epsg:4326')
+                from_prj = mapnik.Projection('+proj=latlong +datum=WGS84')
                 to_prj = mapnik.Projection(self.map.srs)
                 self.map.zoom_to_box(env.transform(from_prj,to_prj))
             else:
