@@ -5,11 +5,13 @@ import sys
 from mapnik.ogcserver.wsgi import WSGIApp
 
 import os
-WORKING_DIR = os.path.dirname(__file__)
+WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
 # add to the PYTHONPATH the folder that contains map_factory.py (and ogcserver.conf)
 sys.path.append(WORKING_DIR)
 #sys.path.append('/Users/spring/projects/mapnik-dev/trunk/bindings/python/')
-application = WSGIApp(WORKING_DIR + '/ogcserver.conf')
+configpath = os.path.join(WORKING_DIR,'ogcserver.conf')
+
+application = WSGIApp(configpath)
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server
