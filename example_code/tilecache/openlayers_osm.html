@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Mapnik OSM and TileCache</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    html, body { height: 100%; }
+    body {margin: 0px;}
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+<!--<script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>-->
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+<script type="text/javascript">
+        var map;
+        
+        function init() {
+            
+            var options = { 
+                maxResolution: 156543.0339,
+                units: 'm',
+                projection: new OpenLayers.Projection("EPSG:900913"),
+                maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34)
+                };
+            
+            map = new OpenLayers.Map("map", options);
+            
+            
+            /*              
+            Works with a tilecache.cfg layer entry like:
+            
+            [osm]
+            type=Mapnik
+            mapfile=/full/path/to/osm.xml
+            spherical_mercator=true
+            
+            **Your OSM data in postgis must be in EPSG 900913 or Spherical Mercator**
+            
+            Edit the below parameters to fit your setup:
+            
+            */
+
+            
+            
+            // default url of tilecache_http_server.py
+            var server_url = "http://localhost:8080/";
+            
+            // Must match tilecache config layername
+            var layer_name = "osm";
+            
+            var image_type = "png";
+            // force regeneration even if cache is hit
+            //var image_type = "png?FORCE=1";
+            
+            
+            var tms = new OpenLayers.Layer.TMS("TileCache Mapnik Layer",server_url,
+                { serviceVersion: "1.0.0", layername: layer_name,  type: image_type });
+
+            var official_tiles = new OpenLayers.Layer.OSM("Mapnik from OSM");
+            
+            map.addLayers([tms,official_tiles]);
+            map.addControl(new OpenLayers.Control.Scale('scale'));
+            map.addControl(new OpenLayers.Control.Permalink('permalink'));
+            map.addControl(new OpenLayers.Control.MousePosition());
+            map.addControl(new OpenLayers.Control.Navigation()); 
+            map.addControl(new OpenLayers.Control.PanZoom());
+            var ls = new OpenLayers.Control.LayerSwitcher()
+            map.addControl(ls);
+            ls.maximizeControl();
+            map.zoomToMaxExtent();
+            }
+    </script>
+  </head>
+  <body onload="init()">
+     <h2 style="position:absolute; z-index:10000; left: 100px;">Mapnik OSM and TileCache</h2>
+     <h5 style="position:absolute; z-index:10000; bottom: 5px; left: 10px;">More info: <a href="http://mapnik-utils.googlecode.com">Mapnik-utils</a></h5>
+    <div id="map">
+    </div>
+  </body>
+</html>
