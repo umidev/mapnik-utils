@@ -685,3 +685,87 @@
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
+
+
+.poi_point.point[military=bunker][zoom>=13] name
+{
+    point-file: url('map-icons/svg-twotone-png/military_bunker.n.14.png');
+    text-fill: #ac39ac;
+    text-dy: 13;
+    text-face-name: "Droid Sans Regular";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+}
+
+.poi_point.point[military=bunker][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/military_bunker.n.16.png');
+    text-fill: #ac39ac;
+    text-dy: 17;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
+
+.poi_point.point[amenity=hunting_stand][zoom>=13] name
+{
+    point-file: url('map-icons/svg-twotone-png/poi_hunting_stand.n.14.png');
+    text-fill: #ac39ac;
+    text-dy: 13;
+    text-face-name: "Droid Sans Regular";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+}
+
+.poi_point.point[amenity=hunting_stand][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/poi_hunting_stand.n.16.png');
+    text-fill: #ac39ac;
+    text-dy: 17;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
+
+.poi_point.point[man_made=mast][zoom>=13] name
+{
+    point-file: url('map-icons/svg-twotone-png/poi_tower_communications.n.14.png');
+    text-fill: #ac39ac;
+    text-dy: 13;
+    text-face-name: "Droid Sans Regular";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+}
+
+.poi_point.point[man_made=mast][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/poi_tower_communications.n.16.png');
+    text-fill: #ac39ac;
+    text-dy: 17;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}

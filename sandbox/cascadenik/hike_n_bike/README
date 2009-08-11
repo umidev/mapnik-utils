@@ -11,7 +11,7 @@ JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.
 
 JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
   --read-xml europe.osm.bz2 \
-  --bounding-box left=10.0 right=16.0 bottom=50.0 top=52.0 \
+  --bounding-box left=9.95 right=16.0 bottom=50.0 top=52.0 \
   --write-xml thueringen_sachsen.osm.gz
 
 cd /opt/applications/tilesathome/utils/export/osm2pgsql && ./osm2pgsql --slim -d gis thueringen_sachsen.osm.gz

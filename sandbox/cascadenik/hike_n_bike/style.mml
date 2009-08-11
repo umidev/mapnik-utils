@@ -780,7 +780,9 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_point
-                     WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost', 'rescue_box')
+                     WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost', 'rescue_box', 'hunting_stand')
+                        OR man_made IN ('mast')
+                        OR military IN ('bunker')
                         OR amenity IN ('restaurant', 'fast_food', 'pub', 'drinking_water'))
                         AS poi]]></Parameter>
         </Datasource>
