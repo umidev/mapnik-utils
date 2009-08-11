@@ -1,7 +1,3 @@
-s/xxxae/ä/g
-s/xxxoe/ö/g
-s/xxxue/ü/g
-s/xxxss/ß/g
 s/osmc_/osmc:/g
 s/\[admin_level\] = 1/\[admin_level\] = '1'/g
 s/\[admin_level\] = 2/\[admin_level\] = '2'/g

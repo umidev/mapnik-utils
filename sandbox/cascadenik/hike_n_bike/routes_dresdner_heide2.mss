@@ -60,14 +60,14 @@ Kreuz 4
 .route.hiking_heide_a_h[name="Dresdner Heide, Brille"][zoom>=14]                    { shield-file: url('img/symbols/dresdner_heide/brille.16.png'); }
 .route.hiking_heide_a_h[name="Dresdner Heide, Diebsteig"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/diebsteig.16.png'); }
 .route.hiking_heide_a_h[name="Dresdner Heide, Doppel-E"][zoom>=14]                  { shield-file: url('img/symbols/dresdner_heide/doppel-e.16.png'); }
-.route.hiking_heide_a_h[name="Dresdner Heide, Flxxxuegelweg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/fluegelweg.16.png'); }
+.route.hiking_heide_a_h[name="Dresdner Heide, Flügelweg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/fluegelweg.16.png'); }
 .route.hiking_heide_a_h[name="Dresdner Heide, Gabel"][zoom>=14]                     { shield-file: url('img/symbols/dresdner_heide/gabel.16.png'); }
-.route.hiking_heide_a_h[name="Dresdner Heide, Gxxxaensefuxxxss"][zoom>=14]                  { shield-file: url('img/symbols/dresdner_heide/gaensefuss.16.png'); }
+.route.hiking_heide_a_h[name="Dresdner Heide, Gänsefuß"][zoom>=14]                  { shield-file: url('img/symbols/dresdner_heide/gaensefuss.16.png'); }
 .route.hiking_heide_a_h[name="Dresdner Heide, HG-Weg"][zoom>=14]                    { shield-file: url('img/symbols/dresdner_heide/hg-weg.16.png'); }
 .route.hiking_heide_a_h[name="Dresdner Heide, Hakenweg"][zoom>=14]                  { shield-file: url('img/symbols/dresdner_heide/hakenweg.16.png'); }
-.route.hiking_heide_a_h[name="Dresdner Heide, Hirschstxxxaengel"][zoom>=14]             { shield-file: url('img/symbols/dresdner_heide/hirschstaengel.16.png'); }
-.route.hiking_heide_a_h[name="Dresdner Heide, Hxxxaemmerchen"][zoom>=14]                { shield-file: url('img/symbols/dresdner_heide/haemmerchen.16.png'); }
-.route.hiking_heide_a_h[name="Dresdner Heide, Hxxxuetchen"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/huetchen.16.png'); }
+.route.hiking_heide_a_h[name="Dresdner Heide, Hirschstängel"][zoom>=14]             { shield-file: url('img/symbols/dresdner_heide/hirschstaengel.16.png'); }
+.route.hiking_heide_a_h[name="Dresdner Heide, Hämmerchen"][zoom>=14]                { shield-file: url('img/symbols/dresdner_heide/haemmerchen.16.png'); }
+.route.hiking_heide_a_h[name="Dresdner Heide, Hütchen"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/huetchen.16.png'); }
 
 .route.hiking_heide_k_n[name="Dresdner Heide, Kannenhenkel"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/kannenhenkel.16.png'); }
 .route.hiking_heide_k_n[name="Dresdner Heide, Kreuz 5"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/kreuz_5.16.png'); }
@@ -75,19 +75,19 @@ Kreuz 4
 .route.hiking_heide_k_n[name="Dresdner Heide, Kreuz 7"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/kreuz_7.16.png'); }
 .route.hiking_heide_k_n[name="Dresdner Heide, Krumme Neun"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/krumme_9.16.png'); }
 .route.hiking_heide_k_n[name="Dresdner Heide, Krumme 9"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/krumme_9.16.png'); }
-.route.hiking_heide_k_n[name="Dresdner Heide, Mehlfluxxxssweg"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/mehlflussweg.16.png'); }
+.route.hiking_heide_k_n[name="Dresdner Heide, Mehlflußweg"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/mehlflussweg.16.png'); }
 .route.hiking_heide_k_n[name="Dresdner Heide, Mittelweg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/mittelweg.16.png'); }
-.route.hiking_heide_k_n[name="Dresdner Heide, Mxxxuehlweg"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/muehlweg.16.png'); }
+.route.hiking_heide_k_n[name="Dresdner Heide, Mühlweg"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/muehlweg.16.png'); }
 
-.route.hiking_heide_k_n[name="Dresdner Heide, Nachtflxxxuegel"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/nachtfluegel.16.png'); }
-.route.hiking_heide_k_n[name="Dresdner Heide, Neuer Flxxxuegel"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/neuer_fluegel.16.png'); }
+.route.hiking_heide_k_n[name="Dresdner Heide, Nachtflügel"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/nachtfluegel.16.png'); }
+.route.hiking_heide_k_n[name="Dresdner Heide, Neuer Flügel"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/neuer_fluegel.16.png'); }
 .route.hiking_heide_k_n[name="Dresdner Heide, Neuer Weg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/neuer_weg.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Ochsensteig"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/ochsensteig.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Pillnitz-Moritzburger-Weg"][zoom>=14] { shield-file: url('img/symbols/dresdner_heide/pillnitz-moritzburger_weg.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Reichsapfel"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/reichsapfel.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Rennsteig"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/rennsteig.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Runde 4"][zoom>=14]                   { shield-file: url('img/symbols/dresdner_heide/runde_4.16.png'); }
-.route.hiking_heide_o_s[name="Dresdner Heide, Sandbrxxxueckenweg"][zoom>=14]            { shield-file: url('img/symbols/dresdner_heide/sandbrueckenweg.16.png'); }
+.route.hiking_heide_o_s[name="Dresdner Heide, Sandbrückenweg"][zoom>=14]            { shield-file: url('img/symbols/dresdner_heide/sandbrueckenweg.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Saugartenweg"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/saugartenweg.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Schere"][zoom>=14]                    { shield-file: url('img/symbols/dresdner_heide/schere.16.png'); }
 .route.hiking_heide_o_s[name="Dresdner Heide, Schwerterweg"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/schwerterweg.16.png'); }
@@ -99,8 +99,8 @@ Kreuz 4
 .route.hiking_heide_t_z[name="Dresdner Heide, Verkehrte Gabel"][zoom>=14]           { shield-file: url('img/symbols/dresdner_heide/verkehrte_gabel.16.png'); }
 .route.hiking_heide_t_z[name="Dresdner Heide, Verkehrter Anker"][zoom>=14]          { shield-file: url('img/symbols/dresdner_heide/verkehrter_anker.16.png'); }
 .route.hiking_heide_t_z[name="Dresdner Heide, Vogelzipfel"][zoom>=14]               { shield-file: url('img/symbols/dresdner_heide/vogelzipfel.16.png'); }
-.route.hiking_heide_t_z[name="Dresdner Heide, Weixxxssiger Gxxxaensefuxxxss"][zoom>=14]         { shield-file: url('img/symbols/dresdner_heide/weissiger_gaensefuss.16.png'); }
-.route.hiking_heide_t_z[name="Dresdner Heide, Weixxxssiger Weg"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/weissiger_weg.16.png'); }
+.route.hiking_heide_t_z[name="Dresdner Heide, Weißiger Gänsefuß"][zoom>=14]         { shield-file: url('img/symbols/dresdner_heide/weissiger_gaensefuss.16.png'); }
+.route.hiking_heide_t_z[name="Dresdner Heide, Weißiger Weg"][zoom>=14]              { shield-file: url('img/symbols/dresdner_heide/weissiger_weg.16.png'); }
 .route.hiking_heide_t_z[name="Dresdner Heide, Wiesenweg"][zoom>=14]                 { shield-file: url('img/symbols/dresdner_heide/wiesenweg.16.png'); }
 
 

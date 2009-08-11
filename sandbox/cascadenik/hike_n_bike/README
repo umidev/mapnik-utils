@@ -340,3 +340,16 @@ convert -modulate 100,150,100 -thumbnail 18x18 weissiger_weg.jpg			weissiger_weg
 convert -modulate 100,150,100 -thumbnail 18x18 wiesenweg.jpg				wiesenweg.18.png
 convert -modulate 100,150,100 -thumbnail 18x18 zirkel.jpg				zirkel.18.png
 
+
+
+http://en.wikipedia.org/wiki/Droid_(font)
+
+Droid Sans Bold
+Droid Sans Fallback Regular
+Droid Sans Japanese Regular
+Droid Sans Mono Regular
+Droid Sans Regular
+Droid Serif Bold
+Droid Serif Bold Italic
+Droid Serif Italic
+Droid Serif Regular
