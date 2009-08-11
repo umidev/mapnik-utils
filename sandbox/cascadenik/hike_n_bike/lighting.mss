@@ -10,16 +10,28 @@
 }
 
 /* lit ways */
-.road.lighting[highway=residential]
+.road.lighting[lit=yes]
 {
     line-color: #ddc13d;
 }
 
 /* unlit ways */
-.road.lighting[highway=tertiary]
+.road.lighting[lit=no]
 {
     line-color: #000000;
 }
+
+.road.lighting[prominence=major][zoom<=8]{line-width: 1;}
+.road.lighting[prominence=minor][zoom<=8]{line-width: 1;}
+
+.road.lighting[prominence=major][zoom=9]{line-width: 2;}
+.road.lighting[prominence=minor][zoom=9]{line-width: 1;}
+
+.road.lighting[prominence=major][zoom=10]{line-width: 3;}
+.road.lighting[prominence=minor][zoom=10]{line-width: 1;}
+
+.road.lighting[prominence=major][zoom=11]{line-width: 4;}
+.road.lighting[prominence=minor][zoom=11]{line-width: 2;}
 
 .road.lighting[prominence=major][zoom=12]{line-width: 5;}
 .road.lighting[prominence=minor][zoom=12]{line-width: 3;}
@@ -40,7 +52,7 @@
 /*
 .road.lighting[zoom>=12] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 9;
     text-fill: #000;
     text-placement: line;
@@ -51,7 +63,7 @@
     text-spacing: 400;
 }
 
-.road.lighting[highway=residential] name
+.road.lighting[lit=yes] name
 {
     text-halo-radius: 3;
     text-halo-fill: #ddb600;

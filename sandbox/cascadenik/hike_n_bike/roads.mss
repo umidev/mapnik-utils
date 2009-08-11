@@ -233,7 +233,7 @@
 .road.label.minor[zoom=13][highway=tertiary] name,
 .road.label[zoom>=14][highway!=motorway][highway!=motorway_link] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 9;
     text-fill: #000;
     text-placement: line;
@@ -259,7 +259,7 @@
 .road.label.major[zoom>=11][highway=primary] ref_content,
 .road.label.major[zoom>=7][highway=motorway] ref_content
 {
-    shield-face-name: "DejaVu Sans Bold";
+    shield-face-name: "Droid Sans Bold";
     shield-min-distance: 100;
     shield-size: 9;
     shield-fill: #000;

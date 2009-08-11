@@ -29,7 +29,7 @@
 
 .water.line name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-placement: line;
 /*     text-size: 9; */
     text-fill: #7396bb;
@@ -351,7 +351,7 @@
 .parklike.label name,
 .citylike.label[amenity!=parking] name
 {
-    text-face-name: "DejaVu Serif Italic";
+    text-face-name: "Droid Serif Italic";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -363,7 +363,7 @@
 .parklike.label[zoom=16][size=small] name,
 .citylike.label[zoom=16][size=small][amenity!=parking] name
 {
-    text-face-name: "DejaVu Serif Italic";
+    text-face-name: "Droid Serif Italic";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -375,7 +375,7 @@
 .parklike.label[zoom>=17] name,
 .citylike.label[zoom>=17][amenity!=parking] name
 {
-    text-face-name: "DejaVu Serif Italic";
+    text-face-name: "Droid Serif Italic";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -387,7 +387,7 @@
 
 .building.label name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -396,7 +396,7 @@
 .building.label[zoom>=15][zoom<=16][size=medium] name,
 .building.label[zoom=16][size=small] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -496,7 +496,7 @@
 .building.label[zoom>=16][size=large] name,
 .building.label[zoom>=17] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-fill: #000;
     text-placement: point;
     text-halo-radius: 1;
@@ -506,7 +506,7 @@
 
 .water.label name
 {
-    text-face-name: "DejaVu Serif Italic";
+    text-face-name: "Droid Serif Italic";
     text-fill: #7396bb;
     text-halo-fill: #e7f6fd;
     text-halo-radius: 1;
@@ -530,7 +530,7 @@
 
 .ferry.label[zoom>=13] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 9;
     text-placement: line;
     text-dy: 5;

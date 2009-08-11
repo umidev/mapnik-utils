@@ -2,7 +2,7 @@
 
 .place name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-fill: #000;
     text-placement: point;
     text-wrap-width: 65;
@@ -11,7 +11,7 @@
 .place[place=town][zoom>=9] name,
 .place[place=city] name
 {
-    text-face-name: "DejaVu Sans Bold";
+    text-face-name: "Droid Sans Bold";
     text-halo-radius: 2 !important;
     text-fill: #222;
 }

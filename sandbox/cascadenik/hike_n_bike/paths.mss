@@ -287,7 +287,7 @@
 
 .path.label[zoom>=12] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-fill: #000;
     text-placement: line;
@@ -301,7 +301,7 @@
 
 .path.label[zoom>=15] name
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-fill: #000;
     text-placement: line;

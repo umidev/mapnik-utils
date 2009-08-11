@@ -7,7 +7,7 @@
 {
     point-file: url('map-icons/svg-twotone-png/poi_point_of_interest.p.12.png');
     text-dy: 14;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500;
@@ -23,7 +23,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_view_point.p.8.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -36,7 +36,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_view_point.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -50,7 +50,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_tower.p.10.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -64,7 +64,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_tower.p.14.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -78,7 +78,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.10.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -92,7 +92,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_ruin.p.14.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -106,7 +106,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_castle.p.8.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -119,7 +119,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_castle.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -133,7 +133,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_guidepost.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -147,7 +147,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_information.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -160,7 +160,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_information.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -174,7 +174,7 @@
     point-file: url('map-icons/svg-twotone-png/poi_point_of_interest.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -187,7 +187,7 @@
     point-file: url('map-icons/svg-twotone-png/poi_point_of_interest.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -201,7 +201,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_bench.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -215,7 +215,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_toilets.p.8.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -228,7 +228,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_toilets.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -242,7 +242,7 @@
     point-file: url('map-icons/svg-twotone-png/accommodation_shelter.p.8.png');
     text-fill: #0092da;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -255,7 +255,7 @@
     point-file: url('map-icons/svg-twotone-png/accommodation_shelter.p.12.png');
     text-fill: #0092da;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -269,7 +269,7 @@
     point-file: url('map-icons/svg-twotone-png/accommodation_shelter.p.16.png');
     text-fill: #0092da;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -283,7 +283,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_picnic.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -296,7 +296,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_picnic.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -310,7 +310,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_telephone.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -323,7 +323,7 @@
     point-file: url('map-icons/svg-twotone-png/amenity_telephone.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -338,7 +338,7 @@
     point-file: url('map-icons/svg-twotone-png/health_hospital_emergency.p.10.png');
     text-fill: #da0092;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 500;
@@ -351,7 +351,7 @@
     point-file: url('map-icons/svg-twotone-png/health_hospital_emergency.p.12.png');
     text-fill: #da0092;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -365,7 +365,7 @@
     point-file: url('map-icons/svg-twotone-png/food_restaurant.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -378,7 +378,7 @@
     point-file: url('map-icons/svg-twotone-png/food_restaurant.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -392,7 +392,7 @@
     point-file: url('map-icons/svg-twotone-png/food_fastfood.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -405,7 +405,7 @@
     point-file: url('map-icons/svg-twotone-png/food_fastfood.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -419,7 +419,7 @@
     point-file: url('map-icons/svg-twotone-png/food_pub.p.8.png');
     text-fill: #734a08;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -432,7 +432,7 @@
     point-file: url('map-icons/svg-twotone-png/food_pub.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -446,7 +446,7 @@
     point-file: url('map-icons/svg-twotone-png/food_drinkingtap.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -459,7 +459,7 @@
     point-file: url('map-icons/svg-twotone-png/food_drinkingtap.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -473,7 +473,7 @@
     point-file: url('map-icons/svg-twotone-png/transport_parking.n.8.png');
     text-fill: #0092da;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
@@ -486,7 +486,7 @@
     point-file: url('map-icons/svg-twotone-png/transport_parking.n.12.png');
     text-fill: #0092da;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
@@ -500,7 +500,7 @@
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.8.png');
     text-fill: #0092da;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
@@ -513,7 +513,7 @@
     point-file: url('map-icons/svg-twotone-png/transport_parking_car_paid.p.12.png');
     text-fill: #0092da;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
@@ -527,7 +527,7 @@
     point-file: url('map-icons/svg-twotone-png/place_of_worship.p.8.png');
     text-fill: #0092da;
     text-dy: 9;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 50;
@@ -540,7 +540,7 @@
     point-file: url('map-icons/svg-twotone-png/place_of_worship.p.12.png');
     text-fill: #0092da;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 50;
@@ -564,7 +564,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_cave.p.8.png');
     text-fill: #734a08;
     text-dy: 10;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -577,7 +577,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_cave.p.12.png');
     text-fill: #734a08;
     text-dy: 14;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -596,7 +596,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_cross.p.12.png');
     text-fill: #734a08;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -610,7 +610,7 @@
     point-file: url('map-icons/svg-twotone-png/tourist_cross.p.16.png');
     text-fill: #734a08;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -624,7 +624,7 @@
     point-file: url('map-icons/svg-twotone-png/accommodation_camping.p.14.png');
     text-fill: #0092da;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -637,7 +637,7 @@
     point-file: url('map-icons/svg-twotone-png/accommodation_camping.p.16.png');
     text-fill: #0092da;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;
@@ -649,7 +649,7 @@
 .poi_boundary.point[boundary=marker][zoom>=16] ref
 {
     text-fill: #cf9700;
-    text-face-name: "DejaVu Sans Oblique";
+    text-face-name: "Droid Serif Italic";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -664,7 +664,7 @@
     point-file: url('map-icons/svg-twotone-png/shopping_bicycle.n.14.png');
     text-fill: #ac39ac;
     text-dy: 13;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: point;
     text-wrap-width: 77;
@@ -677,7 +677,7 @@
     point-file: url('map-icons/svg-twotone-png/shopping_bicycle.n.16.png');
     text-fill: #ac39ac;
     text-dy: 17;
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 10;
     text-placement: point;
     text-wrap-width: 77;

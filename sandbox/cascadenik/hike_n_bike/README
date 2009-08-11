@@ -14,6 +14,12 @@ JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.
   --bounding-box left=10.0 right=16.0 bottom=50.0 top=52.0 \
   --write-xml thueringen_sachsen.osm.gz
 
+cd /opt/applications/tilesathome/utils/export/osm2pgsql && ./osm2pgsql --slim -d gis thueringen_sachsen.osm.gz
+
+
+rm -rf /home/colin/mapnik/tiles/1* && ./generate_tiles_colin.py
+
+
 http://planet.openstreetmap.org/daily/
 
 JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
@@ -32,15 +38,16 @@ update planet_osm_line set importance=0 where importance is null;
 update planet_osm_polygon set importance=0 where importance is null;
 
 
+cd /opt/applications/tilesathome/mapnik-utils/serverside/cascadenik/
 
-python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/style.mml  > /home/colin/mapnik/osm_teczno_customized.xml 
-
+python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/style.mml  > /home/colin/mapnik/osm_teczno_customized.xml
 
 sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/replacements.sed /home/colin/mapnik/osm_teczno_customized.xml | sponge /home/colin/mapnik/osm_teczno_customized.xml
 
 
 http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
 
+rsync -avz --existing /home/colin/mapnik/tiles cmarqu@ugh.dreamhost.com:~/opentiles.com/cmarqu/
 
 
 

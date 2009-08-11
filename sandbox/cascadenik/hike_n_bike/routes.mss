@@ -3,7 +3,7 @@
 .route.hiking empty,
 .route.hiking_small empty
 {
-    shield-face-name: "DejaVu Sans Book";
+    shield-face-name: "Droid Sans Regular";
     shield-size: 0;
     shield-fill: #777;
 }
@@ -622,7 +622,7 @@
 
 .path[name="Kletterzustieg"] name
 {
-    shield-face-name: "DejaVu Sans Book";
+    shield-face-name: "Droid Sans Regular";
     shield-size: 0;
     shield-fill: #777;
 }
@@ -653,7 +653,7 @@
 
 .path[path=mountain_path] name
 {
-    shield-face-name: "DejaVu Sans Book";
+    shield-face-name: "Droid Sans Regular";
     shield-size: 0;
     shield-fill: #777;
 }

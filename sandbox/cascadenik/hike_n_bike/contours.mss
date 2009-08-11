@@ -17,7 +17,7 @@
 
 .srtm.fifty[zoom>=15] height
 {
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 7;
     text-placement: line;
     text-fill: #e4ae80;
@@ -35,7 +35,7 @@
     line-width: 1.3;
     line-opacity: 0.5;
 
-    text-face-name: "DejaVu Sans Book";
+    text-face-name: "Droid Sans Regular";
     text-size: 8;
     text-placement: line;
     text-fill: #e4ae80;
