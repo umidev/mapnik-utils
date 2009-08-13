@@ -62,7 +62,7 @@
 .water.line[zoom=14][waterway=stream] { line-width: 2; text-size: 0; }
 
 .water.line[zoom=15] { line-width: 6; text-size: 10; }
-.water.line[zoom=15][waterway=stream] { line-width: 2.5;  text-size: 7; }
+.water.line[zoom=15][waterway=stream] { line-width: 2.5;  text-size: 8; }
 
 .water.line[zoom=16] { line-width: 7; text-size: 11; }
 .water.line[zoom=16][waterway=stream] { line-width: 3;  text-size: 8; }
@@ -174,6 +174,12 @@
 .parklike.area[landuse=village_green]
 {
     polygon-fill: #bfd8b1;
+    polygon-opacity: 0.99;
+}
+
+.parklike.area[landuse=scrub]
+{
+    polygon-fill: #afc7a2;
     polygon-opacity: 0.99;
 }
 
