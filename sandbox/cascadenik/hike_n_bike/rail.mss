@@ -191,7 +191,7 @@
 .transit.point[railway=station][zoom>=17],
 .transit.point[railway=subway_entrance][zoom>=17]
 {
-    point-file: url('img/icons/24x24/symbol/transport/railway=station.png');
+    point-file: url('img/misc/railway_station.24.png');
     point-allow-overlap: true;
     text-dy: 14;
 }
@@ -199,14 +199,14 @@
 .transit.point[aeroway=airport][zoom>=17],
 .transit.point[aeroway=aerodrome][zoom>=17]
 {
-    point-file: url('img/icons/24x24/symbol/transport/amenity=airport.png');
+    point-file: url('img/misc/airport.24.png');
     text-dy: 24;
 }
 
 .transit.point[railway=station][zoom>=15][zoom<=16],
 .transit.point[railway=subway_entrance][zoom>=15][zoom<=16]
 {
-    point-file: url('img/icons/16x16/symbol/transport/railway=station.png');
+    point-file: url('img/misc/railway_station.16.png');
     point-allow-overlap: true;
     text-dy: 12;
 }
@@ -222,7 +222,7 @@
 .transit.point[aeroway=airport][zoom>=14][zoom<=16],
 .transit.point[aeroway=aerodrome][zoom>=14][zoom<=16]
 {
-    point-file: url('img/icons/24x24/symbol/transport/amenity=airport.png');
+    point-file: url('img/misc/airport.24.png');
     text-dy: 24;
 }
 
@@ -245,7 +245,7 @@
 .transit.point[railway=station][zoom>=12][zoom<=14],
 .transit.point[railway=subway_entrance][zoom>=12][zoom<=14]
 {
-    point-file: url('img/icons/12x12/symbol/transport/railway=station.png');
+    point-file: url('img/misc/railway_station.12.png');
     /* point-allow-overlap: true; */
     text-dy: 10;
 }
@@ -253,13 +253,13 @@
 .transit.point[aeroway=airport][zoom>=12][zoom<=13],
 .transit.point[aeroway=aerodrome][zoom>=12][zoom<=13]
 {
-    point-file: url('img/icons/16x16/symbol/transport/amenity=airport.png');
+    point-file: url('img/misc/airport.16.png');
     text-dy: 20;
 }
 
 .transit.point[aeroway=airport][zoom>=9][zoom<=11],
 .transit.point[aeroway=aerodrome][zoom>=9][zoom<=11]
 {
-    point-file: url('img/icons/12x12/symbol/transport/amenity=airport.png');
+    point-file: url('img/misc/airport.12.png');
     text-dy: 18;
 }

@@ -448,61 +448,61 @@
 .building.label[zoom>=17][amenity=police],
 .citylike.label[zoom>=17][amenity=police]
 {
-    point-file: url('img/icons/24x24/symbol/emergency/amenity=police.png');
+    point-file: url('img/misc/police.24.png');
     text-dy: 20;
 }
 
 .building.label[zoom>=15][zoom<=16][amenity=police],
 .citylike.label[zoom>=15][zoom<=16][amenity=police]
 {
-    point-file: url('img/icons/16x16/symbol/emergency/amenity=police.png');
+    point-file: url('img/misc/police.16.png');
     text-dy: 18;
 }
 
 .building.label[zoom=14][amenity=police],
 .citylike.label[zoom=14][amenity=police]
 {
-    point-file: url('img/icons/12x12/symbol/emergency/amenity=police.png');
+    point-file: url('img/misc/police.12.png');
 }
 
 .building.label[zoom>=17][amenity=fire_station],
 .citylike.label[zoom>=17][amenity=fire_station]
 {
-    point-file: url('img/icons/24x24/symbol/emergency/amenity=fire_station.png');
+    point-file: url('img/misc/fire_station.24.png');
     text-dy: 20;
 }
 
 .building.label[zoom>=15][zoom<=16][amenity=fire_station],
 .citylike.label[zoom>=15][zoom<=16][amenity=fire_station]
 {
-    point-file: url('img/icons/16x16/symbol/emergency/amenity=fire_station.png');
+    point-file: url('img/misc/fire_station.16.png');
     text-dy: 18;
 }
 
 .building.label[zoom=14][amenity=fire_station],
 .citylike.label[zoom=14][amenity=fire_station]
 {
-    point-file: url('img/icons/12x12/symbol/emergency/amenity=fire_station.png');
+    point-file: url('img/misc/fire_station.12.png');
 }
 
 .building.label[zoom>=17][amenity=hospital],
 .citylike.label[zoom>=17][amenity=hospital]
 {
-    point-file: url('img/icons/24x24/symbol/emergency/amenity=hospital.png');
+    point-file: url('img/misc/hospital.24.png');
     text-dy: 20;
 }
 
 .building.label[zoom>=15][zoom<=16][amenity=hospital],
 .citylike.label[zoom>=15][zoom<=16][amenity=hospital]
 {
-    point-file: url('img/icons/16x16/symbol/emergency/amenity=hospital.png');
+    point-file: url('img/misc/hospital.16.png');
     text-dy: 18;
 }
 
 .building.label[zoom=14][amenity=hospital],
 .citylike.label[zoom=14][amenity=hospital]
 {
-    point-file: url('img/icons/12x12/symbol/emergency/amenity=hospital.png');
+    point-file: url('img/misc/hospital.12.png');
 }
 
 .building.label[zoom>=15][amenity=parking],
