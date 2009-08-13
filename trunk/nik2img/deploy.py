@@ -7,6 +7,7 @@ Release Steps
  * Edit CHANGELOG.txt
  * rebuild MANIFEST 'python setup.py sdist --manifest-only'
  * Increment '__version__' in main script and 'version' in setup.py
+ * Commit changes to SVN - confirm correct r# in CHANGELOG
  * Run `deploy.py` to create sdist, upload, and create tag
  * Commit tag
  * Update Google Code wiki

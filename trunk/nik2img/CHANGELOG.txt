@@ -3,8 +3,10 @@ nik2img changelog
 =================
 
 
-Version 0.3.2, ________ 2009:
------------------------------
+Version 0.3.2, August 13 2009:
+------------------------------
+
+* Packaged from r796
 
 * Added a --bbox-factor option to allow for a multiplication or division factor to be passed to the final extent
 

@@ -7,7 +7,7 @@ from timeit import time
 from pdb import set_trace
 from optparse import OptionParser
 
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 __author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
 __copyright__ = 'Copyright 2009, Dane Springmeyer'
 __license__ = 'GPLv2'
