@@ -189,6 +189,12 @@
     polygon-opacity: 0.99;
 }
 
+.parklike.area[natural=beach]
+{
+    polygon-fill: #dfd076;
+    polygon-opacity: 0.99;
+}
+
 .parklike.area[landuse=quarry]
 {
     polygon-fill: #bbb;
