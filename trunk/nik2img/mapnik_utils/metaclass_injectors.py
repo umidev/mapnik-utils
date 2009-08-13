@@ -1,4 +1,5 @@
 import re
+import sys
 from mapnik import Map, Layer, Coord, Envelope, Datasource
 from projection import EasyProjection
 
@@ -190,11 +191,14 @@ class _Layer(Layer,_injector):
     def active_rules(self,map):
         rules = []
         for style in self.styles:
-            sty_obj = map.find_style(style)
-            for rule in sty_obj.rules:
-                if rule.active(map.scale()):
-                    rule.parent = style 
-                    rules.append(rule)
+            try:
+                sty_obj = map.find_style(style)
+                for rule in sty_obj.rules:
+                    if rule.active(map.scale()):
+                        rule.parent = style 
+                        rules.append(rule)
+            except Exception, e:
+                sys.stderr.write('Warning: style name reference "%s" found in layer "%s" but Style not found in Map\n' % (style,self.name)) 
         return rules
 
 
