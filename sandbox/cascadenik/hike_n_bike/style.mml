@@ -694,11 +694,25 @@ zoom level  - scale denominator
             <Parameter name="table"><![CDATA[
                 (SELECT *
                      FROM planet_osm_point
-                     WHERE "natural" IN ('peak', 'tree'))
+                     WHERE "natural" IN ('peak'))
                         AS peak]]></Parameter>
         </Datasource>
     </Layer>
     <!-- POIs -->
+    <Layer class="poi_natural point" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT *
+                     FROM planet_osm_point
+                     WHERE "natural" IN ('tree'))
+                        AS poi_natural]]></Parameter>
+        </Datasource>
+    </Layer>
     <Layer class="poi_tourism point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
