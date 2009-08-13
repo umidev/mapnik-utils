@@ -183,6 +183,12 @@
     polygon-opacity: 0.99;
 }
 
+.parklike.area[natural=wetland]
+{
+    polygon-fill: #b9d1c8;
+    polygon-opacity: 0.99;
+}
+
 .parklike.area[landuse=quarry]
 {
     polygon-fill: #bbb;

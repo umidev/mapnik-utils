@@ -111,7 +111,7 @@ zoom level  - scale denominator
                      WHERE building IS NULL
                        AND (amenity IN ('park')
                         OR landuse IN ('recreation_ground', 'greenfield', 'meadow', 'grass', 'village_green', 'cemetery', 'forest', 'allotments', 'farm', 'quarry', 'scrub')
-                        OR "natural" IN ('wood', 'grass')
+                        OR "natural" IN ('wood', 'grass', 'wetland')
                         OR leisure IN ('park', 'pitch', 'track', 'golf_course', 'common', 'playground', 'garden', 'plaza'))
                      ORDER BY z_order ASC, way_area DESC) AS parklike]]></Parameter>
         </Datasource>
@@ -873,7 +873,7 @@ zoom level  - scale denominator
                  WHERE building IS NULL
                    AND (amenity IN ('park')
                      OR landuse IN ('recreation_ground', 'greenfield', 'cemetery', 'forest', 'allotments', 'farm', 'quarry', 'scrub')
-                     OR "natural" IN ('wood', 'grass')
+                     OR "natural" IN ('wood', 'grass', 'wetland')
                      OR leisure IN ('park', 'pitch', 'track', 'golf_course', 'common', 'playground', 'garden', 'plaza'))
                  ORDER BY z_order ASC, way_area DESC) AS parklike]]></Parameter>
         </Datasource>
