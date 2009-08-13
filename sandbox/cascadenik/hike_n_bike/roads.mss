@@ -38,7 +38,7 @@
 .road.point[barrier=gate][zoom>=15],
 .road.point[barrier=bollard][zoom>=15]
 {
-    point-file: url('icons-mapnik/gate2.png');
+    point-file: url('img/mapnik-symbols/gate2.png');
 }
 
 .road.point[highway=bus_stop][zoom>=15]

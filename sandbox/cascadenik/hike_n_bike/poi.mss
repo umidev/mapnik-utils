@@ -18,6 +18,33 @@
 
 /* ---------------------------------------------------------------------- */
 
+.poi_natural.point[natural=tree][zoom>=14] name
+{
+    point-file: url('map-icons/svg-twotone-png/tourist_view_point.p.8.png');
+    text-fill: #734a08;
+    text-dy: 10;
+    text-face-name: "Droid Sans Regular";
+    text-size: 8;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+}
+
+.poi_natural.point[natural=tree][zoom>=15] name
+{
+    point-file: url('map-icons/svg-twotone-png/tourist_view_point.p.12.png');
+    text-fill: #734a08;
+    text-dy: 13;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
+    point-allow-overlap: true;
+}
+
 .poi_tourism.point[tourism=viewpoint][zoom>=13] name
 {
     point-file: url('map-icons/svg-twotone-png/tourist_view_point.p.8.png');

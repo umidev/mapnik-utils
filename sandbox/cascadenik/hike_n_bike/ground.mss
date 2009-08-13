@@ -204,7 +204,7 @@
 .cliff.line[natural=cliff][zoom>=14] name,
 .cliff.area[natural=cliff][zoom>=14] name
 {
-    line-pattern-file: url('icons-mapnik/cliff2.png');
+    line-pattern-file: url('img/mapnik-symbols/cliff2.png');
 }
 
 /* .parklike.area[zoom>=16][landuse=cemetery] /\*, */
@@ -235,7 +235,7 @@
 
 .power.point[zoom>=14]
 {
-    point-file: url('icons-mapnik/power_tower.png');
+    point-file: url('img/mapnik-symbols/power_tower.png');
 }
 
 

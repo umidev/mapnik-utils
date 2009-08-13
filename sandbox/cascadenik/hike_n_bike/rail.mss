@@ -213,7 +213,7 @@
 .transit.point[railway=halt][zoom>=15],
 .transit.point[railway=tram_stop][zoom>=15]
 {
-    point-file: url('icons-mapnik/halt.png');
+    point-file: url('img/mapnik-symbols/halt.png');
     point-allow-overlap: true;
     text-dy: 5;
 }
