@@ -83,7 +83,7 @@ class Compose(object):
             msg += E
         raise sys.exit(msg)
 
-    def msg(self, msg):
+    def msg(self, msg, warn=False):
         sys.stderr.write('%s\n' % msg)
 
     def quiet(self, msg):
