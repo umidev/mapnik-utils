@@ -1,5 +1,6 @@
 import os
 import sys
+import timeit
 import mapnik
 
 try:
@@ -38,11 +39,20 @@ class Render(object):
         self.format = format
         self.world_file_ext = world_file_ext
         
+        self.start_time = 0
+        self.render_time = 0
+        
         self.ALL_FORMATS = {}
         self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg'}
         self.CAIRO_FILE_FORMATS = {'svg':'svg','pdf':'pdf','ps':'ps'}
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
         self.setup_formats()
+
+    def timer(self):
+        self.start_time = timeit.time.time()
+    
+    def stop(self):
+        self.render_time = timeit.time.time() - self.start_time
 
     def setup_formats(self):
         self.ALL_FORMATS.update(self.AGG_FORMATS)
@@ -56,14 +66,16 @@ class Render(object):
         f = open(f_ptr, 'w')
         f.write(self.m.to_wld())
         f.close()
-        
+    
     def stream(self): 
         """
         Routine to render the an image to a string
         """
+        self.timer()
         im = mapnik.Image(self.m.width,self.m.height)
         mapnik.render(self.m,im)
         return im.tostring(self.format)
+        self.stop()
 
     def print_stream(self):
         if sys.platform == 'win32':
@@ -95,10 +107,12 @@ class Render(object):
                 surface = cairo_mapping[args[2]](*context)
             elif args[2] in self.CAIRO_IMAGE_FORMATS:
                 surface = cairo.ImageSurface(cairo_mapping[args[2]], *context[1:])
+            self.timer()
             mapnik.render(args[0],surface)
             if args[2] in self.CAIRO_IMAGE_FORMATS:
                 surface.write_to_png(args[1])
             surface.finish()
+            self.stop()
             if self.world_file_ext:
                 self.write_wld(args[1])
 
@@ -121,7 +135,9 @@ class Render(object):
         """
         Routine to render the requested AGG format.
         """
+        self.timer()
         mapnik.render_to_file(*args)
+        self.stop()
         if self.world_file_ext:
             self.write_wld(args[1])
             

@@ -65,50 +65,54 @@ class ComposeDebug(Compose):
         #self.debug_msg('mime: %s' % self.mime)
 
     def build(self):
-        self.debug_msg('Building map...')
         try:
-            super(ComposeDebug,self).build()
+            builder = super(ComposeDebug,self).build()
         except Exception, E:
             self.output_error(E)        
-        self.debug_msg('SRS: %s' % self.map.srs)
-        if self.map.proj_obj.srid:
-            self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
-        self.debug_msg('Map extent: %s' % self.map.envelope())
-        self.debug_msg('Map long/lat bbox: %s' % self.map.lon_lat_bbox())
-        self.debug_msg('Map center: %s' % self.map.envelope().center())
-        self.debug_msg('Map long/lat center: %s' % self.map.lon_lat_bbox().center())
-        self.debug_msg('Map scale denominator: %s' % self.map.scale_denominator())
-        if self.layers:
-            self.debug_msg('Active layers: %s' % self.map.active_layers())
-        if self.map.layers_bounds():
-            self.debug_msg('Extent of all layers: %s' % self.map.layers_bounds())
-            self.debug_msg('Long/lat extent of all layers: %s' % self.map.lon_lat_layers_bounds())
-            self.debug_msg('Long/lat center of all layers: %s' % self.map.lon_lat_layers_bounds().center())
+        self.last_step('Loading map took... ', builder.load_map_time)
         if self.verbose:
+            self.debug_msg('SRS: %s' % self.map.srs)
+            if self.map.proj_obj.srid:
+                self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
+            self.debug_msg('Map extent: %s' % self.map.envelope())
+            self.debug_msg('Map long/lat bbox: %s' % self.map.lon_lat_bbox())
+            self.debug_msg('Map center: %s' % self.map.envelope().center())
+            self.debug_msg('Map long/lat center: %s' % self.map.lon_lat_bbox().center())
+            self.debug_msg('Map scale denominator: %s' % self.map.scale_denominator())
+            if self.layers:
+                self.debug_msg('Active layers: %s' % self.map.active_layers())
+            if self.map.layers_bounds():
+                self.debug_msg('Extent of all layers: %s' % self.map.layers_bounds())
+                self.debug_msg('Long/lat extent of all layers: %s' % self.map.lon_lat_layers_bounds())
+                self.debug_msg('Long/lat center of all layers: %s' % self.map.lon_lat_layers_bounds().center())
+    
             lyrs = self.map.intersecting_layers()
             if not len(lyrs):
                 self.debug_msg("No layers intersecting map!",warn=True)
             else:
                 self.debug_msg("Layers intersecting map: [%s]" % ', '.join([l.name for l in lyrs]))
-            self.debug_msg("At current scale of '%s'..." % self.map.scale(),print_time=False)
+            self.debug_msg("At current scale of '%s'..." % self.map.scale())
             for lyr in lyrs:
                 if not l.visible(self.map.scale()):
-                    self.debug_msg("Layer '%s' is NOT visible" % lyr.name,warn=True,print_time=False)
+                    self.debug_msg("Layer '%s' is NOT visible" % lyr.name,warn=True)
                 else:
-                    self.debug_msg("layer '%s' is visible" % lyr.name,print_time=False)
+                    self.debug_msg("layer '%s' is visible" % lyr.name)
                 # crashing in filter on os x...
                 #    rules = ', '.join(['%s:%s (%s -> %s)' % (r.parent,str(r.filter)[:10],r.min_scale,r.max_scale) for r in lyr.active_rules])
-                #    self.debug_msg('active rules for %s: %s' % (l.name,rules),print_time=False)
+                #    self.debug_msg('active rules for %s: %s' % (l.name,rules))
                 
         
     def render(self):
         if not self.map:
             self.debug_msg('Calling build from render...')
-        self.debug_msg('Rendering map to... %s' % self.image)            
+        self.debug_msg('Starting rendering...')            
         try:
-            super(ComposeDebug,self).render()
+            renderer = super(ComposeDebug,self).render()
         except Exception, E:
             self.output_error(E)
+        self.last_step('Rendering image took... ', renderer.render_time)
+        self.debug_msg('Finished rendering map to... %s' % self.image)
+        self.total_time()
 
     def register_fonts(self):
         super(ComposeDebug,self).register_fonts()
@@ -124,10 +128,10 @@ class ComposeDebug(Compose):
             sys.stderr.write(color_text(1, '// --> %s \n' % msg,self.no_color))
         sys.exit(1)
 
-    def msg(self, msg, warn=False, print_time=True):
-        self.debug_msg(msg,warn=warn,print_time=print_time)
+    def msg(self, msg, warn=False):
+        self.debug_msg(msg,warn=warn)
 
-    def debug_msg(self, msg, warn=False, print_time=True):
+    def debug_msg(self, msg, warn=False):
         """
         Output a colored message or warning, incrementing the step_counter
         to enable a pdb trace to be set at any point a verbose message is printed.
@@ -138,7 +142,6 @@ class ComposeDebug(Compose):
         if self.verbose:
             text = 'Step: %s // --> %s\n' % (self.step_counter, msg)
             sys.stderr.write(color_text(color,text,self.no_color))
-            self.output_time(print_time)
         if self.pause:
             for second in range(1, (int(self.pause)+1)):
                 sys.stderr.write('%s ' % color_text(5,second,self.no_color))
@@ -165,22 +168,21 @@ class ComposeDebug(Compose):
             minutes = '%s minutes' % str(time/60)
             return minutes
     
-    def elapsed(self, last_step):
-        """
-        Return the full and incremental elasped time.
-        """
-        total = (time.time() - self.start_time)
-        last = (time.time() - last_step)
-        return 'Total time: %s | Last step: %s' % (self.get_time(round(total,4)), self.get_time(round(last,8)))
-    
-    def output_time(self, print_time):
-        """
-        Timing output wrapper to control the start point and verbosity of timing output.
-        """
-        if self.timing_started and print_time:
-            val = color_text(4,self.elapsed(time.time()),self.no_color)
+    def total_time(self, last_step=None):
+        if self.verbose:
+            total = (time.time() - self.start_time)
+            out = 'Total Nik2img run time: %s' % (self.get_time(round(total,4)))
+            if last_step:
+                out += '| Last step: %s'% self.get_time(round(last_step,8))
+            val = color_text(4,out,self.no_color)
             sys.stderr.write('%s\n' % val)
 
+    def last_step(self,msg,timing):
+        if self.verbose:
+            out = '%s %s' % (msg, self.get_time(round(timing,4)))
+            val = color_text(4,out,self.no_color)
+            sys.stderr.write('%s\n' % val)
+        
 parser = OptionParser(usage="""%prog <mapfile> [image] [options]
 
 Example usage
@@ -257,7 +259,12 @@ parser.add_option('-m', '--max-extent', dest='max_extent', nargs=4,
                   help='Projected envelope/extent. Two coordinate pairs in the projection of the map',
                   type='float',
                   action='store')
-                  
+
+parser.add_option('--bbox-factor', dest='bbox_factor',
+                  type='float',
+                  help='Expand or contract final map bounds by factor (positive values will multiple bbox, negative values will divide bbox',
+                  action='store')
+                                    
 parser.add_option('-s', '--srs',
                   dest='srs',
                   help='Spatial reference system to project the image into - accepts either <epsg:code>, <proj4 literal>, or a url like http://spatialreference.org/ref/sr-org/6')

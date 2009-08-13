@@ -14,17 +14,17 @@ Zoom to a set zoom levels
 >>> c.map.zoom_max()
 >>> c.zoom = 0
 >>> c.image = '/tmp/zoom0.png'
->>> c.build()
+>>> builder = c.build()
 >>> c.open()
 >>> c.map.zoom_max()
 >>> c.zoom = 2
 >>> c.image = '/tmp/zoom2.png'
->>> c.build()
+>>> builder = c.build()
 >>> c.open()
 >>> c.map.zoom_max()
 >>> c.zoom = 5
 >>> c.image = '/tmp/zoom5.png'
->>> c.build()
+>>> builder = c.build()
 >>> c.open()
 
 

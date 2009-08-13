@@ -31,6 +31,7 @@ class Compose(object):
         self.zoom_to_layers = None
         self.extent = None
         self.max_extent = None
+        self.bbox_factor = None
         self.srs = None
         self.layers = None
         self.re_render_times = None
@@ -49,7 +50,10 @@ class Compose(object):
         self.map = None
         self.rendered = False
         self.verbose = False
-              
+        
+        self.start_time = 0
+        self.load_map_time = 0
+        
         if kwargs:
             self.handle_options(kwargs)
 
@@ -86,6 +90,7 @@ class Compose(object):
         pass
 
     def register_fonts(self):
+        self.msg('Registering fonts...')
         from fonts import FontHandler
         self.font_handler = FontHandler()
         self.font_handler.add_fonts(self.fonts)
@@ -94,12 +99,13 @@ class Compose(object):
 
     def build(self):
         self.msg('Loading mapfile...')
-        loader = Load(self.mapfile,variables={},from_string=self.from_string)
+        
+        builder = Load(self.mapfile,variables={},from_string=self.from_string)
         if not self.from_string:
             self.msg('Loaded %s...' % self.mapfile)
         else:
             self.msg('Loaded XML from string')
-        self.map = loader.build_map(self.width,self.height)
+        self.map = builder.build_map(self.width,self.height)
 
         if self.srs:
             self.msg('Setting srs to: %s' % self.srs)
@@ -122,6 +128,7 @@ class Compose(object):
         # zoom to max extent at beginning if we later need to 
         # zoom to a center point
         # or need to zoom to a zoom-level
+        self.msg('Setting Map view...')
         if self.center or not self.zoom is None:
             if self.max_extent:
                 self.msg('Zooming to max extent: %s' % self.max_extent) 
@@ -164,9 +171,21 @@ class Compose(object):
             else:
                 self.map.zoom_all()
                 self.msg('Zoom to extent of all layers: "%s"' % self.map.envelope())
-
+        
+        if self.bbox_factor:
+            if self.bbox_factor > 0:
+                bbox = self.map.envelope() * self.bbox_factor
+            else:
+                bbox = self.map.envelope() / self.bbox_factor
+            self.map.zoom_to_box(bbox)
+            self.msg('Adjusting final extent by factor of %s: "%s"' % (self.bbox_factor,self.map.envelope()))
+            
+        self.msg('Finished setting extents...')
+        
         if self.save_xml:
             mapnik.save_map(self.map,self.save_xml)
+        
+        return builder
 
  
     def render(self):
@@ -182,6 +201,7 @@ class Compose(object):
         else:
             renderer.print_stream()
         self.rendered = True
+        return renderer
 
     def open(self, app=None):
         """

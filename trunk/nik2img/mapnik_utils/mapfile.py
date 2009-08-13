@@ -1,5 +1,6 @@
 import os
 import sys
+import timeit
 import mapnik
 
 class Load(object):
@@ -7,12 +8,22 @@ class Load(object):
         self.mapfile = mapfile
         self.from_string = from_string
         self.variables = variables
+        
+        self.start_time = 0
+        self.load_map_time = 0
+        
         self.mapfile_types = {'xml':'XML mapfile','mml':'Mapnik Markup Language', 'py':'Python map variable'}
         if self.from_string:
             self.file_type = 'xml'
         else:
             self.file_type = self.get_type()
             self.validate()
+
+    def timer(self):
+        self.start_time = timeit.time.time()
+    
+    def stop(self):
+        self.load_map_time = timeit.time.time() - self.start_time
         
     def validate(self):
         if not os.path.exists(self.mapfile):
@@ -74,7 +85,9 @@ class Load(object):
         if self.variables:
             self.mapfile = self.variable_replace()
         load = getattr(self,'load_%s' % self.file_type)
+        self.timer()
         load(m)
+        self.stop()
 
     def build_map(self,width,height):
         m = mapnik.Map(width,height)
