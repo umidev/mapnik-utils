@@ -11,7 +11,7 @@ update planet_osm_point set importance=0 where importance is null;
 /*
 .peak.point[zoom>=13]
 {
-    point-file: url('map-icons/svg-twotone-png/poi_point_of_interest.p.12.png');
+    point-file: url('img/svg-twotone-png/poi_point_of_interest.p.12.png');
     text-dy: 14;
     text-face-name: "Droid Sans Regular";
     text-size: 8;
@@ -24,7 +24,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=9][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.4.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -37,7 +37,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=10][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.4.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -50,7 +50,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=11][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.4.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -63,7 +63,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=12][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.5.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.5.png');
     text-dy: 7;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -76,7 +76,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=13] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.6.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.6.png');
     text-dy: 8;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -88,7 +88,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=13][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.8.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.8.png');
     text-dy: 10;
     text-face-name: "Droid Sans Bold";
     text-size: 9;
@@ -100,7 +100,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=13][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.9.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.9.png');
     text-dy: 11;
     text-face-name: "Droid Sans Bold";
     text-size: 9;
@@ -112,7 +112,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=13][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.10.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.10.png');
     text-dy: 12;
     text-face-name: "Droid Sans Bold";
     text-size: 9;
@@ -124,7 +124,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=13][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.12.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -137,7 +137,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=14] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.8.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.8.png');
     text-dy: 10;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -149,7 +149,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=14][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.10.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.10.png');
     text-dy: 12;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -161,7 +161,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=14][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.11.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.11.png');
     text-dy: 13;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -173,7 +173,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=14][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.12.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -185,7 +185,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=14][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.14.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.14.png');
     text-dy: 16;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -199,7 +199,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=15] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.8.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.8.png');
     text-dy: 10;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -211,7 +211,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=15][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.12.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -223,7 +223,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=15][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.16.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.16.png');
     text-dy: 18;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -235,7 +235,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=15][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.17.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.17.png');
     text-dy: 19;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -247,7 +247,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=15][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.19.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.19.png');
     text-dy: 21;
     text-face-name: "Droid Sans Bold";
     text-size: 12;
@@ -262,7 +262,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=16] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.12.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -274,7 +274,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=16][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.16.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.16.png');
     text-dy: 18;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -286,7 +286,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=16][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.17.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.17.png');
     text-dy: 19;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -298,7 +298,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=16][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.18.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.18.png');
     text-dy: 20;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -310,7 +310,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=16][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.20.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.20.png');
     text-dy: 22;
     text-face-name: "Droid Sans Bold";
     text-size: 10;
@@ -324,7 +324,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 .peak.point[natural=peak][zoom>=17] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.16.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.16.png');
     text-dy: 18;
     text-face-name: "Droid Sans Bold";
     text-fill: #333333;
@@ -336,7 +336,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=17][importance>=1] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.18.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.18.png');
     text-dy: 20;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -348,7 +348,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=17][importance>=2] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.19.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.19.png');
     text-dy: 21;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -360,7 +360,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=17][importance>=3] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.20.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.20.png');
     text-dy: 22;
     text-face-name: "Droid Sans Bold";
     text-size: 11;
@@ -372,7 +372,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 .peak.point[natural=peak][zoom>=17][importance>=4] name
 {
-    point-file: url('map-icons/svg-twotone-png/poi_peak.p.22.png');
+    point-file: url('img/svg-twotone-png/poi_peak.p.22.png');
     text-dy: 24;
     text-face-name: "Droid Sans Bold";
     text-size: 12;

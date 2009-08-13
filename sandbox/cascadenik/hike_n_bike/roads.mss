@@ -43,7 +43,7 @@
 
 .road.point[highway=bus_stop][zoom>=15]
 {
-    point-file: url('map-icons/svg-twotone-png/transport_bus_stop.p.8.png');
+    point-file: url('img/svg-twotone-png/transport_bus_stop.p.8.png');
 }
 
 /** Road Weights **/

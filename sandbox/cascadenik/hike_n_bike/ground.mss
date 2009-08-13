@@ -426,14 +426,14 @@
 .building.label[zoom>=17][amenity=school],
 .citylike.label[zoom>=17][amenity=school]
 {
-    point-file: url('map-icons/svg-twotone-png/education_school.p.16.png');
+    point-file: url('img/svg-twotone-png/education_school.p.16.png');
     text-dy: 18;
 }
 
 .building.label[zoom>=15][zoom<=16][amenity=school],
 .citylike.label[zoom>=15][zoom<=16][amenity=school]
 {
-    point-file: url('map-icons/svg-twotone-png/education_school.p.14.png');
+    point-file: url('img/svg-twotone-png/education_school.p.14.png');
     text-dy: 16;
 }
 
@@ -441,7 +441,7 @@
 .building.label[zoom=14][amenity=school],
 .citylike.label[zoom=14][amenity=school]
 {
-    point-file: url('map-icons/svg-twotone-png/education_school.p.12.png');
+    point-file: url('img/svg-twotone-png/education_school.p.12.png');
 }
 */
 
@@ -508,7 +508,7 @@
 .building.label[zoom>=15][amenity=parking],
 .citylike.label[zoom>=15][amenity=parking]
 {
-    point-file: url('map-icons/svg-twotone-png/transport_parking.n.12.png');
+    point-file: url('img/svg-twotone-png/transport_parking.n.12.png');
 }
 
 .building.label[zoom>=16][size=large] name,
