@@ -62,7 +62,7 @@ class Render(object):
     def write_wld(self,rendered_image):
         basename = rendered_image.split('.')[0]
         f_ptr = '%s.%s' % (basename, self.world_file_ext)
-        sys.stderr.write('Saved world file to.. %\n' % f_ptr)
+        sys.stderr.write('Saved world file to.. %s\n' % f_ptr)
         f = open(f_ptr, 'w')
         f.write(self.m.to_wld())
         f.close()
