@@ -4,12 +4,12 @@ http://wiki.openstreetmap.org/index.php/Osmosis
 http://gweb.bretth.com/osmosis-latest.tar.gz
 http://www.bretth.com/osmosis/
 
-JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.31/bin/osmosis \
   --read-xml europe.osm.bz2 \
   --bounding-box left=12.8 right=15.3 bottom=50.65 top=51.5 \
   --write-xml elbsandsteingebirge.osm.gz
 
-JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.31/bin/osmosis \
   --read-xml europe.osm.bz2 \
   --bounding-box left=9.95 right=16.0 bottom=50.0 top=52.0 \
   --write-xml thueringen_sachsen.osm.gz
@@ -22,14 +22,14 @@ rm -rf /home/colin/mapnik/tiles/1* && ./generate_tiles_colin.py
 
 http://planet.openstreetmap.org/daily/
 
-JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.31/bin/osmosis \
      --read-xml-change file="20090226-20090227.osc.gz" \
      --read-xml file="elbsandsteingebirge.osm.gz" \
      --apply-change \
      --write-xml file="elbsandsteingebirge2.osm.gz"
 
 
-JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.30.3/bin/osmosis \
+JAVACMD_OPTIONS=-Xmx1048m /opt/applications/tilesathome/utils/osmosis/osmosis-0.31/bin/osmosis \
      --read-change-interval workingDirectory=/opt/applications/tilesathome/utils/export/osm2pgsql \
      --write-xml-change /dev/stdout | /opt/applications/tilesathome/utils/export/osm2pgsql/osm2pgsql --slim -a /dev/stdin 
 
@@ -45,10 +45,23 @@ python cascadenik-compile.py /opt/applications/tilesathome/mapnik-utils-sandbox/
 sed --file=/opt/applications/tilesathome/mapnik-utils-sandbox/cascadenik/hike_n_bike/replacements.sed /home/colin/mapnik/osm_teczno_customized.xml | sponge /home/colin/mapnik/osm_teczno_customized.xml
 
 
-http://www.informationfreeway.org/api/0.5/way[highway=*][bbox=14.0,50.7,14.7,51.0]
+
+/usr/local/bin/liteserv.py /home/colin/mapnik/osm_teczno_customized.xml --config=/opt/applications/tilesathome/tilelite/tilelite.cfg
+
+file:///opt/applications/tilesathome/tilelite/utils/openlayers_colin.html
+
+
+
+http://www.informationfreeway.org/api/0.6/way[highway=*][bbox=14.0,50.7,14.7,51.0]
 
 rsync -avz --existing /home/colin/mapnik/tiles cmarqu@ugh.dreamhost.com:~/opentiles.com/cmarqu/
+rsync -avz /home/colin/mapnik/tiles_lighting_8 cmarqu@cassini.toolserver.org:~/opentiles.com/cmarqu/
 
+
+
+# importance as a string, convert to real:
+http://www.network-theory.co.uk/docs/postgresql/vol1/DataTypeFormattingFunctions.html
+--> to_number(importance_string, '9.9')
 
 
 st_setsrid(st_makebox2d(st_makepoint(12.8,50.65),st_makepoint(15.3,51.5)),4326);
@@ -339,17 +352,3 @@ convert -modulate 100,150,100 -thumbnail 18x18 weissiger_gaensefuss.jpg		weissig
 convert -modulate 100,150,100 -thumbnail 18x18 weissiger_weg.jpg			weissiger_weg.18.png
 convert -modulate 100,150,100 -thumbnail 18x18 wiesenweg.jpg				wiesenweg.18.png
 convert -modulate 100,150,100 -thumbnail 18x18 zirkel.jpg				zirkel.18.png
-
-
-
-http://en.wikipedia.org/wiki/Droid_(font)
-
-Droid Sans Bold
-Droid Sans Fallback Regular
-Droid Sans Japanese Regular
-Droid Sans Mono Regular
-Droid Sans Regular
-Droid Serif Bold
-Droid Serif Bold Italic
-Droid Serif Italic
-Droid Serif Regular

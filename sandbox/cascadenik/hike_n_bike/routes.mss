@@ -47,10 +47,18 @@
 
 
 /* normal-sized icons */
+
+
 .route.hiking[osmc_symbol="red:white:red_bar"][zoom>=12]
 {
     shield-file: url('img/red_stripe.8.png');
 }
+
+.route.hiking[name="Dresdner Heide, Alte 1"][zoom>=12]
+{
+    shield-file: url('img/symbols/dresdner_heide/Wegzeichen_Alte1.8.png');
+}
+
 .route.hiking[osmc_symbol="red:white:red_bar"][zoom>=14]
 {
     shield-file: url('img/red_stripe.10.png');

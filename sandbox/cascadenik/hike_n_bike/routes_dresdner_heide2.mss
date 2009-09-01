@@ -1,4 +1,4 @@
-/* -*- mode: css -*- */
+@charset "UTF-8"; /* -*- mode: css; coding: utf-8 -*- */
 
 /*
 

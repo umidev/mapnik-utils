@@ -177,7 +177,7 @@
     polygon-opacity: 0.99;
 }
 
-.parklike.area[landuse=scrub]
+.parklike.area[natural=scrub]
 {
     polygon-fill: #afc7a2;
     polygon-opacity: 0.99;
