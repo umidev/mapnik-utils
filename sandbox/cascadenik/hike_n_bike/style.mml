@@ -692,7 +692,7 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT *
+                (SELECT *, (to_number(importance, '9.9')) as importance_real
                      FROM planet_osm_point
                      WHERE "natural" IN ('peak'))
                         AS peak]]></Parameter>

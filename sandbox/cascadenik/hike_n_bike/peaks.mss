@@ -22,7 +22,7 @@ update planet_osm_point set importance=0 where importance is null;
 }
 */
 
-.peak.point[natural=peak][zoom>=9][importance>=4] name
+.peak.point[natural=peak][zoom>=9][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
@@ -35,7 +35,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
 }
 
-.peak.point[natural=peak][zoom>=10][importance>=3] name
+.peak.point[natural=peak][zoom>=10][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
@@ -48,7 +48,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
 }
 
-.peak.point[natural=peak][zoom>=11][importance>=2] name
+.peak.point[natural=peak][zoom>=11][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.4.png');
     text-dy: 6;
@@ -61,7 +61,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
 }
 
-.peak.point[natural=peak][zoom>=12][importance>=1] name
+.peak.point[natural=peak][zoom>=12][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.5.png');
     text-dy: 7;
@@ -86,7 +86,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
 }
-.peak.point[natural=peak][zoom>=13][importance>=1] name
+.peak.point[natural=peak][zoom>=13][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.8.png');
     text-dy: 10;
@@ -98,7 +98,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=13][importance>=2] name
+.peak.point[natural=peak][zoom>=13][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.9.png');
     text-dy: 11;
@@ -110,7 +110,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=13][importance>=3] name
+.peak.point[natural=peak][zoom>=13][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.10.png');
     text-dy: 12;
@@ -122,7 +122,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=13][importance>=4] name
+.peak.point[natural=peak][zoom>=13][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
@@ -147,7 +147,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
 }
-.peak.point[natural=peak][zoom>=14][importance>=1] name
+.peak.point[natural=peak][zoom>=14][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.10.png');
     text-dy: 12;
@@ -159,7 +159,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=14][importance>=2] name
+.peak.point[natural=peak][zoom>=14][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.11.png');
     text-dy: 13;
@@ -171,7 +171,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=14][importance>=3] name
+.peak.point[natural=peak][zoom>=14][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
@@ -183,7 +183,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=14][importance>=4] name
+.peak.point[natural=peak][zoom>=14][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.14.png');
     text-dy: 16;
@@ -209,7 +209,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
 }
-.peak.point[natural=peak][zoom>=15][importance>=1] name
+.peak.point[natural=peak][zoom>=15][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.12.png');
     text-dy: 14;
@@ -221,7 +221,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=15][importance>=2] name
+.peak.point[natural=peak][zoom>=15][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.16.png');
     text-dy: 18;
@@ -233,7 +233,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=15][importance>=3] name
+.peak.point[natural=peak][zoom>=15][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.17.png');
     text-dy: 19;
@@ -245,7 +245,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=15][importance>=4] name
+.peak.point[natural=peak][zoom>=15][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.19.png');
     text-dy: 21;
@@ -272,7 +272,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
 }
-.peak.point[natural=peak][zoom>=16][importance>=1] name
+.peak.point[natural=peak][zoom>=16][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.16.png');
     text-dy: 18;
@@ -284,7 +284,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=16][importance>=2] name
+.peak.point[natural=peak][zoom>=16][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.17.png');
     text-dy: 19;
@@ -296,7 +296,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=16][importance>=3] name
+.peak.point[natural=peak][zoom>=16][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.18.png');
     text-dy: 20;
@@ -308,7 +308,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=16][importance>=4] name
+.peak.point[natural=peak][zoom>=16][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.20.png');
     text-dy: 22;
@@ -334,7 +334,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-fill: #fefefe;
     text-halo-radius: 1;
 }
-.peak.point[natural=peak][zoom>=17][importance>=1] name
+.peak.point[natural=peak][zoom>=17][importance_real>=1.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.18.png');
     text-dy: 20;
@@ -346,7 +346,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=17][importance>=2] name
+.peak.point[natural=peak][zoom>=17][importance_real>=2.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.19.png');
     text-dy: 21;
@@ -358,7 +358,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=17][importance>=3] name
+.peak.point[natural=peak][zoom>=17][importance_real>=3.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.20.png');
     text-dy: 22;
@@ -370,7 +370,7 @@ update planet_osm_point set importance=0 where importance is null;
     text-halo-radius: 1;
     point-allow-overlap: true;
 }
-.peak.point[natural=peak][zoom>=17][importance>=4] name
+.peak.point[natural=peak][zoom>=17][importance_real>=4.0] name
 {
     point-file: url('img/svg-twotone-png/poi_peak.p.22.png');
     text-dy: 24;
@@ -385,7 +385,7 @@ update planet_osm_point set importance=0 where importance is null;
 
 /* ---------------------------------------------------------------------- */
 
-.peak.point[natural=peak][zoom>=16][importance>0] ele
+.peak.point[natural=peak][zoom>=16][importance_real>0.0] ele
 {
     text-dy: 30;
     text-face-name: "Droid Serif Italic";

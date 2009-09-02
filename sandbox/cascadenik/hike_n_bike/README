@@ -352,3 +352,54 @@ convert -modulate 100,150,100 -thumbnail 18x18 weissiger_gaensefuss.jpg		weissig
 convert -modulate 100,150,100 -thumbnail 18x18 weissiger_weg.jpg			weissiger_weg.18.png
 convert -modulate 100,150,100 -thumbnail 18x18 wiesenweg.jpg				wiesenweg.18.png
 convert -modulate 100,150,100 -thumbnail 18x18 zirkel.jpg				zirkel.18.png
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INFO: Launching pipeline execution.
+01.09.2009 18:41:11 org.openstreetmap.osmosis.core.Osmosis run
+INFO: Pipeline executing, waiting for completion.
+Processing: Node(4649k) Way(179k) Relation(0k)COPY_END for planet_osm_line failed: FEHLER:  ungültige Eingabesyntax für Typ real: »regional«
+CONTEXT:  COPY planet_osm_line, Zeile 1, Spalte importance: »regional«
+
+Error occurred, cleaning up
+01.09.2009 20:11:59 org.openstreetmap.osmosis.core.xml.common.BaseXmlWriter release
+SCHWERWIEGEND: Unable to close writer.
+java.io.IOException: Broken pipe
+        at java.io.FileOutputStream.writeBytes(Native Method)
+        at java.io.FileOutputStream.write(FileOutputStream.java:260)
+        at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:202)
+        at sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:263)
+        at sun.nio.cs.StreamEncoder.write(StreamEncoder.java:106)
+        at java.io.OutputStreamWriter.write(OutputStreamWriter.java:190)
+        at java.io.BufferedWriter.flushBuffer(BufferedWriter.java:111)
+        at java.io.BufferedWriter.close(BufferedWriter.java:246)
+        at org.openstreetmap.osmosis.core.xml.common.BaseXmlWriter.release(BaseXmlWriter.java:191)
+        at org.openstreetmap.osmosis.core.merge.v0_6.ChangeMerger.run(ChangeMerger.java:207)
+        at java.lang.Thread.run(Thread.java:619)
+01.09.2009 20:11:59 org.openstreetmap.osmosis.core.merge.v0_6.ChangeDownloader download

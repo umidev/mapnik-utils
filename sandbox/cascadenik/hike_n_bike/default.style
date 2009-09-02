@@ -109,7 +109,7 @@ way       network      text     linear
 way       surface      text     linear
 
 
-node,way  importance      real
+node,way  importance      text	       linear
 node,way  fee    	  text         linear
 way 	  lanes      	  int4         linear
 node,way  information  	  text         linear
