@@ -1,0 +1,69 @@
+# Map server benchmark map file
+MAP
+  IMAGETYPE      AGG
+  EXTENT         -180 -90 180 90
+  SIZE           400 300
+  SHAPEPATH      "../sample_data/"
+  IMAGECOLOR     255 255 255
+  FONTSET        "../fonts/fonts.list"
+  
+  PROJECTION
+      "init=epsg:4326"
+  END
+  
+  OUTPUTFORMAT
+    NAME 'AGG'
+    DRIVER AGG/PNG
+    IMAGEMODE RGB
+  END
+
+
+  # Debug
+  CONFIG  "MS_ERRORFILE" "/tmp/mapserver.log"
+  #DEBUG   2
+
+  # WMS and WFS metadata
+  WEB
+    METADATA
+      "wms_title"           "WMS Demo Server"
+      "wms_onlineresource"  "http://192.168.1.4/cgi-bin/mapserv.fcgi?map=/var/www/share/bench.map&"
+      "wms_srs"             "EPSG:4326"
+      "wfs_title"           "WFS Demo Server"
+      "wfs_onlineresource"  "http://192.168.1.4/cgi-bin/mapserv.fcgi?map=/var/www/share/bench.map&"
+      "wfs_srs"             "EPSG:4326"
+    END
+  END
+  
+  # Tiger texas, postgis, full roads (1M lines)
+  LAYER
+    NAME        tiger_pg
+    METADATA
+      "wms_title"    "Tiger lines, Texas, PostGIS"
+      "wfs_title"    "Tiger lines, Texas, PostGIS"
+      "gml_featureid" "ID"
+      "gml_include_items" "all"
+      "wms_extent" "-106.64395234549875 25.841083405399676 -93.51951316494875 36.50068992305937"
+    END
+    PROCESSING "CLOSE_CONNECTION=DEFER"
+    CONNECTIONTYPE postgis
+    CONNECTION "user=postgres dbname=benchmarks host=localhost"
+    DATA "the_geom from tiger_pg"
+    STATUS      OFF
+    TYPE        LINE
+    #DUMP        TRUE
+
+    # Projection (shared by all layers)
+    PROJECTION
+      "init=epsg:4326"
+    END
+    
+    CLASS
+      STYLE
+        COLOR     0 0 0
+        WIDTH 0.5
+      END
+    END
+  END
+ 
+# End of map file
+END 

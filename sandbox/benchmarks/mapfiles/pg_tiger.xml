@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[
+    <!ENTITY host "localhost">
+    <!ENTITY port "5432">
+    <!ENTITY user "postgres">
+    <!ENTITY password "">
+    <!ENTITY dbname "benchmarks">
+    <!ENTITY tiger_pg "tiger_pg">
+]>
+
+<Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
+
+
+  <Style name="tiger_styles">
+    <Rule>
+      <LineSymbolizer>
+        <CssParameter name="stroke">black</CssParameter>
+        <CssParameter name="stroke-width">.5</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+      
+  <!-- Tiger texas, postgis, full roads (1M lines) -->
+  <Layer name="tiger_pg" srs="+proj=latlong +datum=WGS84" status="on">
+    <StyleName>tiger_styles</StyleName>
+      <Datasource>
+          <Parameter name="type">postgis</Parameter>
+          <Parameter name="host">&host;</Parameter>
+          <Parameter name="port">&port;</Parameter>
+          <Parameter name="user">&user;</Parameter>
+          <Parameter name="password">&password;</Parameter>
+          <Parameter name="dbname">&dbname;</Parameter>
+          <Parameter name="estimate_extent">false</Parameter>
+          <Parameter name="extent">-106.64395234549875,25.841083405399676,-93.51951316494875,36.50068992305937</Parameter>
+          <Parameter name="table">&tiger_pg;</Parameter>
+      </Datasource>
+  </Layer>
+  
+</Map>
