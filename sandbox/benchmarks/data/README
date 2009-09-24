@@ -3,5 +3,10 @@ Data for these benchmarks can be downloaded from:
 http://presentations.opengeo.org/2008_FOSS4G/foss4g-benchmarks-data-scripts.tar.bz2
 tar xvf foss4g-benchmarks-data-scripts.tar.bz2
 
+createdb benchmarks -U postgres -E UTF8
+createlang plpgsql -U postgres benchmarks
+psql -U postgres -f /usr/local/pgsql/share/lwpostgis.sql benchmarks
+psql -U postgres -f /usr/local/pgsql/share/spatial_ref_sys.sql benchmarks
+
 $ createdb -T template_postgis foss4g2008 -U postgres
-$ shp2pgsql -s 4326 tiger_shp.shp tiger_pg | psql foss4g2008 -U postgres
+$ shp2pgsql -s 4326 /Volumes/Wren/Users/spring/projects/utils/sandbox/benchmarks/data/benchmarks/data/tiger_shp.shp tiger_pg | psql benchmarks -U postgres

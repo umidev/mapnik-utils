@@ -1,11 +1,11 @@
 # Map server benchmark map file
 MAP
-  IMAGETYPE      PNG
+  IMAGETYPE      AGG
   EXTENT         -180 -90 180 90
   SIZE           400 300
   SHAPEPATH      "../sample_data/"
   IMAGECOLOR     255 255 255
-  FONTSET        "./fonts/fonts.list"
+  FONTSET        "../fonts/fonts.list"
   
   PROJECTION
       "init=epsg:4326"
@@ -131,7 +131,7 @@ MAP
     END
     PROCESSING "CLOSE_CONNECTION=DEFER"
     CONNECTIONTYPE postgis
-    CONNECTION "user=geoserver password=postgis dbname=foss4g2008 host=localhost"
+    CONNECTION "user=postgres dbname=benchmarks host=localhost"
     DATA "the_geom from tiger_pg"
     STATUS      OFF
     TYPE        LINE
