@@ -42,6 +42,10 @@ image_formats = {'FORMAT_A1': cairo.FORMAT_A1,
 for format in image_formats:
     print '// --  Rendering %s -----------------------------' % format
     surface = cairo.ImageSurface(image_formats[format], m.width, m.height)
-    render(m, surface)
+    #import pdb;pdb.set_trace()
+    ctx = cairo.Context(surface)
+    # ANTIALIAS_DEFAULT, ANTIALIAS_GRAY, ANTIALIAS_NONE
+    ctx.set_antialias(cairo.ANTIALIAS_DEFAULT)
+    render(m, ctx)
     surface.write_to_png('%s_%s.png' % (map_output, format))
     surface.finish()
