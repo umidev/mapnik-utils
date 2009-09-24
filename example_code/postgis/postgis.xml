@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=latlong +datum=WGS84" bgcolor="rgba(0,0,0,0)">
+    <Style name="My Style">
+        <Rule>
+            <LinePatternSymbolizer/>
+            <LineSymbolizer>
+                <CssParameter name="stroke">rgb(255,140,0)</CssParameter>
+                <CssParameter name="stroke-width">2</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="My Style2">
+        <Rule>
+            <LinePatternSymbolizer/>
+            <LineSymbolizer>
+                <CssParameter name="stroke">rgb(0,0,139)</CssParameter>
+                <CssParameter name="stroke-width">3</CssParameter>
+            </LineSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="shape_buffer" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="0">
+        <StyleName>My Style2</StyleName>
+        <Datasource>
+            <Parameter name="dbname">mapnik</Parameter>
+            <Parameter name="table">(select ST_Buffer(geometry, 1) as geometry from polygon) polygon</Parameter>
+            <Parameter name="type">postgis</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer name="shape" srs="+proj=latlong +datum=WGS84" status="1" clear_label_cache="0">
+        <StyleName>My Style</StyleName>
+        <Datasource>
+            <Parameter name="dbname">mapnik</Parameter>
+            <Parameter name="table">polygon</Parameter>
+            <Parameter name="type">postgis</Parameter>
+        </Datasource>
+    </Layer>
+</Map>
