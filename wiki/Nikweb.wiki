@@ -96,7 +96,7 @@ The core functionality sits in the `nikweb.render.MapnikRenderRequest` class. Th
 Notes:
   * While Mapnik is threadsafe, GDAL (which is used for GeoJSON processing) may not be. If you're running into problems, use to a multi-process web server (prefork MPM, mod-wsgi daemon mode with threads=1, etc.). For more information see: http://trac.osgeo.org/gdal/wiki/FAQMiscellaneous
 
-=== WebOb Standalone Server ===
+=== !WebOb Standalone Server ===
 
 Nikweb bundles a [http://pythonpaste.org/webob/ WebOb] WSGI application and a standalone server in the `nikweb.http.webob_server` module.
 
@@ -107,7 +107,7 @@ $ nikweb/http/webob_server.py /path/to/map/files/
 
 Find out the applicable options & environment variables via --help
 
-=== WebOb, Apache & mod-wsgi ===
+=== !WebOb, Apache & mod-wsgi ===
 
 In [http://code.google.com/p/mapnik-utils/source/browse/trunk/nikweb/examples/nikweb_webob.wsgi examples/nikweb_webob.wsgi] there is a sample WSGI file for use by [http://www.modwsgi.org/ mod-wsgi] within Apache. Copy it to an empty directory and edit it to set your paths appropriately.
 
