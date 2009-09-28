@@ -49,9 +49,9 @@ $ pip install nikweb
 See [http://mapnik-utils.googlecode.com/svn/trunk/nikweb/examples/README examples/README]
 
 || *Input Feature Data* || *Map File* || *Output Image* ||
-||[../source/browse/trunk/nikweb/examples/example_0.json JSON]||[../source/browse/trunk/nikweb/examples/example_0.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_0.png"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_0.png" height="200" /></a>||
-||[../source/browse/trunk/nikweb/examples/example_1.json JSON]||[../source/browse/trunk/nikweb/examples/example_1.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_1.png"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_1.png" height="200" /></a>||
-||[../source/browse/trunk/nikweb/examples/example_2.json JSON]||[../source/browse/trunk/nikweb/examples/example_2.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_2.jpg"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_2.jpg" height="200" /></a>||
+||[../../source/browse/trunk/nikweb/examples/example_0.json JSON]||[../../source/browse/trunk/nikweb/examples/example_0.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_0.png"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_0.png" height="200" /></a>||
+||[../../source/browse/trunk/nikweb/examples/example_1.json JSON]||[../../source/browse/trunk/nikweb/examples/example_1.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_1.png"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_1.png" height="200" /></a>||
+||[../../source/browse/trunk/nikweb/examples/example_2.json JSON]||[../../source/browse/trunk/nikweb/examples/example_2.xml Map XML]||<a href="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_2.jpg"><img src="http://mapnik-utils.googlecode.com/svn/wiki/nikweb_images/example_2.jpg" height="200" /></a>||
 
 == Requests ==
 
