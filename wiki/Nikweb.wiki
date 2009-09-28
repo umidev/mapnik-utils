@@ -98,7 +98,7 @@ Notes:
 
 === WebOb Standalone Server ===
 
-Nikweb bundles a WebOb WSGI application and a standalone server in the `nikweb.http.webob_server` module.
+Nikweb bundles a [http://pythonpaste.org/webob/ WebOb] WSGI application and a standalone server in the `nikweb.http.webob_server` module.
 
 Run:
 {{{
@@ -109,7 +109,7 @@ Find out the applicable options & environment variables via --help
 
 === WebOb, Apache & mod-wsgi ===
 
-In [http://mapnik-utils.googlecode.com/svn/trunk/nikweb/examples/nikweb_webob.wsgi `examples/nikweb_webob.wsgi`] there is a sample WSGI file for use by [http://www.modwsgi.org/ mod-wsgi] within Apache. Copy it to an empty directory and edit it to set your paths appropriately.
+In [http://code.google.com/p/mapnik-utils/source/browse/trunk/nikweb/examples/nikweb_webob.wsgi examples/nikweb_webob.wsgi] there is a sample WSGI file for use by [http://www.modwsgi.org/ mod-wsgi] within Apache. Copy it to an empty directory and edit it to set your paths appropriately.
 
 Then in your apache config, add the path to a `WSGIScriptAlias` directive:
 
@@ -123,7 +123,7 @@ WSGIScriptAlias / /path/to/nikweb_config/apache/nikweb_webob.wsgi
 
 === Django ===
 
-Nikweb bundles two Django views in the `nikweb.http.django_views` module.
+Nikweb bundles two [http://www.djangoproject.com Django] views in the `nikweb.http.django_views` module.
 
 Specify the Nikweb settings in the Django settings module:
   * `NIKWEB_MAP_DEFINITIONS`: local path to your map definitions (required)
