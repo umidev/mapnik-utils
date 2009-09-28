@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="steelblue" srs="+proj=latlong +datum=WGS84">
+  <!-- Note: Paths are relative to the XML FILE -->
+
+  <Style name="WorldBorders">
+    <Rule>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f2eff9</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(50%,50%,100%)</CssParameter>
+        <CssParameter name="stroke-width">1</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="Country">
+    <Rule>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">rgb(100%,0%,0%)</CssParameter>
+        <CssParameter name="fill-opacity">0.2</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(100%,0%,0%)</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <!-- Base layers that should be in all maps -->
+  <Layer name="world" srs="+proj=latlong +datum=WGS84">
+    <StyleName>WorldBorders</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">data/TM_WORLD_BORDERS-0.3.shp</Parameter>
+    </Datasource>
+  </Layer>
+
+  <!-- Any layers named with the prefix (NIKWEB*) will get data from the JSON applied -->
+  <Layer name="NIKWEB" srs="+proj=latlong +datum=WGS84">
+    <StyleName>Country</StyleName>
+  </Layer>
+</Map>

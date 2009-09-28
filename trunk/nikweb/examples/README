@@ -1,0 +1,29 @@
+= Running the demos =
+
+First, download the world borders dataset and extract into examples/data/
+  http://thematicmapping.org/downloads/TM_WORLD_BORDERS-0.3.zip
+  (source: http://thematicmapping.org/downloads/world_borders.php)
+
+== From the command line ==
+
+Run:
+  $ python ./nikweb/render.py examples/example_0.xml examples/example_0.json example_0.png
+  $ python ./nikweb/render.py examples/example_1.xml examples/example_1.json example_1.png
+  $ python ./nikweb/render.py examples/example_2.xml examples/example_2.json example_2.jpg
+
+And check out the resulting PNG files.
+
+== As a web service ==
+
+Run:
+  $ python ./nikweb/http/webob_server.py
+
+then to see the available maps (in another shell):
+  $ curl http://localhost:8080/
+
+then to render the examples (in another shell):
+  $ curl -v --data-binary "@examples/example_0.json" http://localhost:8080/example_0/ > example_web_0.png
+  $ curl -v --data-binary "@examples/example_1.json" http://localhost:8080/example_1/ > example_web_1.png
+  $ curl -v --data-binary "@examples/example_2.json" http://localhost:8080/example_2/ > example_web_2.jpg
+
+And check out the resulting PNG files.

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="steelblue" srs="+proj=latlong +datum=WGS84">
+  <!-- Note: Paths are relative to the XML FILE -->
+
+  <Style name="WorldBorders">
+    <Rule>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#f2eff9</CssParameter>
+      </PolygonSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(50%,50%,100%)</CssParameter>
+        <CssParameter name="stroke-width">1</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="TourLine">
+    <Rule>
+      <!-- filter on the attributes of the GeoJSON features -->
+      <Filter>[class] = 'tour_line'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(0%,0%,0%)</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">rgb(100%,0%,0%)</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="TourStart">
+    <Rule>
+      <!-- filter on the attributes of the GeoJSON features -->
+      <Filter>[class] = 'tour_start'</Filter>
+      <PointSymbolizer file="../mapnik/demo/viewer/images/info.png" width="32" height="32" type="png" />
+    </Rule>
+  </Style>
+
+  <!-- Base layers that should be in all maps -->
+  <Layer name="world" srs="+proj=latlong +datum=WGS84">
+    <StyleName>WorldBorders</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">data/TM_WORLD_BORDERS-0.3.shp</Parameter>
+    </Datasource>
+  </Layer>
+
+  <!-- Any layers named with the prefix (NIKWEB*) will get data from the JSON applied -->
+  <Layer name="NIKWEB" srs="+proj=latlong +datum=WGS84">
+    <StyleName>TourLine</StyleName>
+  </Layer>
+
+  <Layer name="NIKWEB_2" srs="+proj=latlong +datum=WGS84">
+    <StyleName>TourStart</StyleName>
+  </Layer>
+</Map>
