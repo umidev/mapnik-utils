@@ -27,6 +27,12 @@
       </LineSymbolizer>
     </Rule>
   </Style>
+  
+  <Style name="CountryLabels">
+    <Rule>
+      <TextSymbolizer name="NAME" face_name="DejaVu Sans Book" size="25" fill="black" halo_fill="white" halo_radius="1" spacing="6"/>
+    </Rule>
+  </Style>
 
   <!-- Base layers that should be in all maps -->
   <Layer name="world" srs="+proj=latlong +datum=WGS84">
@@ -40,5 +46,6 @@
   <!-- Any layers named with the prefix (NIKWEB*) will get data from the JSON applied -->
   <Layer name="NIKWEB" srs="+proj=latlong +datum=WGS84">
     <StyleName>Country</StyleName>
+    <StyleName>CountryLabels</StyleName>
   </Layer>
 </Map>

@@ -50,9 +50,6 @@
   <!-- Any layers named with the prefix (NIKWEB*) will get data from the JSON applied -->
   <Layer name="NIKWEB" srs="+proj=latlong +datum=WGS84">
     <StyleName>TourLine</StyleName>
-  </Layer>
-
-  <Layer name="NIKWEB_2" srs="+proj=latlong +datum=WGS84">
     <StyleName>TourStart</StyleName>
   </Layer>
 </Map>
