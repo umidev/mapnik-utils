@@ -14,11 +14,11 @@ setup(name='nikinfo',
         license='GPlv2',
         url='http://mapnik-utils.googlecode.com/',
         classifiers=[
-            'Development Status :: 4 - Beta',
-            'Environment :: Console',
-            'Intended Audience :: End Users/Desktop',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python',
-            'Topic :: Utilities'
-            ],
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: End Users/Desktop',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Scientific/Engineering :: GIS',
+        'Topic :: Utilities'],
         )
