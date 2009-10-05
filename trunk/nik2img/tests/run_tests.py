@@ -2,10 +2,11 @@
 # http://trac.gispython.org/projects/PCL/browser/Shapely/trunk/tests/test_doctests.py
 # Copyright (c) 2007, Sean C. Gillies
 
+import os
+import sys
+import glob
 import doctest
 import unittest
-import glob
-import os
 
 optionflags = (doctest.NORMALIZE_WHITESPACE |
                doctest.ELLIPSIS)
@@ -33,5 +34,10 @@ def run_doc_tests():
          in list_doctests()])
 
 if __name__ == "__main__":
+    # append working directory so we can import 'mapnik_util' without installing them
+    sys.path.append(os.getcwd())
+    # test importing so a failure happens here
+    # rather than later during docstests
+    import mapnik_utils
     runner = unittest.TextTestRunner()
     runner.run(run_doc_tests())
