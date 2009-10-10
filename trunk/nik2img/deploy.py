@@ -17,7 +17,7 @@ import sys
 import time
 from subprocess import call as subcall
 
-DEBUG = False
+DEBUG = True
 
 app = 'nik2img'
 version = __import__(app).__version__
@@ -40,7 +40,7 @@ def cleanup():
     call('sudo rm -rf *.egg* *.pyc dist/ build/')
 
 def tag():
-    call('svn cp ../%s %s/%s/' % (app,tag_dir,version))
+    call('svn copy https://mapnik-utils.googlecode.com/svn/trunk/%s/ https://mapnik-utils.googlecode.com/svn/tags/%s/%s -m "tagging %s %s release"' % (app,app,version,app,version))
 
 def package():
     call('python setup.py sdist upload')
@@ -55,7 +55,7 @@ def main():
     tag()
     package()
     cleanup()
-    commit()
+    #commit()
     
 if __name__ == '__main__':
     main()
