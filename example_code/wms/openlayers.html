@@ -17,9 +17,18 @@
         var map, world, wms;
         function init(){
             map = new OpenLayers.Map('map');
-            wms = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000?", {layers: 'world', format:'image/png'} );
-            map.addLayers([wms]);
-            map.fractionalZoom = true;
+            
+            countries = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000?", 
+                {layers: ['countries], styles:[''],format:'image/png'}, 
+                { isBaseLayer: true } );
+            
+            labels = new OpenLayers.Layer.WMS("Mapnik WMS","http://localhost:8000?", 
+                {layers: ['countries_l'], styles:[''],format:'image/png',transparent:'TRUE'}, 
+                { isBaseLayer: false } );
+
+            map.addLayers([countries,labels]);
+            
+            //map.fractionalZoom = true;
             map.zoomToMaxExtent();     
         }                
     </script>

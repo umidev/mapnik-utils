@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
 <!-- Sample Mapnik XML template by Dane Springmeyer -->
-<Map bgcolor="white" srs="+proj=latlong +datum=WGS84">
+<Map srs="+proj=latlong +datum=WGS84">
   
   <Style name="population">
 
@@ -120,11 +120,19 @@
     <!-- Style order determines layering hierarchy -->
     <!-- Labels go on top so they are listed second -->
     <StyleName>population</StyleName>
-    <StyleName>countries_label</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
       <Parameter name="file">/Users/spring/projects/utils/example_code/wms/data/thematic_mapping_world</Parameter>
     </Datasource>
   </Layer>
 
+  <Layer name="countries_l" status="on" queryable="true">
+    <!-- Style order determines layering hierarchy -->
+    <!-- Labels go on top so they are listed second -->
+    <StyleName>countries_label</StyleName>
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">/Users/spring/projects/utils/example_code/wms/data/thematic_mapping_world</Parameter>
+    </Datasource>
+  </Layer>
 </Map>
