@@ -3,12 +3,6 @@
 
 A command line utility to take a cascadenik mml or mapnik xml file as input and output an image.
 
-===<font color="red">Note: Version 0.2.4 was used in the Where 2.0 demo, so download that for the exact interface for http://mapsfromscratch.com</font> ===
-
-{{{
-svn co http://mapnik-utils.googlecode.com/svn/tags/nik2img/0.2.4/ nik2img2_4
-}}}
-
 === Installation ===
 
 To run this program:
@@ -43,8 +37,7 @@ To run the full test suite for nik2img:
 {{{
 $ svn co http://mapnik-utils.googlecode.com/svn/trunk/nik2img/ nik2img-svn
 $ cd nik2img-svn
-$ sudo python setup.py install
-$ sudo python tests/tests.py
+$ python tests/run_tests.py
 }}}
 
 
@@ -62,12 +55,12 @@ Loop through verbosely outputting all possible image formats and a custom tile s
 $ nik2img.py mapfile.xml maps/ -f all -d 256 256  -v
 }}}
 
-General a map in spherical mercator projection by supplying Long/Lat bounding box (of the United States):
+Generate a map in spherical mercator projection by supplying Long/Lat bounding box (of the United States):
 {{{
 $ nik2img.py mapfile.xml mercator.png --srs 900913 --bbox -124.73 24.95 -66.96 49.37 -v
 }}}
 
-General that same map in spherical mercator projection but by supplying the projected coordinates (in mercator):
+Generate that same map in spherical mercator projection but by supplying the projected coordinates (in mercator):
 {{{
 $ nik2img.py mapfile.xml mercator.png --srs 900913 --projected-extent -13885038.383 2870337 -7455049 6338174 -v
 }}}
