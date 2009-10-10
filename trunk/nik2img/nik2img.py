@@ -7,7 +7,7 @@ from timeit import time
 from pdb import set_trace
 from optparse import OptionParser
 
-__version__ = '0.3.2'
+__version__ = '0.4.0'
 __author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
 __copyright__ = 'Copyright 2009, Dane Springmeyer'
 __license__ = 'GPLv2'
@@ -183,7 +183,7 @@ class ComposeDebug(Compose):
             val = color_text(4,out,self.no_color)
             sys.stderr.write('%s\n' % val)
         
-parser = OptionParser(usage="""%prog <mapfile> [image] [options]
+parser = OptionParser(usage="""%prog <mapfile> <image> [options]
 
 Example usage
 -------------
@@ -194,8 +194,11 @@ Full help:
 Read XML, output image:
  $ %prog mapfile.xml image.png
 
+Read MML in verbose mode
+ $ %prog mapfile.mml image.png -v
+
 Read MML, pipe to image
- $ %prog mapfile.mml > image.png
+ $ %prog mapfile.mml --pipe > image.png
 
 Accept piped XML
 $ <xml stream> | %prog image.png
@@ -320,6 +323,10 @@ parser.add_option('--no-open', dest='no_open',
                   action='store_true', default=False,
                   help='Skip opening of image in default viewer')
 
+parser.add_option('--pipe', dest='pipe',
+                  action='store_true', default=False,
+                  help='Pipe image to byte stream instead of writing to file')
+                  
 parser.add_option('--fonts',
                   type='string', # actually results in a comma-delimited list
                   help='List of paths to .ttf or .otf fonts to register (comma separated)',
@@ -365,7 +372,10 @@ if __name__ == '__main__':
             if hasattr(options,'image'):
                 nik_map.open()
             else:
-                nik_map.render()
+                if not options.pipe:
+                    parser.error(color_text(4,'\n\nPlease provide the path to an out image.\n',options.no_color))
+                else:
+                    nik_map.render()
     
     if options.profile:
         import cProfile

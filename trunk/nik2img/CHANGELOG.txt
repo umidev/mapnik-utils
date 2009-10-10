@@ -3,6 +3,16 @@ nik2img changelog
 =================
 
 
+Version 0.4.0, October 10th 2009:
+---------------------------------
+
+* Packaged from r848
+
+* Made the output image argument mandatory unless the new '--pipe' flag is used, avoiding printing of image into terminal unless the user actually wants that behavior.
+
+* Tests can now be run without needing to install nik2img
+
+
 Version 0.3.2, August 13 2009:
 ------------------------------
 
