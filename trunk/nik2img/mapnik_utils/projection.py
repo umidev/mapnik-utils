@@ -10,7 +10,7 @@ MERC_PROJ4 = '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +
 
 class EasyProjection(mapnik.Projection):
     def __init__(self,srs):
-        self.srs = srs.lower()
+        self.srs = srs
         self.srid = None
         self.method, self.proj = self.get_proj(self.srs)
         try:
