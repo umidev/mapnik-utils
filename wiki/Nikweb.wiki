@@ -19,7 +19,8 @@ See [http://mapnik-utils.googlecode.com/svn/trunk/nikweb/AUTHORS AUTHORS] for de
   * Linux or OS X (might work on windows, patches welcome!)
   * [http://www.python.org Python] >= 2.4
   * [http://www.gdal.org GDAL] >= 1.5.0, compiled with GeoJSON support
-  * [http://www.mapnik.org Mapnik] >= 0.6.0, compiled with GDAL support (& other sources you want)
+  * [Cairo] 1.8 & python-cairo (optional, for PDF/SVG output)
+  * [http://www.mapnik.org Mapnik] >= 0.6.0, compiled with GDAL support (& other sources you want), and optionally Cairo support.
   * Python [http://undefined.org/python/#simplejson SimpleJSON] (for Python < 2.6)
   * [http://pythonpaste.org/webob/ WebOb] >= 0.9 or [http://www.djangoproject.com Django] >= 1.0 (for the web framework bits)
 
@@ -75,12 +76,19 @@ The additional parameters are:
   * `height`: height of the output map image.
   * `bbox_image`: `[minx, miny, maxx, maxx]`. Default is the extent of the submitted data.
   * `bbox_image_buffer`: `[value, units]`. When bbox_image is not specified, buffer the extent of the submitted data by the specified value. Units are one of "`px`" (pixels in the output image), or "`map`" (map units).
-  * `format`: output image mime-type. Default is "`image/png`"
+  * format: output image mime-type. Default is "`image/png`". Available formats are:
+    * `image/png`: 32-bit PNG
+    * `image/jpeg`: JPEG
+    * `image/png256`: 8-bit PNG
+    * `text/svg+xml`: SVG (only if Mapnik was built with Cairo support)
+    * `application/pdf`: PDF (only if Mapnik was built with Cairo support)
+    * `application/postscript`: PostScript (only if Mapnik was built with Cairo support)
 
 If `width` and `height` are specified, the resulting image will be that size. If `bbox_image` is specified, and one of `width`/`height` are specified, then the unspecified width or height is calculated based on the bounding box proportions.
 
 All input data should be in the projection specified in the map XML file `<layer>` definition. If the `<map>` projection differs, then `bbox_image` must be specified, and should be in the `<map>` projection coordinates.
 
+For the PDF and PostScript output formats, the image dimensions are all in points (1/72.0 inch).
 
 == Map definitions ==
 
