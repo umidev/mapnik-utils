@@ -19,7 +19,7 @@ See [http://mapnik-utils.googlecode.com/svn/trunk/nikweb/AUTHORS AUTHORS] for de
   * Linux or OS X (might work on windows, patches welcome!)
   * [http://www.python.org Python] >= 2.4
   * [http://www.gdal.org GDAL] >= 1.5.0, compiled with GeoJSON support
-  * [Cairo] 1.8 & python-cairo (optional, for PDF/SVG output)
+  * [http://cairographics.org/ Cairo] 1.8 & python-cairo (optional, for PDF/SVG output)
   * [http://www.mapnik.org Mapnik] >= 0.6.0, compiled with GDAL support (& other sources you want), and optionally Cairo support.
   * Python [http://undefined.org/python/#simplejson SimpleJSON] (for Python < 2.6)
   * [http://pythonpaste.org/webob/ WebOb] >= 0.9 or [http://www.djangoproject.com Django] >= 1.0 (for the web framework bits)
