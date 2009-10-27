@@ -67,15 +67,15 @@ class Nikweb(object):
         else:
             raise exc.HTTPBadRequest("No 'q' parameter specified").exception 
         
-        #try:
-        d = json.loads(raw_data.decode('utf-8'))
-        #except:
-        #    raise exc.HTTPBadRequest('Error parsing JSON').exception
+        try:
+            d = json.loads(raw_data.decode('utf-8'))
+        except:
+            raise exc.HTTPBadRequest('Error parsing JSON').exception
         
-        #try:
-        image, content_type, elapsed = self.nikweb_http.render(map, d)
-        #except:
-        #    raise exc.HTTPServerError('Error rendering').exception
+        try:
+            image, content_type, elapsed = self.nikweb_http.render(map, d)
+        except:
+            raise exc.HTTPServerError('Error rendering').exception
         
         resp = Response(body=image, content_type=content_type)
         resp.headers['X-nikweb-rendertime'] = "%0.3f" % elapsed
