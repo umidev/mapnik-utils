@@ -6,6 +6,7 @@ import tempfile
 import os
 import sys
 import logging
+from cStringIO import StringIO
 
 import mapnik
 try:
@@ -107,9 +108,42 @@ class NikwebRenderRequest(object):
                 return (int(self.height * bbox_size[0]/bbox_size[1]), int(self.height))
         return self.factory.default_size
     
-    def get_format(self):
-        """ Turns the mime-type (eg. image/png) into a format specifier (eg. png)"""
-        return self.format.split('/')[1].lower()
+    def _render_surface(self, map, map_size):
+        if self.format.startswith('image/'):
+            # AGG
+            f = str(self.format.split('/')[1].lower())
+            im = mapnik.Image(*map_size)
+            mapnik.render(map, im)
+            return im.tostring(f)
+        
+        elif self.format in ('application/pdf', 'application/postscript', 'text/svg+xml'):
+            # CAIRO
+            try:
+                # first, check if Cairo is available
+                import cairo
+                # newer Mapniks have better ways of checking whether they were actually
+                # compiled with Cairo support
+                if hasattr(mapnik, 'has_cairo') and (not mapnik.has_cairo()):
+                    raise ImportError
+                if hasattr(mapnik, 'has_pycairo') and (not mapnik.has_pycairo()):
+                    raise ImportError
+            except ImportError:
+                raise ImportError("Mapnik wasn't compiled with Cairo support, or Cairo isn't installed.")
+            
+            surface_file = StringIO()
+            if (self.format == 'application/pdf'):
+                surface = cairo.PDFSurface(surface_file, *map_size)
+            elif (self.format == 'application/postscript'):
+                surface = cairo.PSSurface(surface_file, *map_size)
+            elif (self.format == 'text/svg+xml'):
+                surface = cairo.SVGSurface(surface_file, *map_size)
+            
+            mapnik.render(map, surface)
+            surface.finish()
+            return surface_file.getvalue()
+        
+        else:
+            raise ValueError("Unknown format: %s" % self.format)
     
     def render(self):
         """ Renders the request, returning a binary in the specified format. """
@@ -163,9 +197,7 @@ class NikwebRenderRequest(object):
                 map.zoom_to_box(extent)
             
             # render it
-            map_im = mapnik.Image(*map_size)
-            mapnik.render(map, map_im)
-            return map_im.tostring(str(self.get_format()))
+            return self._render_surface(map, map_size)
         
         finally:
             geojson_file.close()
