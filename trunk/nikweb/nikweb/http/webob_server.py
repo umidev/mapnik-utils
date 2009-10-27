@@ -15,8 +15,8 @@ import nikweb.http
 
 class Nikweb(object):
     URL_PATTERNS = (
-        (r'/$', 'index'),
-        (r'/(?P<map>[\w\.-]+)/$', 'render'),
+        (r'/?$', 'index'),
+        (r'/(?P<map>[\w\.-]+)/?$', 'render'),
     )
     
     def __init__(self, map_definitions, **kwargs):
