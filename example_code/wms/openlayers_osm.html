@@ -10,7 +10,10 @@
       height: 100%;
     }
   </style>
-<script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>
+<!--<script src="http://dev.openlayers.org/nightly/OpenLayers.js"></script>-->
+
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+
 <script type="text/javascript">
         var map;
         
@@ -28,10 +31,13 @@
                 {
                 layers: '__all__',
                 format:'image/png',
+                bgcolor:'0xb5d0d0',
+                //transparent:'TRUE'
                 },
                 {
-                //gutter:0,
-                //ratio:1,
+                gutter:1,
+                buffer:0,
+                ratio:1,
                 wrapDateLine: true,
                 isBaselayer:true,
                 singleTile:true,
