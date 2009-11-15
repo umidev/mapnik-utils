@@ -372,8 +372,8 @@ if __name__ == '__main__':
             if hasattr(options,'image'):
                 nik_map.open()
             else:
-                if not options.pipe:
-                    parser.error(color_text(4,'\n\nPlease provide the path to an out image.\n',options.no_color))
+                if not options.pipe and not options.dry_run:
+                    parser.error(color_text(4,'\n\nPlease provide the path to an output image.\n',options.no_color))
                 else:
                     nik_map.render()
     
