@@ -1,6 +1,6 @@
 import re
 import sys
-from mapnik import Map, Layer, Coord, Envelope, Datasource
+import mapnik
 from projection import EasyProjection
 
 try:
@@ -8,8 +8,7 @@ try:
 except:
     from compatibility import ProjTransform
 
-
-BoostPythonMetaclass = Coord.__class__
+BoostPythonMetaclass = mapnik.Coord.__class__
                 
 class _injector(object):
     class __metaclass__(BoostPythonMetaclass):
@@ -20,7 +19,7 @@ class _injector(object):
                         setattr(b,k,v)
             return type.__init__(self, name, bases, dict)
 
-class _Map(Map,_injector):
+class _Map(mapnik.Map,_injector):
 
     def set_easy_srs(self,srs):
         self.srs = EasyProjection(srs).params()
@@ -91,20 +90,20 @@ class _Map(Map,_injector):
     
     # http://trac.mapnik.org/browser/trunk/src/map.cpp#L245
     def set_center_and_zoom(self,lon,lat,level=0,geographic=True):
-        coords = Coord(lon,lat)
+        coords = mapnik.Coord(lon,lat)
         if geographic and not self.proj_obj.geographic:
             coords = coords.forward(self.proj_obj)
         w,h = self.width, self.height
         res = self.get_scale_for_zoom_level(level) 
-        box = Envelope(coords.x - 0.5 * w * res,
+        box = mapnik.Envelope(coords.x - 0.5 * w * res,
                     coords.y - 0.5 * h * res, 
                     coords.x + 0.5 * w * res, 
                     coords.y + 0.5 * h * res)
         self.zoom_to_box(box) 
 
     def set_center_and_radius(self,lon,lat,radius=None,geographic=True):
-        coords = Coord(lon,lat)
-        box = Envelope(coords.x - radius,
+        coords = mapnik.Coord(lon,lat)
+        box = mapnik.Envelope(coords.x - radius,
                       coords.y - radius,
                       coords.x + radius,
                       coords.y + radius)
@@ -113,7 +112,7 @@ class _Map(Map,_injector):
         self.zoom_to_box(box)
 
     def zoom_max(self):
-        max_extent = Envelope(-179.99999694572804,-85.0511285163245,179.99999694572804,85.0511287798066)
+        max_extent = mapnik.Envelope(-179.99999694572804,-85.0511285163245,179.99999694572804,85.0511287798066)
         if not self.proj_obj.geographic:
             max_extent = max_extent.forward(self.proj_obj)
         self.zoom_to_box(max_extent)
@@ -179,7 +178,7 @@ class _Map(Map,_injector):
             )
         return wld_string
                   
-class _Layer(Layer,_injector):
+class _Layer(mapnik.Layer,_injector):
 
     @property
     def proj_obj(self):
@@ -202,14 +201,14 @@ class _Layer(Layer,_injector):
         return rules
 
 
-class _Coord(Coord,_injector):
+class _Coord(mapnik.Coord,_injector):
     def transform(self,from_prj,to_prj):
-        trans = ProjTransform(from_prj,to_prj)
+        trans = mapnik.ProjTransform(from_prj,to_prj)
         return trans.forward(self)
 
-class _Envelope(Envelope,_injector):
+class _Envelope(mapnik.Envelope,_injector):
     def transform(self,from_prj,to_prj):
-        trans = ProjTransform(from_prj,to_prj)
+        trans = mapnik.ProjTransform(from_prj,to_prj)
         return trans.forward(self)
 
 if __name__ == '__main__':

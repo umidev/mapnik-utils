@@ -5,12 +5,18 @@ import platform
 from renderer import Render
 from mapfile import Load
 
+# repair compatibility with mapnik2 development series
+if not hasattr(mapnik,'Envelope'):
+    mapnik.Envelope = mapnik.Box2d
+
 # extend native mapnik objects
 import metaclass_injectors
 
 # bring 0.5.x series python bindings up to 0.6.x
 if not hasattr(mapnik,'mapnik_version'):
     import compatibility 
+
+
 
 class Compose(object):
     """
