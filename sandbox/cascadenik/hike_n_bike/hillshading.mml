@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+zoom level  - scale denominator
+1 279541132.014
+2 139770566.007
+3 69885283.0036
+4 34942641.5018
+5 17471320.7509
+6 8735660.37545
+7 4367830.18772
+8 2183915.09386
+9 1091957.54693
+10 545978.773466
+11 272989.386733
+12 136494.693366
+13 68247.3466832
+14 34123.6733416
+15 17061.8366708
+16 8530.91833539
+17 4265.4591677
+18 2132.72958385
+-->
+
+
+<!DOCTYPE Map[
+    <!ENTITY map_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
+    <!ENTITY user "gis">
+    <!ENTITY dbname "gis">
+    <!ENTITY estimate_extent "true">
+    <!ENTITY extent "">
+]>
+<Map srs="&map_srs;">
+    <Stylesheet>
+        Map { map-bgcolor: #eeeeee; }
+    </Stylesheet>
+
+
+    <Layer class="hill_N00W050-N09W059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W050-N09W059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W060-N09W069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W060-N09W069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W070-N09W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W070-N09W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W080-N09W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W080-N09W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W090-N09W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W090-N09W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W150-N09W159">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W150-N09W159/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W160-N09W169">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W160-N09W169/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N00W170-N09W179">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N00W170-N09W179/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W020-N19W029">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W020-N19W029/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W060-N19W069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W060-N19W069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W070-N19W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W070-N19W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W080-N19W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W080-N19W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W090-N19W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W090-N19W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W100-N19W109">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W100-N19W109/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W110-N19W119">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W110-N19W119/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W150-N19W159">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W150-N19W159/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N10W170-N19W179">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N10W170-N19W179/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W070-N29W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W070-N29W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W080-N29W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W080-N29W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W090-N29W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W090-N29W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W100-N29W109">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W100-N29W109/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W110-N29W119">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W110-N29W119/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W150-N29W159">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W150-N29W159/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W160-N29W169">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W160-N29W169/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N20W170-N29W179">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N20W170-N29W179/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E000-N39E009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E000-N39E009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E000-N39E009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E000-N39E009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E010-N39E019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E010-N39E019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E020-N39E029">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E020-N39E029/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E030-N39E039">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E030-N39E039/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E040-N39E049">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E040-N39E049/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E050-N39E059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E050-N39E059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30E060-N39E069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30E060-N39E069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W000-N39W010">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W000-N39W010/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W010-N39W019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W010-N39W019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W020-N39W029">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W020-N39W029/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W030-N39W039">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W030-N39W039/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W060-N39W069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W060-N39W069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W070-N39W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W070-N39W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W080-N39W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W080-N39W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W090-N39W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W090-N39W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W100-N39W109">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W100-N39W109/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W110-N39W119">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W110-N39W119/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N30W120-N39W129">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N30W120-N39W129/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E000-N49E009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E000-N49E009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E010-N49E019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E010-N49E019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E020-N49E029">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E020-N49E029/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E030-N49E039">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E030-N49E039/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E040-N49E049">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E040-N49E049/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E050-N49E059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E050-N49E059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40E060-N49E069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40E060-N49E069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W000-N49W009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W000-N49W009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W010-N49W019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W010-N49W019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W050-N49W059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W050-N49W059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W060-N49W069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W060-N49W069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W070-N49W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W070-N49W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W080-N49W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W080-N49W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W090-N49W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W090-N49W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W100-N49W109">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W100-N49W109/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W110-N49W119">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W110-N49W119/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N40W120-N49W129">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N40W120-N49W129/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E000-N60E009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E000-N60E009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E010-N60E019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E010-N60E019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E020-N60E029">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E020-N60E029/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E030-N60E039">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E030-N60E039/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E040-N60E049">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E040-N60E049/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E050-N60E059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E050-N60E059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50E060-N60E069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50E060-N60E069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W000-N60W009">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W000-N60W009/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W010-N60W019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W010-N60W019/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W050-N60W059">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W050-N60W059/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W060-N60W069">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W060-N60W069/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W070-N60W079">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W070-N60W079/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W080-N60W089">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W080-N60W089/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W090-N60W099">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W090-N60W099/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W100-N60W109">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W100-N60W109/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W110-N60W119">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W110-N60W119/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W120-N60W129">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W120-N60W129/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W130-N60W139">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W130-N60W139/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W160-N60W169">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W160-N60W169/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="hill_N50W170-N60W179">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N50W170-N60W179/hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+
+    <Style name="raster">
+      <Rule>
+	<RasterSymbolizer>
+          <CssParameter name="opacity">1.0</CssParameter>
+          <CssParameter name="scaling">bilinear</CssParameter>
+          <CssParameter name="mode">grain_merge</CssParameter>
+	</RasterSymbolizer>
+      </Rule>
+    </Style>
+
+</Map>
+

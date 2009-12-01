@@ -25,21 +25,22 @@ zoom level  - scale denominator
 
 <!DOCTYPE Map[
     <!ENTITY map_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
-    <!ENTITY coastlines "/opt/applications/tilesathome/world_boundaries/processed_p">
+    <!ENTITY coastlines "/sql/world_boundaries/unpacked/processed_p">
     <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
-    <!ENTITY user "postgres">
+    <!ENTITY user "gis">
     <!ENTITY dbname "gis">
-    <!ENTITY estimate_extent "false">
-    <!ENTITY extent "1148357,6146222,1869795,6999934">
+    <!ENTITY estimate_extent "true">
+    <!ENTITY extent "">
+<!--    <!ENTITY extent "1148357,6146222,1869795,6999934">-->
 <!--     <!ENTITY extent "1448357,6446222,1669795,6799934"> -->
 <!--[Lon min, Lat min, Lon max, Lat max]--> 
 <!--     <!ENTITY extent "12.8,50.65,15.3,51.5"> -->
 ]>
 <Map srs="&map_srs;">
     <Stylesheet>
-        Map { map-bgcolor: #eeeeee; }
+        Map { map-bgcolor: #cae5fb; }
     </Stylesheet>
     <Stylesheet src="ground.mss"/>
 <!--     <Stylesheet src="contours.mss"/> -->
@@ -54,7 +55,6 @@ zoom level  - scale denominator
     <Stylesheet src="routes.mss"/>
 
             <!-- coastline shapefiles can be found at http://hypercube.telascience.org/~kleptog/ -->
-<!--
     <Layer class="coast edge outer" srs="&coastlines_srs;">
         <Datasource>
             <Parameter name="type">shape</Parameter>
@@ -73,8 +73,6 @@ zoom level  - scale denominator
             <Parameter name="file">&coastlines;</Parameter>
         </Datasource>
     </Layer>
-
--->
 
     <Layer class="citylike nonparking area" srs="&osm_srs;">
         <Datasource>
@@ -178,15 +176,72 @@ zoom level  - scale denominator
 
     <!-- For some reason, this layer gets set to status="off"
          in the generated XML file, need to fix there: -->
-    <Layer class="dem">
+<!--
+    <Layer class="demN40E000-N44E004">
       	<StyleName>raster</StyleName>
         <Datasource>
 	    <Parameter name="type">gdal</Parameter>
- 	    <Parameter name="file">/opt/applications/tilesathome/contours/hill2_8_z3.tif</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N40E000-N44E004/N40E000-N44E004_hill.tif</Parameter>
 	    <Parameter name="format">tiff</Parameter>
         </Datasource>
     </Layer>
-
+    <Layer class="demN40E005-N44E009">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N40E005-N44E009/N40E005-N44E009_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN40E010-N44E014">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N40E010-N44E014/N40E010-N44E014_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN40E015-N44E019">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N40E015-N44E019/N40E015-N44E019_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN45E000-N49E004">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N45E000-N49E004/N45E000-N49E004_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN45E005-N49E009">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N45E005-N49E009/N45E005-N49E009_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN45E010-N49E014">
+      	<StyleName>raster</StyleName>
+        <Datasource>
+	    <Parameter name="type">gdal</Parameter>
+ 	    <Parameter name="file">/mnt/user-store/osm_hillshading/N45E010-N49E014/N45E010-N49E014_hill.tif</Parameter>
+	    <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+    <Layer class="demN45E015-N49E019">
+        <StyleName>raster</StyleName>
+        <Datasource>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="file">/mnt/user-store/osm_hillshading/N45E015-N49E019/N45E015-N49E019_hill.tif</Parameter>
+            <Parameter name="format">tiff</Parameter>
+        </Datasource>
+    </Layer>
+-->
     <Layer class="water area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -228,7 +283,7 @@ zoom level  - scale denominator
         </Datasource>
     </Layer>
 
-
+<!--
     <Layer class="srtm ten" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -268,7 +323,7 @@ zoom level  - scale denominator
                  height::integer % 100 = 0) AS srtm]]></Parameter>
         </Datasource>
     </Layer>
-
+-->
 
     <Layer class="road area" srs="&osm_srs;">
         <Datasource>
@@ -318,7 +373,7 @@ zoom level  - scale denominator
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
                 (SELECT * FROM planet_osm_line
-                    WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
+                    WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway')
 	            ORDER BY z_order ASC) AS minor_roads]]></Parameter>
         </Datasource>
     </Layer>
@@ -352,7 +407,7 @@ zoom level  - scale denominator
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
-            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
+            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
         </Datasource>
     </Layer>
     <Layer class="road inline" srs="&osm_srs;">
@@ -684,6 +739,7 @@ zoom level  - scale denominator
 	                AS route]]></Parameter>
         </Datasource>
     </Layer>
+ 
     <Layer class="peak point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -692,12 +748,23 @@ zoom level  - scale denominator
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
-                (SELECT *, (to_number(importance, '9.9')) as importance_real
+               (SELECT way, "natural", name, ele, 
+                      CASE WHEN importance IS NOT null THEN 
+                         ('0' || regexp_replace(importance,'[^0-9.]','','g'))::real
+                      ELSE 0 END 
+                     AS importance_real
                      FROM planet_osm_point
-                     WHERE "natural" IN ('peak'))
+                     WHERE "natural" IN ('peak') ORDER BY importance_real DESC)
                         AS peak]]></Parameter>
         </Datasource>
     </Layer>
+
+<!--
+(SELECT "natural", name, importance FROM planet_osm_point WHERE "natural" IN ('peak') AND importance SIMILAR TO '^-*[0-5].[0-9]$' ORDER BY importance DESC);
+-->
+
+
+
     <!-- POIs -->
     <Layer class="poi_natural point" srs="&osm_srs;">
         <Datasource>
@@ -913,7 +980,7 @@ zoom level  - scale denominator
                  ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
         </Datasource>
     </Layer>
-
+<!--
     <Layer class="srtm label" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -928,7 +995,7 @@ zoom level  - scale denominator
                  height::integer % 100 = 0) AS srtm]]></Parameter>
         </Datasource>
     </Layer>
-
+-->
     <Layer class="road label minor" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
@@ -946,7 +1013,7 @@ zoom level  - scale denominator
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
-            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footpath', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
+            <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
         </Datasource>
     </Layer>
     <Layer class="water label" srs="&osm_srs;">
@@ -999,6 +1066,7 @@ zoom level  - scale denominator
         </Datasource>
     </Layer>
 
+<!--
     <Style name="raster">
       <Rule>
 	<RasterSymbolizer>
@@ -1008,5 +1076,5 @@ zoom level  - scale denominator
 	</RasterSymbolizer>
       </Rule>
     </Style>
-
+-->
 </Map>

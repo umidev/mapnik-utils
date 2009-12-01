@@ -29,10 +29,10 @@ zoom level  - scale denominator
     <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
-    <!ENTITY user "postgres">
+    <!ENTITY user "gis">
     <!ENTITY dbname "gis">
-    <!ENTITY estimate_extent "false">
-    <!ENTITY extent "1148357,6146222,1869795,6999934">
+    <!ENTITY estimate_extent "true">
+    <!ENTITY extent "">
 ]>
 <Map srs="&map_srs;">
     <Stylesheet>
@@ -62,6 +62,48 @@ zoom level  - scale denominator
                  ORDER BY z_order ASC, priority DESC)
 
                  AS minor_roads]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="way lighting" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                 WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway'))
+                 AS ways]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="building lighting" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_line
+                 WHERE building IN ('yes'))
+                 AS buildings]]></Parameter>
+        </Datasource>
+    </Layer>
+
+    <Layer class="area lighting" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+                (SELECT * FROM planet_osm_polygon
+                 WHERE lit IN ('yes', 'no'))
+                 AS areas]]></Parameter>
         </Datasource>
     </Layer>
 

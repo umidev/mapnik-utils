@@ -17,6 +17,16 @@
 .coast.edge.outer[zoom<=12] { line-width: 9; }
 .coast.edge.inner[zoom<=12] { line-width: 3; }
 
+.coast.fill
+{
+    polygon-fill: #eeeeee;
+    /* polygon-fill: #dceee9; */
+    /*
+    line-width: 1;
+    line-color: #dceee9;
+    */
+}
+
 /* water areas with an outline look bad because they show the seams 
    when riverbanks touch along the length of a river, so don't outline any waters */
 
@@ -82,15 +92,6 @@
     line-width: 1.5;
     line-color: #000080; /* navy */
     line-dasharray: 5, 5;
-}
-
-.coast.fill
-{
-/*     polygon-fill: #dceee9; */
-    /*
-    line-width: 1;
-    line-color: #dceee9;
-    */
 }
 
 .citylike.area
