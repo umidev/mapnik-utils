@@ -15,7 +15,7 @@ PORT = 8080
 pattern = r'''/(?P<url1>.*)\+(?P<url2>.*)/(?P<z>\d{1,10})/(?P<x>\d{1,10})/(?P<y>\d{1,10})\.(?P<extension>(?:png|jpg))'''
 request_re = re.compile(pattern)
 
-server = "http://%s:%s" % (socket.gethostname(),PORT)
+server = "http://%s:%s" % (socket.getfqdn(),PORT)
 
 url = '%s/http://tile.openstreetmap.org/+http://toolserver.org/~cmarqu/hill/12/2270/1395.png' % server
 example = '<a href="%s">%s</a>' % (url,url)
