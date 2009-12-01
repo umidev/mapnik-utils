@@ -40,8 +40,7 @@ class Request:
 def fetch_image(tile):
     temp = tempfile.NamedTemporaryFile(suffix='.png', mode = 'w+b')
     f = urllib.urlopen(tile)
-    data = f.read()
-    temp.write(data)
+    temp.write(f.read())
     f.close()
     temp.seek(0)
     im = mapnik.Image.open(temp.name)
