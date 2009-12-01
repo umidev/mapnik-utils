@@ -17,7 +17,7 @@ request_re = re.compile(pattern)
 
 server = "http://%s:%s" % (socket.gethostname(),PORT)
 
-url = '%s/http://a.tile.openstreetmap.org/+http://toolserver.org/~cmarqu/hillalpha/12/2270/1395.png' % server
+url = '%s/http://tile.openstreetmap.org/+http://toolserver.org/~cmarqu/hill/12/2270/1395.png' % server
 example = '<a href="%s">%s</a>' % (url,url)
 
 class Response:
