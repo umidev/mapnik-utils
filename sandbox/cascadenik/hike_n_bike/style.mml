@@ -28,9 +28,10 @@ zoom level  - scale denominator
     <!ENTITY coastlines "/sql/world_boundaries/unpacked/processed_p">
     <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
-    <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
+    <!ENTITY contours_srs "+proj=latlong +datum=WGS84">    
+    <!ENTITY host "sql-mapnik">
     <!ENTITY user "gis">
-    <!ENTITY dbname "gis">
+    <!ENTITY dbname "osm_mapnik">
     <!ENTITY estimate_extent "true">
     <!ENTITY extent "">
 <!--    <!ENTITY extent "1148357,6146222,1869795,6999934">-->
@@ -77,7 +78,7 @@ zoom level  - scale denominator
     <Layer class="citylike nonparking area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -95,7 +96,7 @@ zoom level  - scale denominator
     <Layer class="parklike area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -117,7 +118,7 @@ zoom level  - scale denominator
     <Layer class="citylike parking area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -132,7 +133,7 @@ zoom level  - scale denominator
     <Layer class="cliff line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -146,7 +147,7 @@ zoom level  - scale denominator
     <Layer class="cliff area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -161,7 +162,7 @@ zoom level  - scale denominator
     <Layer class="parklike line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -245,7 +246,7 @@ zoom level  - scale denominator
     <Layer class="water area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -260,7 +261,7 @@ zoom level  - scale denominator
     <Layer class="water line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -273,7 +274,7 @@ zoom level  - scale denominator
     <Layer class="water ferry" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -287,7 +288,7 @@ zoom level  - scale denominator
     <Layer class="srtm ten" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -301,7 +302,7 @@ zoom level  - scale denominator
     <Layer class="srtm fifty" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -314,7 +315,7 @@ zoom level  - scale denominator
     <Layer class="srtm hundred" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -328,7 +329,7 @@ zoom level  - scale denominator
     <Layer class="road area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -343,7 +344,7 @@ zoom level  - scale denominator
     <Layer class="road texture" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -367,7 +368,7 @@ zoom level  - scale denominator
     <Layer class="path outline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -380,7 +381,7 @@ zoom level  - scale denominator
     <Layer class="road outline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -403,7 +404,7 @@ zoom level  - scale denominator
     <Layer class="path inline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -413,7 +414,7 @@ zoom level  - scale denominator
     <Layer class="road inline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -436,7 +437,7 @@ zoom level  - scale denominator
     <Layer class="road centerline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -461,7 +462,7 @@ zoom level  - scale denominator
     <Layer class="motorway outline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -474,7 +475,7 @@ zoom level  - scale denominator
     <Layer class="motorway inline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -488,7 +489,7 @@ zoom level  - scale denominator
     <Layer class="rail bridge" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -501,7 +502,7 @@ zoom level  - scale denominator
     <Layer class="rail outline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -514,7 +515,7 @@ zoom level  - scale denominator
     <Layer class="rail centerline" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -527,7 +528,7 @@ zoom level  - scale denominator
     <Layer class="rail line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -541,7 +542,7 @@ zoom level  - scale denominator
     <Layer class="power line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -555,7 +556,7 @@ zoom level  - scale denominator
     <Layer class="barrier" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -569,7 +570,7 @@ zoom level  - scale denominator
     <Layer class="boundary line" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -583,7 +584,7 @@ zoom level  - scale denominator
     <Layer class="boundary area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -598,7 +599,7 @@ zoom level  - scale denominator
     <Layer class="building area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -613,7 +614,7 @@ zoom level  - scale denominator
     <Layer class="place label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -631,7 +632,7 @@ zoom level  - scale denominator
     <Layer class="route hiking" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -652,7 +653,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_small" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -667,7 +668,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_heide" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -682,7 +683,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_heide_a_h" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -697,7 +698,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_heide_k_n" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -712,7 +713,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_heide_o_s" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -727,7 +728,7 @@ zoom level  - scale denominator
     <Layer class="route hiking_heide_t_z" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -743,7 +744,7 @@ zoom level  - scale denominator
     <Layer class="peak point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -769,7 +770,7 @@ zoom level  - scale denominator
     <Layer class="poi_natural point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -783,7 +784,7 @@ zoom level  - scale denominator
     <Layer class="poi_tourism point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -798,7 +799,7 @@ zoom level  - scale denominator
     <Layer class="poi_historic point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -812,7 +813,7 @@ zoom level  - scale denominator
     <Layer class="poi_natural point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -826,7 +827,7 @@ zoom level  - scale denominator
     <Layer class="poi_boundary point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -840,7 +841,7 @@ zoom level  - scale denominator
     <Layer class="poi_shop point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -854,7 +855,7 @@ zoom level  - scale denominator
     <Layer class="poi point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -872,7 +873,7 @@ zoom level  - scale denominator
     <Layer class="power point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -888,7 +889,7 @@ zoom level  - scale denominator
     <Layer class="transit point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -903,7 +904,7 @@ zoom level  - scale denominator
     <Layer class="road point" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -919,7 +920,7 @@ zoom level  - scale denominator
     <Layer class="road label major" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -940,7 +941,7 @@ zoom level  - scale denominator
     <Layer class="parklike label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -962,7 +963,7 @@ zoom level  - scale denominator
     <Layer class="citylike label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -984,7 +985,7 @@ zoom level  - scale denominator
     <Layer class="srtm label" srs="&contours_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -999,7 +1000,7 @@ zoom level  - scale denominator
     <Layer class="road label minor" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -1009,7 +1010,7 @@ zoom level  - scale denominator
     <Layer class="path label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -1019,7 +1020,7 @@ zoom level  - scale denominator
     <Layer class="water label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -1038,7 +1039,7 @@ zoom level  - scale denominator
     <Layer class="ferry label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -1050,7 +1051,7 @@ zoom level  - scale denominator
     <Layer class="building label" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>

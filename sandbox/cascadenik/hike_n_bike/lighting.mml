@@ -29,8 +29,8 @@ zoom level  - scale denominator
     <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY contours_srs "+proj=latlong +datum=WGS84">
-    <!ENTITY user "gis">
-    <!ENTITY dbname "gis">
+    <!ENTITY host "sql-mapnik">
+    <!ENTITY dbname "osm_mapnik">
     <!ENTITY estimate_extent "true">
     <!ENTITY extent "">
 ]>
@@ -44,7 +44,7 @@ zoom level  - scale denominator
     <Layer class="road lighting" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -68,7 +68,7 @@ zoom level  - scale denominator
     <Layer class="way lighting" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -82,7 +82,7 @@ zoom level  - scale denominator
     <Layer class="building lighting" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
@@ -96,7 +96,7 @@ zoom level  - scale denominator
     <Layer class="area lighting" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
-            <Parameter name="user">&user;</Parameter>
+            <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
