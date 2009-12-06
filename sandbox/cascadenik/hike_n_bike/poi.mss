@@ -604,7 +604,7 @@
 }
 
 .poi_tourism.point[tourism=summit_cross][zoom>=13] name,
-.poi_historic.point[historic=wayside_cross][zoom>=13] name
+.poi_historic.point[historic=wayside_cross][zoom>=14] name
 {
     point-file: url('img/svg-twotone-png/tourist_cross.p.12.png');
     text-fill: #734a08;
@@ -618,7 +618,7 @@
 }
 
 .poi_tourism.point[tourism=summit_cross][zoom>=15] name,
-.poi_historic.point[historic=wayside_cross][zoom>=13] name
+.poi_historic.point[historic=wayside_cross][zoom>=16] name
 {
     point-file: url('img/svg-twotone-png/tourist_cross.p.16.png');
     text-fill: #734a08;
