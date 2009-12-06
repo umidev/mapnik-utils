@@ -162,7 +162,8 @@
     polygon-opacity: 0.99;
 }
 
-.parklike.area[landuse=farm]
+.parklike.area[landuse=farm],
+.parklike.area[landuse=farmland]
 {
     polygon-fill: #ead8bd;
     polygon-opacity: 0.93;
