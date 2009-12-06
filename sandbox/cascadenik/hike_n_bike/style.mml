@@ -750,9 +750,8 @@ zoom level  - scale denominator
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
                (SELECT way, "natural", name, ele, 
-                      CASE WHEN importance IS NOT null THEN 
-                         ('0' || regexp_replace(importance,'[^0-9.]','','g'))::real
-                      ELSE 0 END 
+                      (CASE WHEN importance ~ E'^-?[[:digit:]]+(\.[[:digit:]]+)?$' THEN 
+                       CAST (importance AS FLOAT) ELSE 0 END)
                      AS importance_real
                      FROM planet_osm_point
                      WHERE "natural" IN ('peak') ORDER BY importance_real DESC)
@@ -761,10 +760,50 @@ zoom level  - scale denominator
     </Layer>
 
 <!--
-(SELECT "natural", name, importance FROM planet_osm_point WHERE "natural" IN ('peak') AND importance SIMILAR TO '^-*[0-5].[0-9]$' ORDER BY importance DESC);
+            <Parameter name="table"><![CDATA[
+                (SELECT ST_Collect(way) AS way,
+                        highway,
+                        railway,
+                        (CASE WHEN layer ~ E'^-?[[:digit:]]+(\.[[:digit:]]+)?$' THEN CAST (layer AS FLOAT)
+                              ELSE 0
+                              END) AS coalesced_layer,
+                        (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0
+                              WHEN highway IN ('footpath', 'track', 'footway', 'steps', 'pedestrian', 'path', 'cycleway') THEN 1
+                              WHEN railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail') THEN 2
+                              WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 3
+                              WHEN highway = 'secondary' THEN 4
+                              WHEN highway = 'tertiary' THEN 5
+                              ELSE 9 END) AS priority,
+                        (CASE WHEN highway IN ('secondary', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link') THEN 'major_road'
+                              WHEN highway IN ('residential', 'unclassified', 'service', 'minor', 'road', 'tertiary') THEN 'minor_road'
+                              WHEN railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail') THEN 'rail'
+                              WHEN highway IN ('footpath', 'track', 'footway', 'steps', 'pedestrian', 'path', 'cycleway') THEN 'path'
+                              ELSE '' END) AS kind,
+                        (CASE WHEN tunnel IN ('yes', 'true') THEN 'yes'
+                              ELSE 'no' END) AS is_tunnel,
+                        (CASE WHEN bridge IN ('yes', 'true') THEN 'yes'
+                              ELSE 'no' END) AS is_bridge
+
+                 FROM (SELECT * FROM planet_osm_line WHERE ST_Intersects(way, !BBOX!)) AS bounded_lines
+
+                 WHERE railway IN ('rail', 'spur', 'subway', 'light_rail', 'tram', 'abandoned', 'disused', 'monorail')
+                    OR highway IN ('secondary', 'trunk', 'trunk_link', 'primary', 'primary_link', 'motorway', 'motorway_link')
+                    OR highway IN ('residential', 'unclassified', 'service', 'minor', 'road', 'tertiary')
+                    OR highway IN ('footpath', 'track', 'footway', 'steps', 'pedestrian', 'path', 'cycleway')
+
+                 GROUP BY highway, railway, coalesced_layer, priority, kind, is_tunnel, is_bridge
+                 ORDER BY coalesced_layer ASC, priority DESC)
+                 
+                 AS collected_lines]]></Parameter>
 -->
 
+<!--
+(SELECT "natural", name, (CASE WHEN importance ~ E'^-?[[:digit:]]+(\.[[:digit:]]+)?$' THEN CAST (importance AS FLOAT) ELSE 0 END) AS importance_real FROM planet_osm_point WHERE "natural" IN ('peak') ORDER BY importance_real DESC);
+-->
 
+<!--
+ (SELECT "natural", name, importance FROM planet_osm_point WHERE "natural" IN ('peak') AND importance SIMILAR TO '^-*[0-5].[0-9]$' ORDER BY importance DESC);
+-->
 
     <!-- POIs -->
     <Layer class="poi_natural point" srs="&osm_srs;">
