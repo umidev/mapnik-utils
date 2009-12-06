@@ -2,11 +2,11 @@
 cat tests/mapfile_wgs84.xml | nik2img.py /tmp/from_string.png
 
 # redirect image stream
-nik2img.py tests/mapfile_wgs84.xml > /tmp/image_stream.png
+nik2img.py tests/mapfile_wgs84.xml --pipe > /tmp/image_stream.png
 open /tmp/image_stream.png
 
 # redirect image jpeg stream
-nik2img.py tests/mapfile_wgs84.xml -f jpeg > /tmp/image_stream.jpeg
+nik2img.py tests/mapfile_wgs84.xml -f jpeg --pipe > /tmp/image_stream.jpeg
 open /tmp/image_stream.jpeg
 
 # worldfile registration
@@ -34,8 +34,8 @@ nik2img.py tests/mapfile_wgs84.xml --srs 900913 /tmp/map-mercator-full.png
 # zoom to bounding box of california
 nik2img.py tests/mapfile_wgs84.xml --bbox -125.5 31.7 -113.3 42.6 -d 500 500 /tmp/cali.png
 
-# zoom to san jose
-nik2img.py tests/mapfile_wgs84.xml --bbox -121.945 37.312 -121.886 37.355 -d 500 500 /tmp/san_jose.png
+# zoom to san jose and load map from python code
+nik2img.py tests/pymap.py --bbox -121.945 37.312 -121.886 37.355 -d 500 500 /tmp/san_jose.png
 
 # load map from python script
 nik2img.py tests/pymap.py /tmp/map_frompy.png
