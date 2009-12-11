@@ -64,12 +64,35 @@
     line-color: #808080;
     line-width: 1;
 }
-
 .rail.line[zoom>=14][zoom<=15][railway!=tram][railway!=narrow_gauge][railway!=monorail]
 {
     line-color: #808080;
     line-width: 6;
     line-dasharray: 1, 6;
+}
+
+.rail.centerline[zoom>=12][zoom<=13][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 1;
+}
+.rail.line[zoom>=12][zoom<=13][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 4;
+    line-dasharray: 1, 4;
+}
+
+.rail.centerline[zoom=11][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 1;
+}
+.rail.line[zoom=11][railway!=tram][railway!=narrow_gauge][railway!=monorail]
+{
+    line-color: #808080;
+    line-width: 3;
+    line-dasharray: 1, 4;
 }
 
 
