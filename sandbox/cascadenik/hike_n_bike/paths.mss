@@ -1,94 +1,94 @@
 /* -*- mode: css -*- */
 
-.path
+.path[zoom>=10]
 {
     line-cap: butt;
     line-join: round;
 }
 
-.path[highway=steps]
+.path[zoom>=10][highway=steps]
 {
     line-cap: butt;
     line-join: miter;
 }
 
-.path.outline
+.path.outline[zoom>=10]
 { 
     line-width: 3;
     line-dasharray: 3, 3;
 }
-.path.inline
+.path.inline[zoom>=10]
 {
     line-width: 2;
 /*     line-dasharray: 3, 3; */
 }
 
-.path.outline[highway=path]
+.path.outline[zoom>=10][highway=path]
 { 
     line-width: 2;
     line-dasharray: 2, 2;
 }
-.path.inline[highway=path]
+.path.inline[zoom>=10][highway=path]
 {
     line-width: 1;
     line-dasharray: 2, 2;
 }
 
-.path.outline[highway=footway],
-.path.outline[highway=path][foot=designated]
+.path.outline[zoom>=10][highway=footway],
+.path.outline[zoom>=10][highway=path][foot=designated]
 { 
     line-width: 2;
     line-dasharray: 6, 2;
 }
-.path.inline[highway=footway],
-.path.inline[highway=path][foot=designated]
+.path.inline[zoom>=10][highway=footway],
+.path.inline[zoom>=10][highway=path][foot=designated]
 {
     line-width: 1;
     line-dasharray: 6, 2;
 }
 
-.path.outline[highway=track]
+.path.outline[zoom>=10][highway=track]
 { 
     line-width: 2;
     line-dasharray: 18, 2;
 }
-.path.inline[highway=track]
+.path.inline[zoom>=10][highway=track]
 {
     line-width: 1;
     line-dasharray: 18, 2;
 }
 
 
-.path.outline[highway=track][tracktype=grade1]
+.path.outline[zoom>=10][highway=track][tracktype=grade1]
 { 
     line-width: 2.5;
     line-dasharray: 18, 1;
 }
-.path.inline[highway=track][tracktype=grade1]
+.path.inline[zoom>=10][highway=track][tracktype=grade1]
 {
     line-width: 2.0;
     line-dasharray: 18, 1;
 }
 
 
-.path.outline[highway=track][tracktype=grade2]
+.path.outline[zoom>=10][highway=track][tracktype=grade2]
 { 
     line-width: 2.0;
     line-dasharray: 18, 3;
 }
-.path.inline[highway=track][tracktype=grade2]
+.path.inline[zoom>=10][highway=track][tracktype=grade2]
 {
     line-width: 1.5;
     line-dasharray: 18, 3;
 }
 
 
-.path.outline[highway=track][tracktype=grade3]
+.path.outline[zoom>=10][highway=track][tracktype=grade3]
 { 
     line-width: 2.0;
     line-dasharray: 15, 3;
 }
-.path.inline[highway=track][tracktype=grade3]
+.path.inline[zoom>=10][highway=track][tracktype=grade3]
 {
     line-width: 1.5;
     line-dasharray: 15, 3;
@@ -96,12 +96,12 @@
 
 
 /* FIXME: change color? */
-.path.outline[highway=track][tracktype=grade4]
+.path.outline[zoom>=10][highway=track][tracktype=grade4]
 { 
     line-width: 1.7;
     line-dasharray: 12, 2;
 }
-.path.inline[highway=track][tracktype=grade4]
+.path.inline[zoom>=10][highway=track][tracktype=grade4]
 {
     line-width: 1.2;
     line-dasharray: 12, 2;
@@ -109,12 +109,12 @@
 
 
 /* FIXME: change color? */
-.path.outline[highway=track][tracktype=grade5]
+.path.outline[zoom>=10][highway=track][tracktype=grade5]
 { 
     line-width: 1.5;
     line-dasharray: 9, 3;
 }
-.path.inline[highway=track][tracktype=grade5]
+.path.inline[zoom>=10][highway=track][tracktype=grade5]
 {
     line-width: 1.0;
     line-dasharray: 9, 3;
@@ -173,84 +173,84 @@
 
 /** Path Colors **/
 
-.path.outline
+.path.outline[zoom>=10]
 {
     line-color: #f00; /* catch-all */
     line-opacity: 0.7;
 }
-.path.inline
+.path.inline[zoom>=10]
 {
     line-color: #000;
     line-opacity: 0.5;
 }
 
-.path.outline[highway=path]
+.path.outline[zoom>=10][highway=path]
 {
     line-color: #fff;
     line-opacity: 0.77;
 }
-.path.inline[highway=path]
+.path.inline[zoom>=10][highway=path]
 {
     line-opacity: 0.75;
 }
 
 
-.path.outline[highway=footway]
+.path.outline[zoom>=10][highway=footway]
 {
     line-color: #fff;
     line-opacity: 0.77;
 }
-.path.inline[highway=footway]
+.path.inline[zoom>=10][highway=footway]
 {
     line-opacity: 0.95;
 }
 
 
-.path.outline[highway=track]
+.path.outline[zoom>=10][highway=track]
 {
     line-color: #fff;
     line-opacity: 0.9;
 }
-.path.inline[highway=track]
+.path.inline[zoom>=10][highway=track]
 {
     line-opacity: 0.95;
 }
 
 
-.path.outline[highway=steps]
+.path.outline[zoom>=10][highway=steps]
 {
     line-color: #fff;
     line-opacity: 0.1;
 }
-.path.inline[highway=steps]
+.path.inline[zoom>=10][highway=steps]
 {
     line-color: #000;
     line-opacity: 0.75;
 }
 
 
-.path.outline[highway=cycleway],
-.path.outline[highway=path][bicycle=designated]
+.path.outline[zoom>=10][highway=cycleway],
+.path.outline[zoom>=10][highway=path][bicycle=designated]
 {
     line-color: #fff;
     line-opacity: 0.77;
 }
-.path.inline[highway=cycleway],
-.path.inline[highway=path][bicycle=designated]
+.path.inline[zoom>=10][highway=cycleway],
+.path.inline[zoom>=10][highway=path][bicycle=designated]
 {
     line-color: #00f;
     line-opacity: 0.7;
 }
 
 
-.path.outline[highway=bridleway],
-.path.outline[highway=path][horse=designated]
+.path.outline[zoom>=10][highway=bridleway],
+.path.outline[zoom>=10][highway=path][horse=designated]
 {
     line-color: #fff;
     line-opacity: 0.77;
 }
-.path.inline[highway=bridleway],
-.path.inline[highway=path][horse=designated]
+.path.inline[zoom>=10][highway=bridleway],
+.path.inline[zoom>=10][highway=path][horse=designated]
 {
     line-color: #0bbf13;
     line-opacity: 0.7;
@@ -277,8 +277,8 @@
     line-opacity: 0.1;
 }
 
-.path.outline[zoom<=10],
-.path.inline[zoom<=10]
+.path.outline[zoom=10],
+.path.inline[zoom=10]
 {
     line-opacity: 0.01;
 }
