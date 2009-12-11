@@ -56,7 +56,7 @@
 .road.inline[zoom>=7][zoom<=11][prominence=major][highway=motorway] { line-width: 2; }
 .road.outline[zoom>=7][zoom<=11][prominence=major][highway=motorway] { line-width: 4; }
 
-.road.texture[zoom>=7][zoom<=10] { line-width: 1; } /* general background fuzz */
+.road.texture[zoom>=9][zoom<=10] { line-width: 1; } /* general background fuzz */
 
 .road.inline[zoom>=7][zoom<=10][prominence=major][highway=motorway] { line-width: 2; }
 .road.inline[zoom>=11][zoom<=12][prominence=major][highway!=motorway_link] { line-width: 2; }
