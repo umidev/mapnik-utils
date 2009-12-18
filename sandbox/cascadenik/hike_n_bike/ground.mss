@@ -425,6 +425,7 @@
 }
 
 
+/*
 .building.label[zoom>=17][amenity=school],
 .citylike.label[zoom>=17][amenity=school]
 {
@@ -439,7 +440,6 @@
     text-dy: 16;
 }
 
-/*
 .building.label[zoom=14][amenity=school],
 .citylike.label[zoom=14][amenity=school]
 {
