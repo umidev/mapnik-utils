@@ -310,7 +310,6 @@
 {
     line-color: #ffffff;
 }
-
 .road.outline[highway=unclassified]
 {
     line-color: #999999;
@@ -318,28 +317,25 @@
 
 .road.inline[highway=living_street]
 {
-    line-color: #bbb;
+    line-color: #eeeeee;
 }
-
 .road.outline[highway=living_street]
 {
-    line-color: #333;
+    line-color: #aaaaaa;
 }
 
 .road.inline[highway=pedestrian]
 {
-    line-color: #ddd;
+    line-color: #dddddd;
 }
-
 .road.outline[highway=pedestrian]
 {
-    line-color: #555;
+    line-color: #aaaaaa;
 }
-
 .road.area[highway=pedestrian]
 {
-    polygon-fill: #ddd;
-    line-color: #555;
+    polygon-fill: #dddddd;
+    line-color: #aaaaaa;
     line-width: 1;
     line-opacity: 0.25;
 }
@@ -348,7 +344,6 @@
 {
     line-color: #ffffff;
 }
-
 .road.outline[highway=tertiary]
 {
     line-color: #777777;
