@@ -87,7 +87,8 @@ zoom level  - scale denominator
                 (SELECT *
                  FROM planet_osm_polygon
                  WHERE building IS NULL
-                   AND (amenity IN ('school', 'college', 'university', 'library', 'hospital', 'police', 'fire_station')
+                   AND (amenity IN ('hospital', 'police', 'fire_station')
+                        OR tourism IN ('museum')
                         OR landuse IN ('residential', 'industrial', 'commercial')
                         OR aeroway IN ('apron'))
                  ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>
@@ -818,7 +819,7 @@ zoom level  - scale denominator
                 (SELECT *
                      FROM planet_osm_point
                      WHERE amenity IN ('bench', 'toilets', 'shelter', 'telephone', 'parking', 'guidepost', 'signpost', 'rescue_box', 'hunting_stand')
-                        OR man_made IN ('mast')
+                        OR man_made IN ('mineshaft', 'mast')
                         OR military IN ('bunker')
                         OR amenity IN ('restaurant', 'fast_food', 'pub', 'drinking_water'))
                         AS poi]]></Parameter>
@@ -930,7 +931,8 @@ zoom level  - scale denominator
                         REGEXP_REPLACE(UPPER(name), '(.)', E'\\1\xC2\xA0\xC2\xA0', 'g') AS name_stretched
                  FROM planet_osm_polygon
                  WHERE building IS NULL
-                   AND (amenity IN ('parking', 'school', 'college', 'university', 'library', 'hospital', 'police', 'fire_station')
+                   AND (amenity IN ('parking', 'hospital', 'police', 'fire_station')
+                     OR tourism IN ('museum')
                      OR landuse IN ('residential', 'industrial', 'commercial')
                      OR aeroway IN ('apron'))
                  ORDER BY z_order ASC, way_area DESC) AS citylike]]></Parameter>

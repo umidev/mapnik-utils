@@ -700,7 +700,8 @@
 }
 
 
-.poi_point.point[military=bunker][zoom>=13] name
+/*.poi_historic.point[historic=ruins][ruins=bunker][zoom>=13] name,*/
+.poi.point[military=bunker][zoom>=13] name
 {
     point-file: url('img/svg-twotone-png/military_bunker.n.14.png');
     text-fill: #ac39ac;
@@ -713,7 +714,8 @@
     text-halo-radius: 1;
 }
 
-.poi_point.point[military=bunker][zoom>=15] name
+/*.poi_historic.point[historic=ruins][ruins=bunker][zoom>=15] name,*/
+.poi.point[military=bunker][zoom>=15] name
 {
     point-file: url('img/svg-twotone-png/military_bunker.n.16.png');
     text-fill: #ac39ac;
@@ -728,10 +730,20 @@
 }
 
 
-.poi_point.point[amenity=hunting_stand][zoom>=13] name
+.poi.point[amenity=hunting_stand][zoom>=13]
 {
-    point-file: url('img/svg-twotone-png/poi_hunting_stand.n.14.png');
-    text-fill: #ac39ac;
+    point-file: url('img/svg-twotone-png/poi_hunting_stand.p.14.png');
+}
+.poi.point[amenity=hunting_stand][zoom>=15]
+{
+    point-file: url('img/svg-twotone-png/poi_hunting_stand.p.16.png');
+    point-allow-overlap: true;
+}
+
+.poi.point[man_made=mast][zoom>=13] name
+{
+    point-file: url('img/svg-twotone-png/poi_tower_communications.p.14.png');
+    text-fill: #734a08;
     text-dy: 13;
     text-face-name: "Droid Sans Regular";
     text-size: 8;
@@ -740,11 +752,10 @@
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
-
-.poi_point.point[amenity=hunting_stand][zoom>=15] name
+.poi.point[man_made=mast][zoom>=15] name
 {
-    point-file: url('img/svg-twotone-png/poi_hunting_stand.n.16.png');
-    text-fill: #ac39ac;
+    point-file: url('img/svg-twotone-png/poi_tower_communications.p.16.png');
+    text-fill: #734a08;
     text-dy: 17;
     text-face-name: "Droid Sans Regular";
     text-size: 10;
@@ -755,11 +766,10 @@
     point-allow-overlap: true;
 }
 
-
-.poi_point.point[man_made=mast][zoom>=13] name
+.poi.point[man_made=mineshaft][zoom>=13] name
 {
-    point-file: url('img/svg-twotone-png/poi_tower_communications.n.14.png');
-    text-fill: #ac39ac;
+    point-file: url('img/svg-twotone-png/poi_mine.p.14.png');
+    text-fill: #734a08;
     text-dy: 13;
     text-face-name: "Droid Sans Regular";
     text-size: 8;
@@ -768,11 +778,10 @@
     text-halo-fill: #fbfbfb;
     text-halo-radius: 1;
 }
-
-.poi_point.point[man_made=mast][zoom>=15] name
+.poi.point[man_made=mineshaft][zoom>=15] name
 {
-    point-file: url('img/svg-twotone-png/poi_tower_communications.n.16.png');
-    text-fill: #ac39ac;
+    point-file: url('img/svg-twotone-png/poi_mine.p.16.png');
+    text-fill: #734a08;
     text-dy: 17;
     text-face-name: "Droid Sans Regular";
     text-size: 10;

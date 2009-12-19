@@ -425,27 +425,39 @@
 }
 
 
-/*
-.building.label[zoom>=17][amenity=school],
-.citylike.label[zoom>=17][amenity=school]
+.building.label[zoom>=17][tourism=museum] name,
+.citylike.label[zoom>=17][tourism=museum] name
 {
-    point-file: url('img/svg-twotone-png/education_school.p.16.png');
+    point-file: url('img/svg-twotone-png/tourist_museum.p.16.png');
     text-dy: 18;
+    text-fill: #734a08;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
 }
 
-.building.label[zoom>=15][zoom<=16][amenity=school],
-.citylike.label[zoom>=15][zoom<=16][amenity=school]
+.building.label[zoom>=15][zoom<=16][tourism=museum] name,
+.citylike.label[zoom>=15][zoom<=16][tourism=museum] name
 {
-    point-file: url('img/svg-twotone-png/education_school.p.14.png');
+    point-file: url('img/svg-twotone-png/tourist_museum.p.14.png');
     text-dy: 16;
+    text-fill: #734a08;
+    text-face-name: "Droid Sans Regular";
+    text-size: 10;
+    text-placement: point;
+    text-wrap-width: 77;
+    text-halo-fill: #fbfbfb;
+    text-halo-radius: 1;
 }
 
-.building.label[zoom=14][amenity=school],
-.citylike.label[zoom=14][amenity=school]
+.building.label[zoom=14][tourism=museum] name,
+.citylike.label[zoom=14][tourism=museum] name
 {
-    point-file: url('img/svg-twotone-png/education_school.p.12.png');
+    point-file: url('img/svg-twotone-png/tourist_museum.p.12.png');
 }
-*/
 
 .building.label[zoom>=17][amenity=police],
 .citylike.label[zoom>=17][amenity=police]
