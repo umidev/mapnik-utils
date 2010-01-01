@@ -367,7 +367,7 @@
     line-opacity: 0.6;
 }
 /* Forstabteilungsnummern/Jagenzahl */
-.boundary.forest[zoom>=14] ref
+.boundary.forest[zoom>=15] ref
 {
     line-color: #659a4e;
     line-join: round;
