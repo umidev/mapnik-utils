@@ -366,6 +366,19 @@
     line-dasharray: 6, 9;
     line-opacity: 0.6;
 }
+/* Forstabteilungsnummern/Jagenzahl */
+.boundary.forest[zoom>=14] ref
+{
+    line-color: #659a4e;
+    line-join: round;
+    line-width: 1;
+    text-face-name: "Droid Serif Italic";
+    text-size: 9;
+    text-fill: #659a4e;
+    text-halo-radius: 1;
+    text-max-char-angle-delta: 20;
+    text-placement: line;
+}
 
 
 .parklike.label name,

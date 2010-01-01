@@ -29,9 +29,14 @@ zoom level  - scale denominator
     <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY osm_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
     <!ENTITY contours_srs "+proj=latlong +datum=WGS84">    
-    <!ENTITY host "sql-mapnik">
+    <!ENTITY host "">
+    <!ENTITY user "gis">
+    <!ENTITY dbname "gis">
+
+<!--    <!ENTITY host "sql-mapnik">
     <!ENTITY user "gis">
     <!ENTITY dbname "osm_mapnik">
+-->
     <!ENTITY estimate_extent "true">
     <!ENTITY extent "">
 <!--    <!ENTITY extent "1148357,6146222,1869795,6999934">-->
@@ -80,6 +85,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
 
@@ -99,6 +105,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -121,6 +128,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -136,6 +144,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -150,6 +159,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -165,6 +175,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -180,6 +191,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -193,6 +205,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -207,6 +220,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -221,6 +235,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -234,6 +249,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -248,6 +264,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -263,6 +280,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -287,6 +305,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -300,6 +319,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -323,6 +343,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
@@ -333,6 +354,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -356,6 +378,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -381,6 +404,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -394,6 +418,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -408,6 +433,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -421,6 +447,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -434,6 +461,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -447,6 +475,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -461,6 +490,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -475,6 +505,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -489,6 +520,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -503,6 +535,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -512,12 +545,28 @@ zoom level  - scale denominator
                         AS boundaryarea]]></Parameter>
         </Datasource>
     </Layer>
+    <Layer class="boundary forest" srs="&osm_srs;">
+        <Datasource>
+            <Parameter name="type">postgis</Parameter>
+            <Parameter name="host">&host;</Parameter>
+            <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
+            <Parameter name="estimate_extent">&estimate_extent;</Parameter>
+            <Parameter name="extent">&extent;</Parameter>
+            <Parameter name="table"><![CDATA[
+	        (SELECT * 
+                     FROM planet_osm_line
+	             WHERE boundary='forest')
+                        AS boundaryforest]]></Parameter>
+        </Datasource>
+    </Layer>
 
     <Layer class="building area" srs="&osm_srs;">
         <Datasource>
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -533,6 +582,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -551,6 +601,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -572,6 +623,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -587,6 +639,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -602,6 +655,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -617,6 +671,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -632,6 +687,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -647,6 +703,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -663,6 +720,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -728,6 +786,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -742,6 +801,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -757,6 +817,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -771,6 +832,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -785,6 +847,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -799,6 +862,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -813,6 +877,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -831,6 +896,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -847,6 +913,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -862,6 +929,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -878,6 +946,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -899,6 +968,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -921,6 +991,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -944,6 +1015,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -959,6 +1031,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table">(SELECT *, length(way) AS length, (CASE WHEN highway IN ('motorway', 'motorway_link') THEN 0 WHEN highway IN ('trunk', 'trunk_link', 'primary', 'primary_link') THEN 1 WHEN highway IN ('secondary', 'secondary_link') THEN 2 WHEN highway = 'tertiary' THEN 3 ELSE 4 END) AS priority FROM planet_osm_line WHERE highway IN ('pedestrian', 'living_street', 'residential', 'unclassified', 'service', 'minor', 'road', 'tertiary') ORDER BY priority ASC, z_order ASC, length DESC) AS minor_roads</Parameter>
@@ -969,6 +1042,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table">(SELECT * FROM planet_osm_line WHERE highway IN ('track', 'footway', 'steps', 'bridleway', 'path', 'cycleway') ORDER BY z_order ASC) AS minor_roads</Parameter>
@@ -979,6 +1053,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
@@ -998,6 +1073,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table">(SELECT * FROM planet_osm_line 
@@ -1010,6 +1086,7 @@ zoom level  - scale denominator
             <Parameter name="type">postgis</Parameter>
             <Parameter name="host">&host;</Parameter>
             <Parameter name="dbname">&dbname;</Parameter>
+            <Parameter name="user">&user;</Parameter>
             <Parameter name="estimate_extent">&estimate_extent;</Parameter>
             <Parameter name="extent">&extent;</Parameter>
             <Parameter name="table"><![CDATA[
