@@ -1,5 +1,36 @@
 /* -*- mode: css -*- */
 
+.path.closed[zoom>=13]
+{
+    line-color: #f00;
+    line-opacity: 0.7;
+    line-cap: butt;
+    line-join: miter;
+}
+.path.closed[zoom=13]
+{
+    line-width: 3;
+    line-dasharray: 1, 1, 1, 8;
+}
+.path.closed[zoom=14]
+{
+    line-width: 5;
+    line-dasharray: 1, 1, 1, 10;
+}
+.path.closed[zoom=15],
+.path.closed[zoom=16]
+{
+    line-width: 7;
+    line-dasharray: 1, 2, 1, 14;
+}
+.path.closed[zoom>=17]
+{
+    line-width: 9;
+    line-dasharray: 1, 2, 1, 24;
+}
+
+
+
 .path[zoom>=10]
 {
     line-cap: butt;
@@ -175,7 +206,7 @@
 
 .path.outline[zoom>=10]
 {
-    line-color: #f00; /* catch-all */
+    line-color: #f00;
     line-opacity: 0.7;
 }
 .path.inline[zoom>=10]
