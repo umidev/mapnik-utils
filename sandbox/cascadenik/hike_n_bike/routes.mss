@@ -1,5 +1,7 @@
 @charset "UTF-8"; /* -*- mode: css; coding: utf-8 -*- */
 
+/* http://topo.geofabrik.de/symbols_en.html */
+
 .route.hiking empty,
 .route.hiking_small empty
 {
@@ -412,142 +414,118 @@
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="red:white:red_pipe"][zoom>=12],
-.route.hiking[osmc_symbol="red:white:|"][zoom>=12]
+.route.hiking[osmc_symbol="red:white:red_stripe"][zoom>=12]
 {
     shield-file: url('img/red_pipe.8.png');
 }
-.route.hiking[osmc_symbol="red:white:red_pipe"][zoom>=14],
-.route.hiking[osmc_symbol="red:white:|"][zoom>=14]
+.route.hiking[osmc_symbol="red:white:red_stripe"][zoom>=14]
 {
     shield-file: url('img/red_pipe.10.png');
 }
-.route.hiking[osmc_symbol="red:white:red_pipe"][zoom>=15],
-.route.hiking[osmc_symbol="red:white:|"][zoom>=15]
+.route.hiking[osmc_symbol="red:white:red_stripe"][zoom>=15]
 {
     shield-file: url('img/red_pipe.12.png');
 }
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="red:white:red_pipe"][zoom>=12],
-.route.hiking_small[osmc_symbol="red:white:|"][zoom>=12]
+.route.hiking_small[osmc_symbol="red:white:red_stripe"][zoom>=12]
 {
     shield-file: url('img/red_pipe.5.png');
 }
-.route.hiking_small[osmc_symbol="red:white:red_pipe"][zoom>=14],
-.route.hiking_small[osmc_symbol="red:white:|"][zoom>=14]
+.route.hiking_small[osmc_symbol="red:white:red_stripe"][zoom>=14]
 {
     shield-file: url('img/red_pipe.6.png');
 }
-.route.hiking_small[osmc_symbol="red:white:red_pipe"][zoom>=15],
-.route.hiking_small[osmc_symbol="red:white:|"][zoom>=15]
+.route.hiking_small[osmc_symbol="red:white:red_stripe"][zoom>=15]
 {
     shield-file: url('img/red_pipe.8.png');
 }
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="green:white:green_pipe"][zoom>=12],
-.route.hiking[osmc_symbol="green:white:|"][zoom>=12]
+.route.hiking[osmc_symbol="green:white:green_stripe"][zoom>=12]
 {
     shield-file: url('img/green_pipe.8.png');
 }
-.route.hiking[osmc_symbol="green:white:green_pipe"][zoom>=14],
-.route.hiking[osmc_symbol="green:white:|"][zoom>=14]
+.route.hiking[osmc_symbol="green:white:green_stripe"][zoom>=14]
 {
     shield-file: url('img/green_pipe.10.png');
 }
-.route.hiking[osmc_symbol="green:white:green_pipe"][zoom>=15],
-.route.hiking[osmc_symbol="green:white:|"][zoom>=15]
+.route.hiking[osmc_symbol="green:white:green_stripe"][zoom>=15]
 {
     shield-file: url('img/green_pipe.12.png');
 }
 
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="green:white:green_pipe"][zoom>=12],
-.route.hiking_small[osmc_symbol="green:white:|"][zoom>=12]
+.route.hiking_small[osmc_symbol="green:white:green_stripe"][zoom>=12]
 {
     shield-file: url('img/green_pipe.5.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_pipe"][zoom>=14],
-.route.hiking_small[osmc_symbol="green:white:|"][zoom>=14]
+.route.hiking_small[osmc_symbol="green:white:green_stripe"][zoom>=14]
 {
     shield-file: url('img/green_pipe.6.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_pipe"][zoom>=15],
-.route.hiking_small[osmc_symbol="green:white:|"][zoom>=15]
+.route.hiking_small[osmc_symbol="green:white:green_stripe"][zoom>=15]
 {
     shield-file: url('img/green_pipe.8.png');
 }
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="blue:white:blue_pipe"][zoom>=12],
-.route.hiking[osmc_symbol="blue:white:|"][zoom>=12]
+.route.hiking[osmc_symbol="blue:white:blue_stripe"][zoom>=12]
 {
     shield-file: url('img/blue_pipe.8.png');
 }
-.route.hiking[osmc_symbol="blue:white:blue_pipe"][zoom>=14],
-.route.hiking[osmc_symbol="blue:white:|"][zoom>=14]
+.route.hiking[osmc_symbol="blue:white:blue_stripe"][zoom>=14]
 {
     shield-file: url('img/blue_pipe.10.png');
 }
-.route.hiking[osmc_symbol="blue:white:blue_pipe"][zoom>=15],
-.route.hiking[osmc_symbol="blue:white:|"][zoom>=15]
+.route.hiking[osmc_symbol="blue:white:blue_stripe"][zoom>=15]
 {
     shield-file: url('img/blue_pipe.12.png');
 }
 
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="blue:white:blue_pipe"][zoom>=12],
-.route.hiking_small[osmc_symbol="blue:white:|"][zoom>=12]
+.route.hiking_small[osmc_symbol="blue:white:blue_stripe"][zoom>=12]
 {
     shield-file: url('img/blue_pipe.5.png');
 }
-.route.hiking_small[osmc_symbol="blue:white:blue_pipe"][zoom>=14],
-.route.hiking_small[osmc_symbol="blue:white:|"][zoom>=14]
+.route.hiking_small[osmc_symbol="blue:white:blue_stripe"][zoom>=14]
 {
     shield-file: url('img/blue_pipe.6.png');
 }
-.route.hiking_small[osmc_symbol="blue:white:blue_pipe"][zoom>=15],
-.route.hiking_small[osmc_symbol="blue:white:|"][zoom>=15]
+.route.hiking_small[osmc_symbol="blue:white:blue_stripe"][zoom>=15]
 {
     shield-file: url('img/blue_pipe.8.png');
 }
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="yellow:white:yellow_pipe"][zoom>=12],
-.route.hiking[osmc_symbol="yellow:white:|"][zoom>=12]
+.route.hiking[osmc_symbol="yellow:white:yellow_stripe"][zoom>=12]
 {
     shield-file: url('img/yellow_pipe.8.png');
 }
-.route.hiking[osmc_symbol="yellow:white:yellow_pipe"][zoom>=14],
-.route.hiking[osmc_symbol="yellow:white:|"][zoom>=14]
+.route.hiking[osmc_symbol="yellow:white:yellow_stripe"][zoom>=14]
 {
     shield-file: url('img/yellow_pipe.10.png');
 }
-.route.hiking[osmc_symbol="yellow:white:yellow_pipe"][zoom>=15],
-.route.hiking[osmc_symbol="yellow:white:|"][zoom>=15]
+.route.hiking[osmc_symbol="yellow:white:yellow_stripe"][zoom>=15]
 {
     shield-file: url('img/yellow_pipe.12.png');
 }
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="yellow:white:yellow_pipe"][zoom>=12],
-.route.hiking_small[osmc_symbol="yellow:white:|"][zoom>=12]
+.route.hiking_small[osmc_symbol="yellow:white:yellow_stripe"][zoom>=12]
 {
     shield-file: url('img/yellow_pipe.5.png');
 }
-.route.hiking_small[osmc_symbol="yellow:white:yellow_pipe"][zoom>=14],
-.route.hiking_small[osmc_symbol="yellow:white:|"][zoom>=14]
+.route.hiking_small[osmc_symbol="yellow:white:yellow_stripe"][zoom>=14]
 {
     shield-file: url('img/yellow_pipe.6.png');
 }
-.route.hiking_small[osmc_symbol="yellow:white:yellow_pipe"][zoom>=15],
-.route.hiking_small[osmc_symbol="yellow:white:|"][zoom>=15]
+.route.hiking_small[osmc_symbol="yellow:white:yellow_stripe"][zoom>=15]
 {
     shield-file: url('img/yellow_pipe.8.png');
 }
@@ -555,36 +533,30 @@
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=12],
-.route.hiking[osmc_symbol="green:white:#x5c"][zoom>=12]
+.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=12]
 {
     shield-file: url('img/green_backslash.8.png');
 }
-.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=14],
-.route.hiking[osmc_symbol="green:white:#x5c"][zoom>=14]
+.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=14]
 {
     shield-file: url('img/green_backslash.10.png');
 }
-.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=15],
-.route.hiking[osmc_symbol="green:white:#x5c"][zoom>=15]
+.route.hiking[osmc_symbol="green:white:green_backslash"][zoom>=15]
 {
     shield-file: url('img/green_backslash.12.png');
 }
 
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=12],
-.route.hiking_small[osmc_symbol="green:white:#x5c"][zoom>=12]
+.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=12]
 {
     shield-file: url('img/green_backslash.5.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=14],
-.route.hiking_small[osmc_symbol="green:white:#x5c"][zoom>=14]
+.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=14]
 {
     shield-file: url('img/green_backslash.6.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=15],
-.route.hiking_small[osmc_symbol="green:white:#x5c"][zoom>=15]
+.route.hiking_small[osmc_symbol="green:white:green_backslash"][zoom>=15]
 {
     shield-file: url('img/green_backslash.8.png');
 }
@@ -592,36 +564,30 @@
 
 
 /* normal-sized icons */
-.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=12],
-.route.hiking[osmc_symbol="green:white:/"][zoom>=12]
+.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=12]
 {
     shield-file: url('img/green_slash.8.png');
 }
-.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=14],
-.route.hiking[osmc_symbol="green:white:/"][zoom>=14]
+.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=14]
 {
     shield-file: url('img/green_slash.10.png');
 }
-.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=15],
-.route.hiking[osmc_symbol="green:white:/"][zoom>=15]
+.route.hiking[osmc_symbol="green:white:green_slash"][zoom>=15]
 {
     shield-file: url('img/green_slash.12.png');
 }
 
 
 /* small icons for inbetween the bigger ones */
-.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=12],
-.route.hiking_small[osmc_symbol="green:white:/"][zoom>=12]
+.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=12]
 {
     shield-file: url('img/green_slash.5.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=14],
-.route.hiking_small[osmc_symbol="green:white:/"][zoom>=14]
+.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=14]
 {
     shield-file: url('img/green_slash.6.png');
 }
-.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=15],
-.route.hiking_small[osmc_symbol="green:white:/"][zoom>=15]
+.route.hiking_small[osmc_symbol="green:white:green_slash"][zoom>=15]
 {
     shield-file: url('img/green_slash.8.png');
 }
