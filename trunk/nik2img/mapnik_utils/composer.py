@@ -76,7 +76,7 @@ class Compose(object):
                 self.changed.append(opt[0])
 
     def prepare(self):
-        self.format = self.format.lower().replace('image/','')
+        self.format = self.format.replace('image/','')
         self.mime = 'image/%s' % self.format.replace('256','')
         if self.fonts:
             self.register_fonts()

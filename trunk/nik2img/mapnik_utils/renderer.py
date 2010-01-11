@@ -10,7 +10,8 @@ try:
                 'pdf':cairo.PDFSurface,
                 'ps':cairo.PSSurface,
                 'ARGB32':cairo.FORMAT_ARGB32,
-                'RGB24':cairo.FORMAT_RGB24}
+                'RGB24':cairo.FORMAT_RGB24
+                }
 
 except ImportError:
     HAS_CAIRO = False
@@ -87,15 +88,15 @@ class Render(object):
         """
         Abstraction wrapper for calling for map images rendered with either AGG or Cairo.
         """        
-        if args[2] in self.CAIRO_FILE_FORMATS:
-            self.render_cairo(*args)
+        if args[2] in self.CAIRO_FILE_FORMATS and hasattr(mapnik,'mapnik_version') and mapnik.mapnik_version() < 700:
+            self.render_with_pycairo(*args)
         # todo: support rendering to image formats with cairo
         #elif args[2] in self.CAIRO_IMAGE_FORMATS:
-            #self.render_cairo(*args)
-        elif args[2] in self.AGG_FORMATS:
-            self.render_agg(*args)
+            #self.render_with_pycairo(*args)
+        else:
+            self.render_to_file(*args)
 
-    def render_cairo(self,*args):
+    def render_with_pycairo(self,*args):
         """
         Routine to render the requested Cairo format.
         """
@@ -126,12 +127,12 @@ class Render(object):
         else:
             for k, v in self.CAIRO_FILE_FORMATS.iteritems():
                 path = '%s_%s.%s' % (basename,k,v)
-                self.render_cairo(self.m,path,k)
+                self.render_with_pycairo(self.m,path,k)
             for k, v in self.CAIRO_IMAGE_FORMATS.iteritems():
                 path = '%s_%s.%s' % (basename,k,v)
-                self.render_cairo(self.m,path,k)
+                self.render_with_pycairo(self.m,path,k)
 
-    def render_agg(self,*args):
+    def render_to_file(self,*args):
         """
         Routine to render the requested AGG format.
         """
@@ -148,7 +149,7 @@ class Render(object):
         """
         for k, v in self.AGG_FORMATS.iteritems():
             path = '%s_%s.%s' % (basename,k,v)
-            self.render_agg(self.m,path,k)
+            self.render_to_file(self.m,path,k)
            
     def render_file(self): 
         """

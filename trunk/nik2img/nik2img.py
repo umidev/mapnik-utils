@@ -225,7 +225,7 @@ def make_list(option, opt, value, parser):
     
 
 parser.add_option('-f', '--format', dest='format',
-                  help='Format of image: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, or all (will loop through all formats).')
+                  help='Format of image: png (32 bit), png256 (8 bit), jpeg, pdf, svg, ps, ARGB32, RGB24, or all (will loop through all formats).')
 
 parser.add_option('-c', '--center', dest='center', nargs=2,
                   help='Center coordinates. A long,lat pair e.g. -122.3 47.6 (Seattle)',
