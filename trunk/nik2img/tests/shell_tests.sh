@@ -1,5 +1,7 @@
 # mapfile from string
-cat tests/mapfile_wgs84.xml | nik2img.py /tmp/from_string.png
+cd tests/
+cat mapfile_wgs84.xml | nik2img.py /tmp/from_string.png
+cd ../
 
 # redirect image stream
 nik2img.py tests/mapfile_wgs84.xml --pipe > /tmp/image_stream.png
@@ -12,8 +14,8 @@ open /tmp/image_stream.jpeg
 # worldfile registration
 nik2img.py tests/mapfile_lambert.xml /tmp/lambert.png --world-file wld -d 2000 1500 --no-open
 # open both in qgis
-open tests/data/us_states_lambert.shp -a qgis
-open /tmp/lambert.png -a qgis
+#open tests/data/us_states_lambert.shp -a qgis
+#open /tmp/lambert.png -a qgis
 
 # zoom to extent using long/lat bbox
 nik2img.py tests/mapfile_wgs84.xml --bbox -130 26 -60 50 /tmp/map-latlong1.png
@@ -41,6 +43,7 @@ nik2img.py tests/pymap.py --bbox -121.945 37.312 -121.886 37.355 -d 500 500 /tmp
 nik2img.py tests/pymap.py /tmp/map_frompy.png
 
 # load map from cascadenik mml
+# thisi is currently failing... cascadenik does not put minimum_version need to support Mapnik2
 nik2img.py tests/mapfile_wgs84.mml /tmp/from_css.png
 
 # render all possible image formats into a folder

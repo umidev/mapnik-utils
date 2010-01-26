@@ -74,9 +74,8 @@ Render a Map from an XML string
 ... <StyleName>states_line</StyleName><Datasource><Parameter name="file">tests/data/us_states_wgs84.shp</Parameter><Parameter name="type">shape</Parameter></Datasource>
 ... </Layer>
 ... </Map>'''
->>> if mapnik.has_pycairo():
-...  c = Compose(xml_string,from_string=True,image='/tmp/states_line.pdf',format='pdf')
-...  c.open()
+>>> c = Compose(xml_string,from_string=True,image='/tmp/states_line.pdf',format='pdf')
+>>> c.open()
 
 Register and use a custom font
 ------------------------------
