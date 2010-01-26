@@ -63,8 +63,12 @@ class Load(object):
             return mapnik.load_map(m,self.mapfile)
 
     def load_mml(self,m):    
-        from cascadenik import load_map as load
-        load(m,self.mapfile)
+        from cascadenik import compile
+        compiled = '%s_compiled.xml' % os.path.splitext(self.mapfile)[0]
+        open(compiled, 'w').write(compile(self.mapfile))
+        mapnik.load_map(m, compiled)
+        #from cascadenik import load_map as load
+        #load(m,self.mapfile)
 
     def load_py(self,m,map_variable='m'):
         """
