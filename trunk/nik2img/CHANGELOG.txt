@@ -4,7 +4,7 @@ nik2img changelog
 
 
 Version 0.4.1, February 2nd 2009:
----------------------- ----------
+---------------------------------
 
  * Packaged from r902
  
