@@ -17,7 +17,7 @@ import sys
 import time
 from subprocess import call as subcall
 
-DEBUG = True
+DEBUG = False
 
 app = 'nik2img'
 version = __import__(app).__version__
