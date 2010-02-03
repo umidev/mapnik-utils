@@ -1,8 +1,8 @@
 from distutils.core import setup
 
-version = '0.4.0'
+version = '0.4.1'
 app = 'nik2img'
-description = 'A mapfile to image generator for the Mapnik C++/Python mapping toolkit'
+description = 'A command line style renderer for the Mapnik C++/Python mapping toolkit'
 url = 'http://mapnik-utils.googlecode.com/'
 readme = file('README.txt','rb').read()
 
@@ -13,7 +13,7 @@ setup(name='%s' % app,
       author='Dane Springmeyer',
       author_email='dbsgeo@gmail.com',
       requires=['Mapnik'],
-      keywords='mapnik,gis,geospatial,shp2img',
+      keywords='Mapnik,GIS,GeoSpatial,shp2img',
       url=url,
       #py_modules=['%s' % app],
       packages=['mapnik_utils'],
