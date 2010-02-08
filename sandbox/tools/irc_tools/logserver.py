@@ -101,10 +101,10 @@ def get_day(filename,path=None):
         top += ' | <a href="%s/%s/%s/">%s</a>' % (ROOT_URL,parts[0],parts[1],parts[1])
         top += '</h4>'
         links = ''
-        pre_file = '%s/%s-%s-%s.txt' % (ROOT_PATH, previous.year,previous.month,previous.day)
-        next_file = '%s/%s-%s-%s.txt' % (ROOT_PATH, next.year,next.month,next.day)
-        pre_text = '<a href="%s/%s/%s/%s/">previous</a>' % (ROOT_URL,previous.year,previous.month,previous.day)
-        next_text = '<a href="%s/%s/%s/%s/">next</a>' % (ROOT_URL,next.year,next.month,next.day)
+        pre_file = '%s/%s-%s-%s.txt' % (ROOT_PATH, previous.year,pad(previous.month),pad(previous.day))
+        next_file = '%s/%s-%s-%s.txt' % (ROOT_PATH, next.year,pad(next.month),pad(next.day))
+        pre_text = '<a href="%s/%s/%s/%s/">previous</a>' % (ROOT_URL,previous.year,pad(previous.month),pad(previous.day))
+        next_text = '<a href="%s/%s/%s/%s/">next</a>' % (ROOT_URL,next.year,pad(next.month),pad(next.day))
         if os.path.isfile(pre_file) & os.path.isfile(next_file):
             links += '%s | %s' % (pre_text,next_text)
         elif os.path.isfile(pre_file):
@@ -118,6 +118,11 @@ def get_day(filename,path=None):
         finally:
             f_.close()
 
+def pad(num):
+    if len(str(num)) < 2:
+        return '0%s' % num
+    return num
+
 def home(req):
     today = datetime.datetime.today()
     dates = {}
@@ -126,7 +131,8 @@ def home(req):
     dates['day'] = today.day
     dates['root'] = ROOT_URL
     items = WELCOME % dates
-    log_days = glob.glob(ROOT_PATH + '/%s-%s*.txt' % (today.year,today.month))
+    log_days = glob.glob(ROOT_PATH + '/%s-%s*.txt' % (today.year,pad(today.month)))
+    #import pdb;pdb.set_trace()
     if log_days:
         todays_log = log_days[-1].replace('.txt','')
         if todays_log:
@@ -169,12 +175,12 @@ def query(req, path):
     elif len(parts) == 2:
         year = parts[0]
         month = parts[1]
-        return list_days('/%s-%s-*.txt' % (year,month))
+        return list_days('/%s-%s-*.txt' % (year,pad(month)))
     elif len(parts) == 3:
         year = parts[0]
         month = parts[1]
         day = parts[2]
-        day = get_day('%s-%s-%s' % (year,month,day),ROOT_PATH)
+        day = get_day('%s-%s-%s' % (year,pad(month),pad(day)),ROOT_PATH)
         if day:
             vars = {'title':day[0],'body':day[1] + day[2]}
             return Response(BASE % vars + FOOTER, mimetype='text/html')
