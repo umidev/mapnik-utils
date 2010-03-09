@@ -703,7 +703,7 @@
 /*.poi_historic.point[historic=ruins][ruins=bunker][zoom>=13] name,*/
 .poi.point[military=bunker][zoom>=13] name
 {
-    point-file: url('img/svg-twotone-png/military_bunker.n.14.png');
+    point-file: url('img/svg-twotone-png/military_bunker.p.14.png');
     text-fill: #ac39ac;
     text-dy: 13;
     text-face-name: "Droid Sans Regular";
@@ -717,7 +717,7 @@
 /*.poi_historic.point[historic=ruins][ruins=bunker][zoom>=15] name,*/
 .poi.point[military=bunker][zoom>=15] name
 {
-    point-file: url('img/svg-twotone-png/military_bunker.n.16.png');
+    point-file: url('img/svg-twotone-png/military_bunker.p.16.png');
     text-fill: #ac39ac;
     text-dy: 17;
     text-face-name: "Droid Sans Regular";
