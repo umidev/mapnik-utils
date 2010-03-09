@@ -29,6 +29,11 @@
     line-dasharray: 1, 2, 1, 24;
 }
 
+/*
+unterschiedliche Strichsorten:  
+fettere Striche: Autos nicht; Fahrrad nicht: ein fetter und ein duenner 
+(impliziert auto nicht? ;-); Fussgaenger: zwei duenne?
+*/
 
 
 .path[zoom>=10]
