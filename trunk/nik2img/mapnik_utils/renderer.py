@@ -1,7 +1,11 @@
 import os
 import sys
 import timeit
-import mapnik
+
+try:
+    import mapnik2 as mapnik
+except ImportError:
+    import mapnik
 
 try:
     import cairo

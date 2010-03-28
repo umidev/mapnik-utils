@@ -1,4 +1,7 @@
-from mapnik import forward_, inverse_, Map, Coord, Envelope, Projection, scale_denominator
+try:
+    from mapnik2 import forward_, inverse_, Map, Coord, Envelope, Projection, scale_denominator
+except ImportError:
+    from mapnik import forward_, inverse_, Map, Coord, Envelope, Projection, scale_denominator
 
 TRANSFORM_ERROR = 'Only Mapnik >= 0.6.0 supports projected transforms, see: http://trac.mapnik.org/ticket/117'
 

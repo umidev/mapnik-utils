@@ -1,7 +1,12 @@
 import os
 import sys
 import timeit
-import mapnik
+
+try:
+    import mapnik2 as mapnik
+except ImportError:
+    import mapnik
+
 
 class Load(object):
     def __init__(self,mapfile,variables={},from_string=False):

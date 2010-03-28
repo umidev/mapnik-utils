@@ -1,4 +1,8 @@
-import mapnik
+try:
+    import mapnik2 as mapnik
+except ImportError:
+    import mapnik
+
 
 class FontHandler(object):
     def __init__(self):

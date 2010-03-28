@@ -1,9 +1,14 @@
 import os
 import sys
-import mapnik
 import platform
 from renderer import Render
 from mapfile import Load
+
+try:
+    import mapnik2 as mapnik
+except ImportError:
+    import mapnik
+
 
 # repair compatibility with mapnik2 development series
 if not hasattr(mapnik,'Envelope'):

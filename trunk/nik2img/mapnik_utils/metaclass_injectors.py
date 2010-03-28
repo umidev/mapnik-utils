@@ -1,11 +1,13 @@
 import re
 import sys
-import mapnik
 from projection import EasyProjection
 
 try:
-    from mapnik import ProjTransform
-except:
+    import mapnik2 as mapnik
+except ImportError:
+    import mapnik
+
+if not hasattr(mapnik,'ProjTransform'):
     from compatibility import ProjTransform
 
 BoostPythonMetaclass = mapnik.Coord.__class__

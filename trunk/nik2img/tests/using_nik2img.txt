@@ -64,7 +64,11 @@ Render a Map from an XML string
 -------------------------------
 
 >>> from mapnik_utils import Compose
->>> import mapnik
+>>> try:
+...     import mapnik2 as mapnik
+... except ImportError:
+...     import mapnik
+... 
 >>> xml_string = '''<?xml version="1.0" encoding="utf-8"?>
 ... <Map bgcolor="#8cb6d3">
 ... <Style name="states_line">

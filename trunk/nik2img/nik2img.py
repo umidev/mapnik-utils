@@ -337,8 +337,11 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
     if not sys.stdin.isatty():
-        xml = sys.stdin.read()
-        import mapnik
+        xml = sys.stdin.read()        
+        try:
+            import mapnik2 as mapnik
+        except ImportError:
+            import mapnik
         if hasattr(mapnik,'load_map_from_string'):
             options.from_string = True
             mapfile = xml
