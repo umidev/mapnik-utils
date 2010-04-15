@@ -3,6 +3,7 @@ import sys
 import platform
 from renderer import Render
 from mapfile import Load
+from subprocess import Popen, PIPE
 
 try:
     import mapnik2 as mapnik
@@ -198,7 +199,6 @@ class Compose(object):
         
         return builder
 
- 
     def render(self):
         if not self.map:
             self.build()
@@ -213,8 +213,11 @@ class Compose(object):
             renderer.print_stream()
         self.rendered = True
         return renderer
-
-    def open(self, app=None):
+    
+    def call(self,cmd):
+        Popen(cmd.split(' '),stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        
+    def open(self, app=None, fail=False):
         """
         Routine to open the rendered image or folder of images from the filesystem.
         """
@@ -224,20 +227,23 @@ class Compose(object):
         try:
             if os.name == 'nt':
                 if app:
-                    self.msg('Overriding default image viewer not yet supported on Win32')
-                os.system('start %s' % self.image.replace('/','\\'))
+                    self.msg('Overriding default image viewer not supported on Win32')
+                self.call('start %s' % self.image.replace('/','\\'))
             elif platform.uname()[0] == 'Linux':
                 if app:
-                    os.system('bash -c "%s %s"' % (app, self.image))
+                    self.call('bash -c "%s %s"' % (app, self.image))
                 else:
                     try:
-                        os.system('bash -c "xdg-open %s"' % self.image)
+                        call('bash -c "xdg-open %s"' % self.image)
                     except:
-                        os.system('bash -c "gthumb %s"' % self.image)                        
+                        self.call('bash -c "gthumb %s"' % self.image)
             elif platform.uname()[0] == 'Darwin':
                 if app:
-                    os.system('open %s -a %s' % (self.image, app))
+                    self.call('open %s -a %s' % (self.image, app))
                 else:
-                    os.system('open %s' % self.image)
-        except Exception:
-            pass # this is fluf, so fail quietly if there is a problem
+                    self.call('open %s' % self.image)
+        except Exception, e:
+            if fail:
+                raise SystemExit(e)
+            else:
+                pass # this is fluf, so fail quietly if there is a problem
