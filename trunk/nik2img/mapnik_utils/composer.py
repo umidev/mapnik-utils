@@ -238,11 +238,11 @@ class Compose(object):
             self.call('start %s' % self.image.replace('/','\\'))
         elif platform.uname()[0] == 'Linux':
             if app:
-                self.call('bash -c "%s %s"' % (app, self.image))
+                self.call('%s %s' % (app, self.image))
             else:
-                resp = self.call('bash -c "xdg-open %s"' % self.image)
+                resp = self.call('xdg-open %s' % self.image)
                 if not resp:
-                    self.call('bash -c "gthumb %s"' % self.image)
+                    self.call('gthumb %s' % self.image)
         elif platform.uname()[0] == 'Darwin':
             if app:
                 self.call('open %s -a %s' % (self.image, app))
