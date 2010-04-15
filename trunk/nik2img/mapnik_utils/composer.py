@@ -242,7 +242,9 @@ class Compose(object):
             else:
                 resp = self.call('xdg-open %s' % self.image)
                 if not resp:
-                    self.call('gthumb %s' % self.image)
+                    resp = self.call('gthumb %s' % self.image)
+                    if not resp:
+                        self.call('display %s' % self.image)
         elif platform.uname()[0] == 'Darwin':
             if app:
                 self.call('open %s -a %s' % (self.image, app))
