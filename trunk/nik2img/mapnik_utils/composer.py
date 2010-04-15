@@ -214,36 +214,36 @@ class Compose(object):
         self.rendered = True
         return renderer
     
-    def call(self,cmd):
-        Popen(cmd.split(' '),stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    def call(self,cmd,fail=False):
+        try:
+            response = Popen(cmd.split(' '),stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            return response[0]
+        except Exception, e:
+            if fail:
+                raise SystemExit(e)
+            else:
+                return None
         
-    def open(self, app=None, fail=False):
+    def open(self, app=None):
         """
         Routine to open the rendered image or folder of images from the filesystem.
         """
         self.render()
         if not app and self.app:
             app = self.app
-        try:
-            if os.name == 'nt':
-                if app:
-                    self.msg('Overriding default image viewer not supported on Win32')
-                self.call('start %s' % self.image.replace('/','\\'))
-            elif platform.uname()[0] == 'Linux':
-                if app:
-                    self.call('bash -c "%s %s"' % (app, self.image))
-                else:
-                    try:
-                        call('bash -c "xdg-open %s"' % self.image)
-                    except:
-                        self.call('bash -c "gthumb %s"' % self.image)
-            elif platform.uname()[0] == 'Darwin':
-                if app:
-                    self.call('open %s -a %s' % (self.image, app))
-                else:
-                    self.call('open %s' % self.image)
-        except Exception, e:
-            if fail:
-                raise SystemExit(e)
+        if os.name == 'nt':
+            if app:
+                self.msg('Overriding default image viewer not supported on Win32')
+            self.call('start %s' % self.image.replace('/','\\'))
+        elif platform.uname()[0] == 'Linux':
+            if app:
+                self.call('bash -c "%s %s"' % (app, self.image))
             else:
-                pass # this is fluf, so fail quietly if there is a problem
+                resp = self.call('bash -c "xdg-open %s"' % self.image)
+                if not resp:
+                    self.call('bash -c "gthumb %s"' % self.image)
+        elif platform.uname()[0] == 'Darwin':
+            if app:
+                self.call('open %s -a %s' % (self.image, app))
+            else:
+                self.call('open %s' % self.image)
