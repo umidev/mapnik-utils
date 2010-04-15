@@ -231,9 +231,9 @@ class Compose(object):
                     os.system('bash -c "%s %s"' % (app, self.image))
                 else:
                     try:
-                        os.system('bash -c "xdg-open %s"' % (app, self.image))
+                        os.system('bash -c "xdg-open %s"' % self.image)
                     except:
-                        os.system('bash -c "gthumb %s"' % (app, self.image))                        
+                        os.system('bash -c "gthumb %s"' % self.image)                        
             elif platform.uname()[0] == 'Darwin':
                 if app:
                     os.system('open %s -a %s' % (self.image, app))
