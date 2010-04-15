@@ -228,7 +228,12 @@ class Compose(object):
                 os.system('start %s' % self.image.replace('/','\\'))
             elif platform.uname()[0] == 'Linux':
                 if app:
-                    os.system('%s %s' % (app, self.image))
+                    os.system('bash -c "%s %s"' % (app, self.image))
+                else:
+                    try:
+                        os.system('bash -c "xdg-open %s"' % (app, self.image))
+                    except:
+                        os.system('bash -c "gthumb %s"' % (app, self.image))                        
             elif platform.uname()[0] == 'Darwin':
                 if app:
                     os.system('open %s -a %s' % (self.image, app))
