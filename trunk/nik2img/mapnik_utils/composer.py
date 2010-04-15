@@ -217,7 +217,8 @@ class Compose(object):
     def call(self,cmd,fail=False):
         try:
             response = Popen(cmd.split(' '),stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            return response[0]
+            cm = response.communicate()
+            return cm[0]
         except Exception, e:
             if fail:
                 raise SystemExit(e)
