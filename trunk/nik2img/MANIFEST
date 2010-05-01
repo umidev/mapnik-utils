@@ -9,7 +9,7 @@ mapnik_utils/__init__.py
 mapnik_utils/compatibility.py
 mapnik_utils/composer.py
 mapnik_utils/fonts.py
-mapnik_utils/mapfile.py
+mapnik_utils/loader.py
 mapnik_utils/metaclass_injectors.py
 mapnik_utils/projection.py
 mapnik_utils/renderer.py

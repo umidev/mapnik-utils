@@ -27,15 +27,19 @@ class Mapnik:
     __instance = None
     __version = None
 
-    def __init__(self,version=2):
+    def __init__(self,version=None):
         if Mapnik.__instance is None:
-            if version == 2:
-                try:
+            if version in (None, 2):
+                if version is None:
+                    try:
+                        import mapnik2
+                        Mapnik.__instance = mapnik2
+                    except:
+                        import mapnik
+                        Mapnik.__instance = mapnik
+                else:
                     import mapnik2
                     Mapnik.__instance = mapnik2
-                except:
-                    import mapnik
-                    Mapnik.__instance = mapnik                
             else:
                 import mapnik
                 Mapnik.__instance = mapnik
