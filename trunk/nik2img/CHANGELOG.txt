@@ -2,6 +2,15 @@
 nik2img changelog
 =================
 
+
+Version 0.5.2, April 30, 2010:
+------------------------------
+
+ * Packaged from r936
+ 
+ * 0.5.1 needed a bit more love.
+ 
+ 
 Version 0.5.1, April 30, 2010:
 ------------------------------
 
