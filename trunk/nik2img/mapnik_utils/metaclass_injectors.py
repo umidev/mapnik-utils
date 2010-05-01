@@ -5,6 +5,7 @@ from mapnik_utils.version_adapter import Mapnik
 
 mapnik = Mapnik()
 
+# mapnik_utils
 from projection import EasyProjection
 
 if not hasattr(mapnik,'ProjTransform'):

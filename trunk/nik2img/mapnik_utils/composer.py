@@ -7,9 +7,11 @@ import sys
 import platform
 from timeit import time
 from pdb import set_trace
-from renderer import Render
-from mapfile import Load
 from subprocess import Popen, PIPE
+
+# mapnik_utils
+from renderer import Render
+from loader import Load
 
 def color_print(color, text, no_color=False):
     """

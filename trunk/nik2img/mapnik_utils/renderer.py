@@ -1,6 +1,7 @@
 import os
 import sys
 import timeit
+
 from mapnik_utils.version_adapter import Mapnik
 
 mapnik = Mapnik()
