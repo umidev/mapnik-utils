@@ -2,7 +2,7 @@ class Mapnik:
     """ Mapnik Singleton to allow for just a single import of mapnik,
     either old mapnik or mapnik2.
     
-    For enabling nik2img to control version based on command line arg.
+    For allowing nik2img full control over version based on command line arg.
     
     Also, to avoid pitfall of double import:
 

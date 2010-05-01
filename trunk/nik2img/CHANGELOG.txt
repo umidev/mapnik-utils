@@ -2,6 +2,14 @@
 nik2img changelog
 =================
 
+Version 0.5.1, April 30, 2010:
+------------------------------
+
+ * Packaged from r933
+ 
+ * 0.5.0 was a lemon.
+   
+   
 Version 0.5.0, April 30, 2010:
 ------------------------------
 
