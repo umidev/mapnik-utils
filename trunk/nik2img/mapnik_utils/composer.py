@@ -11,6 +11,29 @@ from renderer import Render
 from mapfile import Load
 from subprocess import Popen, PIPE
 
+def color_print(color, text, no_color=False):
+    """
+    Accepts an integer key for one of several color choices along with the text string to color
+      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
+    Prints a colored string of text.
+    """
+    if not os.name == 'nt' and not no_color:
+        print "\033[9%sm%s\033[0m" % (color,text)
+    else:
+        print text
+
+def color_text(color, text, no_color=False):
+    """
+    Accepts an integer key for one of several color choices along with the text string to color
+      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
+    Returns a colored string of text.
+    """
+    if not os.name == 'nt' and not no_color:
+        return "\033[9%sm%s\033[0m" % (color,text)
+    else:
+        return text
+
+
 class Compose(object):
     """
     """

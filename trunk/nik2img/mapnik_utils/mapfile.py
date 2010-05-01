@@ -31,7 +31,7 @@ class Load(object):
         
     def validate(self):
         if not os.path.exists(self.mapfile):
-            raise AttributeError('Mapfile not found')
+            raise AttributeError('Map "%s" not found!' % os.path.abspath(self.mapfile))
         if not self.file_type in self.mapfile_types:
             raise AttributeError('Invalid mapfile type: only these extension allowed: %s' % ', '.join(self.mapfile_types.keys()))
         return True

@@ -7,37 +7,10 @@ __license__ = 'BSD'
 
 import os
 import sys
+import optparse
 import tempfile
 
-from optparse import OptionParser
-
-from mapnik_utils.version_adapter import Mapnik
-
-def color_print(color, text, no_color=False):
-    """
-    Accepts an integer key for one of several color choices along with the text string to color
-      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
-    Prints a colored string of text.
-    """
-    if not os.name == 'nt' and not no_color:
-        print "\033[9%sm%s\033[0m" % (color,text)
-    else:
-        print text
-
-def color_text(color, text, no_color=False):
-    """
-    Accepts an integer key for one of several color choices along with the text string to color
-      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
-    Returns a colored string of text.
-    """
-    if not os.name == 'nt' and not no_color:
-        return "\033[9%sm%s\033[0m" % (color,text)
-    else:
-        return text
-
-
-        
-parser = OptionParser(usage="""%prog <mapfile> <image> [options]
+parser = optparse.OptionParser(usage="""%prog <mapfile> <image> [options]
 
 Example usage
 -------------
@@ -189,15 +162,17 @@ parser.add_option('--fonts',
 
 parser.add_option('--mapnik-version', dest='mapnik_version',
                   action='store', default=1,
-                  help='Use the mapnik2 python bindings if they exist', type='int',
-                  )
+                  help='Use the mapnik2 python bindings if they exist', type='int')
     
 if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
+    # we're actually starting now so pull in mapnik
+    # this version adapter is a nasty hack to globally
+    # control usage of either mapnik or mapnik2
+    from mapnik_utils.version_adapter import Mapnik
     mapnik = Mapnik(options.mapnik_version)
-    #print mapnik.__version
-    #sys.exit()
+
     if not sys.stdin.isatty():
         xml = sys.stdin.read()
         if hasattr(mapnik,'load_map_from_string'):
@@ -211,7 +186,7 @@ if __name__ == '__main__':
         if len(args) > 0:
             options.image = args[0]
     elif len(args) == 0:
-        parser.error(color_text(4,'\n\nPlease provide the path to a Mapnik xml or Cascadenik mml file\n',options.no_color))
+        parser.error('\n\nPlease provide the path to a Mapnik xml or Cascadenik mml file\n')
     else:
         mapfile = args[0]
         if len(args) > 1:
@@ -235,7 +210,7 @@ if __name__ == '__main__':
                 nik_map.open()
             else:
                 if not options.pipe and not options.dry_run:
-                    parser.error(color_text(4,'\n\nPlease provide the path to an output image.\n',options.no_color))
+                    parser.error('\n\nPlease provide the path to an output image.\n')
                 else:
                     nik_map.render()
     
