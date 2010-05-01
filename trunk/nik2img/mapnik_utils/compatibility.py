@@ -1,7 +1,6 @@
-try:
-    from mapnik2 import forward_, inverse_, Map, Coord, Envelope, Projection, scale_denominator
-except ImportError:
-    from mapnik import forward_, inverse_, Map, Coord, Envelope, Projection, scale_denominator
+from mapnik_utils.version_adapter import Mapnik
+
+mapnik = Mapnik()
 
 TRANSFORM_ERROR = 'Only Mapnik >= 0.6.0 supports projected transforms, see: http://trac.mapnik.org/ticket/117'
 
@@ -14,29 +13,29 @@ class ProjTransform(object):
         if self.to_prj.geographic and self.from_prj.geographic:
             return geom
         elif not self.to_prj.geographic and self.from_prj.geographic:
-            return forward_(geom,self.to_prj)
+            return mapnik.forward_(geom,self.to_prj)
         elif self.to_prj.geographic and not self.from_prj.geographic:
-            return inverse_(geom,self.to_prj)
+            return mapnik.inverse_(geom,self.to_prj)
         elif not self.to_prj.geographic and not self.from_prj.geographic:
             if self.to_prj.params() == self.from_prj.params():
                 return geom
             else:
-                raise AttributeError(TRANSFORM_ERROR)
+                raise NotImplementedError(TRANSFORM_ERROR)
         
     def backward(self,geom):
         if self.to_prj.geographic and self.from_prj.geographic:
             return geom
         elif not self.to_prj.geographic and self.from_prj.geographic:
-            return inverse_(geom,self.to_prj)
+            return mapnik.inverse_(geom,self.to_prj)
         elif self.to_prj.geographic and not self.from_prj.geographic:
-            return forward_(geom,self.to_prj)
+            return mapnik.forward_(geom,self.to_prj)
         elif not self.to_prj.geographic and not self.from_prj.geographic:
             if self.to_prj.params() == self.from_prj.params():
                 return geom
             else:
-                raise AttributeError(TRANSFORM_ERROR)
+                raise NotImplementedError(TRANSFORM_ERROR)
 
-BoostPythonMetaclass = Coord.__class__
+BoostPythonMetaclass = mapnik.Coord.__class__
                 
 class _injector(object):
     class __metaclass__(BoostPythonMetaclass):
@@ -47,24 +46,24 @@ class _injector(object):
                         setattr(b,k,v)
             return type.__init__(self, name, bases, dict)
 
-class _Map(Map,_injector):
+class _Map(mapnik.Map,_injector):
 
     def scale_denominator(self):
-        srs = Projection(self.srs)
-        return scale_denominator(self,srs.geographic)
+        srs = mapnik.Projection(self.srs)
+        return mapnik.scale_denominator(self,srs.geographic)
     
     def resize(self,w,h):
         self.width = w
         self.height = h
 
-class _Coord(Coord,_injector):
+class _Coord(mapnik.Coord,_injector):
     def forward(self,obj):
-        return forward_(self,obj)
+        return mapnik.forward_(self,obj)
     def inverse(self,obj):
-        return inverse_(self,obj)
+        return mapnik.inverse_(self,obj)
 
-class _Envelope(Envelope,_injector):
+class _Envelope(mapnik.Envelope,_injector):
     def forward(self,obj):
-        return forward_(self,obj)
+        return mapnik.forward_(self,obj)
     def inverse(self,obj):
-        return inverse_(self,obj)
+        return mapnik.inverse_(self,obj)

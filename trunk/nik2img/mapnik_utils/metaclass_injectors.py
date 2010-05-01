@@ -1,11 +1,11 @@
 import re
 import sys
-from projection import EasyProjection
 
-try:
-    import mapnik2 as mapnik
-except ImportError:
-    import mapnik
+from mapnik_utils.version_adapter import Mapnik
+
+mapnik = Mapnik()
+
+from projection import EasyProjection
 
 if not hasattr(mapnik,'ProjTransform'):
     from compatibility import ProjTransform

@@ -1,28 +1,15 @@
+from mapnik_utils.version_adapter import Mapnik
+
+mapnik = Mapnik()
+
 import os
 import sys
 import platform
+from timeit import time
+from pdb import set_trace
 from renderer import Render
 from mapfile import Load
 from subprocess import Popen, PIPE
-
-try:
-    import mapnik2 as mapnik
-except ImportError:
-    import mapnik
-
-
-# repair compatibility with mapnik2 development series
-if not hasattr(mapnik,'Envelope'):
-    mapnik.Envelope = mapnik.Box2d
-
-# extend native mapnik objects
-import metaclass_injectors
-
-# bring 0.5.x series python bindings up to 0.6.x
-if not hasattr(mapnik,'mapnik_version'):
-    import compatibility 
-
-
 
 class Compose(object):
     """
@@ -250,3 +237,151 @@ class Compose(object):
                 self.call('open %s -a %s' % (self.image, app))
             else:
                 self.call('open %s' % self.image)
+
+
+class ComposeDebug(Compose):
+    """
+    """
+    def __init__(self,mapfile,**kwargs):
+        self.no_color = kwargs.get('no_color')   
+        self.pause = kwargs.get('pause')
+        self.trace_steps = kwargs.get('trace_steps')
+        self.verbose = kwargs.get('verbose')
+
+        self.timing_started = False
+        self.step_counter = 1
+        self.start_time = 0
+
+        Compose.__init__(self,mapfile,**kwargs)
+
+    def setup(self):
+        if self.trace_steps and not self.verbose:
+            self.verbose = True
+            self.debug_msg('PDB trace requested, automatically entering verbose mode')
+
+    def prepare(self):
+        super(ComposeDebug,self).prepare()
+        self.timing_started = True
+        self.start_time = time.time()
+        self.debug_msg('Nik2img starting...')
+        self.debug_msg('Format: %s' % self.format)
+        #self.debug_msg('mime: %s' % self.mime)
+
+    def build(self):
+        try:
+            builder = super(ComposeDebug,self).build()
+        except Exception, E:
+            self.output_error(E)        
+        self.last_step('Loading map took... ', builder.load_map_time)
+        if self.verbose:
+            self.debug_msg('SRS: %s' % self.map.srs)
+            if self.map.proj_obj.srid:
+                self.debug_msg('SRID: %s' % self.map.proj_obj.srid)
+            self.debug_msg('Map extent: %s' % self.map.envelope())
+            self.debug_msg('Map long/lat bbox: %s' % self.map.lon_lat_bbox())
+            self.debug_msg('Map center: %s' % self.map.envelope().center())
+            self.debug_msg('Map long/lat center: %s' % self.map.lon_lat_bbox().center())
+            self.debug_msg('Map scale denominator: %s' % self.map.scale_denominator())
+            if self.layers:
+                self.debug_msg('Active layers: %s' % self.map.active_layers())
+            if self.map.layers_bounds():
+                self.debug_msg('Extent of all layers: %s' % self.map.layers_bounds())
+                self.debug_msg('Long/lat extent of all layers: %s' % self.map.lon_lat_layers_bounds())
+                self.debug_msg('Long/lat center of all layers: %s' % self.map.lon_lat_layers_bounds().center())
+    
+            lyrs = self.map.intersecting_layers()
+            if not len(lyrs):
+                self.debug_msg("No layers intersecting map!",warn=True)
+            else:
+                self.debug_msg("Layers intersecting map: [%s]" % ', '.join([l.name for l in lyrs]))
+            self.debug_msg("At current scale of '%s'..." % self.map.scale())
+            for lyr in lyrs:
+                if not l.visible(self.map.scale()):
+                    self.debug_msg("Layer '%s' is NOT visible" % lyr.name,warn=True)
+                else:
+                    self.debug_msg("layer '%s' is visible" % lyr.name)
+                # crashing in filter on os x...
+                #    rules = ', '.join(['%s:%s (%s -> %s)' % (r.parent,str(r.filter)[:10],r.min_scale,r.max_scale) for r in lyr.active_rules])
+                #    self.debug_msg('active rules for %s: %s' % (l.name,rules))
+                
+        
+    def render(self):
+        if not self.map:
+            self.debug_msg('Calling build from render...')
+        self.debug_msg('Starting rendering...')            
+        try:
+            renderer = super(ComposeDebug,self).render()
+        except Exception, E:
+            self.output_error(E)
+        self.last_step('Rendering image took... ', renderer.render_time)
+        self.debug_msg('Finished rendering map to... %s' % self.image)
+        self.total_time()
+
+    def register_fonts(self):
+        super(ComposeDebug,self).register_fonts()
+        if len(self.font_handler.added):
+            self.debug_msg("Registered: '%s'" % self.font_handler.added)
+        elif len(self.font_handler.failed):
+            self.debug_msg("Available fonts are: '%s'" % self.font_handler.available,warn=True)
+      
+    def output_error(self, msg, E=None):
+        if E:
+            sys.stderr.write(color_text(1, '// --> %s: \n\t %s\n' % (msg, E),self.no_color))
+        else:
+            sys.stderr.write(color_text(1, '// --> %s \n' % msg,self.no_color))
+        sys.exit(1)
+
+    def msg(self, msg, warn=False):
+        self.debug_msg(msg,warn=warn)
+
+    def debug_msg(self, msg, warn=False):
+        """
+        Output a colored message or warning, incrementing the step_counter
+        to enable a pdb trace to be set at any point a verbose message is printed.
+        """
+        color = 2
+        if warn:
+            color = 1
+        if self.verbose:
+            text = 'Step: %s // --> %s\n' % (self.step_counter, msg)
+            sys.stderr.write(color_text(color,text,self.no_color))
+        if self.pause:
+            for second in range(1, (int(self.pause)+1)):
+                sys.stderr.write('%s ' % color_text(5,second,self.no_color))
+                time.sleep(1)
+                sys.stderr.flush()
+            sys.stderr.write('... \n')
+        if self.trace_steps:
+            if self.step_counter in self.trace_steps:
+                try:
+                    print ">>> Entering PDB interpreter (press 'c' to leave)"
+                    set_trace()
+                except KeyboardInterrupt:
+                    pass
+        self.step_counter += 1
+
+    def get_time(self, time):
+        """
+        Get the time and either seconds or minutes format.
+        """
+        if time/60 < 1:
+            seconds = '%s seconds' % str(time)
+            return seconds
+        else:
+            minutes = '%s minutes' % str(time/60)
+            return minutes
+    
+    def total_time(self, last_step=None):
+        if self.verbose:
+            total = (time.time() - self.start_time)
+            out = 'Total Nik2img run time: %s' % (self.get_time(round(total,4)))
+            if last_step:
+                out += '| Last step: %s'% self.get_time(round(last_step,8))
+            val = color_text(4,out,self.no_color)
+            sys.stderr.write('%s\n' % val)
+
+    def last_step(self,msg,timing):
+        if self.verbose:
+            out = '%s %s' % (msg, self.get_time(round(timing,4)))
+            val = color_text(4,out,self.no_color)
+            sys.stderr.write('%s\n' % val)

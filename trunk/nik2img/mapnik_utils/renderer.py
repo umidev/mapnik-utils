@@ -1,11 +1,9 @@
 import os
 import sys
 import timeit
+from mapnik_utils.version_adapter import Mapnik
 
-try:
-    import mapnik2 as mapnik
-except ImportError:
-    import mapnik
+mapnik = Mapnik()
 
 try:
     import cairo

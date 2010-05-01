@@ -1,5 +1,5 @@
 The primary author of nik2img is Dane Springmeyer
-<dbsgeo@gmail.com>.
+<dane@dbsgeo.com>.
 
 Others who have contributed contributed to the tool:
 

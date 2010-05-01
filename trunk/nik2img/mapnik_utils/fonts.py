@@ -1,7 +1,6 @@
-try:
-    import mapnik2 as mapnik
-except ImportError:
-    import mapnik
+from mapnik_utils.version_adapter import Mapnik
+
+mapnik = Mapnik()
 
 
 class FontHandler(object):

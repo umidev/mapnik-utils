@@ -33,7 +33,7 @@ def run_doc_tests():
          for filename
          in list_doctests()])
 
-if __name__ == "__main__":
+def main():
     # append working directory so we can import 'mapnik_util' without installing them
     sys.path.append(os.getcwd())
     # test importing so a failure happens here
@@ -41,3 +41,6 @@ if __name__ == "__main__":
     import mapnik_utils
     runner = unittest.TextTestRunner()
     runner.run(run_doc_tests())
+
+if __name__ == "__main__":
+    main()

@@ -2,6 +2,15 @@
 nik2img changelog
 =================
 
+Version 0.5.0, April 30, 2010:
+------------------------------
+
+ * Packaged from r926
+ 
+ * Refactored core to add switchable support for Mapnik2 (using singleton type thingy)
+  * new command line option --mapnik-version {1|2} that allows you to toggle
+    between old mapnik (up to 0.7.x) and mapnik2 (>= 0.8.0)
+   
 
 Version 0.4.1, February 2nd 2009:
 ---------------------------------
