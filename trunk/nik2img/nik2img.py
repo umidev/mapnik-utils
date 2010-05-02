@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version__ = '0.5.2'
+__version__ = '0.5.3'
 __author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
 __copyright__ = 'Copyright 2009, Dane Springmeyer'
 __license__ = 'BSD'
@@ -161,7 +161,7 @@ parser.add_option('--fonts',
                   callback=make_list)
 
 parser.add_option('--mapnik-version', dest='mapnik_version',
-                  action='store', default=1,
+                  action='store', default=2,
                   help='Use the mapnik2 python bindings if they exist', type='int')
     
 if __name__ == '__main__':

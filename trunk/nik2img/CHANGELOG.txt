@@ -3,6 +3,14 @@ nik2img changelog
 =================
 
 
+Version 0.5.3, May 2nd, 2010:
+-----------------------------
+
+ * Packaged from r950
+ 
+ * Made Mapnik2 default version, falling back to old mapnik.
+
+
 Version 0.5.2, April 30, 2010:
 ------------------------------
 
