@@ -1,0 +1,10 @@
+Cascadenik Changelog
+--------------------
+
+
+Version 0.1.0, May 1, 2010:
+---------------------------
+
+ * Initial release.
+ 
+ * Packaged from r941
