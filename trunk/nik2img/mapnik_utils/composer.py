@@ -7,33 +7,11 @@ import sys
 import platform
 from timeit import time
 from pdb import set_trace
-from subprocess import Popen, PIPE
 
 # mapnik_utils
-from renderer import Render
-from loader import Load
-
-def color_print(color, text, no_color=False):
-    """
-    Accepts an integer key for one of several color choices along with the text string to color
-      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
-    Prints a colored string of text.
-    """
-    if not os.name == 'nt' and not no_color:
-        print "\033[9%sm%s\033[0m" % (color,text)
-    else:
-        print text
-
-def color_text(color, text, no_color=False):
-    """
-    Accepts an integer key for one of several color choices along with the text string to color
-      keys = 1:red, 2:green, 3:yellow, 4: dark blue, 5:pink, 6:teal blue, 7:white
-    Returns a colored string of text.
-    """
-    if not os.name == 'nt' and not no_color:
-        return "\033[9%sm%s\033[0m" % (color,text)
-    else:
-        return text
+from mapnik_utils.renderer import Render
+from mapnik_utils.loader import Load
+from mapnik_utils.tools import call, color_text, color_print
 
 
 class Compose(object):
@@ -226,17 +204,6 @@ class Compose(object):
         self.rendered = True
         return renderer
     
-    def call(self,cmd,fail=False):
-        try:
-            response = Popen(cmd.split(' '),stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            cm = response.communicate()
-            return cm[0]
-        except Exception, e:
-            if fail:
-                raise SystemExit(e)
-            else:
-                return None
-        
     def open(self, app=None):
         """
         Routine to open the rendered image or folder of images from the filesystem.
@@ -247,21 +214,21 @@ class Compose(object):
         if os.name == 'nt':
             if app:
                 self.msg('Overriding default image viewer not supported on Win32')
-            self.call('start %s' % self.image.replace('/','\\'))
+            call('start %s' % self.image.replace('/','\\'))
         elif platform.uname()[0] == 'Linux':
             if app:
-                self.call('%s %s' % (app, self.image))
+                call('%s %s' % (app, self.image))
             else:
-                resp = self.call('xdg-open %s' % self.image)
+                resp = call('xdg-open %s' % self.image)
                 if not resp:
-                    resp = self.call('gthumb %s' % self.image)
+                    resp = call('gthumb %s' % self.image)
                     if not resp:
-                        self.call('display %s' % self.image)
+                        call('display %s' % self.image)
         elif platform.uname()[0] == 'Darwin':
             if app:
-                self.call('open %s -a %s' % (self.image, app))
+                call('open %s -a %s' % (self.image, app))
             else:
-                self.call('open %s' % self.image)
+                call('open %s' % self.image)
 
 
 class ComposeDebug(Compose):

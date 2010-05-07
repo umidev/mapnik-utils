@@ -13,4 +13,5 @@ mapnik_utils/loader.py
 mapnik_utils/metaclass_injectors.py
 mapnik_utils/projection.py
 mapnik_utils/renderer.py
+mapnik_utils/tools.py
 mapnik_utils/version_adapter.py

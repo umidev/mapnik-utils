@@ -1,10 +1,13 @@
 import os
 import sys
 import timeit
+import tempfile
 
 from mapnik_utils.version_adapter import Mapnik
 
 mapnik = Mapnik()
+
+from mapnik_utils.tools import call
 
 try:
     import cairo
@@ -47,7 +50,7 @@ class Render(object):
         self.render_time = 0
         
         self.ALL_FORMATS = {}
-        self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg'}
+        self.AGG_FORMATS = {'png':'png','png256':'png','jpeg':'jpg','tif':'tif','tiff':'tif'}
         self.CAIRO_FILE_FORMATS = {'svg':'svg','pdf':'pdf','ps':'ps'}
         self.CAIRO_IMAGE_FORMATS = {'ARGB32':'png','RGB24':'png'}
         self.setup_formats()
@@ -66,7 +69,7 @@ class Render(object):
     def write_wld(self,rendered_image):
         basename = rendered_image.split('.')[0]
         f_ptr = '%s.%s' % (basename, self.world_file_ext)
-        sys.stderr.write('Saved world file to.. %s\n' % f_ptr)
+        #sys.stderr.write('Saved world file to.. %s\n' % f_ptr)
         f = open(f_ptr, 'w')
         f.write(self.m.to_wld())
         f.close()
@@ -120,7 +123,7 @@ class Render(object):
             if self.world_file_ext:
                 self.write_wld(args[1])
 
-    def call_cairo(self, basename):
+    def call_all_cairo(self, basename):
         """
         Abstraction wrapper to allow for the same call
         to any image and file formats requested from Cairo.
@@ -139,13 +142,30 @@ class Render(object):
         """
         Routine to render the requested AGG format.
         """
-        self.timer()
-        mapnik.render_to_file(*args)
-        self.stop()
-        if self.world_file_ext:
-            self.write_wld(args[1])
+        format = args[2]
+        if format in ('tif','tiff'):
+            self.timer()
+            (handle, png_tmp) = tempfile.mkstemp('.png', 'nik2img-tmp')
+            os.close(handle)
+            self.world_file_ext = 'wld'
+            self.write_wld(png_tmp)
+            mapnik.render_to_file(args[0],png_tmp,'png')
+            # todo - figure out more reasonable defaults
+            opts = ' -ot Byte -co COMPRESS=JPEG -co JPEG_QUALITY=100'
+            base_cmd = 'gdal_translate %s %s -a_srs "%s" %s'
+            cmd = base_cmd % (png_tmp,args[1],args[0].srs,opts)
             
-    def call_agg(self, basename):
+            #os.system(cmd)
+            print call(cmd,fail=True)
+            self.stop()
+        else:
+            self.timer()
+            mapnik.render_to_file(*args)
+            if self.world_file_ext:
+                self.write_wld(args[1])
+            self.stop()
+            
+    def call_all_agg(self, basename):
         """
         Abstraction wrapper to allow for calling 
         any requested AGG Formats.
@@ -179,9 +199,9 @@ class Render(object):
             if basename:
                 raise IOError("Must write to a directory/ to produce all formats")
             else:                    
-                self.call_agg(dirname + basename_from_dir)
+                self.call_all_agg(dirname + basename_from_dir)
                 if HAS_CAIRO:
-                    self.call_cairo(dirname + basename_from_dir)
+                    self.call_all_cairo(dirname + basename_from_dir)
         else:
             if not basename:
                 self.local_render_wrapper(self.m, dirname + basename_from_dir + '.' + self.format.rstrip('256'), self.format)

@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-version = '0.5.4'
+version = '0.5.5'
 app = 'nik2img'
 description = 'A command line style renderer for the Mapnik C++/Python mapping toolkit'
 url = 'http://mapnik-utils.googlecode.com/'
@@ -13,7 +13,7 @@ setup(name='%s' % app,
       author='Dane Springmeyer',
       author_email='dane@dbsgeo.com',
       requires=['Mapnik'],
-      keywords='Mapnik,GIS,python,mapping,graphics,geospatial,',
+      keywords='Mapnik,GIS,python,mapping,graphics,geospatial',
       url=url,
       #py_modules=['%s' % app],
       packages=['mapnik_utils'],
