@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version__ = '0.5.5'
+__version__ = '0.5.6'
 __author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
 __copyright__ = 'Copyright 2009, Dane Springmeyer'
 __license__ = 'BSD'
@@ -163,6 +163,10 @@ parser.add_option('--fonts',
 parser.add_option('--mapnik-version', dest='mapnik_version',
                   action='store', default=None,
                   help='Use the mapnik2 python bindings if they exist', type='int')
+
+parser.add_option('--zip', dest='zip_compress',
+                  action='store_true', default=False,
+                  help='Apply zip compression to output image (and other files by same name)')
     
 if __name__ == '__main__':
     (options, args) = parser.parse_args()

@@ -3,6 +3,14 @@ nik2img changelog
 =================
 
 
+Version 0.5.6, May 7th, 2010:
+-----------------------------
+
+ * Packaged from r959
+ 
+ * Added --zip flag to allow compressing output
+
+
 Version 0.5.5, May 7th, 2010:
 -----------------------------
 

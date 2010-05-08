@@ -46,7 +46,7 @@ class Compose(object):
         self.app = None
         self.dry_run = False
         self.from_string = False
-        
+        self.zip_compress = False
         self.changed = []
         self.font_handler = None
         self.map = None
@@ -196,7 +196,7 @@ class Compose(object):
         if self.dry_run:
             self.output_error("Dry run completed successfully...")            
 
-        renderer = Render(self.map,self.image,self.format,self.world_file)
+        renderer = Render(self.map,self.image,self.format,self.world_file,self.zip_compress)
         if self.image:
             renderer.render_file()
         else:

@@ -1,7 +1,9 @@
 import os
 import sys
 import timeit
+import zipfile
 import tempfile
+from glob import glob
 
 from mapnik_utils.version_adapter import Mapnik
 
@@ -39,12 +41,13 @@ def binaryPrint(binary_data):
 
 
 class Render(object):
-    def __init__(self,m,image,format,world_file_ext=None):
+    def __init__(self,m,image,format,world_file_ext=None,zip_compress=False):
         
         self.m = m
         self.image = image
         self.format = format
         self.world_file_ext = world_file_ext
+        self.zip_compress = zip_compress
         
         self.start_time = 0
         self.render_time = 0
@@ -67,12 +70,27 @@ class Render(object):
         self.ALL_FORMATS.update(self.CAIRO_IMAGE_FORMATS)
     
     def write_wld(self,rendered_image):
-        basename = rendered_image.split('.')[0]
-        f_ptr = '%s.%s' % (basename, self.world_file_ext)
+        path = os.path.splitext(rendered_image)[0]
+        f_ptr = '%s.%s' % (path, self.world_file_ext)
         #sys.stderr.write('Saved world file to.. %s\n' % f_ptr)
         f = open(f_ptr, 'w')
         f.write(self.m.to_wld())
         f.close()
+    
+    def zip_up(self,rendered_image):
+        path = os.path.splitext(rendered_image)[0]
+        z_name = '%s.zip' % (path)
+        zip_file = zipfile.ZipFile(z_name, 'w', zipfile.ZIP_DEFLATED)
+        # all files of that same name (like a world file)
+        # of variable ext other than other zip files
+        files = glob('%s.*' % path)
+        for item in files:
+            if not item.endswith('zip'):
+                zip_file.write(item, arcname=os.path.basename(item))
+        #if readme:
+        #    zip.writestr('README.txt',readme)
+        zip_file.close()
+
     
     def stream(self): 
         """
@@ -122,6 +140,8 @@ class Render(object):
             self.stop()
             if self.world_file_ext:
                 self.write_wld(args[1])
+            if self.zip_compress:
+                self.zip_up(args[1])
 
     def call_all_cairo(self, basename):
         """
@@ -164,6 +184,8 @@ class Render(object):
             if self.world_file_ext:
                 self.write_wld(args[1])
             self.stop()
+        if self.zip_compress:
+            self.zip_up(args[1])
             
     def call_all_agg(self, basename):
         """
