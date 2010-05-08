@@ -174,9 +174,8 @@ class Render(object):
             opts = ' -ot Byte -co COMPRESS=JPEG -co JPEG_QUALITY=100'
             base_cmd = 'gdal_translate %s %s -a_srs "%s" %s'
             cmd = base_cmd % (png_tmp,args[1],args[0].srs,opts)
-            
-            #os.system(cmd)
-            print call(cmd,fail=True)
+            #print call(cmd,fail=True)
+            os.system(cmd)
             self.stop()
         else:
             self.timer()
