@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version__ = '0.5.6'
+__version__ = '0.5.7'
 __author__ = 'Dane Springmeyer (dbsgeo [ -a- ] gmail.com)'
 __copyright__ = 'Copyright 2009, Dane Springmeyer'
 __license__ = 'BSD'
