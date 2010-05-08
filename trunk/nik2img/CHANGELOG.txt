@@ -3,6 +3,14 @@ nik2img changelog
 =================
 
 
+Version 0.5.7, May 7th, 2010:
+-----------------------------
+
+ * Packaged from r963
+ 
+ * More reliable support for GeoTiff output through gdal_translate call
+
+
 Version 0.5.6, May 7th, 2010:
 -----------------------------
 
