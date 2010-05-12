@@ -176,6 +176,31 @@
 }
 
 /* -------------------------------------------------- */
+/* disused/abandoned */
+.rail.line[disused=yes],
+.rail.line[disused=true],
+.rail.line[railway=disused],
+.rail.outline[disused=yes],
+.rail.outline[disused=true],
+.rail.outline[railway=disused],
+.rail.centerline[disused=yes],
+.rail.centerline[disused=true],
+.rail.centerline[railway=disused]
+{
+    line-opacity: 0.5;
+}
+
+/*.rail.line[abandoned=yes],
+.rail.line[abandoned=true],
+*/
+.rail.line[railway=abandoned],
+.rail.outline[railway=abandoned],
+.rail.centerline[railway=abandoned]
+{
+    line-opacity: 0.25;
+}
+
+/* -------------------------------------------------- */
 /* transit */
 .transit.point[zoom>=13] name
 {

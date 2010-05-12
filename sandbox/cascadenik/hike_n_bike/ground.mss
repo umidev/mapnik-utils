@@ -169,6 +169,12 @@
     polygon-opacity: 0.93;
 }
 
+.parklike.area[landuse=vineyard]
+{
+    polygon-fill: #d0d7bf;
+    polygon-opacity: 0.93;
+}
+
 .parklike.area[landuse=recreation_ground],
 .parklike.area[landuse=greenfield],
 .parklike.area[landuse=meadow],
