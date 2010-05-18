@@ -149,6 +149,9 @@ properties = {
     # Font name
     'text-face-name': str,
 
+    # Fontset name
+    'text-fontset-name': str,
+
     # Font size
     'text-size': int,
 
@@ -174,10 +177,10 @@ properties = {
     'text-max-char-angle-delta': int,
 
     # Color of the fill ie #FFFFFF
-    'text-fill': color,
+    'text-fill': color_transparent,
 
     # Color of the halo
-    'text-halo-fill': color,
+    'text-halo-fill': color_transparent,
 
     # Radius of the halo in whole pixels, fractional pixels are not accepted
     'text-halo-radius': int,
@@ -191,6 +194,9 @@ properties = {
 
     # Minimum distance between repeated labels such as street names or shield symbols
     'text-min-distance': int,
+
+    # Minimum distance from edge
+    'text-min-padding': int,
 
     # Allow labels to overlap other labels
     'text-allow-overlap': boolean,
@@ -245,14 +251,20 @@ properties = {
     # 
     'shield-face-name': str,
 
+    #
+    'shield-fontset-name': str,
+
     # 
     'shield-size': int,
 
     # 
-    'shield-fill': color,
+    'shield-fill': color_transparent,
 
     # Minimum distance between repeated labels such as street names or shield symbols
     'shield-min-distance': int,
+
+    # Minimum distance from the edge of the map
+    'shield-min-padding': int,
 
     # Spacing between repeated labels such as street names or shield symbols
     'shield-spacing': int,
@@ -270,8 +282,19 @@ properties = {
     'shield-width': int,
     'shield-height': int,
 
+    # displace label by fixed amount on either axis.
+    'shield-dx': int,
+    'shield-dy': int,
+
+    # "line" to label along lines instead of by point
+    'shield-placement': ('point', 'line'),
+
+
     # image type: png or tiff, omitted thanks to PIL
-    'shield-type': None
+    'shield-type': None,
+
+    #
+    'shield-avoid-edges': boolean,
 }
 
 class ParseException(Exception):

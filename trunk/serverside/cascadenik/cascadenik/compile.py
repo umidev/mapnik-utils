@@ -766,13 +766,14 @@ def get_text_rule_groups(declarations):
         and refer to them in Layer.
     """
     property_map = {'text-face-name': 'face_name', 'text-size': 'size', 
+                    'text-fontset-name': 'fontset_name',
                     'text-ratio': 'text_ratio', 'text-wrap-width': 'wrap_width', 'text-spacing': 'spacing',
                     'text-label-position-tolerance': 'label_position_tolerance',
                     'text-max-char-angle-delta': 'max_char_angle_delta', 'text-fill': 'fill',
                     'text-halo-fill': 'halo_fill', 'text-halo-radius': 'halo_radius',
                     'text-dx': 'dx', 'text-dy': 'dy', 'text-character-spacing': 'character_spacing',
                     'text-line-spacing': 'line_spacing',
-                    'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance',
+                    'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance', 'text-min-padding': 'min_padding',
                     'text-allow-overlap': 'allow_overlap', 'text-placement': 'placement'}
 
     # pull out all the names
@@ -798,7 +799,7 @@ def get_text_rule_groups(declarations):
         rule_els = []
         
         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-            if 'face_name' in parameter_values and 'size' in parameter_values:
+            if ('face_name' in parameter_values or 'fontset_name' in parameter_values) and 'size' in parameter_values:
                 symbolizer_el = Element('TextSymbolizer')
             else:
                 # we can do nothing with fontless text
@@ -872,10 +873,13 @@ def get_shield_rule_groups(declarations, dir=None, move_local_files=False):
         and refer to them in Layer.
     """
     property_map = {'shield-face-name': 'face_name', 'shield-size': 'size', 
+                    'shield-fontset-name': 'fontset_name',
                     'shield-fill': 'fill', 'shield-character-spacing': 'character_spacing',
                     'shield-line-spacing': 'line_spacing',
                     'shield-spacing': 'spacing', 'shield-min-distance': 'min_distance',
-                    'shield-file': 'file', 'shield-width': 'width', 'shield-height': 'height' }
+                    'shield-file': 'file', 'shield-width': 'width', 'shield-height': 'height', 'shield-avoid-edges': 
+                    'avoid-edges', 'shield-min-padding': 'min_padding',
+                    'shield-dx': 'dx', 'shield-dy': 'dy', 'shield-placement': 'placement' }
 
     # pull out all the names
     text_names = [dec.selector.elements[1].names[0]
@@ -900,7 +904,7 @@ def get_shield_rule_groups(declarations, dir=None, move_local_files=False):
         rule_els = []
         
         for (filter, parameter_values) in filtered_property_declarations(name_declarations, property_map):
-            if 'file' in parameter_values and 'face_name' in parameter_values and 'size' in parameter_values:
+            if 'file' in parameter_values and ('face_name' in parameter_values or 'fontset_name' in parameter_values) and 'size' in parameter_values:
                 symbolizer_el = Element('ShieldSymbolizer')
             else:
                 # we can do nothing with fontless text
