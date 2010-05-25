@@ -10,6 +10,7 @@ from operator import lt, le, eq, ge, gt
 import os.path
 import zipfile
 import style
+import source
 
 
 try:
@@ -531,6 +532,52 @@ def extract_declarations(map_el, base):
         declarations += style.rulesets_declarations(rulesets)
 
     return declarations
+
+def expand_source_declarations(map_el, base):
+    """ Given a Map element and a URL base string, remove and return a complete
+        list of style declarations from any Stylesheet elements found within.
+    """
+    all_sources = {}
+    config = None
+    all_bases = set([])
+
+    # build up the configuration
+    for spec in map_el.findall('DataSourcesConfig'):
+        map_el.remove(spec)
+    
+        if 'src' in spec.attrib:
+            url = urlparse.urljoin(base, stylesheet.attrib['src'])
+            src_text, local_base = urllib.urlopen(url).read().decode(DEFAULT_ENCODING), url
+
+        elif spec.text:
+            src_text, local_base = spec.text, base
+        else:
+            continue
+        
+        config, bases, sources = source.extract_datasources(src_text, config)
+        all_bases.union(bases)
+        all_sources.update(sources)
+
+    # now transform the xml
+    
+    # add in base datasources
+    for base_name in all_bases:
+        b = Element("Datasource", name=base_name)
+        for pname, pvalue in all_sources[base_name]['parameters'].items():
+            p = Element("Parameter", name=pname)
+            p.text = pvalue
+            b.append(p)
+        map_el.insert(0, b)
+    
+    # expand layer data sources
+    for layer in map_el.findall('Layer'):
+        if 'source_name' in layer.attrib:
+            b = Element("Datasource")
+            for pname, pvalue in all_sources[layer.attrib['source_name']]['parameters'].items():
+                p = Element("Parameter", name=pname)
+                p.text = pvalue
+                b.append(p)
+            layer.append(b)
 
 def test2str(test):
     """ Return a mapnik-happy Filter expression atom for a single test
@@ -1102,6 +1149,8 @@ def compile(src,**kwargs):
     map = doc.getroot()
     
     declarations = extract_declarations(map, src)
+    
+    expand_source_declarations(map, src)
     
     add_map_style(map, get_applicable_declarations(map, declarations))
 
