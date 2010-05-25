@@ -48,6 +48,7 @@ def extract_datasources(textdata, config_parser=None):
         name = sect
         typ = config.get(sect,"type") if config.has_option(sect, "type") else None
         base = config.get(sect,"base") if config.has_option(sect, "base") else None
+        source_srs = config.get(sect,"source_srs") if config.has_option(sect, "source_srs") else None
 
         if typ:
             options['type'] = typ
@@ -77,6 +78,8 @@ def extract_datasources(textdata, config_parser=None):
         conf = dict(parameters=options)
         if base:
             conf['base'] = base
+        if source_srs:
+            conf['source_srs'] = source_srs
         sources[name] = conf
     
     return config, bases, sources

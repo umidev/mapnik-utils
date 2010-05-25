@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- To get running switch the entitites below to fit your environment, and then search and replace the table names osm_bayarea_polygon, osm_bayarea_line, and osm_bayarea_point to fit your osm database table names which default to planet_osm_point, etc. -->
+
+<!DOCTYPE Map[
+
+    <!-- coastline shapefile settings -->
+    <!ENTITY coastlines "../../coastlines/processed_p">
+    <!ENTITY coastlines_srs "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    
+    <!-- osm2pgsql defaults to importing OSM data in mercator projection (+proj=merc) -->
+    <!-- this is also the projection the map should be in for serving tiles in the standard way -->
+    <!ENTITY map_srs        "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    
+    <!-- if you imported data using osm2pgsql in lon/lat then uncomment this next line and comment out the mercator line -->
+    <!--<!ENTITY osm_srs "+proj=latlong +ellps=WGS84 +datum=WGS84 +no_defs">-->
+    <!ENTITY osm_srs        "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    
+    <!-- if estimate_extent is false then we manually set the bounds for our data -->
+    <!ENTITY estimate_extent "false">
+    <!-- extent in spherical mercator of OSM data (+proj=merc...)-->
+    <!ENTITY extent "-20037508,-19929239,20037508,19929239">
+    <!-- Full global extent in spherical mercator (+proj=merc...)-->
+    <!-- <!ENTITY extent "-20037508.34,-20037508.34,20037508.34,20037508.34">-->
+    <!-- global extent in lon lat (uncomment if your data was imported in lon/lat-->
+    <!--<!ENTITY extent "-180,-89.9,180,89.9">-->
+
+    <!-- database settings -->
+    <!ENTITY host "localhost">
+    <!ENTITY port "5432">
+    <!ENTITY user "postgres">
+    <!ENTITY password "">
+    <!ENTITY dbname "osm">
+]>
+<Map srs="&map_srs;">
+    <Stylesheet>
+        Map { map-bgcolor: #8cb6d3; }
+    </Stylesheet>
+    <Stylesheet src="ground.mss"/>
+    <Stylesheet src="roads.mss"/>
+    <Stylesheet src="paths.mss"/>
+    <Stylesheet src="rail.mss"/>
+    <Stylesheet src="places.mss"/>
+
+    <!-- Define the defaults -->
+    <DataSourcesConfig><![CDATA[
+[DEFAULT]
+layer_dir=layers/
+coastline_dir=../../coastlines
+srsSphericalMerc=+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over
+    ]]></DataSourcesConfig>
+
+    <!-- Pull in any local overrides to the defaults; e.g. paths, postgis connection params, etc. -->
+    <DataSourcesConfig src="local_globals.cfg" />
+
+	<!-- Define some sources -->
+    <DataSourcesConfig><![CDATA[
+[shape_base]
+type=shape
+
+[coastlines]
+base=shape_base
+file=%(coastline_dir)s/processed_p
+source_srs=%(srsSphericalMerc)s
+    ]]></DataSourcesConfig>
+
+    <Layer class="coast edge outer" source_name="coastlines" />
+</Map>

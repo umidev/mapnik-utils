@@ -50,14 +50,14 @@ DEFAULT_ENCODING = 'utf-8'
 
 try:
     import lxml.etree as ElementTree
-    from lxml.etree import Element
+    from lxml.etree import Element, tostring
 except ImportError:
     try:
         import xml.etree.ElementTree as ElementTree
-        from xml.etree.ElementTree import Element
+        from xml.etree.ElementTree import Element, tostring
     except ImportError:
         import elementtree.ElementTree as ElementTree
-        from elementtree.ElementTree import Element
+        from elementtree.ElementTree import Element, tostring
 
 opsort = {lt: 1, le: 2, eq: 3, ge: 4, gt: 5}
 opstr = {lt: '<', le: '<=', eq: '==', ge: '>=', gt: '>'}
@@ -546,7 +546,7 @@ def expand_source_declarations(map_el, base):
         map_el.remove(spec)
     
         if 'src' in spec.attrib:
-            url = urlparse.urljoin(base, stylesheet.attrib['src'])
+            url = urlparse.urljoin(base, spec.attrib['src'])
             src_text, local_base = urllib.urlopen(url).read().decode(DEFAULT_ENCODING), url
 
         elif spec.text:
@@ -555,11 +555,11 @@ def expand_source_declarations(map_el, base):
             continue
         
         config, bases, sources = source.extract_datasources(src_text, config)
-        all_bases.union(bases)
+        all_bases.update(bases)
         all_sources.update(sources)
 
     # now transform the xml
-    
+
     # add in base datasources
     for base_name in all_bases:
         b = Element("Datasource", name=base_name)
@@ -571,14 +571,31 @@ def expand_source_declarations(map_el, base):
     
     # expand layer data sources
     for layer in map_el.findall('Layer'):
-        if 'source_name' in layer.attrib:
-            b = Element("Datasource")
-            for pname, pvalue in all_sources[layer.attrib['source_name']]['parameters'].items():
-                p = Element("Parameter", name=pname)
-                p.text = pvalue
-                b.append(p)
-            layer.append(b)
+        if 'source_name' not in layer.attrib:
+            continue
+        
+        if layer.attrib['source_name'] not in all_sources:
+            raise Exception("Datasource '%s' referenced, but not defined in layer:\n%s" % (layer.attrib['source_name'], tostring(layer)))
+                
+        # create the nested datasource object 
+        b = Element("Datasource")
+        dsrc = all_sources[layer.attrib['source_name']]
 
+        if 'base' in dsrc:
+            b.attrib['base'] = dsrc['base']
+        
+        # set the SRS if present
+        if 'source_srs' in dsrc:
+            layer.attrib['srs'] = dsrc['source_srs']
+        
+        for pname, pvalue in dsrc['parameters'].items():
+            p = Element("Parameter", name=pname)
+            p.text = pvalue
+            b.append(p)
+        
+        layer.append(b)
+        del layer.attrib['source_name']
+        
 def test2str(test):
     """ Return a mapnik-happy Filter expression atom for a single test
     """
