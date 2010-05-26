@@ -565,7 +565,7 @@ def expand_source_declarations(map_el, base):
         b = Element("Datasource", name=base_name)
         for pname, pvalue in all_sources[base_name]['parameters'].items():
             p = Element("Parameter", name=pname)
-            p.text = pvalue
+            p.text = str(pvalue)
             b.append(p)
         map_el.insert(0, b)
     
