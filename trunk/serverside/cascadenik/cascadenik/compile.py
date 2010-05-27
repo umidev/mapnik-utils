@@ -1075,6 +1075,8 @@ def get_line_pattern_rules(declarations, dir=None, move_local_files=False):
     
     return rule_els
 
+_color_properties = [k for k,v in style.properties.items() if v in (style.color, style.color_transparent)]
+
 def get_applicable_declarations(element, declarations):
     """ Given an XML element and a list of declarations, return the ones
         that match as a list of (property, value, selector) tuples.
@@ -1084,8 +1086,8 @@ def get_applicable_declarations(element, declarations):
     element_classes = element.get('class', '').split()
 
     render_transparent = False
-    if "!clear" in element_classes:
-        element_classes.remove("!clear")
+    if ".clear" in element_classes:
+        element_classes.remove(".clear")
         render_transparent = True
 
     decls = [dec for dec in declarations
@@ -1093,14 +1095,20 @@ def get_applicable_declarations(element, declarations):
     if not render_transparent:
         return decls
     
-    color_props = [k for k,v in style.properties.items() if v in (style.color, style.color_transparent)]
-    
+    ndecls = []
     for d in decls:
-        if str(d.property) in color_props:
+        if not str(d.property).startswith("text-") and not str(d.property).startswith("shield-"):
+             pass
+        if str(d.property).endswith("-fill"):
             d.value = "transparent"
-        if str(d.property) in ('text-halo-radius',):
+        elif str(d.property) in ('text-halo-radius',):
             d.value = 0
-    return decls 
+        elif str(d.property).endswith('-file'):
+            # TODO - read to a local directory, replace with a new clear version.
+            pass
+            
+        ndecls.append(d)
+    return ndecls 
 
 def localize_shapefile(src, shapefile, dir=None, move_local_files=False):
     """ Given a stylesheet path, a shapefile name, and a temp directory,
