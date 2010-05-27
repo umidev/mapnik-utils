@@ -12,6 +12,12 @@ import zipfile
 import itertools
 import re
 import ConfigParser
+import codecs
+
+# Solves nasty problems:
+# http://bytes.com/topic/python/answers/40109-missing-sys-setappdefaultencoding
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 try:
     import lxml.etree as ElementTree
@@ -24,6 +30,26 @@ except ImportError:
         import elementtree.ElementTree as ElementTree
         from elementtree.ElementTree import Element, tostring
         
+def add_source(sources, ds_name, params):
+    if ds_name not in sources:
+        sources[ds_name] = params
+        return ds_name
+    op = sources[ds_name]
+    c = 0
+    while True:
+        for k,v in op.items():
+            # dicts are unequal
+            if k not in params or op[k] != params[k]:
+                c += 1
+                nds_name = "%s_%d" % (ds_name, c)
+                if nds_name in sources:
+                    op = sources[nds_name] 
+                    break
+                sources[nds_name] = params
+                return nds_name
+            else: # equal, return!
+                return ds_name
+
 def convert(src, outmml, outconfig):
     if os.path.exists(src): # local file
         # using 'file:' enables support on win32
@@ -72,7 +98,8 @@ def convert(src, outmml, outconfig):
         
         params.update(layer.find("Datasource").attrib)
         params['source_srs'] = "%%(%s)s" % srs_name
-        sources[ds_name] = params
+        
+        ds_name = add_source(sources, ds_name, params)
         
         layer.attrib['source_name'] = ds_name
         del layer.attrib['srs']
@@ -102,8 +129,7 @@ def convert(src, outmml, outconfig):
         config.add_section(name)
         for pn,pv in params.items():
             config.set(name,pn,pv)
-    
-    with open(outconfig,"w") as oc:
+    with codecs.open(outconfig,"w","utf-8") as oc:
         config.write(oc)
     
     map.insert(0,Element("DataSourcesConfig", src=outconfig))
