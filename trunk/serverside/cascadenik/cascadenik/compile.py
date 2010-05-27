@@ -538,9 +538,25 @@ def extract_declarations(map_el, base):
 
     return declarations
 
+def fetch_embedded_or_remote_src(elem, base):
+    if 'src' in elem.attrib:
+        url = urlparse.urljoin(base, elem.attrib['src'])
+        return urllib.urlopen(url).read().decode(DEFAULT_ENCODING), url
+
+    elif elem.text:
+        return elem.text, base
+    
+    return None, None
+
 def expand_source_declarations(map_el, base):
-    """ Given a Map element and a URL base string, remove and return a complete
-        list of style declarations from any Stylesheet elements found within.
+    """ This provides mechanism for externalizing and sharing data sources.  The datasource configs are
+    python files, and layers reference sections within that config:
+    
+    <DataSourcesConfig src="datasources.cfg" />
+    <Layer class="road major" source_name="planet_osm_major_roads" />
+    <Layer class="road minor" source_name="planet_osm_minor_roads" />
+    
+    See example2.mml and example.cfg at the root of the cascadenik directory for an example.
     """
     all_sources = {}
     config = None
@@ -549,14 +565,8 @@ def expand_source_declarations(map_el, base):
     # build up the configuration
     for spec in map_el.findall('DataSourcesConfig'):
         map_el.remove(spec)
-    
-        if 'src' in spec.attrib:
-            url = urlparse.urljoin(base, spec.attrib['src'])
-            src_text, local_base = urllib.urlopen(url).read().decode(DEFAULT_ENCODING), url
-
-        elif spec.text:
-            src_text, local_base = spec.text, base
-        else:
+        src_text, local_base = fetch_embedded_or_remote_src(spec, base)
+        if not src_text:
             continue
         
         config, bases, sources = source.extract_datasources(src_text, config)
@@ -600,6 +610,37 @@ def expand_source_declarations(map_el, base):
         
         layer.append(b)
         del layer.attrib['source_name']
+        
+def expand_map_includes(map_el, base):
+    """
+    This provides the ability to include Layer and Stylesheet elements from other .mml files.  
+    It's assumed the .mml file exist in the same directory for path coherence.  This is an alternative to
+    using xml entities.
+    
+    Example:
+      <MapInclude src="foo.mml" />
+    """
+    offset = 0
+    for i,elem in enumerate([c for c in map_el]):
+        if elem.tag == "Stylesheet":
+            map_el.insert(i+offset, elem)
+            offset = +1
+        if elem.tag != "MapInclude":
+            continue      
+        map_el.remove(elem)  
+        src_text, local_base = fetch_embedded_or_remote_src(elem, base)
+        if not src_text:
+            continue
+        
+        import StringIO
+        doc = ElementTree.parse(StringIO.StringIO(src_text))
+        omap = doc.getroot()
+        expand_map_includes(omap, base)
+        
+        for layer in omap.findall("Layer"):
+            map_el.insert(i+offset, layer)
+            offset = +1
+        
         
 def test2str(test):
     """ Return a mapnik-happy Filter expression atom for a single test
@@ -1210,54 +1251,57 @@ def compile(src,**kwargs):
     declarations = extract_declarations(map, src)
     
     expand_source_declarations(map, src)
+    expand_map_includes(map, src)
     
-    add_map_style(map, get_applicable_declarations(map, declarations))
-
-    for layer in map.findall('Layer'):
+    if not kwargs.get('expand_only'):
     
-        for parameter in layer.find('Datasource').findall('Parameter'):
-            if parameter.get('name', None) == 'file':
-                # fetch a remote zipped shapefile or read a local one
-                parameter.text = localize_shapefile(src, parameter.text, dir, move_local_files)
-
-            elif parameter.get('name', None) == 'table':
-                # remove line breaks from possible SQL
-                # http://trac.mapnik.org/ticket/173
-                if not MAPNIK_VERSION >= 601:
-                    parameter.text = parameter.text.replace('\r', ' ').replace('\n', ' ')
-
-        if layer.get('status') == 'off':
-            # don't bother
-            continue
+        add_map_style(map, get_applicable_declarations(map, declarations))
     
-        # the default...
-        layer.set('status', 'off')
-
-        layer_declarations = get_applicable_declarations(layer, declarations)
+        for layer in map.findall('Layer'):
         
-        #pprint.PrettyPrinter().pprint(layer_declarations)
-        
-        insert_layer_style(map, layer, 'polygon style %d' % next_counter(),
-                           get_polygon_rules(layer_declarations) + get_polygon_pattern_rules(layer_declarations, dir, move_local_files))
-        
-        insert_layer_style(map, layer, 'line style %d' % next_counter(),
-                           get_line_rules(layer_declarations) + get_line_pattern_rules(layer_declarations, dir, move_local_files))
-
-        for (shield_name, shield_rule_els) in get_shield_rule_groups(layer_declarations, dir, move_local_files):
-            insert_layer_style(map, layer, 'shield style %d (%s)' % (next_counter(), shield_name), shield_rule_els)
-
-        for (text_name, text_rule_els) in get_text_rule_groups(layer_declarations):
-            insert_layer_style(map, layer, 'text style %d (%s)' % (next_counter(), text_name), text_rule_els)
-
-        insert_layer_style(map, layer, 'point style %d' % next_counter(), get_point_rules(layer_declarations, dir, move_local_files))
-        
-        layer.set('name', 'layer %d' % next_counter())
-        
-        if 'id' in layer.attrib:
-            del layer.attrib['id']
+            for parameter in layer.find('Datasource').findall('Parameter'):
+                if parameter.get('name', None) == 'file':
+                    # fetch a remote zipped shapefile or read a local one
+                    parameter.text = localize_shapefile(src, parameter.text, dir, move_local_files)
     
-        if 'class' in layer.attrib:
-            del layer.attrib['class']
+                elif parameter.get('name', None) == 'table':
+                    # remove line breaks from possible SQL
+                    # http://trac.mapnik.org/ticket/173
+                    if not MAPNIK_VERSION >= 601:
+                        parameter.text = parameter.text.replace('\r', ' ').replace('\n', ' ')
+    
+            if layer.get('status') == 'off':
+                # don't bother
+                continue
+        
+            # the default...
+            layer.set('status', 'off')
+    
+            layer_declarations = get_applicable_declarations(layer, declarations)
+            
+            #pprint.PrettyPrinter().pprint(layer_declarations)
+            
+            insert_layer_style(map, layer, 'polygon style %d' % next_counter(),
+                               get_polygon_rules(layer_declarations) + get_polygon_pattern_rules(layer_declarations, dir, move_local_files))
+            
+            insert_layer_style(map, layer, 'line style %d' % next_counter(),
+                               get_line_rules(layer_declarations) + get_line_pattern_rules(layer_declarations, dir, move_local_files))
+    
+            for (shield_name, shield_rule_els) in get_shield_rule_groups(layer_declarations, dir, move_local_files):
+                insert_layer_style(map, layer, 'shield style %d (%s)' % (next_counter(), shield_name), shield_rule_els)
+    
+            for (text_name, text_rule_els) in get_text_rule_groups(layer_declarations):
+                insert_layer_style(map, layer, 'text style %d (%s)' % (next_counter(), text_name), text_rule_els)
+    
+            insert_layer_style(map, layer, 'point style %d' % next_counter(), get_point_rules(layer_declarations, dir, move_local_files))
+            
+            layer.set('name', 'layer %d' % next_counter())
+            
+            if 'id' in layer.attrib:
+                del layer.attrib['id']
+        
+            if 'class' in layer.attrib:
+                del layer.attrib['class']
 
     xml_out = StringIO.StringIO()
     doc.write(xml_out)
