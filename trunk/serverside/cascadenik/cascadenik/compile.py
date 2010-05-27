@@ -13,11 +13,16 @@ import style
 import source
 
 
+HAS_PIL = False
 try:
-    import PIL.Image
+    from PIL import Image
     HAS_PIL = True
 except ImportError:
-    HAS_PIL = False
+    try:
+        import Image
+        HAS_PIL = True
+    except ImportError:
+        pass
 
 try:
     import mapnik2 as mapnik
@@ -915,7 +920,7 @@ def postprocess_symbolizer_image_file(symbolizer_el, dir, temp_name, move_local_
         if not HAS_PIL:
             raise SystemExit('PIL (Python Imaging Library) is required for handling image data unless you are using PNG inputs and running Mapnik >=0.7.0')
         img_file = StringIO.StringIO(img_data)
-        img = PIL.Image.open(img_file)
+        img = Image.open(img_file)
         # Force PNG
         path = path.replace(ext,'.png')
         img.save(path,format='PNG')
@@ -1104,9 +1109,22 @@ def get_applicable_declarations(element, declarations):
         elif str(d.property) in ('text-halo-radius',):
             d.value = 0
         elif str(d.property).endswith('-file'):
-            # TODO - read to a local directory, replace with a new clear version.
-            pass
-            
+            img_path = str(d.value)
+            transfile = img_path[0:-3] + "transparent.png"
+            if os.path.exists(transfile): 
+                pass
+            elif HAS_PIL:
+                if os.path.exists(img_path): # local file
+                    if os.path.isabs(img_path) and sys.platform == "win32":
+                        img_path = 'file:%s' % img_path
+                        
+                img_data = urllib.urlopen(img_path).read()
+                
+                Image.new("RGBA",Image.open(StringIO.StringIO(img_data)).size,(255,255,255,0)).save(transfile)
+                sys.stderr.write('INFO: created transparent shield file "%s"\n' % transfile)
+            else:
+                raise SystemExit, 'Need PIL to create transparent shield file for "%s".\n' % img_path
+            d.value = transfile
         ndecls.append(d)
     return ndecls 
 
