@@ -1083,8 +1083,24 @@ def get_applicable_declarations(element, declarations):
     element_id = element.get('id', None)
     element_classes = element.get('class', '').split()
 
-    return [dec for dec in declarations
+    render_transparent = False
+    if "!clear" in element_classes:
+        element_classes.remove("!clear")
+        render_transparent = True
+
+    decls = [dec for dec in declarations
             if dec.selector.matches(element_tag, element_id, element_classes)]
+    if not render_transparent:
+        return decls
+    
+    color_props = [k for k,v in style.properties.items() if v in (style.color, style.color_transparent)]
+    
+    for d in decls:
+        if str(d.property) in color_props:
+            d.value = "transparent"
+        if str(d.property) in ('text-halo-radius',):
+            d.value = 0
+    return decls 
 
 def localize_shapefile(src, shapefile, dir=None, move_local_files=False):
     """ Given a stylesheet path, a shapefile name, and a temp directory,
