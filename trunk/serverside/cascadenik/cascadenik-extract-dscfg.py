@@ -13,6 +13,7 @@ import itertools
 import re
 import ConfigParser
 import codecs
+import optparse
 
 # Solves nasty problems:
 # http://bytes.com/topic/python/answers/40109-missing-sys-setappdefaultencoding
@@ -29,6 +30,14 @@ except ImportError:
     except ImportError:
         import elementtree.ElementTree as ElementTree
         from elementtree.ElementTree import Element, tostring
+
+
+standard_projections = {
+    'srs900913' : '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs',
+    'srsMerc' :  '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs',
+    'srs4326' : '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+}
+
         
 def add_source(sources, ds_name, params):
     if ds_name not in sources:
@@ -50,7 +59,7 @@ def add_source(sources, ds_name, params):
             else: # equal, return!
                 return ds_name
 
-def convert(src, outmml, outconfig):
+def convert(src, outmml, outconfig, opts):
     if os.path.exists(src): # local file
         # using 'file:' enables support on win32
         # for opening local files with urllib.urlopen
@@ -68,19 +77,20 @@ def convert(src, outmml, outconfig):
     defaults = {}
     sources = {}
     
-    all_srs = {}
-    num_srs = 0
+    all_srs = dict([(v,k) for k,v in standard_projections.items()])
     
     name_filter = re.compile("\W")
     
     for layer in map.findall("Layer"):
+        if not opts.extract_all and layer.attrib.get('status',"on").lower() == "off":
+            map.remove(layer)
+            continue
         srs = layer.attrib['srs']
         srs_name = all_srs.get(srs)
         if not srs_name:
-            srs_name = "srs%d"%num_srs
+            srs_name = "srs%d"%len(all_srs)
             defaults[srs_name] = srs
             all_srs[srs] = srs_name
-            num_srs += 1
 
         id = layer.attrib.get('id')
         classes = layer.attrib.get('class') 
@@ -136,13 +146,20 @@ def convert(src, outmml, outconfig):
     doc.write(outmml,"utf8")
 
     
-        
+
+
         
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print "usage: %s <source.mml> <output.mml> <output.cfg>" % sys.argv[0]
-        exit(1)
-    inmml, outmml, outcfg = sys.argv[1:4]
-    convert(inmml, outmml, outcfg)
+    parser = optparse.OptionParser(usage= "usage: %s [options] <source.mml> <output.mml> <output.cfg>" % sys.argv[0])
+
+    parser.add_option('-a', '--all', dest='extract_all', default=False, action="store_true",
+                      help='Include disabled layers')
+
+    (options, args) = parser.parse_args()
+    if len(args) != 3:
+        parser.error("Please specify <source.mml> <output.mml> <output.cfg>")
+    
+    inmml, outmml, outcfg = args
+    convert(inmml, outmml, outcfg, options)
 
         
