@@ -611,7 +611,7 @@ def expand_source_declarations(map_el, base):
         layer.append(b)
         del layer.attrib['source_name']
         
-def expand_map_includes(map_el, base):
+def expand_map_includes(map_el, base, nested_map=False):
     """
     This provides the ability to include Layer and Stylesheet elements from other .mml files.  
     It's assumed the .mml file exist in the same directory for path coherence.  This is an alternative to
@@ -622,23 +622,33 @@ def expand_map_includes(map_el, base):
     """
     offset = 0
     for i,elem in enumerate([c for c in map_el]):
-        if elem.tag == "Stylesheet":
-            map_el.insert(i+offset, elem)
-            offset = +1
+        # if it ain't a mapinclude, pass!            
         if elem.tag != "MapInclude":
             continue      
+
         map_el.remove(elem)  
+
+        # because this might be a nested include, there may be nested objects to ignore 
+        if nested_map and elem.attrib.get("nestable","true").lower() in ("false","no","0"):
+            continue
+
         src_text, local_base = fetch_embedded_or_remote_src(elem, base)
         if not src_text:
             continue
         
-        import StringIO
         doc = ElementTree.parse(StringIO.StringIO(src_text))
         omap = doc.getroot()
-        expand_map_includes(omap, base)
         
-        for layer in omap.findall("Layer"):
-            map_el.insert(i+offset, layer)
+        # the nested map may have includes:
+        expand_map_includes(omap, base, True)
+        
+        # now for each element in the sub map, add in things that are nestable.
+        for sub_elem in omap:
+            # ignore non-nestable elements; e.g. default configs, etc.
+            nestable = sub_elem.attrib.pop("nestable", "true").lower() in ("true","yes","1")
+            if not nestable:
+                continue
+            map_el.insert(i+offset, sub_elem)
             offset = +1
         
         
@@ -1248,13 +1258,12 @@ def compile(src,**kwargs):
     doc = ElementTree.parse(urllib.urlopen(src))
     map = doc.getroot()
     
-    declarations = extract_declarations(map, src)
-    
     expand_source_declarations(map, src)
     expand_map_includes(map, src)
     
-    if not kwargs.get('expand_only'):
     
+    if not kwargs.get('expand_only'):
+        declarations = extract_declarations(map, src)
         add_map_style(map, get_applicable_declarations(map, declarations))
     
         for layer in map.findall('Layer'):
