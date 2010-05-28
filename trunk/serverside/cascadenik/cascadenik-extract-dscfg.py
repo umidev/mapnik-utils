@@ -74,7 +74,7 @@ def convert(src, outmml, outconfig, opts):
     doc = ElementTree.parse(urllib.urlopen(src))
     map = doc.getroot()
     
-    defaults = {}
+    defaults = standard_projections
     sources = {}
     
     all_srs = dict([(v,k) for k,v in standard_projections.items()])
