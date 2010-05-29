@@ -569,7 +569,7 @@ def expand_source_declarations(map_el, base):
         if not src_text:
             continue
         
-        config, bases, sources = source.extract_datasources(src_text, config)
+        config, bases, sources = source.extract_datasources(src_text, all_sources, config)
         all_bases.update(bases)
         all_sources.update(sources)
 
@@ -641,6 +641,8 @@ def expand_map_includes(map_el, base, nested_map=False):
         
         # the nested map may have includes:
         expand_map_includes(omap, base, True)
+        expand_source_declarations(omap, base)
+
         
         # now for each element in the sub map, add in things that are nestable.
         for sub_elem in omap:

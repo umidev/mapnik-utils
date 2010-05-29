@@ -30,7 +30,7 @@ class ChainedConfigParser(ConfigParser.SafeConfigParser):
         d.update(self._defaults)
         self._defaults = d 
 
-def extract_datasources(textdata, config_parser=None):
+def extract_datasources(textdata, all_sources, config_parser=None):
     data = StringIO.StringIO(textdata)
     data.seek(0)
     if config_parser:
@@ -54,7 +54,10 @@ def extract_datasources(textdata, config_parser=None):
             options['type'] = typ
         elif base:
             bases.add(base)
-            typ = config.get(base,"type")
+            if base in all_sources:
+                typ = all_sources[base]['parameters']["type"]
+            else:
+                typ = config.get(base,"type")
             
         if not typ:
             raise Exception("Section [%s] missing 'type'" % sect)
