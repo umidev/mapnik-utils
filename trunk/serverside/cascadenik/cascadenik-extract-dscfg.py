@@ -59,6 +59,25 @@ def add_source(sources, ds_name, params):
             else: # equal, return!
                 return ds_name
 
+
+#
+class MyConfigParser(ConfigParser.RawConfigParser):
+    def write(self, fp):
+        """Write an .ini-format representation of the configuration state."""
+        if self._defaults:
+            fp.write("[%s]\n" % ConfigParser.DEFAULTSECT)
+            for (key, value) in sorted(self._defaults.items(), key=lambda x: x[0]):
+                fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')))
+            fp.write("\n")
+        for section in sorted(self._sections):
+            fp.write("[%s]\n" % section)
+            for (key, value) in sorted(self._sections[section].items(), key=lambda x: x[0]):
+                if key != "__name__":
+                    fp.write("%s = %s\n" %
+                             (key, str(value).replace('\n', '\n\t')))
+            fp.write("\n")
+
+
 def convert(src, outmml, outconfig, opts):
     if os.path.exists(src): # local file
         # using 'file:' enables support on win32
@@ -116,28 +135,38 @@ def convert(src, outmml, outconfig, opts):
         layer.remove(layer.find("Datasource"))
 
     # now generate unique bases
-    pg_params = {}
+    g_params = {}
     
     for name, params in sources.items():
-        if params.get('type') != 'postgis':
+        gp = {}
+        name_base = None
+        if params.get('type') == 'postgis':
+            param_set = ("port","host","user","source_srs","password","type","dbname","estimate_extent","extent")
+            name_base = "postgis_conn_%d"
+#        elif params.get('type') == 'shape':
+#            param_set = ("type","file","source_srs")
+#            name_base = "shapefile_%d"
+        else:
             continue
-        pgp = {}
-        for p in ("port","host","user","source_srs","password","type","dbname","estimate_extent","extent"):
+
+        for p in param_set:
             if p in params:
-                pgp[p] = params[p]
+                gp[p] = params[p]
                 del params[p]
-        pgp_name,pgp_data = pg_params.get(repr(pgp),(None,None))        
-        if not pgp_name:
-            pgp_name = "postgis_conn_%d" % len(pg_params)
-            pg_params[repr(pgp)] = pgp_name,pgp
+                
+        gp_name,gp_data = g_params.get(repr(gp),(None,None))        
+        if not gp_name:
+            gp_name = name_base % len(g_params)
+            g_params[repr(gp)] = gp_name,gp
         
-        params['base'] = pgp_name
+        params['base'] = gp_name
         
-    config = ConfigParser.RawConfigParser(defaults)        
+    config = MyConfigParser(defaults)     
     
-    for name,params in itertools.chain(pg_params.values(), sources.items()):
+    for name,params in itertools.chain(g_params.values(), sources.items()):
         config.add_section(name)
         for pn,pv in params.items():
+            if pn == 'table': pv = pv.strip()
             config.set(name,pn,pv)
     with codecs.open(outconfig,"w","utf-8") as oc:
         config.write(oc)
