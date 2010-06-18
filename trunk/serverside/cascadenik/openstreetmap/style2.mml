@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf8'?>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+    <DataSourcesConfig src="style2.cfg" /><Stylesheet>
+        Map { map-bgcolor: #8cb6d3; }
+    </Stylesheet>
+    <Stylesheet src="ground.mss" />
+    <Stylesheet src="roads.mss" />
+    <Stylesheet src="paths.mss" />
+    <Stylesheet src="rail.mss" />
+    <Stylesheet src="places.mss" />
+
+    <Layer class="coast edge outer" source_name="coast_edge_outer" />
+        
+    <Layer class="coast edge inner" source_name="coast_edge_inner" />
+        
+    <Layer class="coast fill" source_name="coast_fill" />
+        
+    <Layer class="citylike nonparking area" source_name="citylike_nonparking_area" />
+        
+    <Layer class="parklike area" source_name="parklike_area" />
+        
+    <Layer class="citylike parking area" source_name="citylike_parking_area" />
+        
+
+    <Layer class="water area" source_name="water_area" />
+        
+    <Layer class="water line" source_name="water_line" />
+        
+
+
+    <Layer class="road texture" source_name="road_texture" />
+        
+
+    <Layer class="path outline" source_name="path_outline" />
+        
+    <Layer class="road outline" source_name="road_outline" />
+        
+
+    <Layer class="path inline" source_name="path_inline" />
+        
+    <Layer class="road inline" source_name="road_inline" />
+        
+
+    
+    <Layer class="motorway outline" source_name="motorway_outline" />
+        
+    <Layer class="motorway inline" source_name="motorway_inline" />
+        
+
+    <Layer class="rail line" source_name="rail_line" />
+        
+
+    <Layer class="building area" source_name="building_area" />
+        
+
+    
+    <Layer class="place label" source_name="place_label" />
+        
+    <Layer class="transit point" source_name="transit_point" />
+        
+    <Layer class="road label major" source_name="road_label_major" />
+        
+    <Layer class="parklike label" source_name="parklike_label" />
+        
+    <Layer class="citylike label" source_name="citylike_label" />
+        
+    <Layer class="road label minor" source_name="road_label_minor" />
+        
+    <Layer class="water label" source_name="water_label" />
+        
+    <Layer class="building label" source_name="building_label" />
+        
+    
+</Map>
