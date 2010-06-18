@@ -650,8 +650,9 @@ def expand_map_includes(map_el, base, nested_map=False):
             nestable = sub_elem.attrib.pop("nestable", "true").lower() in ("true","yes","1")
             if not nestable:
                 continue
-            map_el.insert(i+offset, sub_elem)
-            offset = +1
+
+            map_el.insert(offset, sub_elem)
+            offset += 1
         
         
 def test2str(test):
