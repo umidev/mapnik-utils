@@ -314,6 +314,9 @@ class Declaration:
     def __repr__(self):
         return '%(selector)s { %(property)s: %(value)s }' % self.__dict__
 
+    def clone(self):
+        return Declaration(self.selector, self.property, self.value, self.sort_key)
+
 class Selector:
     """ Represents a complete selector with elements and attribute checks.
     """

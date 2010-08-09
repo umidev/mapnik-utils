@@ -1164,6 +1164,7 @@ def get_applicable_declarations(element, declarations):
     for d in decls:
         if not str(d.property).startswith("text-") and not str(d.property).startswith("shield-"):
             continue
+        d = d.clone()
         if str(d.property).endswith("-fill"):
             d.value = "transparent"
         elif str(d.property) in ('text-halo-radius',):
