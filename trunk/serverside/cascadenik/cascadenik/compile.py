@@ -643,6 +643,9 @@ def expand_map_includes(map_el, base, nested_map=False):
         expand_map_includes(omap, base, True)
         expand_source_declarations(omap, base)
 
+        # if this include is meant to as a blocker, then we
+        # need to append clearfix to all the layers below.
+        clearfix = elem.attrib.pop("clearfix", "false").lower() in ("true","yes","1")
         
         # now for each element in the sub map, add in things that are nestable.
         for sub_elem in omap:
@@ -650,6 +653,9 @@ def expand_map_includes(map_el, base, nested_map=False):
             nestable = sub_elem.attrib.pop("nestable", "true").lower() in ("true","yes","1")
             if not nestable:
                 continue
+            
+            if clearfix and sub_elem.tag == 'Layer':
+                sub_elem.attrib['class'] = sub_elem.attrib['class'] + " .clear" if 'class' in sub_elem.attrib else ".clear"
 
             map_el.insert(offset, sub_elem)
             offset += 1
@@ -1157,7 +1163,7 @@ def get_applicable_declarations(element, declarations):
     ndecls = []
     for d in decls:
         if not str(d.property).startswith("text-") and not str(d.property).startswith("shield-"):
-             pass
+            continue
         if str(d.property).endswith("-fill"):
             d.value = "transparent"
         elif str(d.property) in ('text-halo-radius',):
