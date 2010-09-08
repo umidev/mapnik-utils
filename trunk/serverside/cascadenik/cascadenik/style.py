@@ -170,6 +170,9 @@ properties = {
     # Vertical spacing between lines of multiline labels (in pixels)
     'text-line-spacing': int,
 
+    # Convert to uppercase or lowercase.
+    'text-convert': ('none', 'toupper', 'tolower'),
+
     # allow labels to be moved from their point
     'text-label-position-tolerance': None, # ?
 

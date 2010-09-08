@@ -901,7 +901,7 @@ def get_text_rule_groups(declarations):
                     'text-max-char-angle-delta': 'max_char_angle_delta', 'text-fill': 'fill',
                     'text-halo-fill': 'halo_fill', 'text-halo-radius': 'halo_radius',
                     'text-dx': 'dx', 'text-dy': 'dy', 'text-character-spacing': 'character_spacing',
-                    'text-line-spacing': 'line_spacing',
+                    'text-line-spacing': 'line_spacing', 'text-convert': 'text_convert',
                     'text-avoid-edges': 'avoid_edges', 'text-min-distance': 'min_distance', 'text-min-padding': 'min_padding',
                     'text-allow-overlap': 'allow_overlap', 'text-placement': 'placement'}
 
